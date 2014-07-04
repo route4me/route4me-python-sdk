@@ -10,7 +10,7 @@ def main():
     route4me = Route4Me(KEY)
     optimization = route4me.optimization
     address = route4me.address
-    optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_SD)
+    optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_MD)
     optimization.share_route(0)
     optimization.store_route(0)
     optimization.route_time(0)

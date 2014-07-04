@@ -11,7 +11,7 @@ def main():
     optimization = route4me.optimization
     address = route4me.address
     optimization.route_name('Multiple Depot, Multiple Driver, Time window')
-    optimization.algorithm_type(ALGORITHM_TYPE.TSP)
+    optimization.algorithm_type(ALGORITHM_TYPE.TSP_TW)
     optimization.share_route(0)
     optimization.store_route(1)
     optimization.device_type(DEVICE_TYPE.WEB)
