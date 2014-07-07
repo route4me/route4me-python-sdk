@@ -21,4 +21,5 @@ setup(
         "Topic :: SDK",
         "License :: _____",
     ],
+    test_suite="tests",
 )
