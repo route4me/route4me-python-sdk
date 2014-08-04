@@ -1,5 +1,7 @@
 # Route4Me Python SDK
 
+[![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
+
 ## Installing requirements
 
    pip install -r requirements.txt
