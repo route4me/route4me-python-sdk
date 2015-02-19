@@ -4,4 +4,5 @@ API_HOST = MAIN_HOST + "/api.v4/optimization_problem.php"
 SHOW_ROUTE_HOST = MAIN_HOST + "/route4me.php"
 ROUTE_HOST = MAIN_HOST + "/api.v4/route.php"
 SET_GPS_HOST = MAIN_HOST + "/track/set.php"
+GEOCODER = MAIN_HOST + "/api/geocoder.php"
 

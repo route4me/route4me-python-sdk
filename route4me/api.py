@@ -6,7 +6,7 @@ from route import Route
 from optimization import Optimization
 from utils import *
 from exceptions import APIException
-from api_endpoints import API_HOST, SHOW_ROUTE_HOST
+from api_endpoints import API_HOST, SHOW_ROUTE_HOST, GEOCODER
 
 
 class Route4Me(object):
@@ -35,6 +35,13 @@ class Route4Me(object):
         :return:
         """
         return SHOW_ROUTE_HOST + '?'
+
+    def geocoder_url(self):
+        """
+        Return GENERATE GEOCODE HOST
+        :return:
+        """
+        return GEOCODER + '?'
 
     def _make_request(self, url, params, data, request_method):
         """
@@ -169,4 +176,13 @@ class Route4Me(object):
             except Exception as e:
                 print e
 
-
+    def get_geocodes(self, params):
+        """
+        Get Geocodes from given addresses
+        :param addresses:
+        :return: response as a object
+        """
+        request_method = self._request_get
+        self.response = self._make_request(self.geocoder_url(), params, [],
+                                           request_method)
+        return self.response.content

@@ -1,3 +1,5 @@
+import xmltodict
+
 from base import Base
 from exceptions import ParamValueException
 
@@ -55,3 +57,25 @@ class Address(Base):
         else:
             raise ParamValueException('addresses', 'Params are not complete')
 
+    def fix_geocodes(self, addresses):
+        geocoding_error = []
+        param_address = 'addresses='
+        for a in addresses:
+            param_address = '{0}{1}||'.format(param_address, a.get('address'))
+        params = {'format': 'xml', 'addresses': param_address}
+        content = self.api.get_geocodes(params)
+        obj = xmltodict.parse(content)
+        geocoded_addresses = []
+        for i, d in enumerate(obj.get('destinations').get('destination')):
+            try:
+                address = dict([('lat', float(d.get('@lat'))),
+                                          ('lng', float(d.get('@lng'))),
+                                          ('time', addresses[i].get('time')),
+                                          ('alias', addresses[i].get('alias')),
+                                          ('address', d.get('@destination'))])
+                if addresses[i].get('is_depot'):
+                    address.update(dict([('is_depot', 1)]))
+                geocoded_addresses.append(address)
+            except IndexError:
+                geocoding_error.append(d)
+        return geocoding_error, geocoded_addresses
