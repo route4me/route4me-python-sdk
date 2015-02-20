@@ -6,7 +6,7 @@ from route import Route
 from optimization import Optimization
 from utils import *
 from exceptions import APIException
-from api_endpoints import API_HOST, SHOW_ROUTE_HOST, GEOCODER
+from api_endpoints import API_HOST, SHOW_ROUTE_HOST, GEOCODER, EXPORTER
 
 
 class Route4Me(object):
@@ -42,6 +42,13 @@ class Route4Me(object):
         :return:
         """
         return GEOCODER + '?'
+
+    def export_url(self):
+        """
+        Return GENERATE EXPORT HOST
+        :return:
+        """
+        return EXPORTER
 
     def _make_request(self, url, params, data, request_method):
         """
@@ -184,5 +191,18 @@ class Route4Me(object):
         """
         request_method = self._request_get
         self.response = self._make_request(self.geocoder_url(), params, [],
+                                           request_method)
+        return self.response.content
+
+    def export_route(self, route_id, output_format='csv'):
+        """
+        Get Route from given post data
+        :param route_id:
+        :param output_format:
+        :return: response as a object
+        """
+        data = {'route_id': route_id, 'strExportFormat': output_format}
+        request_method = self._request_post
+        self.response = self._make_request(self.export_url(), {}, data,
                                            request_method)
         return self.response.content
