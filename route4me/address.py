@@ -69,11 +69,11 @@ class Address(Base):
         for i, d in enumerate(obj.get('destinations').get('destination')):
             try:
                 address = dict([('lat', float(d.get('@lat'))),
-                                          ('lng', float(d.get('@lng'))),
-                                          ('time', addresses[i].get('time')),
-                                          ('alias', addresses[i].get('alias')),
-                                          ('address', d.get('@destination'))])
-                if addresses[i].get('is_depot'):
+                                ('lng', float(d.get('@lng'))),
+                                ('time', addresses[i].get('time')),
+                                ('alias', addresses[i].get('alias')),
+                                ('address', d.get('@destination'))])
+                if addresses[i].get('is_depot') == 1:
                     address.update(dict([('is_depot', 1)]))
                 geocoded_addresses.append(address)
             except IndexError:

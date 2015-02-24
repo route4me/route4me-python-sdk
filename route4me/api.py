@@ -183,6 +183,23 @@ class Route4Me(object):
             except Exception as e:
                 print e
 
+    def export_request_to_json(self, file_name):
+        """
+        Export resquest to JSON File
+        :param file_name:
+        :return:
+        """
+        if self.optimization.data:
+            try:
+                f = open(file_name, 'w')
+                f.write(json.dumps(self.optimization.data,
+                                           ensure_ascii=False,
+                                           sort_keys=True,
+                                           indent=4))
+                f.close()
+            except Exception as e:
+                print e
+
     def get_geocodes(self, params):
         """
         Get Geocodes from given addresses
