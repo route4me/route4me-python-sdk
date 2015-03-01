@@ -6,14 +6,15 @@ from route import Route
 from optimization import Optimization
 from utils import *
 from exceptions import APIException
-from api_endpoints import API_HOST, SHOW_ROUTE_HOST, GEOCODER, EXPORTER
+from api_endpoints import API_HOST, SHOW_ROUTE_HOST, BATCH_GEOCODER,\
+    EXPORTER, SINGLE_GEOCODER
 
 
 class Route4Me(object):
     """
     Route4Me Python SDK
     """
-    def __init__(self, key):
+    def __init__(self, key, headers={'User-Agent': 'python-sdk'}):
         self.key = key
         self.response = None
         self.key = key
@@ -21,27 +22,35 @@ class Route4Me(object):
         self.optimization = Optimization(self)
         self.setGPS = SetGPS(self)
         self.route = Route(self)
+        self.headers = headers
 
     def _build_base_url(self):
         """
         Return API HOST
         :return:
         """
-        return API_HOST + '?'
+        return '{0}?'.format(API_HOST)
 
     def route_url(self):
         """
         Return GENERATE ROUTE HOST
         :return:
         """
-        return SHOW_ROUTE_HOST + '?'
+        return '{0}?'.format(SHOW_ROUTE_HOST)
 
-    def geocoder_url(self):
+    def single_geocoder_url(self):
         """
         Return GENERATE GEOCODE HOST
         :return:
         """
-        return GEOCODER + '?'
+        return '{0}?'.format(SINGLE_GEOCODER)
+
+    def batch_geocoder_url(self):
+        """
+        Return GENERATE GEOCODE HOST
+        :return:
+        """
+        return '{0}?'.format(BATCH_GEOCODER)
 
     def export_url(self):
         """
@@ -83,7 +92,8 @@ class Route4Me(object):
         """
         params = self.optimization.get_params()
         return self._make_request(self._build_base_url(), params,
-                                  json.dumps(self.optimization.data), request_method)
+                                  json.dumps(self.optimization.data),
+                                  request_method)
 
     def _request_post(self, url, request_params, data=None):
         """
@@ -93,7 +103,8 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.request('POST', url, params=request_params, data=data)
+        return requests.request('POST', url, params=request_params,
+                                data=data, headers=self.headers, verify=False)
 
     def _request_get(self, url, request_params, data=None):
         """
@@ -103,7 +114,8 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.request('GET', url, params=request_params, data=data)
+        return requests.request('GET', url, params=request_params,
+                                data=data, headers=self.headers, verify=False)
 
     def _request_put(self, url, request_params, data=None):
         """
@@ -113,7 +125,8 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.request('PUT', url, params=request_params, data=data)
+        return requests.request('PUT', url, params=request_params,
+                                data=data, headers=self.headers, verify=False)
 
     def _request_delete(self, url, request_params, data=None):
         """
@@ -123,7 +136,8 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.request('DELETE', url, params=request_params, data=data)
+        return requests.request('DELETE', url, params=request_params,
+                                data=data, headers=self.headers, verify=False)
 
     def run_optimization(self):
         """
@@ -200,15 +214,26 @@ class Route4Me(object):
             except Exception as e:
                 print e
 
-    def get_geocodes(self, params):
+    def get_batch_geocodes(self, params):
         """
         Get Geocodes from given addresses
-        :param addresses:
+        :param params:
         :return: response as a object
         """
         request_method = self._request_get
-        self.response = self._make_request(self.geocoder_url(), params, [],
-                                           request_method)
+        self.response = self._make_request(self.batch_geocoder_url(), params,
+                                           [], request_method)
+        return self.response.content
+
+    def get_geocode(self, params):
+        """
+        Get Geocodes from given address
+        :param params:
+        :return: response as a object
+        """
+        request_method = self._request_get
+        self.response = self._make_request(self.single_geocoder_url(), params,
+                                           [], request_method)
         return self.response.content
 
     def export_route(self, route_id, output_format='csv'):
