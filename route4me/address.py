@@ -91,6 +91,6 @@ class Address(Base):
             obj = obj.get('result')
             address.update(dict([('lat', float(obj.get('@lat'))),
                                  ('lng', float(obj.get('@lng'))), ]))
-        except IndexError:
+        except AttributeError:
             geocoding_error.append(address)
         return geocoding_error, address
