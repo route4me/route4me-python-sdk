@@ -83,8 +83,8 @@ class Address(Base):
         return geocoding_error, geocoded_addresses
 
     def fix_geocode(self, address):
-        geocoding_error = []
-        params = {'format': 'xml', 'address': address}
+        geocoding_error = None
+        params = {'format': 'xml', 'address': address.get('address')}
         content = self.api.get_geocode(params)
         obj = xmltodict.parse(content)
         try:
@@ -92,5 +92,5 @@ class Address(Base):
             address.update(dict([('lat', float(obj.get('@lat'))),
                                  ('lng', float(obj.get('@lng'))), ]))
         except AttributeError:
-            geocoding_error.append(address)
+            geocoding_error = address
         return geocoding_error, address
