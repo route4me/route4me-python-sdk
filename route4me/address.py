@@ -60,11 +60,9 @@ class Address(Base):
     def batch_fix_geocodes(self, addresses):
         geocoding_error = []
         param_address = 'addresses='
-        print addresses
         for a in addresses:
             param_address = '{0}{1}||'.format(param_address, a.get('address'))
         params = {'format': 'xml', 'addresses': param_address}
-        print params
         content = self.api.get_batch_geocodes(params)
         obj = xmltodict.parse(content)
         geocoded_addresses = []
