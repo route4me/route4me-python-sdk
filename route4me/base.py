@@ -308,6 +308,18 @@ class Base(object):
         else:
             raise ParamValueException('route_time', 'Must be integer or long')
 
+    def route_date(self, route_date):
+        """
+        Set route_date param
+        :param route_date:
+        :return:
+        """
+        if isinstance(route_date, types.LongType) or isinstance(route_date,
+                                                                types.IntType):
+            self._copy_data({'route_date': route_date})
+        else:
+            raise ParamValueException('route_date', 'Must be integer or long')
+
     def route_max_duration(self, route_max_duration):
         """
         Set route_max_duration param
@@ -463,6 +475,17 @@ class Base(object):
             self._copy_data({'rt': rt})
         else:
             raise ParamValueException('rt', 'Must be 0 or 1')
+
+    def optimization_quality(self, optimization_quality):
+        """
+        Set optimization_quality param.
+        :param optimization_quality:
+        :return:
+        """
+        if 1 <= optimization_quality <= 3:
+            self._copy_data({'optimization_quality': optimization_quality})
+        else:
+            raise ParamValueException('optimization_quality', 'Must be between 1 to 3')
 
     def directions(self, directions):
         """
