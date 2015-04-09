@@ -1,4 +1,6 @@
 import xmltodict
+import time
+import random
 
 from base import Base
 from exceptions import ParamValueException
@@ -83,12 +85,20 @@ class Address(Base):
     def fix_geocode(self, address):
         geocoding_error = None
         params = {'format': 'xml', 'address': address.get('address')}
-        content = self.api.get_geocode(params)
-        obj = xmltodict.parse(content)
-        try:
-            obj = obj.get('result')
-            address.update(dict([('lat', float(obj.get('@lat'))),
-                                 ('lng', float(obj.get('@lng'))), ]))
-        except AttributeError:
-            geocoding_error = address
+        count = 0
+        while True:
+            content = self.api.get_geocode(params)
+            obj = xmltodict.parse(content)
+            try:
+                obj = obj.get('result')
+                address.update(dict([('lat', float(obj.get('@lat'))),
+                                     ('lng', float(obj.get('@lng'))), ]))
+                break
+            except AttributeError:
+                count += 1
+                if count > 5:
+                    geocoding_error = address
+                    break
+                time.sleep(random.randrange(1, 5)*0.5)
+
         return geocoding_error, address
