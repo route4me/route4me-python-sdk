@@ -1,6 +1,7 @@
 import xmltodict
 import time
 import random
+import requests
 
 from base import Base
 from exceptions import ParamValueException
@@ -87,14 +88,14 @@ class Address(Base):
         params = {'format': 'xml', 'address': address.get('address')}
         count = 0
         while True:
-            content = self.api.get_geocode(params)
-            obj = xmltodict.parse(content)
             try:
+                content = self.api.get_geocode(params)
+                obj = xmltodict.parse(content)
                 obj = obj.get('result')
                 address.update(dict([('lat', float(obj.get('@lat'))),
                                      ('lng', float(obj.get('@lng'))), ]))
-                break
-            except AttributeError:
+                return geocoding_error, address
+            except AttributeError, requests.exceptions.ConnectionError:
                 count += 1
                 if count > 5:
                     geocoding_error = address
