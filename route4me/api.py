@@ -71,7 +71,7 @@ class Route4Me(object):
         """
         request_params = self._transform_params(params)
         response = request_method(url, request_params, data)
-        if not 200 <= response.status_code < 300:
+        if not 200 <= response.status_code < 400:
             raise APIException(response.status_code, response.text,
                                response.url)
         return response
@@ -103,8 +103,9 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.request('POST', url, params=request_params,
-                                data=data, headers=self.headers, verify=False)
+        return requests.post(url, params=request_params,
+                             allow_redirects=False,
+                             data=data, headers=self.headers, verify=False)
 
     def _request_get(self, url, request_params, data=None):
         """
@@ -114,8 +115,9 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.request('GET', url, params=request_params,
-                                data=data, headers=self.headers, verify=False)
+        return requests.get(url, params=request_params,
+                            allow_redirects=False,
+                            data=data, headers=self.headers, verify=False)
 
     def _request_put(self, url, request_params, data=None):
         """
