@@ -394,9 +394,23 @@ class Base(object):
         if isinstance(vehicle_max_distance_mi, types.LongType) or \
                 isinstance(vehicle_max_distance_mi, types.IntType):
             self._copy_data({'vehicle_max_distance_mi':
-                                 vehicle_max_distance_mi})
+                             vehicle_max_distance_mi})
         else:
             raise ParamValueException('vehicle_max_distance_mi',
+                                      'Must be integer or long')
+
+    def max_tour_size(self, max_tour_size):
+        """
+        Set max_tour_size
+        :param max_tour_size:
+        :return:
+        """
+        if isinstance(max_tour_size, types.LongType) or \
+                isinstance(max_tour_size, types.IntType):
+            self._copy_data({'max_tour_size':
+                             max_tour_size})
+        else:
+            raise ParamValueException('max_tour_size',
                                       'Must be integer or long')
 
     def route_email(self, route_email):
