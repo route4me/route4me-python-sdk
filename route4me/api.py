@@ -95,7 +95,7 @@ class Route4Me(object):
                                   json.dumps(self.optimization.data),
                                   request_method)
 
-    def _request_post(self, url, request_params, data=None):
+    def _request_post(self, url, request_params, data=None, redirects=True):
         """
         POST request
         :param url:
@@ -104,10 +104,10 @@ class Route4Me(object):
         :return:
         """
         return requests.post(url, params=request_params,
-                             allow_redirects=False,
+                             allow_redirects=redirects,
                              data=data, headers=self.headers, verify=False)
 
-    def _request_get(self, url, request_params, data=None):
+    def _request_get(self, url, request_params, data=None, redirects=True):
         """
         GET request
         :param url:
@@ -116,7 +116,7 @@ class Route4Me(object):
         :return:
         """
         return requests.get(url, params=request_params,
-                            allow_redirects=False,
+                            allow_redirects=redirects,
                             data=data, headers=self.headers, verify=False)
 
     def _request_put(self, url, request_params, data=None):
