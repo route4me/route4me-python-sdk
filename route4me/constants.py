@@ -46,10 +46,14 @@ DEVICE_TYPE = enum(WEB="web", IPHONE="iphone", IPAD="ipad",
 FORMAT = enum(CSV='csv', SERIALIZED='serialized', XML='xml')
 
 OPTIMIZATION_STATE = auto_enum('OPTIMIZATION_STATE_INITIAL',
-                          'OPTIMIZATION_STATE_MATRIX_PROCESSING',
-                          'OPTIMIZATION_STATE_OPTIMIZING',
-                          'OPTIMIZATION_STATE_OPTIMIZED',
-                          'OPTIMIZATION_STATE_ERROR',
-                          'OPTIMIZATION_STATE_COMPUTING_DIRECTIONS',)
+                               'OPTIMIZATION_STATE_MATRIX_PROCESSING',
+                               'OPTIMIZATION_STATE_OPTIMIZING',
+                               'OPTIMIZATION_STATE_OPTIMIZED',
+                               'OPTIMIZATION_STATE_ERROR',
+                               'OPTIMIZATION_STATE_COMPUTING_DIRECTIONS',)
 
 ROUTE_PATH_OUTPUT = enum(NONE='None', POINTS='Points')
+
+UTURN = auto_enum('UTURN_DEPART_SHORTEST', 'UTURN_DEPART_TO_RIGHT')
+
+LEFT_TURN = auto_enum('LEFTTURN_ALLOW', 'LEFTTURN_FORBID', 'LEFTTURN_MULTIAPPROACH')

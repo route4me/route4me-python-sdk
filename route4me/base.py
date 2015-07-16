@@ -90,7 +90,7 @@ class Base(object):
         :return:
         """
         if isinstance(course, types.LongType) or isinstance(course,
-                                                                types.IntType):
+                                                            types.IntType):
             self._copy_param({'course': course})
         else:
             raise ParamValueException('course', 'Must be integer or long')
@@ -102,7 +102,7 @@ class Base(object):
         :return:
         """
         if isinstance(speed, types.LongType) or isinstance(speed,
-                                                                types.IntType):
+                                                           types.IntType):
             self._copy_param({'speed': speed})
         else:
             raise ParamValueException('speed', 'Must be Float')
@@ -523,6 +523,40 @@ class Base(object):
         else:
             raise ParamValueException('device_tracking_history', 'Must be 0 or 1')
 
+    def uturn(self, uturn_type):
+        """
+        Set uturn_type. Choices are:
+        UTURN_DEPART_SHORTEST or
+        UTURN_DEPART_TO_RIGHT
+        :param: uturn_type:
+        :return:
+        """
+        if 1 <= uturn_type <= 2:
+            self._copy_data({'uturn': uturn_type})
+        else:
+            raise ParamValueException('uturn',
+                                      'Must be : '
+                                      'UTURN_DEPART_SHORTEST or '
+                                      'UTURN_DEPART_TO_RIGHT')
+
+    def leftturn(self, left_turn_type):
+        """
+        Set leftturn. Choices are:
+        LEFTTURN_ALLOW or
+        LEFTTURN_FORBID or
+        LEFTTURN_MULTIAPPROACH
+        :param: leftturn:
+        :return:
+        """
+        if 1 <= left_turn_type <= 3:
+            self._copy_data({'leftturn': left_turn_type})
+        else:
+            raise ParamValueException('leftturn',
+                                      'Must be : '
+                                      'LEFTTURN_ALLOW or '
+                                      'LEFTTURN_FORBID or '
+                                      'LEFTTURN_MULTIAPPROACH')
+
     def _copy_data(self, params):
         """
         Copy params to data
@@ -555,7 +589,7 @@ class Base(object):
         return set(requirements).issubset(set(self.params.keys()))
 
     @staticmethod
-    def check_required_params(params, requirements=[] ):
+    def check_required_params(params, requirements=[]):
         """
         Check if required params are set
         :param requirements:
@@ -587,3 +621,4 @@ class Base(object):
         self.validate_params(**data)
         self.data.update(data)
         self.params.update(params)
+
