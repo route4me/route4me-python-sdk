@@ -16,6 +16,7 @@ def main():
     optimization.share_route(0)
     optimization.store_route(0)
     optimization.route_time(0)
+    optimization.parts(20)
     optimization.route_max_duration(86400)
     optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
@@ -484,8 +485,6 @@ def main():
         print 'Route %s link: %sroute_id=%s' % (address.address,
                                                 route4me.route_url(),
                                                 address.route_id)
-    print json.dumps(route4me.response.content, ensure_ascii=False,
-                     sort_keys=True, indent=4)
     route4me.export_result_to_json('multiple_depot_multiple_driver.json')
 
 

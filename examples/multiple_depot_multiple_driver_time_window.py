@@ -19,7 +19,7 @@ def main():
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
     optimization.metric(METRIC.ROUTE4ME_METRIC_MATRIX)
-    optimization.vehicle_capacity(99)
+    optimization.vehicle_capacity(9999)
     optimization.vehicle_max_distance_mi(99999)
     optimization.parts(10)
     optimization.route_time(0)
@@ -484,9 +484,6 @@ def main():
                                                 route4me.route_url(),
                                                 address.route_id)
     route4me.export_result_to_json('multiple_depot_multiple_driver.json')
-    json_string = json.dumps(route4me.response.content, ensure_ascii=False,
-                     sort_keys=True, indent=4)
-    print json_string
-
+ 
 if __name__ == '__main__':
     main()
