@@ -186,7 +186,7 @@ class Base(object):
         :param: algorithm_type:
         :return:
         """
-        if 1 <= algorithm_type <= 7:
+        if 1 <= algorithm_type <= 101:
             self._copy_data({'algorithm_type': algorithm_type})
         else:
             raise ParamValueException('algorithm_type',

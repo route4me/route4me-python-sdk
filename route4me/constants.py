@@ -20,8 +20,8 @@ def auto_enum(*sequential, **named):
     return enum(**enums)
 
 
-ALGORITHM_TYPE = auto_enum('TSP', 'VRP', 'CVRP_TW_SD', 'CVRP_TW_MD', 'TSP_TW',
-                           'TSP_TW_CR', 'BBCVRP')
+ALGORITHM_TYPE = enum(TSP=1, VRP=2, CVRP_TW_SD=3, CVRP_TW_MD=4, TSP_TW=5,
+                      TSP_TW_CR=6, BBCVRP=7, ALG_LEGACY_DISTRIBUTED=101, ALG_NONE=100)
 
 TRAVEL_MODE = enum(DRIVING='Driving', WALKING='Walking', TRUCKING='Trucking')
 
