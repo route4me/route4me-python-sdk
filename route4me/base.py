@@ -186,14 +186,17 @@ class Base(object):
         :param: algorithm_type:
         :return:
         """
-        if 1 <= algorithm_type <= 101:
+        VALID = [1, 2, 3, 4, 5, 6, 7, 100, 101, ]
+        if algorithm_type in VALID:
             self._copy_data({'algorithm_type': algorithm_type})
         else:
             raise ParamValueException('algorithm_type',
                                       'Must be ALGORITHM_TYPE: '
-                                      'TSP, VRP, CVRP_TW_SD, '
-                                      'CVRP_TW_MD, TSP_TW, '
-                                      'TSP_TW_CR and BBCVRP')
+                                      'TSP(1), VRP(2), CVRP_TW_SD(3), '
+                                      'CVRP_TW_MD(4), TSP_TW(5), '
+                                      'TSP_TW_CR(6), BBCVRP(7), '
+                                      'NO OPTIMIZATION(100) or '
+                                      'LEGACY_DISTRIBUTED(101)')
 
     def route_name(self, route_name):
         """
@@ -214,7 +217,7 @@ class Base(object):
         """
         if isinstance(optimization_problem_id, types.StringTypes):
             self._copy_param({'optimization_problem_id':
-                                  optimization_problem_id})
+                              optimization_problem_id})
         else:
             raise ParamValueException('optimization_problem_id',
                                       'Must be String')
@@ -606,8 +609,10 @@ class Base(object):
         for k, v in kwargs.items():
             try:
                 self.__getattribute__(k)(v)
-            except AttributeError as e:
+            except ParamValueException as e:
                 raise e
+            except AttributeError as e:
+                raise ParamValueException(k, 'Not supported')
         return True
 
     def add(self, params={}, data={}):
