@@ -311,6 +311,90 @@ class Base(object):
         else:
             raise ParamValueException('route_time', 'Must be integer or long')
 
+    def trailer_weight_t(self, trailer_weight_t):
+        """
+        Set trailer_weight_t param
+        :param trailer_weight_t:
+        :return:
+        """
+        if isinstance(trailer_weight_t, types.LongType) or isinstance(trailer_weight_t,
+                                                                      types.IntType):
+            self._copy_data({'trailer_weight_t': trailer_weight_t})
+        else:
+            raise ParamValueException('trailer_weight_t', 'Must be integer or long')
+
+    def limited_weight_t(self, limited_weight_t):
+        """
+        Set limited_weight_t param
+        :param limited_weight_t:
+        :return:
+        """
+        if isinstance(limited_weight_t, types.LongType) or isinstance(limited_weight_t,
+                                                                      types.IntType):
+            self._copy_data({'limited_weight_t': limited_weight_t})
+        else:
+            raise ParamValueException('limited_weight_t', 'Must be integer or long')
+
+    def weight_per_axle_t(self, weight_per_axle_t):
+        """
+        Set weight_per_axle_t param
+        :param weight_per_axle_t:
+        :return:
+        """
+        if isinstance(weight_per_axle_t, types.LongType) or isinstance(weight_per_axle_t,
+                                                                       types.IntType):
+            self._copy_data({'weight_per_axle_t': weight_per_axle_t})
+        else:
+            raise ParamValueException('weight_per_axle_t', 'Must be integer or long')
+
+    def truck_height_meters(self, truck_height_meters):
+        """
+        Set truck_height_meters param
+        :param truck_height_meters:
+        :return:
+        """
+        if isinstance(truck_height_meters, types.LongType) or isinstance(truck_height_meters,
+                                                                         types.IntType):
+            self._copy_data({'truck_height_meters': truck_height_meters})
+        else:
+            raise ParamValueException('truck_height_meters', 'Must be integer or long')
+
+    def truck_width_meters(self, truck_width_meters):
+        """
+        Set truck_width_meters param
+        :param truck_width_meters:
+        :return:
+        """
+        if isinstance(truck_width_meters, types.LongType) or isinstance(truck_width_meters,
+                                                                        types.IntType):
+            self._copy_data({'truck_width_meters': truck_width_meters})
+        else:
+            raise ParamValueException('truck_width_meters', 'Must be integer or long')
+
+    def truck_length_meters(self, truck_length_meters):
+        """
+        Set truck_length_meters param
+        :param truck_length_meters:
+        :return:
+        """
+        if isinstance(truck_length_meters, types.LongType) or isinstance(truck_length_meters,
+                                                                         types.IntType):
+            self._copy_data({'truck_length_meters': truck_length_meters})
+        else:
+            raise ParamValueException('truck_length_meters', 'Must be integer or long')
+
+    def min_tour_size(self, min_tour_size):
+        """
+        Set min_tour_size param
+        :param min_tour_size:
+        :return:
+        """
+        if isinstance(min_tour_size, types.LongType) or isinstance(min_tour_size,
+                                                                   types.IntType):
+            self._copy_data({'min_tour_size': min_tour_size})
+        else:
+            raise ParamValueException('min_tour_size', 'Must be integer or long')
+
     def route_date(self, route_date):
         """
         Set route_date param
@@ -460,6 +544,39 @@ class Base(object):
         else:
             raise ParamValueException('store_route', 'Must be 0 or 1')
 
+    def lock_last(self, lock_last):
+        """
+        Set lock_last param
+        :param lock_last:
+        :return:
+        """
+        if 0 <= lock_last <= 1:
+            self._copy_data({'lock_last': lock_last})
+        else:
+            raise ParamValueException('lock_last', 'Must be 0 or 1')
+
+    def disable_optimization(self, disable_optimization):
+        """
+        Set disable_optimization param
+        :param disable_optimization:
+        :return:
+        """
+        if 0 <= disable_optimization <= 1:
+            self._copy_data({'disable_optimization': disable_optimization})
+        else:
+            raise ParamValueException('disable_optimization', 'Must be 0 or 1')
+
+    def shared_publicly(self, shared_publicly):
+        """
+        Set shared_publicly param
+        :param shared_publicly:
+        :return:
+        """
+        if 0 <= shared_publicly <= 1:
+            self._copy_data({'shared_publicly': shared_publicly})
+        else:
+            raise ParamValueException('shared_publicly', 'Must be 0 or 1')
+
     def reoptimize(self, reoptimize):
         """
         Set reoptimize param
@@ -492,6 +609,17 @@ class Base(object):
             self._copy_data({'rt': rt})
         else:
             raise ParamValueException('rt', 'Must be 0 or 1')
+
+    def has_trailer(self, has_trailer):
+        """
+        Set has_trailer param.
+        :param has_trailer:
+        :return:
+        """
+        if 0 <= has_trailer <= 1:
+            self._copy_data({'has_trailer': has_trailer})
+        else:
+            raise ParamValueException('has_trailer', 'Must be 0 or 1')
 
     def optimization_quality(self, optimization_quality):
         """
@@ -559,6 +687,40 @@ class Base(object):
                                       'LEFTTURN_ALLOW or '
                                       'LEFTTURN_FORBID or '
                                       'LEFTTURN_MULTIAPPROACH')
+
+    def dm(self, dm):
+        """
+        Set dm. Choices are:
+        R4M_PROPRIETARY_ROUTING or
+        R4M_TRAFFIC_ENGINE or
+        TRUCKING
+        :param: dm:
+        :return:
+        """
+        if dm in [1, 3, 6]:
+            self._copy_data({'dm': dm})
+        else:
+            raise ParamValueException('dm',
+                                      'Must be : '
+                                      'R4M_PROPRIETARY_ROUTING or '
+                                      'R4M_TRAFFIC_ENGINE or '
+                                      'TRUCKING')
+
+    def dirm(self, dirm):
+        """
+        Set dirm. Choices are:
+        R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM or
+        TRUCKING
+        :param: dirm:
+        :return:
+        """
+        if dirm in [1, 3]:
+            self._copy_data({'dirm': dirm})
+        else:
+            raise ParamValueException('dirm',
+                                      'Must be : '
+                                      'R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM or'
+                                      'TRUCKING')
 
     def _copy_data(self, params):
         """

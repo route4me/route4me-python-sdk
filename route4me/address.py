@@ -15,7 +15,7 @@ class Address(Base):
     except for depots. One depot can be part of many routes if we have a
     VRP (multi-route) solution.
     """
-    required = ['address', 'lat', 'lng', ]
+    REQUIRED_FIELDS = ['address', 'lat', 'lng', ]
 
     def __init__(self, api, addresses=[]):
         """
@@ -54,7 +54,7 @@ class Address(Base):
         :param kwargs:
         :return:
         """
-        if self.check_required_params(kwargs, self.required):
+        if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
             self.addresses.append(kwargs)
             self.api.optimization.data['addresses'] = self.addresses
         else:

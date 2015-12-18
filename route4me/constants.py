@@ -19,6 +19,10 @@ def auto_enum(*sequential, **named):
     enums = dict(zip(sequential, range(1, len(sequential)+1)), **named)
     return enum(**enums)
 
+TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1, R4M_TRAFFIC_ENGINE=3, TRUCKING=6)
+
+DIRECTIONS_METHOD = enum(R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM=1, TRUCKING=3)
+
 
 ALGORITHM_TYPE = enum(TSP=1, VRP=2, CVRP_TW_SD=3, CVRP_TW_MD=4, TSP_TW=5,
                       TSP_TW_CR=6, BBCVRP=7, ALG_LEGACY_DISTRIBUTED=101, ALG_NONE=100)
