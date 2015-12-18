@@ -43,7 +43,7 @@ class SetGPS(Base):
         """
         if self.required_params(self.requirements):
             self.response = self.api._request_get(self._build_set_url(),
-                                              self.params)
+                                                  self.params)
             response = json2obj(self.response.content)
             return response.status
         else:

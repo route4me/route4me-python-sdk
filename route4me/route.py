@@ -54,7 +54,7 @@ class Route(Base):
             try:
                 response = response.deleted
                 return response
-            except AttributeError as e:
+            except AttributeError:
                 return response.errors
         else:
             raise ParamValueException('params', 'Params are not complete')

@@ -5,6 +5,6 @@ SHOW_ROUTE_HOST = '{0}/route4me.php'.format(MAIN_HOST)
 ROUTE_HOST = '{0}/api.v4/route.php'.format(MAIN_HOST)
 SET_GPS_HOST = '{0}/track/set.php'.format(MAIN_HOST)
 BATCH_GEOCODER = '{0}/api/geocoder.php'.format(MAIN_HOST)
-SINGLE_GEOCODER = '{0}/api/address.php'.format(MAIN_HOST) 
+SINGLE_GEOCODER = '{0}/api/address.php'.format(MAIN_HOST)
 EXPORTER = '{0}/actions/route/export_current_route.php'.format(MAIN_HOST)
 

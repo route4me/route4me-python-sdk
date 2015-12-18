@@ -95,7 +95,7 @@ class Route4Me(object):
                                   json.dumps(self.optimization.data),
                                   request_method)
 
-    def _request_post(self, url, request_params, data=None, redirects=False):
+    def _request_post(self, url, request_params, data=None, redirects=True):
         """
         POST request
         :param url:
@@ -160,7 +160,7 @@ class Route4Me(object):
         self.optimization.reoptimize(1)
         params = self.optimization.get_params()
         self.response = self._make_request(self._build_base_url(), params, [],
-                                  request_method)
+                                           request_method)
         return json2obj(self.response.content)
 
     def get_optimization(self, optimization_problem_id):
@@ -192,9 +192,9 @@ class Route4Me(object):
             try:
                 f = open(file_name, 'w')
                 f.write(json.dumps(self.response.content,
-                                           ensure_ascii=False,
-                                           sort_keys=True,
-                                           indent=4))
+                                   ensure_ascii=False,
+                                   sort_keys=True,
+                                   indent=4))
                 f.close()
             except Exception as e:
                 print e
@@ -209,9 +209,9 @@ class Route4Me(object):
             try:
                 f = open(file_name, 'w')
                 f.write(json.dumps(self.optimization.data,
-                                           ensure_ascii=False,
-                                           sort_keys=True,
-                                           indent=4))
+                                   ensure_ascii=False,
+                                   sort_keys=True,
+                                   indent=4))
                 f.close()
             except Exception as e:
                 print e
