@@ -7,7 +7,7 @@ from optimization import Optimization
 from utils import *
 from exceptions import APIException
 from api_endpoints import API_HOST, SHOW_ROUTE_HOST, BATCH_GEOCODER,\
-    EXPORTER, SINGLE_GEOCODER
+    EXPORTER, SINGLE_GEOCODER, ADDRESS_HOST, ROUTE_HOST
 
 
 class Route4Me(object):
@@ -17,7 +17,6 @@ class Route4Me(object):
     def __init__(self, key, headers={'User-Agent': 'python-sdk'}):
         self.key = key
         self.response = None
-        self.key = key
         self.address = Address(self)
         self.optimization = Optimization(self)
         self.setGPS = SetGPS(self)
@@ -31,12 +30,26 @@ class Route4Me(object):
         """
         return '{0}?'.format(API_HOST)
 
-    def route_url(self):
+    def show_route_url(self):
         """
         Return GENERATE ROUTE HOST
         :return:
         """
         return '{0}?'.format(SHOW_ROUTE_HOST)
+
+    def route_url(self):
+        """
+        Return GENERATE ROUTE API HOST
+        :return:
+        """
+        return '{0}?'.format(ROUTE_HOST)
+
+    def address_url(self):
+        """
+        Return GENERATE ADDRESS HOST
+        :return:
+        """
+        return '{0}?'.format(ADDRESS_HOST)
 
     def single_geocoder_url(self):
         """
@@ -250,3 +263,21 @@ class Route4Me(object):
         self.response = self._make_request(self.export_url(), {}, data,
                                            request_method)
         return self.response.content
+
+    def request_address(self, params):
+        params.update({'api_key': self.key})
+        return self._make_request(self.address_url(), params, None, self._request_get)
+
+    def delete_address(self, params):
+        params.update({'api_key': self.key})
+        return self._make_request(self.address_url(), params, None, self._request_delete)
+
+    def update_address(self, params, data):
+        params.update({'api_key': self.key})
+        data = json.dumps(data)
+        return self._make_request(self.address_url(), params, data, self._request_put)
+
+    def update_route(self, params, data):
+        params.update({'api_key': self.key})
+        data = json.dumps(data)
+        return self._make_request(self.route_url(), params, data, self._request_put)

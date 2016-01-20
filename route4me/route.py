@@ -62,3 +62,18 @@ class Route(Base):
     @staticmethod
     def _build_route_url():
         return ROUTE_HOST + '?'
+
+    def insert_address_into_route(self, addresses, route_id):
+        params = {'route_id': route_id}
+        response = self.api.update_route(params, addresses)
+        return json2obj(response.content)
+
+    def move_addresses_from_route(self, addresses, route_id):
+        params = {'route_id': route_id}
+        response = self.api.update_route(params, addresses)
+        return json2obj(response.content)
+
+    def update_route_parameters(self, data, route_id):
+        params = {'route_id': route_id}
+        response = self.api.update_route(params, data)
+        return json2obj(response.content)

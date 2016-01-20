@@ -5,6 +5,7 @@ import requests
 
 from base import Base
 from exceptions import ParamValueException
+from utils import json2obj
 
 
 class Address(Base):
@@ -103,3 +104,25 @@ class Address(Base):
                 time.sleep(random.randrange(1, 5)*0.5)
 
         return geocoding_error, address
+
+    def get_address(self, route_id, route_destination_id):
+        params = {'route_id': route_id,
+                  'route_destination_id': route_destination_id
+                  }
+        response = self.api.request_address(params)
+        return json2obj(response.content)
+
+    def update_address(self, data, route_id, route_destination_id):
+        params = {'route_id': route_id,
+                  'route_destination_id': route_destination_id
+                  }
+        response = self.api.update_address(params, data)
+        return json2obj(response.content)
+
+    def delete_address_from_route(self, route_id, route_destination_id):
+        params = {'route_id': route_id,
+                  'route_destination_id': route_destination_id
+                  }
+        response = self.api.delete_address(params)
+        return json2obj(response.content)
+
