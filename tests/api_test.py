@@ -159,7 +159,7 @@ class Route4MeAPITestSuite(unittest.TestCase):
             time=0
         )
         response = self.route4me.run_optimization()
-        return self.assertEqual(4, response.state)
+        return self.assertEqual(2, response.state)
 
     def test_param_dict_validation(self):
         gps = self.route4me.setGPS
