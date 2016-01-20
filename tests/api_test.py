@@ -163,8 +163,8 @@ class Route4MeAPITestSuite(unittest.TestCase):
 
     def test_param_dict_validation(self):
         gps = self.route4me.setGPS
-        return self.assertRaises(AttributeError,
-                                 gps.add, {'xxx': 'error'})
+        return self.assertRaises(ParamValueException,
+                                 gps.add, {'xxxx': 100})
 
     def test_addresses_params(self):
         addresses = self.route4me.address
