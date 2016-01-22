@@ -61,3 +61,17 @@ ROUTE_PATH_OUTPUT = enum(NONE='None', POINTS='Points')
 UTURN = auto_enum('UTURN_DEPART_SHORTEST', 'UTURN_DEPART_TO_RIGHT')
 
 LEFT_TURN = auto_enum('LEFTTURN_ALLOW', 'LEFTTURN_FORBID', 'LEFTTURN_MULTIAPPROACH')
+
+TRUCK_HAZARDOUS_GOODS = enum(NONE='',
+                             EXPLOSIVE='explosive',
+                             GAS='gas',
+                             FLAMMABLE='flammable',
+                             COMBUSTIBLE='combustible',
+                             ORGANIC='organic',
+                             POISON='poison',
+                             RADIOACTIVE='radioActive',
+                             CORROSIVE='corrosive',
+                             POISONOUSINHALATION='poisonousInhalation',
+                             HARMFULTOWATER='harmfulToWater',
+                             OTHER='other',
+                             ALLHAZARDOUSGOODS='allHazardousGoods')

@@ -329,8 +329,9 @@ class Base(object):
         :param limited_weight_t:
         :return:
         """
-        if isinstance(limited_weight_t, types.LongType) or isinstance(limited_weight_t,
-                                                                      types.IntType):
+        if isinstance(limited_weight_t, types.LongType) or \
+           isinstance(limited_weight_t, float) or \
+           isinstance(limited_weight_t, types.IntType):
             self._copy_data({'limited_weight_t': limited_weight_t})
         else:
             raise ParamValueException('limited_weight_t', 'Must be integer or long')
@@ -341,47 +342,51 @@ class Base(object):
         :param weight_per_axle_t:
         :return:
         """
-        if isinstance(weight_per_axle_t, types.LongType) or isinstance(weight_per_axle_t,
-                                                                       types.IntType):
+        if isinstance(weight_per_axle_t, types.LongType) or \
+           isinstance(weight_per_axle_t, float) or \
+           isinstance(weight_per_axle_t, types.IntType):
             self._copy_data({'weight_per_axle_t': weight_per_axle_t})
         else:
             raise ParamValueException('weight_per_axle_t', 'Must be integer or long')
 
-    def truck_height_meters(self, truck_height_meters):
+    def truck_height(self, truck_height):
         """
-        Set truck_height_meters param
-        :param truck_height_meters:
+        Set truck_height param
+        :param truck_height:
         :return:
         """
-        if isinstance(truck_height_meters, types.LongType) or isinstance(truck_height_meters,
-                                                                         types.IntType):
-            self._copy_data({'truck_height_meters': truck_height_meters})
+        if isinstance(truck_height, types.LongType) or \
+           isinstance(truck_height, float) or \
+           isinstance(truck_height, types.IntType):
+            self._copy_data({'truck_height': truck_height})
         else:
-            raise ParamValueException('truck_height_meters', 'Must be integer or long')
+            raise ParamValueException('truck_height', 'Must be integer or long')
 
-    def truck_width_meters(self, truck_width_meters):
+    def truck_width(self, truck_width):
         """
-        Set truck_width_meters param
-        :param truck_width_meters:
+        Set truck_width param
+        :param truck_width:
         :return:
         """
-        if isinstance(truck_width_meters, types.LongType) or isinstance(truck_width_meters,
-                                                                        types.IntType):
-            self._copy_data({'truck_width_meters': truck_width_meters})
+        if isinstance(truck_width, types.LongType) or \
+           isinstance(truck_width, float) or \
+           isinstance(truck_width, types.IntType):
+            self._copy_data({'truck_width': truck_width})
         else:
-            raise ParamValueException('truck_width_meters', 'Must be integer or long')
+            raise ParamValueException('truck_width', 'Must be integer or long')
 
-    def truck_length_meters(self, truck_length_meters):
+    def truck_length(self, truck_length):
         """
-        Set truck_length_meters param
-        :param truck_length_meters:
+        Set truck_length param
+        :param truck_length:
         :return:
         """
-        if isinstance(truck_length_meters, types.LongType) or isinstance(truck_length_meters,
-                                                                         types.IntType):
-            self._copy_data({'truck_length_meters': truck_length_meters})
+        if isinstance(truck_length, types.LongType) or \
+           isinstance(truck_length, float) or \
+           isinstance(truck_length, types.IntType):
+            self._copy_data({'truck_length': truck_length})
         else:
-            raise ParamValueException('truck_length_meters', 'Must be integer or long')
+            raise ParamValueException('truck_length', 'Must be integer or long')
 
     def min_tour_size(self, min_tour_size):
         """
@@ -789,3 +794,13 @@ class Base(object):
         self.data.update(data)
         self.params.update(params)
 
+    def truck_hazardous_goods(self, truck_hazardous_goods):
+        """
+        Set truck_hazardous_goods param
+        :param truck_hazardous_goods:
+        :return:
+        """
+        if truck_hazardous_goods in TRUCK_HAZARDOUS_GOODS.reverse_mapping.keys():
+            self._copy_data({'truck_hazardous_goods': truck_hazardous_goods})
+        else:
+            raise ParamValueException('truck_hazardous_goods', 'Must be MI or KM')
