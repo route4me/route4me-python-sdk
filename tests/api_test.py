@@ -73,9 +73,14 @@ class Route4MeAPITestSuite(unittest.TestCase):
 
     def test_route(self):
         route = self.route4me.route
-        response = route.get_route(route_id='742A9E5051AA84B9E6365C92369B030C')
-        return self.assertEqual(response.route_id,
-                                '742A9E5051AA84B9E6365C92369B030C')
+        response = route.get_routes(limit=10, Offset=5)
+        if hasattr(response, 'errors'):
+            print '. '.join(response.errors)
+        else:
+            route_id = response[0].route_id
+            response = route.get_route(route_id=route_id)
+            return self.assertEqual(response.route_id,
+                                    route_id)
 
     def test_optimization(self):
         optimization = self.route4me.optimization
