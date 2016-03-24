@@ -87,15 +87,12 @@ def main():
         time=0
     )
 
-    print optimization.data
-
     response = route4me.run_optimization()
     print 'Optimization Link: %s' % response.links.view
     for address in response.addresses:
         print 'Route %s link: %sroute_id=%s' % (address.address,
                                                 route4me.route_url(),
                                                 address.route_id)
-    route4me.export_result_to_json('single_driver_round_trip.json')
 
 
 if __name__ == '__main__':

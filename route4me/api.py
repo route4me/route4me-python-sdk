@@ -6,15 +6,14 @@ from route import Route
 from optimization import Optimization
 from utils import *
 from exceptions import APIException
-from api_endpoints import API_HOST, SHOW_ROUTE_HOST, BATCH_GEOCODER,\
-    EXPORTER, SINGLE_GEOCODER, ADDRESS_HOST, ROUTE_HOST
+from api_endpoints import *
 
 
 class Route4Me(object):
     """
     Route4Me Python SDK
     """
-    def __init__(self, key, headers={'User-Agent': 'python-sdk'}):
+    def __init__(self, key, headers={'User-Agent': 'python-sdk'}, redirects=True, verify_ssl=False, proxies={}):
         self.key = key
         self.response = None
         self.address = Address(self)
@@ -22,6 +21,9 @@ class Route4Me(object):
         self.setGPS = SetGPS(self)
         self.route = Route(self)
         self.headers = headers
+        self.redirects = redirects
+        self.verify_ssl = verify_ssl
+        self.proxies = proxies
 
     def _build_base_url(self):
         """
@@ -64,6 +66,55 @@ class Route4Me(object):
         :return:
         """
         return '{0}?'.format(BATCH_GEOCODER)
+
+    def get_users_host_url(self):
+        """
+        Return GET USERS HOST
+        :return:
+        """
+        return '{0}?'.format(GET_USERS_HOST)
+
+    def add_route_notes_host_url(self):
+        """
+        Return ADD ROUTE NOTES HOST
+        :return:
+        """
+        return '{0}?'.format(ADD_ROUTE_NOTES_HOST)
+
+    def get_activities_host_url(self):
+        """
+        Return GET ACTIVITIES HOST
+        :return:
+        """
+        return '{0}?'.format(GET_ACTIVITIES_HOST)
+
+    def duplicate_route_url(self):
+        """
+        Return DUPLICATE ROUTE URL
+        :return:
+        """
+        return '{0}?'.format(DUPLICATE_ROUTE)
+
+    def move_route_destination_url(self):
+        """
+        Return MOVE ROUTE DESTINATION URL
+        :return:
+        """
+        return '{0}?'.format(MOVE_ROUTE_DESTINATION)
+
+    def addressbook_url(self):
+        """
+        Return ADDRESSBOOK HOST
+        :return:
+        """
+        return '{0}?'.format(ADDRESSBOOK)
+
+    def avoidance_url(self):
+        """
+        Return AVOIDANCE HOST
+        :return:
+        """
+        return '{0}?'.format(AVOIDANCE)
 
     def export_url(self):
         """
@@ -108,7 +159,7 @@ class Route4Me(object):
                                   json.dumps(self.optimization.data),
                                   request_method)
 
-    def _request_post(self, url, request_params, data=None, redirects=True):
+    def _request_post(self, url, request_params, data=None):
         """
         POST request
         :param url:
@@ -117,10 +168,11 @@ class Route4Me(object):
         :return:
         """
         return requests.post(url, params=request_params,
-                             allow_redirects=redirects,
-                             data=data, headers=self.headers, verify=False)
+                             allow_redirects=self.redirects,
+                             proxies=self.proxies,
+                             data=data, headers=self.headers, verify=self.verify_ssl)
 
-    def _request_get(self, url, request_params, data=None, redirects=True):
+    def _request_get(self, url, request_params, data=None):
         """
         GET request
         :param url:
@@ -129,8 +181,9 @@ class Route4Me(object):
         :return:
         """
         return requests.get(url, params=request_params,
-                            allow_redirects=redirects,
-                            data=data, headers=self.headers, verify=False)
+                            allow_redirects=self.redirects,
+                            proxies=self.proxies,
+                            data=data, headers=self.headers, verify=self.verify_ssl)
 
     def _request_put(self, url, request_params, data=None):
         """
@@ -141,7 +194,8 @@ class Route4Me(object):
         :return:
         """
         return requests.request('PUT', url, params=request_params,
-                                data=data, headers=self.headers, verify=False)
+                                proxies=self.proxies,
+                                data=data, headers=self.headers, verify=self.verify_ssl)
 
     def _request_delete(self, url, request_params, data=None):
         """
@@ -152,7 +206,7 @@ class Route4Me(object):
         :return:
         """
         return requests.request('DELETE', url, params=request_params,
-                                data=data, headers=self.headers, verify=False)
+                                data=data, headers=self.headers, verify=self.verify_ssl)
 
     def run_optimization(self):
         """
@@ -160,7 +214,16 @@ class Route4Me(object):
         :return: response as an object
         """
         self.response = self.get(self._request_post)
-        return json2obj(self.response.content)
+        response = self.response.content
+        try:
+            response = json2obj(response)
+            return response
+        except AttributeError:
+            raise
+        except ValueError:
+            raise
+        except Exception:
+            raise
 
     def reoptimization(self, optimization_id):
         """
@@ -174,7 +237,13 @@ class Route4Me(object):
         params = self.optimization.get_params()
         self.response = self._make_request(self._build_base_url(), params, [],
                                            request_method)
-        return json2obj(self.response.content)
+        try:
+            response = json2obj(self.response.content)
+            return response
+        except ValueError:
+            raise
+        except Exception:
+            raise
 
     def get_optimization(self, optimization_problem_id):
         """
@@ -209,8 +278,8 @@ class Route4Me(object):
                                    sort_keys=True,
                                    indent=4))
                 f.close()
-            except Exception as e:
-                print e
+            except Exception:
+                raise
 
     def export_request_to_json(self, file_name):
         """
@@ -226,8 +295,8 @@ class Route4Me(object):
                                    sort_keys=True,
                                    indent=4))
                 f.close()
-            except Exception as e:
-                print e
+            except Exception:
+                raise
 
     def get_batch_geocodes(self, params):
         """
@@ -281,3 +350,15 @@ class Route4Me(object):
         params.update({'api_key': self.key})
         data = json.dumps(data)
         return self._make_request(self.route_url(), params, data, self._request_put)
+
+    def get_users(self, params={'limit': 10, "Offset": 5}):
+        """
+        Get users using GET request
+        :return: API response
+        """
+        params.update({'api_key': self.key})
+        self.response = self._request_get(self.get_users_host_url(),
+                                          params)
+        response = json2obj(self.response.content)
+        return response
+
