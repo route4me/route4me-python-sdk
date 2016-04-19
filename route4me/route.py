@@ -104,15 +104,16 @@ class Route(Base):
         else:
             raise ParamValueException('params', 'Params are not complete')
 
-    def delete_route(self):
+    def delete_route(self, **kwargs):
         """
         Delete given route
         :return: API response
         :raises: ParamValueException if required params are not present.
         AttributeError if there is an error deleting a route
         """
-        if self.required_params(['route_id']):
-            self.response = self.api._request_delete(self._build_route_url(), self.params)
+        kwargs.update({'api_key': self.params['api_key'], })
+        if self.check_required_params(kwargs, ['route_id', ]):
+            self.response = self.api._request_delete(self._build_route_url(), kwargs)
             response = json2obj(self.response.content)
             try:
                 response = response.deleted

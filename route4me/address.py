@@ -112,6 +112,14 @@ class Address(Base):
         response = self.api.request_address(params)
         return json2obj(response.content)
 
+    def get_address_notes(self, route_id, route_destination_id):
+        params = {'route_id': route_id,
+                  'route_destination_id': route_destination_id,
+                  'notes': True,
+                  }
+        response = self.api.request_address(params)
+        return json2obj(response.content)
+
     def update_address(self, data, route_id, route_destination_id):
         params = {'route_id': route_id,
                   'route_destination_id': route_destination_id
@@ -126,3 +134,19 @@ class Address(Base):
         response = self.api.delete_address(params)
         return json2obj(response.content)
 
+    def add_address_notes(self, note, **kwargs):
+        """
+        Add Address  Note using POST request
+        :return: API response
+        :raise: ParamValueException if required params are not present.
+        """
+        if self.check_required_params(kwargs, ['route_destination_id', 'route_id']):
+            data = {'strUpdateType': kwargs.pop('activity_type'), 'strNoteContents': note}
+            kwargs.update({'api_key': self.params['api_key'], })
+            self.response = self.api._request_post(self.api.add_route_notes_host_url(),
+                                                   kwargs, data)
+            response = json2obj(self.response.content)
+            return response
+
+        else:
+            raise ParamValueException('params', 'Params are not complete')
