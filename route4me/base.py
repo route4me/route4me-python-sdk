@@ -60,6 +60,18 @@ class Base(object):
         else:
             raise ParamValueException('route_id', 'Must be String')
 
+    def address_1(self, address_1):
+        """
+        Set address_1 in params or data
+        :param address_1:
+        :return:
+        :raise: ParamValueException if address_1 is not String
+        """
+        if isinstance(address_1, types.StringTypes):
+            self._copy_param({'address_1': address_1})
+        else:
+            raise ParamValueException('address_1', 'Must be String')
+
     def tx_id(self, tx_id):
         """
         Set tx_id param
@@ -119,6 +131,28 @@ class Base(object):
             raise ParamValueException('lat', 'Must be Float')
 
     def lng(self, lng):
+        """
+        Set lng param
+        :param lng:
+        :return:
+        """
+        if isinstance(lng, types.FloatType):
+            self._copy_param({'lng': lng})
+        else:
+            raise ParamValueException('lng', 'Must be Float')
+
+    def cached_lat(self, lat):
+        """
+        Set lat param
+        :param lat:
+        :return:
+        """
+        if isinstance(lat, types.FloatType):
+            self._copy_param({'lat': lat})
+        else:
+            raise ParamValueException('lat', 'Must be Float')
+
+    def cached_lng(self, lng):
         """
         Set lng param
         :param lng:

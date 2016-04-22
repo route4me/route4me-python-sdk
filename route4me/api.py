@@ -1,12 +1,13 @@
 import requests
 from urllib import urlencode
-from address import Address
-from gps import SetGPS
-from route import Route
-from optimization import Optimization
-from utils import *
-from exceptions import APIException
-from api_endpoints import *
+from .address import Address
+from .address_book import AddressBook
+from .gps import SetGPS
+from .route import Route
+from .optimization import Optimization
+from .utils import *
+from .exceptions import APIException
+from .api_endpoints import *
 
 
 class Route4Me(object):
@@ -17,6 +18,7 @@ class Route4Me(object):
         self.key = key
         self.response = None
         self.address = Address(self)
+        self.address_book = AddressBook(self)
         self.optimization = Optimization(self)
         self.setGPS = SetGPS(self)
         self.route = Route(self)
@@ -225,18 +227,19 @@ class Route4Me(object):
         except Exception:
             raise
 
-    def reoptimization(self, optimization_id):
+    def reoptimization(self, optimization_id, data={}):
         """
         Execute reoptimization
         :param optimization_id:
         :return: response as a object
         """
-        request_method = self._request_put
         self.optimization.optimization_problem_id(optimization_id)
         self.optimization.reoptimize(1)
-        params = self.optimization.get_params()
-        self.response = self._make_request(self._build_base_url(), params, [],
-                                           request_method)
+        data = {'parameters': data}
+        self.response = self._make_request(self._build_base_url(),
+                                           self.optimization.get_params(),
+                                           json.dumps(data),
+                                           self._request_put)
         try:
             response = json2obj(self.response.content)
             return response

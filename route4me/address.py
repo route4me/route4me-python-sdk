@@ -3,9 +3,9 @@ import time
 import random
 import requests
 
-from base import Base
-from exceptions import ParamValueException
-from utils import json2obj
+from .base import Base
+from .exceptions import ParamValueException
+from .utils import json2obj
 
 
 class Address(Base):

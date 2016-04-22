@@ -41,6 +41,24 @@ class Route(Base):
         else:
             raise ParamValueException('params', 'Params are not complete')
 
+    def get_route_tracking(self, **kwargs):
+        """
+        Get route using GET request
+        :return: API response
+        :raise: ParamValueException if required params are not present.
+        """
+        if self.validate_params(**kwargs):
+            self.params.update(kwargs)
+        self.params.update({'device_tracking_history': True})
+        if self.check_required_params(self.params, self.requirements):
+            self.response = self.api._request_get(self._build_route_url(),
+                                                  self.params)
+            response = json2obj(self.response.content)
+            return response
+
+        else:
+            raise ParamValueException('params', 'Params are not complete')
+
     def get_routes(self, **kwargs):
         """
         Get routes using GET request
