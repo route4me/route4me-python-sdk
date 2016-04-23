@@ -1,7 +1,7 @@
-from base import Base
-from exceptions import ParamValueException
-from utils import json2obj
-from api_endpoints import SET_GPS_HOST
+from .base import Base
+from .exceptions import ParamValueException
+from .utils import json2obj
+from .api_endpoints import SET_GPS_HOST
 
 
 class SetGPS(Base):
@@ -9,18 +9,17 @@ class SetGPS(Base):
         Set GPS position of the device
     """
 
-    requirements = [
-            'api_key',
-            'format',
-            'member_id',
-            'route_id',
-            'course',
-            'speed',
-            'lat',
-            'lng',
-            'device_type',
-            'device_guid',
-    ]
+    requirements = ['api_key',
+                    'format',
+                    'member_id',
+                    'route_id',
+                    'course',
+                    'speed',
+                    'lat',
+                    'lng',
+                    'device_type',
+                    'device_guid',
+                    ]
 
     def __init__(self, api):
         self.response = None

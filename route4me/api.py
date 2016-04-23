@@ -2,6 +2,7 @@ import requests
 from urllib import urlencode
 from .address import Address
 from .address_book import AddressBook
+from .avoidance_zones import AvoindanceZones
 from .gps import SetGPS
 from .route import Route
 from .optimization import Optimization
@@ -19,6 +20,7 @@ class Route4Me(object):
         self.response = None
         self.address = Address(self)
         self.address_book = AddressBook(self)
+        self.avoidance_zones = AvoindanceZones(self)
         self.optimization = Optimization(self)
         self.setGPS = SetGPS(self)
         self.route = Route(self)

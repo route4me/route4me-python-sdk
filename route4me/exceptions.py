@@ -1,4 +1,4 @@
-from api_endpoints import DRIVER_VERSION
+from .api_endpoints import DRIVER_VERSION
 
 
 class APIException(Exception):

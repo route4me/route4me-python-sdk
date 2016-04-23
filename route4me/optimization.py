@@ -1,6 +1,6 @@
-from base import Base
-from utils import json2obj
-from exceptions import ParamValueException
+from .base import Base
+from .utils import json2obj
+from .exceptions import ParamValueException
 
 
 class Optimization(Base):

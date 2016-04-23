@@ -1,7 +1,7 @@
-from base import Base
-from exceptions import ParamValueException
-from utils import json2obj
-from api_endpoints import ROUTE_HOST
+from .base import Base
+from .exceptions import ParamValueException
+from .utils import json2obj
+from .api_endpoints import ROUTE_HOST
 
 
 class Route(Base):
@@ -9,10 +9,9 @@ class Route(Base):
     A Route is a multi-sequence of addresses that need to be
     visited by a single vehicle and a single driver in a fixed time period.
     """
-    requirements = [
-            'api_key',
-            'route_id',
-    ]
+    requirements = ['api_key',
+                    'route_id',
+                    ]
 
     def __init__(self, api):
         """
@@ -156,6 +155,11 @@ class Route(Base):
         return json2obj(response.content)
 
     def update_route_parameters(self, data, route_id):
+        params = {'route_id': route_id}
+        response = self.api.update_route(params, data)
+        return json2obj(response.content)
+
+    def update_route(self, data, route_id):
         params = {'route_id': route_id}
         response = self.api.update_route(params, data)
         return json2obj(response.content)
