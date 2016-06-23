@@ -3,6 +3,7 @@ from urllib import urlencode
 from .address import Address
 from .address_book import AddressBook
 from .avoidance_zones import AvoindanceZones
+from .orders import Order
 from .gps import SetGPS
 from .route import Route
 from .optimization import Optimization
@@ -15,13 +16,19 @@ class Route4Me(object):
     """
     Route4Me Python SDK
     """
-    def __init__(self, key, headers={'User-Agent': 'python-sdk'}, redirects=True, verify_ssl=False, proxies={}):
+    def __init__(self,
+                 key,
+                 headers={'User-Agent': 'python-sdk',
+                          'Accept-Encoding': 'identity, deflate, compress, gzip',
+                          'Accept': '*/*', },
+                 redirects=True, verify_ssl=False, proxies={}):
         self.key = key
         self.response = None
         self.address = Address(self)
         self.address_book = AddressBook(self)
         self.avoidance_zones = AvoindanceZones(self)
         self.optimization = Optimization(self)
+        self.order = Order(self)
         self.setGPS = SetGPS(self)
         self.route = Route(self)
         self.headers = headers
@@ -56,6 +63,13 @@ class Route4Me(object):
         :return:
         """
         return '{0}?'.format(ADDRESS_HOST)
+
+    def order_url(self):
+        """
+        Return ORDER HOST
+        :return:
+        """
+        return ORDERS_HOST
 
     def single_geocoder_url(self):
         """

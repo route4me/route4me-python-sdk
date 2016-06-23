@@ -19,7 +19,7 @@ def main():
             print '. '.join(response.errors)
         else:
             for i, activity in enumerate(response.results):
-                print 'Activity #{}'.format(i+1)
+                print 'Activity #{}'.format(i + 1)
                 print '\tActivity ID: {}'.format(activity.activity_id)
                 print '\tActivity Message: {}'.format(activity.activity_message)
                 print '\tActivity Type: {}'.format(activity.activity_type)

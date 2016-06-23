@@ -16,7 +16,7 @@ def auto_enum(*sequential, **named):
     :param named:
     :return:
     """
-    enums = dict(zip(sequential, range(1, len(sequential)+1)), **named)
+    enums = dict(zip(sequential, range(1, len(sequential) + 1)), **named)
     return enum(**enums)
 
 TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1, R4M_TRAFFIC_ENGINE=3, TRUCKING=6)

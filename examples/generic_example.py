@@ -15,7 +15,7 @@ def main():
     else:
         print response
         for i, optimization in enumerate(response.optimizations):
-            print 'Optimization #{}'.format(i+1)
+            print 'Optimization #{}'.format(i + 1)
             print '\tOptimization ID: {}'.format(optimization.optimization_problem_id)
 
 

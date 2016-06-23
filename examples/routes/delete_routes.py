@@ -18,7 +18,7 @@ def main():
         else:
             print 'Routes Deleted:'
             for i, route in enumerate(response.route_ids):
-                print '\t{0} - {1}'.format(i+1, route)
+                print '\t{0} - {1}'.format(i + 1, route)
 
 if __name__ == '__main__':
     main()

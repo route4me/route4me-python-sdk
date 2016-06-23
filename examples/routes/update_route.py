@@ -70,59 +70,15 @@ def main():
         alias='Toga Bike Shop',
         time=0
     )
-    address.add_address(
-        address='555 W 57th St New York, NY 10019',
-        lat=40.7718005,
-        lng=-73.9897716,
-        alias='BMW of Manhattan',
-        time=0
-    )
-    address.add_address(
-        address='57 W 57th St New York, NY 10019',
-        lat=40.7558695,
-        lng=-73.9862019,
-        alias='Verizon Wireless',
-        time=0
-    )
 
-    new_sequence = [8, 5, 1, 7, 2, 6, 0, 3, 4]
-
-    addresses = {'addresses': []}
     response = r4m.run_optimization()
 
-    print 'Current Addresses'
-    for i, address in enumerate(response.addresses):
-        print 'Number {}:'.format(i)
-        if address.is_depot:
-            print '\t This is a Depot'
-        print '\taddress: {}'.format(address.address)
-        print '\t'
-        if new_sequence[i] == 0:
-            addresses['addresses'].append(
-                {
-                    "route_destination_id": address.route_destination_id,
-                    "is_depot": True
-                })
-        else:
-            addresses['addresses'].append({"route_destination_id": address.route_destination_id,
-                                           "sequence_no": new_sequence[i],
-                                           "is_depot": False
-                                           })
-
-    print 'Moving addresses'
+    data = {"driver_alias": "Juan", }
 
     route_id = response.addresses[1].route_id
 
-    response = r4m.route.move_addresses_from_route(addresses, route_id)
-    print 'Addresses after move'
-
-    for i, address in enumerate(response.addresses):
-        print 'Number {}:'.format(i)
-        if address.is_depot:
-            print '\t This is a Depot'
-        print '\taddress: {}'.format(address.address)
-        print '\t'
-
+    response = r4m.route.update_route(data, route_id)
+    print 'Driver Alias: {}'.format(response.driver_alias)
 
 if __name__ == '__main__':
     main()

@@ -23,7 +23,6 @@ def main():
             if hasattr(response, 'errors'):
                 print '. '.join(response.errors)
             else:
-
                 print 'Address: {}'.format(response.address)
 
 if __name__ == '__main__':

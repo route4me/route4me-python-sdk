@@ -101,7 +101,7 @@ class Address(Base):
                 if count > 5:
                     geocoding_error = address
                     break
-                time.sleep(random.randrange(1, 5)*0.5)
+                time.sleep(random.randrange(1, 5) * 0.5)
 
         return geocoding_error, address
 
@@ -140,7 +140,7 @@ class Address(Base):
         :return: API response
         :raise: ParamValueException if required params are not present.
         """
-        if self.check_required_params(kwargs, ['route_destination_id', 'route_id']):
+        if self.check_required_params(kwargs, ['address_id', 'route_id']):
             data = {'strUpdateType': kwargs.pop('activity_type'), 'strNoteContents': note}
             kwargs.update({'api_key': self.params['api_key'], })
             self.response = self.api._request_post(self.api.add_route_notes_host_url(),

@@ -25,15 +25,17 @@ def main():
             response = route4me.address.add_address_notes(note, route_id=route_id,
                                                           device_type=DEVICE_TYPE.WEB,
                                                           activity_type='wrongdelivery',
-                                                          lat=lat,
-                                                          lng=lng,
-                                                          route_destination_id=route_destination_id,
+                                                          dev_lat=lat,
+                                                          dev_lng=lng,
+                                                          address_id=route_destination_id,
                                                           )
             if hasattr(response, 'errors'):
                 print '. '.join(response.errors)
             else:
                 print 'Note ID: {}'.format(response.note_id)
                 print 'Note contents: {}'.format(response.note.contents)
+                print 'Route ID: {}'.format(response.note.route_id)
+                print 'Route Destination ID: {}'.format(response.note.route_destination_id)
 
 if __name__ == '__main__':
     main()

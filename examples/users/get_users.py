@@ -12,7 +12,7 @@ def main():
         print '. '.join(response.errors)
     else:
         for i, member in enumerate(response):
-            print 'Member #{}'.format(i+1)
+            print 'Member #{}'.format(i + 1)
             print '\tName: {0}, {1}'.format(member.member_first_name, member.member_last_name)
             print '\tEmail: {}'.format(member.member_email)
 

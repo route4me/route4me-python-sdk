@@ -98,7 +98,7 @@ class Route(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['route_id', ]):
-            self.response = self.api._request_get(self._build_route_url(),
+            self.response = self.api._request_get(self.api.duplicate_route_url(),
                                                   kwargs)
             response = json2obj(self.response.content)
             return response

@@ -20,7 +20,7 @@ def main():
         else:
             print 'Addresses to include'
             for i, address in enumerate(response.addresses):
-                print 'Address #{}'.format(i+1)
+                print 'Address #{}'.format(i + 1)
                 print '\tAddress: {}'.format(address.address)
                 print '\tLatitude: {}'.format(address.lat)
                 print '\tLongitude: {}'.format(address.lng)
@@ -39,7 +39,7 @@ def main():
                           }]
             print 'Addresses to include'
             for i, address in enumerate(addresses):
-                print 'Address #{}'.format(i+1)
+                print 'Address #{}'.format(i + 1)
                 print '\tAddress: {}'.format(address.get('address'))
                 print '\tLatitude: {}'.format(address.get('lat'))
                 print '\tLongitude: {}'.format(address.get('lng'))
@@ -52,7 +52,7 @@ def main():
             else:
                 print 'Current Addresses'
                 for i, address in enumerate(response.addresses):
-                    print 'Address #{}'.format(i+1)
+                    print 'Address #{}'.format(i + 1)
                     print '\tAddress: {}'.format(address.address)
                     print '\tLatitude: {}'.format(address.lat)
                     print '\tLongitude: {}'.format(address.lng)

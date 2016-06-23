@@ -29,8 +29,8 @@ class AddressBook(Base):
         self.json_data = kwargs
         if self.check_required_params(self.json_data, self.REQUIRED_FIELDS):
             self.response = self.api._request_post(self.api.addressbook_url(),
-                                                   self.params, data=json.dumps(self.json_data))
-            return json2obj(self.response.content)
+                                                   self.params, data=json.dumps(self.json_data, ensure_ascii=False))
+            return self.response.content
 
         else:
             raise ParamValueException('params', 'Params are not complete')
