@@ -4,10 +4,11 @@ from .address import Address
 from .address_book import AddressBook
 from .avoidance_zones import AvoindanceZones
 from .orders import Order
+from .rapid_address import RapidAddress
 from .gps import SetGPS
 from .route import Route
 from .optimization import Optimization
-from .utils import *
+from .utils import json2obj
 from .exceptions import APIException
 from .api_endpoints import *
 
@@ -31,6 +32,7 @@ class Route4Me(object):
         self.order = Order(self)
         self.setGPS = SetGPS(self)
         self.route = Route(self)
+        self.rapid_address = RapidAddress(self)
         self.headers = headers
         self.redirects = redirects
         self.verify_ssl = verify_ssl
@@ -140,6 +142,27 @@ class Route4Me(object):
         :return:
         """
         return EXPORTER
+
+    def rapid_address_zip_url(self):
+        """
+        Return GENERATE RAPID ADDRESS ZIP HOST
+        :return:
+        """
+        return RAPID_ADDRESS_ZIP
+
+    def rapid_address_service_url(self):
+        """
+        Return GENERATE RAPID ADDRESS SERVICE HOST
+        :return:
+        """
+        return RAPID_ADDRESS_SERVICE
+
+    def rapid_address_url(self):
+        """
+        Return GENERATE RAPID ADDRESS HOST
+        :return:
+        """
+        return RAPID_ADDRESS
 
     def _make_request(self, url, params, data, request_method):
         """

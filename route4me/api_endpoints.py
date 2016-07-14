@@ -16,3 +16,6 @@ MOVE_ROUTE_DESTINATION = '{0}/actions/route/move_route_destination.php'.format(M
 ADDRESSBOOK = '{0}/api.v4/address_book.php'.format(MAIN_HOST)
 AVOIDANCE = '{0}/api.v4/avoidance.php'.format(MAIN_HOST)
 ORDERS_HOST = '{0}/api.v4/order.php'.format(MAIN_HOST)
+RAPID_ADDRESS = 'https://rapid.route4me.com/street_data/'
+RAPID_ADDRESS_SERVICE = 'https://rapid.route4me.com/street_data/service/'
+RAPID_ADDRESS_ZIP = 'https://rapid.route4me.com/street_data/zipcode/'
