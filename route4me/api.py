@@ -3,15 +3,16 @@ import requests
 from urllib import urlencode
 from .address import Address
 from .address_book import AddressBook
+from .api_endpoints import *
 from .avoidance_zones import AvoindanceZones
+from .exceptions import APIException
+from .gps import SetGPS
+from .optimization import Optimization
 from .orders import Order
 from .rapid_address import RapidAddress
-from .gps import SetGPS
 from .route import Route
-from .optimization import Optimization
+from .territory import Territory
 from .utils import json2obj
-from .exceptions import APIException
-from .api_endpoints import *
 
 
 class Route4Me(object):
@@ -34,6 +35,7 @@ class Route4Me(object):
         self.setGPS = SetGPS(self)
         self.route = Route(self)
         self.rapid_address = RapidAddress(self)
+        self.territory = Territory(self)
         self.headers = headers
         self.redirects = redirects
         self.verify_ssl = verify_ssl
@@ -136,6 +138,13 @@ class Route4Me(object):
         :return:
         """
         return '{0}?'.format(AVOIDANCE)
+
+    def territory_url(self):
+        """
+        Return TERRITORY HOST
+        :return:
+        """
+        return '{0}?'.format(TERRITORY_HOST)
 
     def export_url(self):
         """
