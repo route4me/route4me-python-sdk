@@ -25,11 +25,17 @@ class RapidAddress(Base):
         :param kwargs:
         :return: API response content
         """
+        url = self.api.rapid_address_url()
         kwargs.update({'api_key': self.params['api_key'], })
-        response = self.api._request_get(self.api.rapid_address_url(), kwargs)
+        if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
+            url = '{0}{1}/{2}/'.format(url, kwargs.pop('offset'), kwargs.pop('limit'))
+        elif 'pk' in kwargs:
+            url = '{0}{1}/'.format(url, kwargs.pop('pk'))
+
+        response = self.api._request_get(url, kwargs)
         try:
             return json.loads(response.content)
-        except ValueError:
+        except ValueError, err:
             return response.content
 
     def get_street_data_zip(self, **kwargs):

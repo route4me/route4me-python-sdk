@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from route4me import Route4Me
 
 KEY = "11111111111111111111111111111111"

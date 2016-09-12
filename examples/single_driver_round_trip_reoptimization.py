@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from route4me import Route4Me
 from route4me.constants import *
 
@@ -98,8 +96,6 @@ def main():
         print 'Route %s link: %sroute_id=%s' % (address.address,
                                                 route4me.route_url(),
                                                 address.route_id)
-    api.export_result_to_json('single_driver_round_trip_reoptimization.json')
-
     print 'Reoptimization...'
 
     optimization_problem_id = response.optimization_problem_id

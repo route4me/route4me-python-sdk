@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import json
 
 from route4me import Route4Me
@@ -384,7 +382,6 @@ def main():
         print 'Route %s link: %sroute_id=%s' % (address.address,
                                                 route4me.route_url(),
                                                 address.route_id)
-    route4me.export_result_to_json('multiple_depot_multiple_driver.json')
 
 
 if __name__ == '__main__':

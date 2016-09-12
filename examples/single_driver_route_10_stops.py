@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from route4me import Route4Me
 from route4me.constants import *
 
@@ -88,7 +86,6 @@ def main():
         print 'Route %s link: %sroute_id=%s' % (address.address,
                                                 route4me.route_url(),
                                                 address.route_id)
-    route4me.export_result_to_json('single_driver_route_10_stops.json')
 
 
 if __name__ == '__main__':

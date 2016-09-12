@@ -1,10 +1,6 @@
-#!/usr/bin/python
 from route4me import Route4Me
 
-__author__ = 'Juan Jose Pimentel'
-
 KEY = "11111111111111111111111111111111"
-
 
 def main():
     route4me = Route4Me(KEY)
