@@ -1,3 +1,4 @@
+import json
 from .base import Base
 from .utils import json2obj
 from .exceptions import ParamValueException
@@ -63,6 +64,38 @@ class Optimization(Base):
         if self.check_required_params(kwargs, ['optimization_problem_id', 'addresses', 'reoptimize']):
             self.response = self.api._request_put(self.api._build_base_url(),
                                                   kwargs)
+            response = json2obj(self.response.content)
+            return response
+        else:
+            raise ParamValueException('params', 'Params are not complete')
+
+    def delete_optimization(self, **kwargs):
+        """
+        Delete optimization using DELETE request
+        :return: API response
+        :raise: ParamValueException if required params are not present.
+
+        """
+        self.json_data = kwargs
+        if self.check_required_params(kwargs, ['optimization_problem_ids', ]):
+            self.response = self.api._request_delete(self.api._build_base_url(),
+                                                  self.params, data=json.dumps(self.json_data, ensure_ascii=False))
+            response = json2obj(self.response.content)
+            return response
+        else:
+            raise ParamValueException('params', 'Params are not complete')
+
+    def delete_address_from_optimization(self, **kwargs):
+        """
+        Delete Address from an optimization using DELETE request
+        :return: API response
+        :raise: ParamValueException if required params are not present.
+
+        """
+        kwargs.update({'api_key': self.params['api_key'], })
+        if self.check_required_params(kwargs, ['optimization_problem_id', 'route_destination_id']):
+            self.response = self.api._request_delete(self.api.address_url(),
+                                                     kwargs)
             response = json2obj(self.response.content)
             return response
         else:
