@@ -10,7 +10,7 @@ class AvoindanceZones(Base):
     Avoidance Zones Management
     """
 
-    def __init__(self, api, addresses=[]):
+    def __init__(self, api):
         """
         Avoidance Zones Instance
         :param api:

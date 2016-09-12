@@ -1,6 +1,7 @@
 import json
 import requests
 from urllib import urlencode
+from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook
 from .api_endpoints import *
@@ -24,9 +25,10 @@ class Route4Me(object):
                  headers={'User-Agent': 'python-sdk',
                           'Accept-Encoding': 'identity, deflate, compress, gzip',
                           'Accept': '*/*', },
-                 redirects=True, verify_ssl=False, proxies={}):
+                 redirects=True, verify_ssl=True, proxies={}):
         self.key = key
         self.response = None
+        self.activity_feed = ActivityFeed(self)
         self.address = Address(self)
         self.address_book = AddressBook(self)
         self.avoidance_zones = AvoindanceZones(self)
@@ -54,6 +56,13 @@ class Route4Me(object):
         :return:
         """
         return '{0}?'.format(SHOW_ROUTE_HOST)
+
+    def activity_feed_url(self):
+        """
+        Return ACTIVITY FEED HOST
+        :return:
+        """
+        return '{0}?'.format(ACTIVITY_FEED)
 
     def route_url(self):
         """
