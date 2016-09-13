@@ -14,6 +14,7 @@ from .rapid_address import RapidAddress
 from .route import Route
 from .territory import Territory
 from .utils import json2obj
+from .file_uploading import FileUploading
 
 
 class Route4Me(object):
@@ -32,6 +33,7 @@ class Route4Me(object):
         self.address = Address(self)
         self.address_book = AddressBook(self)
         self.avoidance_zones = AvoindanceZones(self)
+        self.file_uploading = FileUploading(self)
         self.optimization = Optimization(self)
         self.order = Order(self)
         self.setGPS = SetGPS(self)
@@ -63,6 +65,27 @@ class Route4Me(object):
         :return:
         """
         return '{0}?'.format(ACTIVITY_FEED)
+
+    def file_upload_url(self):
+        """
+        Return FILE UPLOAD HOST
+        :return:
+        """
+        return '{0}?'.format(FILE_UPLOAD_HOST)
+
+    def file_upload_preview_url(self):
+        """
+        Return FILE UPLOAD PREVIEW HOST
+        :return:
+        """
+        return '{0}?'.format(FILE_UPLOAD_PREVIEW_HOST)
+
+    def file_upload_geocode_url(self):
+        """
+        Return FILE UPLOAD GEOCODE HOST
+        :return:
+        """
+        return '{0}?'.format(FILE_UPLOAD_GEOCODE_HOST)
 
     def route_url(self):
         """
@@ -219,17 +242,18 @@ class Route4Me(object):
                                   json.dumps(self.optimization.data),
                                   request_method)
 
-    def _request_post(self, url, request_params, data=None):
+    def _request_post(self, url, request_params, data=None, files=None):
         """
         POST request
         :param url:
         :param request_params:
         :param data:
+        :param files:
         :return:
         """
         return requests.post(url, params=request_params,
                              allow_redirects=self.redirects,
-                             proxies=self.proxies,
+                             proxies=self.proxies, files=files,
                              data=data, headers=self.headers, verify=self.verify_ssl)
 
     def _request_get(self, url, request_params, data=None):
