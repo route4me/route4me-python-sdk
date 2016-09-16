@@ -15,6 +15,7 @@ from .route import Route
 from .territory import Territory
 from .utils import json2obj
 from .file_uploading import FileUploading
+from .members import Members
 
 
 class Route4Me(object):
@@ -35,6 +36,7 @@ class Route4Me(object):
         self.avoidance_zones = AvoindanceZones(self)
         self.file_uploading = FileUploading(self)
         self.optimization = Optimization(self)
+        self.members = Members(self)
         self.order = Order(self)
         self.setGPS = SetGPS(self)
         self.route = Route(self)
@@ -114,6 +116,41 @@ class Route4Me(object):
         :return:
         """
         return '{0}?'.format(SINGLE_GEOCODER)
+
+    def member_authenticate_url(self):
+        """
+        Return MEMBER AUTHENTICATE HOST
+        :return:
+        """
+        return '{0}?'.format(MEMBER_AUTHENTICATE)
+
+    def user_license_url(self):
+        """
+        Return USER LICENSE HOST
+        :return:
+        """
+        return '{0}?'.format(USER_LICENSE_HOST)
+
+    def validate_session_url(self):
+        """
+        Return VALIDATE SESSION
+        :return:
+        """
+        return '{0}?'.format(VALIDATE_SESSION)
+
+    def webinar_register_url(self):
+        """
+        Return WEBINAR REGISTER
+        :return:
+        """
+        return '{0}?'.format(WEBINAR_REGISTER)
+
+    def verify_device_license_url(self):
+        """
+        Return VERIFY DEVICE LICENSE
+        :return:
+        """
+        return '{0}?'.format(VERIFY_DEVICE_LICENSE)
 
     def batch_geocoder_url(self):
         """
@@ -435,15 +472,3 @@ class Route4Me(object):
         params.update({'api_key': self.key})
         data = json.dumps(data)
         return self._make_request(self.route_url(), params, data, self._request_put)
-
-    def get_users(self, params={'limit': 10, "Offset": 5}):
-        """
-        Get users using GET request
-        :return: API response
-        """
-        params.update({'api_key': self.key})
-        self.response = self._request_get(self.get_users_host_url(),
-                                          params)
-        response = json2obj(self.response.content)
-        return response
-
