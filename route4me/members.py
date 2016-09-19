@@ -133,3 +133,39 @@ class Members(Base):
                 return response.content
         else:
             raise ParamValueException('order', 'Missing required params')
+
+    def register_action(self, **kwargs):
+        """
+        Register Action
+        :param kwargs:
+        :return: API response content
+        """
+        if self.check_required_params(kwargs, ["industry",
+                                               "first_name",
+                                               "last_name",
+                                               "email_address",
+                                               "check_terms",
+                                               "device_type",
+                                               "plan",
+                                               "password_1",
+                                               "password_2",
+                                               "format"]):
+            params = {'api_key': self.params['api_key'],
+                      'plan': kwargs.pop('plan')}
+            kwargs['strIndustry'] = kwargs.pop('industry')
+            kwargs['strFirstName'] = kwargs.pop('first_name')
+            kwargs['strLastName'] = kwargs.pop('last_name')
+            kwargs['strEmail'] = kwargs.pop('email_address')
+            kwargs['chkTerms'] = kwargs.pop('check_terms')
+            kwargs['device_type'] = kwargs.pop('device_type')
+            kwargs['strPassword_1'] = kwargs.pop('password_1')
+            kwargs['strPassword_2'] = kwargs.pop('password_2')
+            response = self.api._request_post(self.api.register_action_url(),
+                                              params,
+                                              data=kwargs)
+            try:
+                return json.loads(response.content)
+            except ValueError:
+                return response.content
+        else:
+            raise ParamValueException('order', 'Missing required params')

@@ -151,14 +151,18 @@ class Address(Base):
         else:
             raise ParamValueException('params', 'Params are not complete')
 
-
     def geocode(self, **kwargs):
-        if 'format' not in kwargs:        
+        """
+        Bulk Geocoder using POST request
+        :return: API response
+        :raise: ParamValueException if required params are not present.
+        """
+        if 'format' not in kwargs:
             kwargs.update({'format': 'csv'})
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['addresses', ]):
             response = self.api._request_post(self.api.batch_geocoder_url(),
-                                                   kwargs)
+                                              kwargs)
             return response.content
 
         else:

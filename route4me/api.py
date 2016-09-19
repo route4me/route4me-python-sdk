@@ -145,6 +145,13 @@ class Route4Me(object):
         """
         return '{0}?'.format(WEBINAR_REGISTER)
 
+    def register_action_url(self):
+        """
+        Return REGISTER ACTION
+        :return:
+        """
+        return '{0}?'.format(REGISTER_ACTION)
+
     def verify_device_license_url(self):
         """
         Return VERIFY DEVICE LICENSE
@@ -186,6 +193,27 @@ class Route4Me(object):
         :return:
         """
         return '{0}?'.format(DUPLICATE_ROUTE)
+
+    def share_route_url(self):
+        """
+        Return SHARE ROUTE URL
+        :return:
+        """
+        return '{0}?'.format(SHARE_ROUTE_HOST)
+
+    def merge_route_url(self):
+        """
+        Return MERGE ROUTES HOST
+        :return:
+        """
+        return '{0}?'.format(MERGE_ROUTES_HOST)
+
+    def resequence_route_url(self):
+        """
+        Return RESEQUENCE ROUTE HOST
+        :return:
+        """
+        return '{0}?'.format(RESEQUENCE_ROUTE)
 
     def move_route_destination_url(self):
         """
