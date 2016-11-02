@@ -96,7 +96,7 @@ class Address(Base):
                 address.update(dict([('lat', float(obj.get('@lat'))),
                                      ('lng', float(obj.get('@lng'))), ]))
                 return geocoding_error, address
-            except AttributeError, requests.exceptions.ConnectionError:
+            except (AttributeError, requests.exceptions.ConnectionError):
                 count += 1
                 if count > 5:
                     geocoding_error = address

@@ -1,7 +1,15 @@
-from constants import *
-from exceptions import ParamValueException
 import types
 import re
+
+from route4me.constants import *
+from route4me.exceptions import ParamValueException
+
+
+def check_string_type(obj):
+    try:
+        return isinstance(obj, basestring)
+    except NameError:
+        return isinstance(obj, str)
 
 
 class Base(object):
@@ -55,7 +63,7 @@ class Base(object):
         :return:
         :raise: ParamValueException if route_id is not String
         """
-        if isinstance(route_id, types.StringTypes):
+        if check_string_type(route_id):
             self._copy_param({'route_id': route_id})
         else:
             raise ParamValueException('route_id', 'Must be String')
@@ -67,7 +75,7 @@ class Base(object):
         :return:
         :raise: ParamValueException if address_1 is not String
         """
-        if isinstance(address_1, types.StringTypes):
+        if check_string_type(address_1):
             self._copy_param({'address_1': address_1})
         else:
             raise ParamValueException('address_1', 'Must be String')
@@ -78,7 +86,7 @@ class Base(object):
         :param tx_id:
         :return:
         """
-        if isinstance(tx_id, types.StringTypes):
+        if check_string_type(tx_id):
             self._copy_param({'tx_id': tx_id})
         else:
             raise ParamValueException('tx_id', 'Must be String')
@@ -180,7 +188,7 @@ class Base(object):
         :param device_guid:
         :return:
         """
-        if isinstance(device_guid, types.StringTypes):
+        if check_string_type(device_guid):
             self._copy_param({'device_guid': device_guid})
         else:
             raise ParamValueException('device_guid', 'Must be String')
@@ -191,7 +199,7 @@ class Base(object):
         :param app_version:
         :return:
         """
-        if isinstance(app_version, types.StringTypes):
+        if check_string_type(app_version):
             self._copy_param({'app_version': app_version})
         else:
             raise ParamValueException('app_version', 'Must be String')
@@ -238,7 +246,7 @@ class Base(object):
         :param route_name:
         :return:
         """
-        if isinstance(route_name, types.StringTypes):
+        if check_string_type(route_name):
             self._copy_data({'route_name': route_name})
         else:
             raise ParamValueException('route_name', 'Must be String')
@@ -249,7 +257,7 @@ class Base(object):
         :param optimization_problem_id:
         :return:
         """
-        if isinstance(optimization_problem_id, types.StringTypes):
+        if check_string_type(optimization_problem_id):
             self._copy_param({'optimization_problem_id':
                               optimization_problem_id})
         else:
@@ -545,7 +553,7 @@ class Base(object):
         :param route_email:
         :return:
         """
-        if isinstance(route_email, types.StringTypes):
+        if check_string_type(route_email):
             self._copy_data({'route_email': route_email})
         else:
             raise ParamValueException('route_email', 'Must be String')

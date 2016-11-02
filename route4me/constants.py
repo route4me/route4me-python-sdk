@@ -1,10 +1,13 @@
+from six import iteritems
+
+
 def enum(**enums):
     """
     Create enums with custom values to help user set their params
     :param enums:
     :return:
     """
-    reverse = dict((value, key) for key, value in enums.iteritems())
+    reverse = dict((value, key) for key, value in iteritems(enums))
     enums['reverse_mapping'] = reverse
     return type('Enum', (), enums)
 

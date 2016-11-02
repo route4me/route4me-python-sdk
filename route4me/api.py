@@ -1,6 +1,9 @@
 import json
 import requests
-from urllib import urlencode
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook

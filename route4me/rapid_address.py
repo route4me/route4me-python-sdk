@@ -35,7 +35,7 @@ class RapidAddress(Base):
         response = self.api._request_get(url, kwargs)
         try:
             return json.loads(response.content)
-        except ValueError, err:
+        except ValueError as err:
             return response.content
 
     def get_street_data_zip(self, **kwargs):

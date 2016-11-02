@@ -8,7 +8,13 @@ def _json_object_hook(d):
     :param d: data
     :return: namedtuple
     """
-    return namedtuple('X', d.keys())(*d.values())
+    keys = []
+    for k in d.keys():
+        if k[0].isdigit():
+            k = 'd_{}'.format(k)
+        keys.append(k)
+
+    return namedtuple('X', keys)(*d.values())
 
 
 def json2obj(data):
@@ -17,4 +23,4 @@ def json2obj(data):
     :param data: JSON data
     :return: object
     """
-    return json.loads(data, object_hook=_json_object_hook)
+    return json.loads(data.decode('utf-8'), object_hook=_json_object_hook)
