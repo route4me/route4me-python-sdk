@@ -1,6 +1,5 @@
 DRIVER_VERSION = 'route4me-python-driver-0.0.1'
-MAIN_HOST = 'http://www.broono.com'
-#MAIN_HOST = 'https://www.route4me.com'
+MAIN_HOST = 'https://www.route4me.com'
 
 ACTIVITY_FEED = '{0}/api.v4/activity_feed.php'.format(MAIN_HOST)
 ADDRESSBOOK = '{0}/api.v4/address_book.php'.format(MAIN_HOST)
