@@ -4,6 +4,8 @@
 [![bitHound Dependencies](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/dependencies.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk/master/dependencies/npm)
 [![bitHound Dev Dependencies](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/devDependencies.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk/master/dependencies/npm)
 [![bitHound Code](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/code.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk)
+[![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)
+
 
 ### What does the Route4Me SDK permit me to do?
 This SDK makes it easier for you use the Route4Me API, which creates optimally sequenced driving routes for many drivers.
