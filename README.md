@@ -1,5 +1,9 @@
 # Route4Me Route Optimization Python SDK
 [![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
+[![bitHound Overall Score](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/score.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk)
+[![bitHound Dependencies](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/dependencies.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk/master/dependencies/npm)
+[![bitHound Dev Dependencies](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/devDependencies.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk/master/dependencies/npm)
+[![bitHound Code](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/code.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk)
 
 ### What does the Route4Me SDK permit me to do?
 This SDK makes it easier for you use the Route4Me API, which creates optimally sequenced driving routes for many drivers.
