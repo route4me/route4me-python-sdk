@@ -25,6 +25,7 @@ class Route4Me(object):
     """
     Route4Me Python SDK
     """
+# codebeat:disable[TOO_MANY_FUNCTIONS]
     def __init__(self,
                  key,
                  headers={'User-Agent': 'python-sdk',
@@ -503,3 +504,5 @@ class Route4Me(object):
         params.update({'api_key': self.key})
         data = json.dumps(data)
         return self._make_request(self.route_url(), params, data, self._request_put)
+
+# codebeat:enable[TOO_MANY_FUNCTIONS]
