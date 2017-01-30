@@ -4,7 +4,7 @@ import re
 from route4me.constants import *
 from route4me.exceptions import ParamValueException
 
-
+# codebeat:disable[TOO_MANY_FUNCTIONS]
 def check_string_type(obj):
     try:
         return isinstance(obj, basestring)
@@ -846,3 +846,5 @@ class Base(object):
             self._copy_data({'truck_hazardous_goods': truck_hazardous_goods})
         else:
             raise ParamValueException('truck_hazardous_goods', 'Must be MI or KM')
+
+# codebeat:enable[TOO_MANY_FUNCTIONS]
