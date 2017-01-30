@@ -25,7 +25,7 @@ class Route4Me(object):
     """
     Route4Me Python SDK
     """
-# codebeat:disable[TOO_MANY_FUNCTIONS]
+# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC]
     def __init__(self,
                  key,
                  headers={'User-Agent': 'python-sdk',
