@@ -3,7 +3,7 @@ from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
-# codebeat:disable[SC]
+# codebeat:disable[SIMILARITY]
 def main():
     route4me = Route4Me(KEY)
     avoidance_zones = route4me.avoidance_zones
@@ -29,4 +29,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-# codebeat:enable[SC]
+# codebeat:enable[SIMILARITY]
