@@ -1,8 +1,8 @@
+# codebeat:disable[SIMILARITY]
 from route4me import Route4Me
 from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
-
 
 def main():
     route4me = Route4Me(KEY)
@@ -62,3 +62,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# codebeat:enable[SIMILARITY]
