@@ -1,10 +1,10 @@
+# codebeat:disable[TOTAL_LOC, TOO_MANY_FUNCTIONS]
 import types
 import re
 
 from route4me.constants import *
 from route4me.exceptions import ParamValueException
 
-# codebeat:disable[TOO_MANY_FUNCTIONS]
 def check_string_type(obj):
     try:
         return isinstance(obj, basestring)
@@ -847,4 +847,4 @@ class Base(object):
         else:
             raise ParamValueException('truck_hazardous_goods', 'Must be MI or KM')
 
-# codebeat:enable[TOO_MANY_FUNCTIONS]
+# codebeat:enable[TOTAL_LOC, TOO_MANY_FUNCTIONS]
