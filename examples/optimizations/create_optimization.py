@@ -1,9 +1,9 @@
+# codebeat:disable[SIMILARITY]
 from route4me import Route4Me
 from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
-# codebeat:disable[SIMILARITY]
 def main():
     route4me = Route4Me(KEY)
     optimization = route4me.optimization
@@ -91,7 +91,8 @@ def main():
         print 'Route %s link: %sroute_id=%s' % (address.address,
                                                 route4me.route_url(),
                                                 address.route_id)
-# codebeat:enable[SIMILARITY]
+
 
 if __name__ == '__main__':
     main()
+# codebeat:enable[SIMILARITY]

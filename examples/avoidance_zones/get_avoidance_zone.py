@@ -1,9 +1,9 @@
+# codebeat:disable[SIMILARITY]
 from route4me import Route4Me
 from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
-# codebeat:disable[SIMILARITY]
 def main():
     route4me = Route4Me(KEY)
     avoidance_zones = route4me.avoidance_zones
