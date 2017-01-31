@@ -1,7 +1,7 @@
 import json
 import requests
 
-# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, SC]
+# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
 try:
     from urllib import urlencode
 except ImportError:
@@ -506,4 +506,4 @@ class Route4Me(object):
         data = json.dumps(data)
         return self._make_request(self.route_url(), params, data, self._request_put)
 
-# codebeat:enable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, SC]
+# codebeat:enable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
