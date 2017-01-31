@@ -1,3 +1,4 @@
+# codebeat:disable[LOC, ABC]
 from route4me import Route4Me
 from route4me.constants import *
 
@@ -96,3 +97,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# codebeat:enable[LOC, ABC]
