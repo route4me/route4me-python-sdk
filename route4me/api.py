@@ -1,5 +1,7 @@
 import json
 import requests
+
+# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, SC]
 try:
     from urllib import urlencode
 except ImportError:
@@ -20,12 +22,11 @@ from .utils import json2obj
 from .file_uploading import FileUploading
 from .members import Members
 
-
 class Route4Me(object):
     """
     Route4Me Python SDK
     """
-# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, SC]
+
     def __init__(self,
                  key,
                  headers={'User-Agent': 'python-sdk',
