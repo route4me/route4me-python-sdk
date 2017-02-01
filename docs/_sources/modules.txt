@@ -1,7 +1,0 @@
-route4me
-========
-
-.. toctree::
-   :maxdepth: 4
-
-   route4me
