@@ -1,3 +1,4 @@
+# codebeat:disable[ABC]
 from route4me import Route4Me
 
 KEY = "11111111111111111111111111111111"
@@ -39,3 +40,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+# codebeat:enable[ABC]
