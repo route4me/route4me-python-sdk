@@ -3,7 +3,7 @@ from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
-
+# codebeat:disable[LOC, ABC]
 def main():
     r4m = Route4Me(KEY)
     optimization = r4m.optimization
@@ -102,7 +102,7 @@ def main():
         print 'Number {}:'.format(i)
         print '\taddress: {}'.format(address.address)
         print '\t'
-
+# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
     main()

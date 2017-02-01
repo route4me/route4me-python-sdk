@@ -3,7 +3,7 @@ from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
-
+# codebeat:disable[LOC, ABC]
 def main():
     route4me = Route4Me(KEY)
     api = route4me
@@ -102,6 +102,7 @@ def main():
     response = api.reoptimization(optimization_problem_id)
     print 'Reoptimization status: %s' % \
           OPTIMIZATION_STATE.reverse_mapping.get(response.state)
-
+# codebeat:enable[LOC, ABC]
+		  
 if __name__ == '__main__':
     main()

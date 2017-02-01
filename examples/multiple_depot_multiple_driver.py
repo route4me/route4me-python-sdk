@@ -5,7 +5,7 @@ from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
-
+# codebeat:disable[LOC, ABC]
 def main():
     route4me = Route4Me(KEY)
     optimization = route4me.optimization
@@ -483,7 +483,7 @@ def main():
         print 'Route %s link: %sroute_id=%s' % (address.address,
                                                 route4me.route_url(),
                                                 address.route_id)
-
+# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
     main()

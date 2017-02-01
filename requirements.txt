@@ -1,4 +1,3 @@
-Route4Me-SDK==0.0.1
 oauthlib==0.6.1
 requests==2.3.0
 requests-oauthlib==0.4.0
