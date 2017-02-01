@@ -14,7 +14,7 @@ setup(
     license = "___",
     keywords = "rout4me, python, sdk, api",
     url = "http://route4me.com/api/demo",
-    packages=['route4me', 'examples', 'tests', 'docs'],
+    packages=['route4me', 'examples', 'tests', ],
     long_description=read('README.md'),
     classifiers=[
         "Development Status :: 1 - Beta",

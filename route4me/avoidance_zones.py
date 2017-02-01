@@ -1,4 +1,4 @@
-# codebeat:disable[SIMILARITY]
+# codebeat:disable[SIMILARITY, ABC]
 import json
 
 from .base import Base
@@ -92,4 +92,4 @@ class AvoindanceZones(Base):
             return response
         else:
             raise ParamValueException('params', 'Params are not complete')
-# codebeat:enable[SIMILARITY]
+# codebeat:enable[SIMILARITY, ABC]

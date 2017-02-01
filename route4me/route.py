@@ -1,3 +1,4 @@
+# codebeat:disable[TOO_MANY_FUNCTIONS]
 import json
 
 from .base import Base
@@ -302,3 +303,4 @@ class Route(Base):
 
         else:
             raise ParamValueException('params', 'Params are not complete')
+# codebeat:enable[TOO_MANY_FUNCTIONS]

@@ -1,4 +1,4 @@
-# codebeat:disable[TOTAL_LOC, TOO_MANY_FUNCTIONS]
+# codebeat:disable[TOTAL_LOC, TOO_MANY_FUNCTIONS, TOTAL_COMPLEXITY]
 import types
 import re
 
@@ -847,4 +847,4 @@ class Base(object):
         else:
             raise ParamValueException('truck_hazardous_goods', 'Must be MI or KM')
 
-# codebeat:enable[TOTAL_LOC, TOO_MANY_FUNCTIONS]
+# codebeat:enable[TOTAL_LOC, TOO_MANY_FUNCTIONS, TOTAL_COMPLEXITY]

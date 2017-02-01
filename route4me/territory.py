@@ -1,4 +1,4 @@
-# codebeat:disable[SIMILARITY]
+# codebeat:disable[SIMILARITY, BLOCK_NESTING]
 import json
 
 from .base import Base
@@ -92,4 +92,4 @@ class Territory(Base):
             return response
         else:
             raise ParamValueException('params', 'Params are not complete')
-# codebeat:enable[SIMILARITY]
+# codebeat:enable[SIMILARITY, BLOCK_NESTING]
