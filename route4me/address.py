@@ -1,3 +1,4 @@
+# codebeat:disable[ABC]
 import xmltodict
 import time
 import random
@@ -167,3 +168,4 @@ class Address(Base):
 
         else:
             raise ParamValueException('params', 'Params are not complete')
+# codebeat:enable[ABC]
