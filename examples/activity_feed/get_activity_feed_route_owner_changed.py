@@ -7,7 +7,7 @@ KEY = "11111111111111111111111111111111"
 def main():
     route4me = Route4Me(KEY)
     activity_feed = route4me.activity_feed
-    response = activity_feed.get_activity_feed_deleted(route_id='5C15E83A4BE005BCD1537955D28D51D7')
+    response = activity_feed.get_activity_feed_route_owner_changed(route_id='5C15E83A4BE005BCD1537955D28D51D7')
     if hasattr(response, 'errors'):
         print '. '.join(response.errors)
     else:
