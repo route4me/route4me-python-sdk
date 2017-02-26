@@ -1,9 +1,6 @@
 # Route4Me Route Optimization Python SDK
 [![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
-[![bitHound Overall Score](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/score.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk)
-[![bitHound Dependencies](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/dependencies.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk/master/dependencies/npm)
-[![bitHound Dev Dependencies](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/devDependencies.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk/master/dependencies/npm)
-[![bitHound Code](https://www.bithound.io/github/route4me/route4me-python-sdk/badges/code.svg)](https://www.bithound.io/github/route4me/route4me-python-sdk)
+
 [![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/?branch=master)
