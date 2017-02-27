@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
 [![Build status](https://ci.appveyor.com/api/projects/status/0?svg=true)](https://ci.appveyor.com/project/route4me/route4me-python-sdk-0)
 
-[![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star)](https://github.com/route4me/route4me-python-sdk)
 [![PyPI](https://img.shields.io/pypi/v/route4me-python.svg)][PYPI]
 [![PyPI](https://img.shields.io/pypi/dm/route4me-python.svg)][PYPI]
 [![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star)](https://github.com/route4me/route4me-python-sdk)
