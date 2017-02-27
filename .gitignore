@@ -6,3 +6,4 @@ Route4Me_SDK.egg-info/
 build/
 dist/
 docs_source
+/coverage
