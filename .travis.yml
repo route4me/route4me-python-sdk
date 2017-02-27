@@ -28,9 +28,11 @@ install:
 
   - pip --version
   - flake8 --version
+  - pytest --version
 
 script:
   - flake8
+  - pytest
   # - python setup.py test
   - coverage run tests.py
   - codecov
