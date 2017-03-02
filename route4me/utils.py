@@ -23,4 +23,11 @@ def json2obj(data):
     :param data: JSON data
     :return: object
     """
-    return json.loads(data.decode('utf-8'), object_hook=_json_object_hook)
+    return json.loads(data, object_hook=_json_object_hook)
+
+
+def check_string_type(obj):
+    try:
+        return isinstance(obj, basestring)
+    except NameError:
+        return isinstance(obj, str)

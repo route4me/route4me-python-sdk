@@ -1,7 +1,8 @@
 import json
-from .base import Base
-from .utils import json2obj
-from .exceptions import ParamValueException
+from route4me.base import Base
+from route4me.utils import json2obj
+from route4me.exceptions import ParamValueException
+from route4me.api_endpoints import ADDRESS_HOST, API_HOST
 
 
 class Optimization(Base):
@@ -30,7 +31,7 @@ class Optimization(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['limit', 'Offset', ]):
-            self.response = self.api._request_get(self.api._build_base_url(),
+            self.response = self.api._request_get(API_HOST,
                                                   kwargs)
             response = json2obj(self.response.content)
             return response
@@ -46,7 +47,7 @@ class Optimization(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['optimization_problem_id', ]):
-            self.response = self.api._request_get(self.api._build_base_url(),
+            self.response = self.api._request_get(API_HOST,
                                                   kwargs)
             response = json2obj(self.response.content)
             return response
@@ -62,7 +63,7 @@ class Optimization(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['optimization_problem_id', 'addresses', 'reoptimize']):
-            self.response = self.api._request_put(self.api._build_base_url(),
+            self.response = self.api._request_put(API_HOST,
                                                   kwargs)
             response = json2obj(self.response.content)
             return response
@@ -78,7 +79,7 @@ class Optimization(Base):
         """
         self.json_data = kwargs
         if self.check_required_params(kwargs, ['optimization_problem_ids', ]):
-            self.response = self.api._request_delete(self.api._build_base_url(),
+            self.response = self.api._request_delete(API_HOST,
                                                   self.params, data=json.dumps(self.json_data, ensure_ascii=False))
             response = json2obj(self.response.content)
             return response
@@ -94,7 +95,7 @@ class Optimization(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['optimization_problem_id', 'route_destination_id']):
-            self.response = self.api._request_delete(self.api.address_url(),
+            self.response = self.api._request_delete(ADDRESS_HOST,
                                                      kwargs)
             response = json2obj(self.response.content)
             return response

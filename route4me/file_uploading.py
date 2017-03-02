@@ -1,8 +1,9 @@
 import json
 
-from .base import Base
-from .exceptions import ParamValueException
-from .utils import json2obj
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.api_endpoints import FILE_UPLOAD_HOST,\
+    FILE_UPLOAD_PREVIEW_HOST, FILE_UPLOAD_GEOCODE_HOST
 
 
 class FileUploading(Base):
@@ -28,7 +29,7 @@ class FileUploading(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['strUploadID', 'format']):
-            self.response = self.api._request_get(self.api.file_upload_preview_url(),
+            self.response = self.api._request_get(FILE_UPLOAD_PREVIEW_HOST,
                                                   kwargs)
             return self.response.content
         else:
@@ -43,7 +44,7 @@ class FileUploading(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['files', 'format',]):
-            self.response = self.api._request_post(self.api.file_upload_url(),
+            self.response = self.api._request_post(FILE_UPLOAD_HOST,
                                                   kwargs, files=kwargs.pop('files'))
             return self.response.content
         else:
@@ -58,7 +59,7 @@ class FileUploading(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['strUploadID', 'files', ]):
-            self.response = self.api._request_post(self.api.file_upload_geocode_url(),
+            self.response = self.api._request_post(FILE_UPLOAD_GEOCODE_HOST,
                                                   kwargs, files=kwargs.pop('files'))
             return self.response.content
         else:

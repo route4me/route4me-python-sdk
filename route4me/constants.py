@@ -80,3 +80,9 @@ TRUCK_HAZARDOUS_GOODS = enum(NONE='',
                              ALLHAZARDOUSGOODS='allHazardousGoods')
 
 TERRITORY_TYPE = enum(CIRCLE='circle', POLY='poly', RECT='rect', )
+
+HEADERS = {
+    'User-Agent': 'python-sdk',
+    'Accept-Encoding': 'identity, deflate, compress, gzip',
+    'Accept': '*/*',
+}

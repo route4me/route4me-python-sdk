@@ -1,2 +1,2 @@
-from .api import Route4Me
-from .exceptions import APIException, ParamValueException
+from route4me.api import Route4Me
+from route4me.exceptions import APIException, ParamValueException

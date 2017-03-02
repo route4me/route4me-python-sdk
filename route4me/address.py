@@ -3,10 +3,12 @@ import xmltodict
 import time
 import random
 import requests
+import json
 
-from .base import Base
-from .exceptions import ParamValueException
-from .utils import json2obj
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.utils import json2obj
+from route4me.api_endpoints import ADD_ROUTE_NOTES_HOST, BATCH_GEOCODER, ADDRESS_HOST
 
 
 class Address(Base):
@@ -68,7 +70,7 @@ class Address(Base):
         for a in addresses:
             param_address = '{0}{1}||'.format(param_address, a.get('address'))
         params = {'format': 'xml', 'addresses': param_address}
-        content = self.api.get_batch_geocodes(params)
+        content = self.get_batch_geocodes(params)
         obj = xmltodict.parse(content)
         geocoded_addresses = []
         for i, d in enumerate(obj.get('destinations').get('destination')):
@@ -85,13 +87,37 @@ class Address(Base):
                 geocoding_error.append(d)
         return geocoding_error, geocoded_addresses
 
+    def get_geocode(self, params):
+        """
+        Get Geocodes from given address
+        :param params:
+        :return: response as a object
+        """
+        request_method = self._request_get
+        self.response = self._make_request(self.single_geocoder_url(), params,
+                                           [], request_method)
+        return self.response.content
+
+    def get_batch_geocodes(self, params):
+        """
+        Get Geocodes from given addresses
+        :param params:
+        :return: response as a object
+        """
+        self.response = self.api._make_request(self.batch_geocoder_url(),
+                                               params,
+                                               [],
+                                               self.api._request_get)
+        return self.response.content
+
+
     def fix_geocode(self, address):
         geocoding_error = None
         params = {'format': 'xml', 'address': address.get('address')}
         count = 0
         while True:
             try:
-                content = self.api.get_geocode(params)
+                content = self.get_geocode(params)
                 obj = xmltodict.parse(content)
                 obj = obj.get('result')
                 address.update(dict([('lat', float(obj.get('@lat'))),
@@ -105,6 +131,19 @@ class Address(Base):
                 time.sleep(random.randrange(1, 5) * 0.5)
 
         return geocoding_error, address
+
+    def delete_address(self, params):
+        params.update({'api_key': self.key})
+        return self._make_request(ADDRESS_HOST, params, None, self._request_delete)
+
+    def update_address(self, params, data):
+        params.update({'api_key': self.key})
+        data = json.dumps(data)
+        return self._make_request(ADDRESS_HOST, params, data, self._request_put)
+
+    def request_address(self, params):
+        params.update({'api_key': self.key})
+        return self._make_request(ADDRESS_HOST, params, None, self._request_get)
 
     def get_address(self, route_id, route_destination_id):
         params = {'route_id': route_id,
@@ -144,7 +183,7 @@ class Address(Base):
         if self.check_required_params(kwargs, ['address_id', 'route_id']):
             data = {'strUpdateType': kwargs.pop('activity_type'), 'strNoteContents': note}
             kwargs.update({'api_key': self.params['api_key'], })
-            self.response = self.api._request_post(self.api.add_route_notes_host_url(),
+            self.response = self.api._request_post(ADD_ROUTE_NOTES_HOST,
                                                    kwargs, data)
             response = json2obj(self.response.content)
             return response
@@ -162,7 +201,7 @@ class Address(Base):
             kwargs.update({'format': 'csv'})
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['addresses', ]):
-            response = self.api._request_post(self.api.batch_geocoder_url(),
+            response = self.api._request_post(BATCH_GEOCODER,
                                               kwargs)
             return response.content
 

@@ -1,7 +1,10 @@
 import json
-from .base import Base
-from .exceptions import ParamValueException
-from .utils import json2obj
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.utils import json2obj
+from route4me.api_endpoints import MEMBER_AUTHENTICATE, \
+    USER_LICENSE_HOST, VALIDATE_SESSION, WEBINAR_REGISTER, VERIFY_DEVICE_LICENSE, \
+    GET_USERS_HOST, USER_URL
 
 
 class Members(Base):
@@ -31,7 +34,7 @@ class Members(Base):
                                                'token',
                                                'payload',
                                                'format', ]):
-            response = self.api._request_post(self.api.user_license_url(),
+            response = self.api._request_post(USER_LICENSE_HOST,
                                               self.params,
                                               data=json.dumps(kwargs, ensure_ascii=False))
             try:
@@ -50,7 +53,7 @@ class Members(Base):
         if self.check_required_params(kwargs, ['device_id',
                                                'device_type',
                                                'format', ]):
-            response = self.api._request_post(self.api.verify_device_license_url(),
+            response = self.api._request_post(VERIFY_DEVICE_LICENSE,
                                               self.params,
                                               data=json.dumps(kwargs, ensure_ascii=False))
             try:
@@ -70,7 +73,7 @@ class Members(Base):
                                                'password', ]):
             kwargs['strEmail'] = kwargs.pop('email')
             kwargs['strPassword'] = kwargs.pop('password')
-            response = self.api._request_post(self.api.member_authenticate_url(),
+            response = self.api._request_post(MEMBER_AUTHENTICATE,
                                               self.params,
                                               data=kwargs)
             try:
@@ -86,10 +89,23 @@ class Members(Base):
         :return: API response
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        response = self.api._request_get(self.api.get_users_host_url(),
+        response = self.api._request_get(GET_USERS_HOST,
                                          kwargs)
         try:
-            return json2obj(response.content)
+            return response.json()
+        except ValueError:
+            return response.content
+
+    def get_api_key_users(self, **kwargs):
+        """
+        Get users taht belong to a given api_key using GET request
+        :return: API response
+        """
+        kwargs.update({'api_key': self.params['api_key'], })
+        response = self.api._request_get(USER_URL,
+                                         kwargs)
+        try:
+            return response.json()
         except ValueError:
             return response.content
 
@@ -102,7 +118,7 @@ class Members(Base):
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['session_guid',
                                                'member_id', ]):
-            response = self.api._request_get(self.api.validate_session_url(),
+            response = self.api._request_get(VALIDATE_SESSION,
                                              kwargs)
             try:
                 return json.loads(response.content)
@@ -124,7 +140,7 @@ class Members(Base):
                                                "company_name",
                                                "member_id",
                                                "webiinar_date"]):
-            response = self.api._request_post(self.api.webinar_register_url(),
+            response = self.api._request_post(WEBINAR_REGISTER,
                                               self.params,
                                               data=kwargs)
             try:
@@ -134,7 +150,7 @@ class Members(Base):
         else:
             raise ParamValueException('order', 'Missing required params')
 
-    def register_action(self, **kwargs):
+    def register(self, **kwargs):
         """
         Register Action
         :param kwargs:
@@ -150,8 +166,7 @@ class Members(Base):
                                                "password_1",
                                                "password_2",
                                                "format"]):
-            params = {'api_key': self.params['api_key'],
-                      'plan': kwargs.pop('plan')}
+            params = {'plan': kwargs.pop('plan')}
             kwargs['strIndustry'] = kwargs.pop('industry')
             kwargs['strFirstName'] = kwargs.pop('first_name')
             kwargs['strLastName'] = kwargs.pop('last_name')
@@ -164,7 +179,7 @@ class Members(Base):
                                               params,
                                               data=kwargs)
             try:
-                return json.loads(response.content)
+                return response.json()
             except ValueError:
                 return response.content
         else:

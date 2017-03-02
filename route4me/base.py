@@ -1,15 +1,10 @@
 # codebeat:disable[TOTAL_LOC, TOO_MANY_FUNCTIONS, TOTAL_COMPLEXITY]
-import types
 import re
+import types
 
 from route4me.constants import *
 from route4me.exceptions import ParamValueException
-
-def check_string_type(obj):
-    try:
-        return isinstance(obj, basestring)
-    except NameError:
-        return isinstance(obj, str)
+from route4me.utils import check_string_type
 
 
 class Base(object):

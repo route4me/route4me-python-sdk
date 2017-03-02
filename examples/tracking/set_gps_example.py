@@ -23,7 +23,7 @@ def main():
         setGPS.device_guid('TEST_GPS')
         setGPS.device_timestamp('2014-06-14 17:43:35')
         print setGPS.params
-        print setGPS.set_gps_params()
+        print setGPS.set_gps_track()
 
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@ def main():
             "password_1": "ultrasecret",
             "password_2": "ultrasecret",
             "format": "json", }
-    response = members.register_action(**data)
+    response = members.register(**data)
     if hasattr(response, 'errors'):
         print '. '.join(response.errors)
     else:

@@ -1,7 +1,6 @@
-from .base import Base
-from .exceptions import ParamValueException
-from .utils import json2obj
-from .api_endpoints import SET_GPS_HOST
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.api_endpoints import SET_GPS_HOST
 
 
 class SetGPS(Base):
@@ -9,7 +8,7 @@ class SetGPS(Base):
         Set GPS position of the device
     """
 
-    requirements = ['api_key',
+    requirements = ('api_key',
                     'format',
                     'member_id',
                     'route_id',
@@ -19,31 +18,24 @@ class SetGPS(Base):
                     'lng',
                     'device_type',
                     'device_guid',
-                    ]
+                    )
 
     def __init__(self, api):
         self.response = None
         self.params = {'api_key': api.key, }
         Base.__init__(self, api)
 
-    @staticmethod
-    def _build_set_url():
-        """
-        Return SET HOST
-        :return:
-        """
-        return SET_GPS_HOST + '?'
-
-    def set_gps_params(self):
+    def set_gps_track(self, **kwargs):
         """
         Set GPS position of device using GET request
         :return: Response status
         :raise: ParamValueException if any required param is not set
         """
-        if self.required_params(self.requirements):
-            self.response = self.api._request_get(self._build_set_url(),
+        kwargs.update({'api_key': self.params['api_key'], })
+        if self.check_required_params(kwargs, self.requirements):
+            self.response = self.api._request_get(SET_GPS_HOST,
                                                   self.params)
-            response = json2obj(self.response.content)
-            return response.status
+            response = self.response.json()
+            return response.get('status')
         else:
             raise ParamValueException('params', 'Params are not complete')

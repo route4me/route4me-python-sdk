@@ -1,8 +1,10 @@
 # codebeat:disable[SIMILARITY, LOC, ABC]
 from route4me import Route4Me
 from route4me.constants import *
+from route4me.api_endpoints import ROUTE_HOST
 
 KEY = "11111111111111111111111111111111"
+
 
 def main():
     route4me = Route4Me(KEY)
@@ -89,7 +91,7 @@ def main():
     print 'Optimization Link: %s' % response.links.view
     for address in response.addresses:
         print 'Route %s link: %sroute_id=%s' % (address.address,
-                                                route4me.route_url(),
+                                                ROUTE_HOST,
                                                 address.route_id)
 
 

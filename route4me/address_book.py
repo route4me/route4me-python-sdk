@@ -1,15 +1,16 @@
 import json
 
-from .base import Base
-from .exceptions import ParamValueException
-from .utils import json2obj
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.utils import json2obj
+from route4me.api_endpoints import ADDRESSBOOK
 
 
 class AddressBook(Base):
     """
     Address Book Management
     """
-    REQUIRED_FIELDS = ['address_1', 'cached_lat', 'cached_lng', ]
+    REQUIRED_FIELDS = ('address_1', 'cached_lat', 'cached_lng', )
 
     def __init__(self, api, addresses=[]):
         """
@@ -28,7 +29,7 @@ class AddressBook(Base):
         """
         self.json_data = kwargs
         if self.check_required_params(self.json_data, self.REQUIRED_FIELDS):
-            self.response = self.api._request_post(self.api.addressbook_url(),
+            self.response = self.api._request_post(ADDRESSBOOK,
                                                    self.params, data=json.dumps(self.json_data, ensure_ascii=False))
             return self.response.content
 
@@ -43,7 +44,7 @@ class AddressBook(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['limit', 'Offset', ]):
-            self.response = self.api._request_get(self.api.addressbook_url(),
+            self.response = self.api._request_get(ADDRESSBOOK,
                                                   kwargs)
             response = json.loads(self.response.content)
             return response
@@ -58,7 +59,7 @@ class AddressBook(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['address_id', ]):
-            self.response = self.api._request_get(self.api.addressbook_url(),
+            self.response = self.api._request_get(ADDRESSBOOK,
                                                   kwargs)
             response = json.loads(self.response.content)
             return response
@@ -72,7 +73,7 @@ class AddressBook(Base):
         :raise: ParamValueException if required params are not present.
         """
         if self.check_required_params(kwargs, ['address_id', ]):
-            self.response = self.api._request_put(self.api.addressbook_url(),
+            self.response = self.api._request_put(ADDRESSBOOK,
                                                   self.params, data=json.dumps(kwargs))
             response = json.loads(self.response.content)
             return response
@@ -86,7 +87,7 @@ class AddressBook(Base):
         :raise: ParamValueException if required params are not present.
         """
         if self.check_required_params(kwargs, ['address_ids', ]):
-            self.response = self.api._request_delete(self.api.addressbook_url(),
+            self.response = self.api._request_delete(ADDRESSBOOK,
                                                      self.params, data=json.dumps(kwargs))
             response = json2obj(self.response.content)
             return response

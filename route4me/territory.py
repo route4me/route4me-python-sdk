@@ -1,9 +1,10 @@
 # codebeat:disable[SIMILARITY, BLOCK_NESTING]
 import json
 
-from .base import Base
-from .exceptions import ParamValueException
-from .utils import json2obj
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.utils import json2obj
+from route4me.api_endpoints import TERRITORY_HOST
 
 
 class Territory(Base):
@@ -27,7 +28,7 @@ class Territory(Base):
         :raise: ParamValueException if required params are not present.
         """
         if self.check_required_params(self.params, ['api_key', ]):
-            self.response = self.api._request_get(self.api.territory_url(),
+            self.response = self.api._request_get(TERRITORY_HOST,
                                                   self.params)
             response = json2obj(self.response.content)
             return response
@@ -42,7 +43,7 @@ class Territory(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['api_key', 'territory_id']):
-            self.response = self.api._request_get(self.api.territory_url(),
+            self.response = self.api._request_get(TERRITORY_HOST,
                                                   kwargs)
             response = json2obj(self.response.content)
             return response
@@ -56,7 +57,7 @@ class Territory(Base):
         :raise: ParamValueException if required params are not present.
         """
         if self.check_required_params(kwargs, ['territory_name', 'territory_color', 'territory']):
-            self.response = self.api._request_post(self.api.territory_url(),
+            self.response = self.api._request_post(TERRITORY_HOST,
                                                    self.params, data=json.dumps(kwargs))
             response = json2obj(self.response.content)
             return response
@@ -71,7 +72,7 @@ class Territory(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['territory_id']):
-            self.response = self.api._request_delete(self.api.territory_url(),
+            self.response = self.api._request_delete(TERRITORY_HOST,
                                                      kwargs)
             response = json2obj(self.response.content)
             return response
@@ -86,7 +87,7 @@ class Territory(Base):
         """
         self.params.update({'territory_id': territory_id})
         if self.check_required_params(kwargs, ['territory_name', 'territory_color', 'territory']):
-            self.response = self.api._request_put(self.api.territory_url(),
+            self.response = self.api._request_put(TERRITORY_HOST,
                                                   self.params, data=json.dumps(kwargs))
             response = json2obj(self.response.content)
             return response

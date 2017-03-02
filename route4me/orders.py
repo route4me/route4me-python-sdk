@@ -1,14 +1,14 @@
 import json
-from .base import Base
-from .exceptions import ParamValueException
-
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.api_endpoints import ORDERS_HOST
 
 class Order(Base):
     """
     Orders are transactional events.
     """
 
-    REQUIRED_FIELDS = ['address_1', 'cached_lat', 'cached_lng', ]
+    REQUIRED_FIELDS = ('address_1', 'cached_lat', 'cached_lng', )
 
     def __init__(self, api):
         """
@@ -25,7 +25,7 @@ class Order(Base):
         :return: API response content
         """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
-            response = self.api._request_post(self.api.order_url(),
+            response = self.api._request_post(ORDERS_HOST,
                                               self.params,
                                               data=json.dumps(kwargs, ensure_ascii=False))
             try:
@@ -43,7 +43,7 @@ class Order(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['order_id', 'api_key', ]):
-            response = self.api._request_get(self.api.order_url(),
+            response = self.api._request_get(ORDERS_HOST,
                                              kwargs)
             try:
                 return json.loads(response.content)
@@ -59,7 +59,7 @@ class Order(Base):
         :return: API response content
         """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
-            response = self.api._request_put(self.api.order_url(),
+            response = self.api._request_put(ORDERS_HOST,
                                              self.params, data=json.dumps(kwargs))
             try:
                 return json.loads(response.content)
@@ -75,7 +75,7 @@ class Order(Base):
         :return: API response content
         """
         if self.check_required_params(kwargs, ['order_ids', ]):
-            response = self.api._request_delete(self.api.order_url(),
+            response = self.api._request_delete(ORDERS_HOST,
                                                 self.params, data=json.dumps(kwargs))
             try:
                 return json.loads(response.content)

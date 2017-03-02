@@ -1,9 +1,8 @@
 import json
 
-from .base import Base
-from .exceptions import ParamValueException
-from .utils import json2obj
-
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.api_endpoints import RAPID_ADDRESS_SERVICE, RAPID_ADDRESS, RAPID_ADDRESS_ZIP
 
 class RapidAddress(Base):
     """
@@ -25,7 +24,7 @@ class RapidAddress(Base):
         :param kwargs:
         :return: API response content
         """
-        url = self.api.rapid_address_url()
+        url = RAPID_ADDRESS
         kwargs.update({'api_key': self.params['api_key'], })
         if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
             url = '{0}{1}/{2}/'.format(url, kwargs.pop('offset'), kwargs.pop('limit'))
@@ -45,7 +44,7 @@ class RapidAddress(Base):
         :return: API response content
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        url = self.api.rapid_address_zip_url()
+        url = RAPID_ADDRESS_ZIP
         if self.check_required_params(kwargs, ['zipcode', 'api_key', ]):
             url = '{0}{1}/'.format(url, kwargs.pop('zipcode'))
             if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
@@ -65,7 +64,7 @@ class RapidAddress(Base):
         :return: API response content
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        url = self.api.rapid_address_service_url()
+        url = RAPID_ADDRESS_SERVICE
         if self.check_required_params(kwargs, ['zipcode', 'api_key', 'housenumber', ]):
             url = '{0}{1}/{2}/'.format(url, kwargs.pop('zipcode'), kwargs.pop('housenumber'))
             if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():

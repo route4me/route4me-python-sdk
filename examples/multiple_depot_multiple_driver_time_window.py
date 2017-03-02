@@ -1,5 +1,6 @@
 from route4me import Route4Me
 from route4me.constants import *
+from route4me.api_endpoints import ROUTE_HOST
 import json
 
 KEY = "11111111111111111111111111111111"
@@ -479,7 +480,7 @@ def main():
     print 'Optimization Link: %s' % optimization.links.view
     for address in optimization.addresses:
         print 'Route %s link: %sroute_id=%s' % (address.address,
-                                                route4me.route_url(),
+                                                ROUTE_HOST,
                                                 address.route_id)
 # codebeat:enable[LOC, ABC]												
 

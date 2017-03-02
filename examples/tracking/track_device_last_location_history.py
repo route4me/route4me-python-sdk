@@ -30,7 +30,7 @@ def main():
                 'lat': 41.8927521+i,
             })
             print gps.params
-            print 'GPS Params SET %s' % gps.set_gps_params()
+            print 'GPS Params SET %s' % gps.set_gps_track()
         route.add(params={
             'route_id': response[0].route_id,
             'device_tracking_history': 1,
