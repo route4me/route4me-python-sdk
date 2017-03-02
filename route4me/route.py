@@ -72,7 +72,7 @@ class Route(Base):
 
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['limit', 'Offset', ]):
+        if self.check_required_params(kwargs, ['limit', 'offset', ]):
             self.response = self.api._request_get(ROUTE_HOST,
                                                   kwargs)
             response = self.response.json()

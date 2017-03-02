@@ -1,6 +1,6 @@
 import unittest
 
-from tests.base import  Route4MeAPITestSuite
+from tests.base import Route4MeAPITestSuite
 
 
 class Route4MeRoutesTests(Route4MeAPITestSuite):
@@ -10,7 +10,7 @@ class Route4MeRoutesTests(Route4MeAPITestSuite):
 
     def test_get_routes(self):
         route = self.route4me.route
-        response = route.get_routes(limit=10, Offset=5)
+        response = route.get_routes(limit=10, offset=5)
         if hasattr(response, 'errors'):
             print ('. '.join(response.get('errors')))
         else:

@@ -34,7 +34,7 @@ class SetGPS(Base):
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, self.requirements):
             self.response = self.api._request_get(SET_GPS_HOST,
-                                                  self.params)
+                                                  kwargs)
             response = self.response.json()
             return response.get('status')
         else:

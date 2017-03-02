@@ -1,5 +1,5 @@
 import unittest
-
+import datetime
 from route4me.exceptions import ParamValueException
 from route4me.constants import FORMAT, DEVICE_TYPE
 
@@ -16,10 +16,15 @@ class Route4MeGPSTests(Route4MeAPITestSuite):
         Test Set GPS
         :return:
         """
+        route = self.route4me.route
+        response = route.get_routes(limit=10, offset=5)
+        self.assertFalse(hasattr(response, 'errors'))
+        self.assertTrue(len(response) > 0)
+        route_id = response[0].get('route_id', False)
         setGPS = self.route4me.setGPS
-        setGPS.params.update({
-            'format': FORMAT.CSV,
-            'route_id': '7420A6120C1BA7B83C512E61416AECD0',
+        params = {
+            'format': 'serialized',
+            'route_id': route_id,
             'lat': 38.141598,
             'lng': -85.793846,
             'course': 1,
@@ -27,9 +32,9 @@ class Route4MeGPSTests(Route4MeAPITestSuite):
             'device_type': DEVICE_TYPE.IPHONE,
             'member_id': 1,
             'device_guid': 'qweqweqwe',
-            'device_timestamp': '2014-06-14 17:43:35',
-        })
-        return self.assertTrue(setGPS.set_gps_track())
+            'device_timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        return self.assertTrue(setGPS.set_gps_track(**params))
 
     def test_set_valid_device_timestamp(self):
         """
