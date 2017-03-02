@@ -98,7 +98,7 @@ class Route4MeAPITestSuite(unittest.TestCase):
             'distance_unit': DISTANCE_UNIT.MI,
             'device_type': DEVICE_TYPE.WEB,
             'travel_mode': TRAVEL_MODE.DRIVING,
-            })
+        })
         address.add_address(
             address='754 5th Ave New York, NY 10019',
             lat=40.7636197,

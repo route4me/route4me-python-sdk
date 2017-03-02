@@ -1,0 +1,6 @@
+# Development dependencies
+# in one place
+
+coverage>=4.3.4
+codecov>=2.0.5
+flake8>=3.3.0
