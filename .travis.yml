@@ -1,7 +1,36 @@
+# =============================================================================
+# Access Route4Me's logistics-as-a-service API
+# using our Python SDK
+#
+# Copyright (C) 2016-2017 Route4Me
+# =============================================================================
+
 language: python
+
+sudo: false
+
+cache:
+  pip: true
+
 python:
   - "2.7"
+  - "3.3"
+  - "3.5"
+  - "nightly" # currently points to 3.7-dev
+  - "pypy"
+
 before_install:
-        - python setup.py install
-install: pip install -r requirements.txt
-script:  python setup.py test
+  - python setup.py install
+
+install:
+  - pip install -r requirements.txt -q
+  - pip install -r requirements-dev.txt -q
+
+  - pip --version
+  - flake8 --version
+
+script:
+  - flake8
+  # - python setup.py test
+  - coverage run tests.py
+  - codecov
