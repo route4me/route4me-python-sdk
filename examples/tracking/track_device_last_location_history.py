@@ -1,5 +1,8 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    FORMAT,
+    DEVICE_TYPE
+)
 import datetime as dt
 
 KEY = "11111111111111111111111111111111"
@@ -24,10 +27,10 @@ def main():
         # SET GPS
         for i in xrange(4):
             gps.add(params={
-                'speed': 120+i,
+                'speed': 120 + i,
                 'device_timestamp': dt.datetime.strftime(dt.datetime.now(),
                                                          "%Y-%m-%d %H:%M:%S"),
-                'lat': 41.8927521+i,
+                'lat': 41.8927521 + i,
             })
             print gps.params
             print 'GPS Params SET %s' % gps.set_gps_track()
@@ -37,7 +40,8 @@ def main():
         })
         response = route.get_route()
         for history in response.tracking_history:
-            print 'lng: %s lat: %s time: %s speed: %s ' % (history.lg, history.lt,
+            print 'lng: %s lat: %s time: %s speed: %s ' % (history.lg,
+                                                           history.lt,
                                                            history.ts_friendly,
                                                            history.s)
 

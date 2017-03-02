@@ -1,6 +1,5 @@
 # codebeat:disable[SIMILARITY, BLOCK_NESTING]
 from route4me import Route4Me
-from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
@@ -13,7 +12,8 @@ def main():
         print '. '.join(response.errors)
     else:
         for i, territory in enumerate(response):
-            print '{0}  - Territory ID: {1}'.format(i + 1, territory.territory_id)
+            print '{0}  - Territory ID: {1}'.format(i + 1,
+                                                    territory.territory_id)
             print '\tTerritory Name: {}'.format(territory.territory_name)
             print '\tTerritory Color: {}'.format(territory.territory_color)
             print '\tMember ID: {}'.format(territory.member_id)

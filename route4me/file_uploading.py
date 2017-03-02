@@ -1,5 +1,3 @@
-import json
-
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
 from route4me.api_endpoints import FILE_UPLOAD_HOST,\
@@ -18,7 +16,6 @@ class FileUploading(Base):
         :return:
         """
         Base.__init__(self, api)
-
 
     def get_file_preview(self, **kwargs):
         """
@@ -43,9 +40,11 @@ class FileUploading(Base):
 
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['files', 'format',]):
+        if self.check_required_params(kwargs, ['files',
+                                               'format', ]):
             self.response = self.api._request_post(FILE_UPLOAD_HOST,
-                                                  kwargs, files=kwargs.pop('files'))
+                                                   kwargs,
+                                                   files=kwargs.pop('files'))
             return self.response.content
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -60,7 +59,8 @@ class FileUploading(Base):
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['strUploadID', 'files', ]):
             self.response = self.api._request_post(FILE_UPLOAD_GEOCODE_HOST,
-                                                  kwargs, files=kwargs.pop('files'))
+                                                   kwargs,
+                                                   files=kwargs.pop('files'))
             return self.response.content
         else:
             raise ParamValueException('params', 'Params are not complete')

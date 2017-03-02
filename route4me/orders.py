@@ -3,6 +3,7 @@ from route4me.base import Base
 from route4me.exceptions import ParamValueException
 from route4me.api_endpoints import ORDERS_HOST
 
+
 class Order(Base):
     """
     Orders are transactional events.
@@ -25,9 +26,10 @@ class Order(Base):
         :return: API response content
         """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
+            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(ORDERS_HOST,
                                               self.params,
-                                              data=json.dumps(kwargs, ensure_ascii=False))
+                                              data=data)
             try:
                 return json.loads(response.content)
             except ValueError:
@@ -60,7 +62,8 @@ class Order(Base):
         """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
             response = self.api._request_put(ORDERS_HOST,
-                                             self.params, data=json.dumps(kwargs))
+                                             self.params,
+                                             data=json.dumps(kwargs))
             try:
                 return json.loads(response.content)
             except ValueError:
@@ -76,11 +79,11 @@ class Order(Base):
         """
         if self.check_required_params(kwargs, ['order_ids', ]):
             response = self.api._request_delete(ORDERS_HOST,
-                                                self.params, data=json.dumps(kwargs))
+                                                self.params,
+                                                data=json.dumps(kwargs))
             try:
                 return json.loads(response.content)
             except ValueError:
                 return response.content
         else:
             raise ParamValueException('order', 'Missing required params')
-

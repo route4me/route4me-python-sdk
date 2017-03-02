@@ -88,7 +88,9 @@ class Route(Base):
 
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['route_id', 'limit', 'Offset', ]):
+        if self.check_required_params(kwargs, ['route_id',
+                                               'limit',
+                                               'offset', ]):
             self.response = self.api._request_get(GET_ACTIVITIES_HOST,
                                                   kwargs)
             response = json2obj(self.response.content)
@@ -173,12 +175,15 @@ class Route(Base):
         :raises: ParamValueException if required params are not present.
         AttributeError if there is an error deleting a route
         """
-        if self.check_required_params(kwargs, ['addresses', 'route_id', 'optimal_position']):
+        if self.check_required_params(kwargs, ['addresses',
+                                               'route_id',
+                                               'optimal_position']):
             params = {'api_key': self.params['api_key'],
                       'route_id': kwargs.pop('route_id')}
-
+            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_put(ROUTE_HOST,
-                                             params, data=json.dumps(kwargs, ensure_ascii=False))
+                                             params,
+                                             data=data)
             return response.json()
 
         else:
@@ -192,7 +197,8 @@ class Route(Base):
         AttributeError if there is an error deleting a route
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['route_path_output', 'route_id', ]):
+        if self.check_required_params(kwargs, ['route_path_output',
+                                               'route_id', ]):
             response = self.api._request_get(ROUTE_HOST,
                                              kwargs)
             return response.json()
@@ -216,11 +222,6 @@ class Route(Base):
         else:
             raise ParamValueException('params', 'Params are not complete')
 
-    def update_route(self, params, data):
-        params.update({'api_key': self.key})
-        data = json.dumps(data)
-        return self._make_request(ROUTE_HOST, params, data, self._request_put)
-
     def share_route(self, **kwargs):
         """
         Share a route using POST
@@ -228,13 +229,16 @@ class Route(Base):
         :raises: ParamValueException if required params are not present.
         AttributeError if there is an error deleting a route
         """
-        if self.check_required_params(kwargs, ['recipient_email', 'route_id', 'response_format']):
+        if self.check_required_params(kwargs, ['recipient_email',
+                                               'route_id',
+                                               'response_format']):
             params = {'api_key': self.params['api_key'],
                       'route_id': kwargs.pop('route_id'),
                       'response_format': kwargs.pop('response_format')}
+            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(SHARE_ROUTE_HOST,
                                               params,
-                                              data=json.dumps(kwargs, ensure_ascii=False))
+                                              data=data)
             return response.json()
 
         else:
@@ -247,13 +251,17 @@ class Route(Base):
         :raises: ParamValueException if required params are not present.
         AttributeError if there is an error deleting a route
         """
-        if self.check_required_params(kwargs, ['addresses', 'route_id', 'route_destination_id']):
-            params = {'api_key': self.params['api_key'],
-                      'route_id': kwargs.pop('route_id'),
-                      'route_destination_id': kwargs.pop('route_destination_id'), }
-
+        if self.check_required_params(kwargs, ['addresses',
+                                               'route_id',
+                                               'route_destination_id']):
+            params = {
+                'api_key': self.params['api_key'],
+                'route_id': kwargs.pop('route_id'),
+                'route_destination_id': kwargs.pop('route_destination_id'),
+            }
+            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_put(ROUTE_HOST,
-                                             params, data=json.dumps(kwargs, ensure_ascii=False))
+                                             params, data=data)
             return response.json()
 
         else:
@@ -267,9 +275,10 @@ class Route(Base):
         AttributeError if there is an error deleting a route
         """
         if self.check_required_params(kwargs, ['route_ids']):
+            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(MERGE_ROUTES_HOST,
                                               self.params,
-                                              data=json.dumps(kwargs, ensure_ascii=False))
+                                              data=data)
             return response.json()
 
         else:
@@ -283,7 +292,9 @@ class Route(Base):
         AttributeError if there is an error deleting a route
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['disable_optimization', 'route_id', 'optimize', ]):
+        if self.check_required_params(kwargs, ['disable_optimization',
+                                               'route_id',
+                                               'optimize', ]):
             response = self.api._request_get(RESEQUENCE_ROUTE,
                                              kwargs)
             return response.json()
@@ -298,13 +309,16 @@ class Route(Base):
         :raises: ParamValueException if required params are not present.
         AttributeError if there is an error deleting a route
         """
-        if self.check_required_params(kwargs, ['route_id', 'route_destination_id']):
-            params = {'api_key': self.params['api_key'],
-                      'route_id': kwargs.pop('route_id'),
-                      'route_destination_id': kwargs.pop('route_destination_id'), }
-
+        if self.check_required_params(kwargs, ['route_id',
+                                               'route_destination_id']):
+            params = {
+                'api_key': self.params['api_key'],
+                'route_id': kwargs.pop('route_id'),
+                'route_destination_id': kwargs.pop('route_destination_id'),
+            }
+            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_put(ADDRESS_HOST,
-                                             params, data=json.dumps(kwargs, ensure_ascii=False))
+                                             params, data=data)
             return response.json()
 
         else:

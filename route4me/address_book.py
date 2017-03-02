@@ -29,8 +29,10 @@ class AddressBook(Base):
         """
         self.json_data = kwargs
         if self.check_required_params(self.json_data, self.REQUIRED_FIELDS):
+            data = json.dumps(self.json_data, ensure_ascii=False)
             self.response = self.api._request_post(ADDRESSBOOK,
-                                                   self.params, data=json.dumps(self.json_data, ensure_ascii=False))
+                                                   self.params,
+                                                   data=data)
             return self.response.content
 
         else:
@@ -74,7 +76,8 @@ class AddressBook(Base):
         """
         if self.check_required_params(kwargs, ['address_id', ]):
             self.response = self.api._request_put(ADDRESSBOOK,
-                                                  self.params, data=json.dumps(kwargs))
+                                                  self.params,
+                                                  data=json.dumps(kwargs))
             response = json.loads(self.response.content)
             return response
         else:
@@ -88,7 +91,8 @@ class AddressBook(Base):
         """
         if self.check_required_params(kwargs, ['address_ids', ]):
             self.response = self.api._request_delete(ADDRESSBOOK,
-                                                     self.params, data=json.dumps(kwargs))
+                                                     self.params,
+                                                     data=json.dumps(kwargs))
             response = json2obj(self.response.content)
             return response
         else:

@@ -1,10 +1,19 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DEVICE_TYPE,
+    TRAVEL_MODE,
+    DISTANCE_UNIT,
+    METRIC,
+)
 from route4me.api_endpoints import ROUTE_HOST
 
 KEY = '11111111111111111111111111111111'
 
 # codebeat:disable[LOC, ABC]
+
+
 def main():
     route4me = Route4Me(KEY)
     optimization = route4me.optimization
@@ -23,6 +32,7 @@ def main():
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
     optimization.metric(METRIC.ROUTE4ME_METRIC_GEODESIC)
+
     address.add_address(
         address='3634 W Market St, Fairlawn, OH 44333',
         lat=41.135762259364,
@@ -224,7 +234,6 @@ def main():
         time_window_start=65277,
         time_window_end=68545
     )
-    print optimization.data
 
     response = route4me.run_optimization()
     print 'Optimization Link: %s' % response.links.view

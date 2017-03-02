@@ -1,6 +1,12 @@
 # codebeat:disable[SIMILARITY, LOC, ABC]
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DEVICE_TYPE,
+    TRAVEL_MODE,
+    DISTANCE_UNIT,
+)
 from route4me.api_endpoints import ROUTE_HOST
 
 KEY = "11111111111111111111111111111111"

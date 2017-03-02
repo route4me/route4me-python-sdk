@@ -10,12 +10,15 @@ def main():
     if hasattr(response, 'errors'):
         print '. '.join(response.errors)
     else:
-        optimization_problem_id = response.optimizations[0].optimization_problem_id
-        response = optimization.get_optimization(optimization_problem_id=optimization_problem_id)
+        optimizations = response.optimizations
+        optimization_problem_id = optimizations[0].optimization_problem_id
+        response = optimization.get_optimization(
+            optimization_problem_id=optimization_problem_id)
         if hasattr(response, 'errors'):
             print '. '.join(response.errors)
         else:
-            print '\tOptimization ID: {}'.format(response.optimization_problem_id)
+            optimization_problem_id = response.optimization_problem_id
+            print '\tOptimization ID: {}'.format(optimization_problem_id)
 
 if __name__ == '__main__':
     main()

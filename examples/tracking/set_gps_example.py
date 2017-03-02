@@ -1,5 +1,8 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    FORMAT,
+    DEVICE_TYPE
+)
 
 KEY = "11111111111111111111111111111111"
 

@@ -27,6 +27,11 @@ def json2obj(data):
 
 
 def check_string_type(obj):
+    """
+    Check if an object is string type
+    :param obj:
+    :return:
+    """
     try:
         return isinstance(obj, basestring)
     except NameError:

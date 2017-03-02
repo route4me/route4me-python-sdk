@@ -1,8 +1,8 @@
 # codebeat:disable[SIMILARITY, BLOCK_NESTING]
 from route4me import Route4Me
-from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
+
 
 def main():
     route4me = Route4Me(KEY)

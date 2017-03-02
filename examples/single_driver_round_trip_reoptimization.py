@@ -5,6 +5,8 @@ from route4me.api_endpoints import ROUTE_HOST
 KEY = "11111111111111111111111111111111"
 
 # codebeat:disable[LOC, ABC]
+
+
 def main():
     route4me = Route4Me(KEY)
     api = route4me
@@ -104,6 +106,6 @@ def main():
     print 'Reoptimization status: %s' % \
           OPTIMIZATION_STATE.reverse_mapping.get(response.state)
 # codebeat:enable[LOC, ABC]
-		  
+
 if __name__ == '__main__':
     main()

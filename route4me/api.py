@@ -22,7 +22,7 @@ from route4me.file_uploading import FileUploading
 from route4me.members import Members
 from route4me.vehicles import Vehicle
 from route4me.constants import HEADERS
-from route4me.api_endpoints import API_HOST, ROUTE_HOST
+from route4me.api_endpoints import API_HOST
 
 
 class Route4Me(object):
@@ -104,7 +104,8 @@ class Route4Me(object):
         return requests.post(url, params=request_params,
                              allow_redirects=self.redirects,
                              proxies=self.proxies, files=files,
-                             data=data, headers=self.headers, verify=self.verify_ssl)
+                             data=data, headers=self.headers,
+                             verify=self.verify_ssl)
 
     def _request_get(self, url, request_params, data=None):
         """
@@ -117,7 +118,9 @@ class Route4Me(object):
         return requests.get(url, params=request_params,
                             allow_redirects=self.redirects,
                             proxies=self.proxies,
-                            data=data, headers=self.headers, verify=self.verify_ssl)
+                            data=data,
+                            headers=self.headers,
+                            verify=self.verify_ssl)
 
     def _request_put(self, url, request_params, data=None):
         """
@@ -129,7 +132,9 @@ class Route4Me(object):
         """
         return requests.request('PUT', url, params=request_params,
                                 proxies=self.proxies,
-                                data=data, headers=self.headers, verify=self.verify_ssl)
+                                data=data,
+                                headers=self.headers,
+                                verify=self.verify_ssl)
 
     def _request_delete(self, url, request_params, data=None):
         """
@@ -140,7 +145,9 @@ class Route4Me(object):
         :return:
         """
         return requests.request('DELETE', url, params=request_params,
-                                data=data, headers=self.headers, verify=self.verify_ssl)
+                                data=data,
+                                headers=self.headers,
+                                verify=self.verify_ssl)
 
     def run_optimization(self):
         """

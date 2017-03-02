@@ -62,7 +62,9 @@ class Optimization(Base):
 
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['optimization_problem_id', 'addresses', 'reoptimize']):
+        if self.check_required_params(kwargs, ['optimization_problem_id',
+                                               'addresses',
+                                               'reoptimize']):
             self.response = self.api._request_put(API_HOST,
                                                   kwargs)
             response = json2obj(self.response.content)
@@ -79,8 +81,10 @@ class Optimization(Base):
         """
         self.json_data = kwargs
         if self.check_required_params(kwargs, ['optimization_problem_ids', ]):
+            data = json.dumps(self.json_data, ensure_ascii=False)
             self.response = self.api._request_delete(API_HOST,
-                                                  self.params, data=json.dumps(self.json_data, ensure_ascii=False))
+                                                     self.params,
+                                                     data=data)
             response = json2obj(self.response.content)
             return response
         else:
@@ -94,7 +98,8 @@ class Optimization(Base):
 
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['optimization_problem_id', 'route_destination_id']):
+        if self.check_required_params(kwargs, ['optimization_problem_id',
+                                               'route_destination_id']):
             self.response = self.api._request_delete(ADDRESS_HOST,
                                                      kwargs)
             response = json2obj(self.response.content)

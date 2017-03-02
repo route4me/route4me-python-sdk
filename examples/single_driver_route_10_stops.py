@@ -5,6 +5,8 @@ from route4me.api_endpoints import ROUTE_HOST
 KEY = "11111111111111111111111111111111"
 
 # codebeat:disable[LOC, ABC]
+
+
 def main():
     route4me = Route4Me(KEY)
     optimization = route4me.optimization

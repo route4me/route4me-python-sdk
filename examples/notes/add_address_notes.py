@@ -1,5 +1,7 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    DEVICE_TYPE
+)
 
 KEY = "11111111111111111111111111111111"
 
@@ -20,20 +22,23 @@ def main():
             lat = response.addresses[0].lat
             lng = response.addresses[0].lng
             note = 'Test Note Contents'
-            response = route4me.address.add_address_notes(note, route_id=route_id,
-                                                          device_type=DEVICE_TYPE.WEB,
-                                                          activity_type='wrongdelivery',
-                                                          dev_lat=lat,
-                                                          dev_lng=lng,
-                                                          address_id=route_destination_id,
-                                                          )
+            response = route4me.address.add_address_notes(
+                note,
+                route_id=route_id,
+                device_type=DEVICE_TYPE.WEB,
+                activity_type='wrongdelivery',
+                dev_lat=lat,
+                dev_lng=lng,
+                address_id=route_destination_id,
+            )
             if hasattr(response, 'errors'):
                 print '. '.join(response.errors)
             else:
                 print 'Note ID: {}'.format(response.note_id)
                 print 'Note contents: {}'.format(response.note.contents)
                 print 'Route ID: {}'.format(response.note.route_id)
-                print 'Route Destination ID: {}'.format(response.note.route_destination_id)
+                print 'Route Destination ID: {}'.format(
+                    response.note.route_destination_id)
 
 if __name__ == '__main__':
     main()

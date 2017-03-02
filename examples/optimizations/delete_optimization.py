@@ -1,9 +1,17 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DISTANCE_UNIT,
+    DEVICE_TYPE,
+    TRAVEL_MODE
+)
 
 KEY = "11111111111111111111111111111111"
 
 # codebeat:disable[LOC, ABC]
+
+
 def main():
     route4me = Route4Me(KEY)
     optimization = route4me.optimization
@@ -88,8 +96,9 @@ def main():
     response = route4me.run_optimization()
     optimization_id = response.addresses[0].optimization_problem_id
     print 'Deleting Optimization Problem: {}'.format(optimization_id)
-    response = route4me.optimization.delete_optimization(optimization_problem_ids=[optimization_id, ])
-    print response
+    response = route4me.optimization.delete_optimization(
+        optimization_problem_ids=[optimization_id, ])
+    print (response)
 # codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':

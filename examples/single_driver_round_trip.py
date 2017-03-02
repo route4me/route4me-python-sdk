@@ -1,6 +1,12 @@
 # codebeat:disable[SIMILARITY, LOC, ABC]
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DEVICE_TYPE,
+    TRAVEL_MODE,
+    DISTANCE_UNIT,
+)
 from route4me.api_endpoints import ROUTE_HOST
 
 KEY = "11111111111111111111111111111111"
@@ -58,7 +64,7 @@ def main():
         alias='Frank Stella Clothier',
         time=0
     )
-    address.add_address( 
+    address.add_address(
         address='324 Columbus Ave #1 New York, NY 10023',
         lat=40.7803123,
         lng=-73.9793079,
@@ -88,11 +94,11 @@ def main():
     )
 
     response = route4me.run_optimization()
-    print 'Optimization Link: %s' % response.links.view
+    print ('Optimization Link: {}'.format(response.links.view))
     for address in response.addresses:
-        print 'Route %s link: %sroute_id=%s' % (address.address,
-                                                ROUTE_HOST,
-                                                address.route_id)
+        print ('\tRoute {0} link: {1}\troute_id={2}'.format(address.address,
+                                                            ROUTE_HOST,
+                                                            address.route_id))
 
 
 if __name__ == '__main__':

@@ -1,6 +1,12 @@
 # codebeat:disable[LOC, ABC]
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DISTANCE_UNIT,
+    DEVICE_TYPE,
+    TRAVEL_MODE
+)
 
 KEY = "11111111111111111111111111111111"
 
@@ -89,10 +95,15 @@ def main():
     response = route4me.run_optimization()
     optimization_id = response.addresses[0].optimization_problem_id
     route_destination_id = response.addresses[1].route_destination_id
-    print 'Deleting Address: {0}  from Optimization Problem: {1}'.format(route_destination_id, optimization_id)
-    response = route4me.optimization.delete_address_from_optimization(optimization_problem_id=optimization_id,
-                                                                      route_destination_id=route_destination_id)
-    print response
+    print 'Deleting Address: {0}  from Optimization Problem: {1}'.format(
+        route_destination_id,
+        optimization_id
+    )
+    response = route4me.optimization.delete_address_from_optimization(
+        optimization_problem_id=optimization_id,
+        route_destination_id=route_destination_id
+    )
+    print(response)
 
 
 if __name__ == '__main__':

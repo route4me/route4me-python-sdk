@@ -1,6 +1,5 @@
 # codebeat:disable[SIMILARITY, LOC, ABC]
 from route4me import Route4Me
-from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 

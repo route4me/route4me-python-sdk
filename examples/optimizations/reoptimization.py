@@ -1,5 +1,5 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import OPTIMIZATION_STATE
 
 KEY = "11111111111111111111111111111111"
 
@@ -11,7 +11,8 @@ def main():
     if hasattr(response, 'errors'):
         print '. '.join(response.errors)
     else:
-        optimization_problem_id = response.optimizations[0].optimization_problem_id
+        optimizations = response.optimizations
+        optimization_problem_id = optimizations[0].optimization_problem_id
         print 'Reoptimization problem id: {}'.format(optimization_problem_id)
         response = route4me.reoptimization(optimization_problem_id)
         print 'Reoptimization status: %s' % \

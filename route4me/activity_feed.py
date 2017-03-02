@@ -107,9 +107,12 @@ class ActivityFeed(Base):
         self.json_data = kwargs
         kwargs.update({'api_key': self.params['api_key'],
                        'activity_type': 'user_message', })
-        if self.check_required_params(self.json_data, ['api_key', 'activity_message', 'route_id']):
+        if self.check_required_params(self.json_data, ['api_key',
+                                                       'activity_message',
+                                                       'route_id']):
+            data = json.dumps(self.json_data, ensure_ascii=False)
             self.response = self.api._request_post(ACTIVITY_FEED,
-                                                   self.params, data=json.dumps(self.json_data, ensure_ascii=False))
+                                                   self.params, data=data)
             response = json2obj(self.response.content)
             return response
 

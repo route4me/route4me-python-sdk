@@ -8,7 +8,12 @@ import json
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
 from route4me.utils import json2obj
-from route4me.api_endpoints import ADD_ROUTE_NOTES_HOST, BATCH_GEOCODER, ADDRESS_HOST
+from route4me.api_endpoints import (
+    ADD_ROUTE_NOTES_HOST,
+    BATCH_GEOCODER,
+    ADDRESS_HOST,
+    SINGLE_GEOCODER,
+)
 
 
 class Address(Base):
@@ -93,9 +98,10 @@ class Address(Base):
         :param params:
         :return: response as a object
         """
-        request_method = self._request_get
-        self.response = self._make_request(self.single_geocoder_url(), params,
-                                           [], request_method)
+        self.response = self.api._make_request(SINGLE_GEOCODER,
+                                               params,
+                                               [],
+                                               self.api._request_get)
         return self.response.content
 
     def get_batch_geocodes(self, params):
@@ -104,12 +110,11 @@ class Address(Base):
         :param params:
         :return: response as a object
         """
-        self.response = self.api._make_request(self.batch_geocoder_url(),
+        self.response = self.api._make_request(BATCH_GEOCODER,
                                                params,
                                                [],
                                                self.api._request_get)
         return self.response.content
-
 
     def fix_geocode(self, address):
         geocoding_error = None
@@ -132,18 +137,12 @@ class Address(Base):
 
         return geocoding_error, address
 
-    def delete_address(self, params):
-        params.update({'api_key': self.key})
-        return self._make_request(ADDRESS_HOST, params, None, self._request_delete)
-
-    def update_address(self, params, data):
-        params.update({'api_key': self.key})
-        data = json.dumps(data)
-        return self._make_request(ADDRESS_HOST, params, data, self._request_put)
-
     def request_address(self, params):
         params.update({'api_key': self.key})
-        return self._make_request(ADDRESS_HOST, params, None, self._request_get)
+        return self._make_request(ADDRESS_HOST,
+                                  params,
+                                  None,
+                                  self._request_get)
 
     def get_address(self, route_id, route_destination_id):
         params = {'route_id': route_id,
@@ -164,14 +163,24 @@ class Address(Base):
         params = {'route_id': route_id,
                   'route_destination_id': route_destination_id
                   }
-        response = self.api.update_address(params, data)
+        params.update({'api_key': self.key})
+        data = json.dumps(data)
+        response = self.api._make_request(ADDRESS_HOST,
+                                          params,
+                                          data,
+                                          self.api._request_put)
         return json2obj(response.content)
 
     def delete_address_from_route(self, route_id, route_destination_id):
         params = {'route_id': route_id,
                   'route_destination_id': route_destination_id
                   }
-        response = self.api.delete_address(params)
+        params.update({'api_key': self.key})
+        response = self.api._make_request(ADDRESS_HOST,
+                                          params,
+                                          None,
+                                          self.api._request_delete)
+
         return json2obj(response.content)
 
     def add_address_notes(self, note, **kwargs):
@@ -181,7 +190,8 @@ class Address(Base):
         :raise: ParamValueException if required params are not present.
         """
         if self.check_required_params(kwargs, ['address_id', 'route_id']):
-            data = {'strUpdateType': kwargs.pop('activity_type'), 'strNoteContents': note}
+            data = {'strUpdateType': kwargs.pop('activity_type'),
+                    'strNoteContents': note}
             kwargs.update({'api_key': self.params['api_key'], })
             self.response = self.api._request_post(ADD_ROUTE_NOTES_HOST,
                                                    kwargs, data)

@@ -1,10 +1,15 @@
 import json
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
-from route4me.utils import json2obj
-from route4me.api_endpoints import MEMBER_AUTHENTICATE, \
-    USER_LICENSE_HOST, VALIDATE_SESSION, WEBINAR_REGISTER, VERIFY_DEVICE_LICENSE, \
-    GET_USERS_HOST, USER_URL
+from route4me.api_endpoints import (
+    MEMBER_AUTHENTICATE,
+    USER_LICENSE_HOST,
+    VALIDATE_SESSION,
+    WEBINAR_REGISTER,
+    VERIFY_DEVICE_LICENSE,
+    GET_USERS_HOST,
+    USER_URL
+)
 
 
 class Members(Base):
@@ -34,9 +39,10 @@ class Members(Base):
                                                'token',
                                                'payload',
                                                'format', ]):
+            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(USER_LICENSE_HOST,
                                               self.params,
-                                              data=json.dumps(kwargs, ensure_ascii=False))
+                                              data=data)
             try:
                 return json.loads(response.content)
             except ValueError:
@@ -53,9 +59,10 @@ class Members(Base):
         if self.check_required_params(kwargs, ['device_id',
                                                'device_type',
                                                'format', ]):
+            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(VERIFY_DEVICE_LICENSE,
                                               self.params,
-                                              data=json.dumps(kwargs, ensure_ascii=False))
+                                              data=data)
             try:
                 return json.loads(response.content)
             except ValueError:

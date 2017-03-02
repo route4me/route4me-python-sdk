@@ -2,7 +2,9 @@ import json
 
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
-from route4me.api_endpoints import RAPID_ADDRESS_SERVICE, RAPID_ADDRESS, RAPID_ADDRESS_ZIP
+from route4me.api_endpoints import RAPID_ADDRESS_SERVICE, \
+    RAPID_ADDRESS, RAPID_ADDRESS_ZIP
+
 
 class RapidAddress(Base):
     """
@@ -27,14 +29,16 @@ class RapidAddress(Base):
         url = RAPID_ADDRESS
         kwargs.update({'api_key': self.params['api_key'], })
         if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
-            url = '{0}{1}/{2}/'.format(url, kwargs.pop('offset'), kwargs.pop('limit'))
+            url = '{0}{1}/{2}/'.format(url,
+                                       kwargs.pop('offset'),
+                                       kwargs.pop('limit'))
         elif 'pk' in kwargs:
             url = '{0}{1}/'.format(url, kwargs.pop('pk'))
 
         response = self.api._request_get(url, kwargs)
         try:
             return json.loads(response.content)
-        except ValueError as err:
+        except ValueError:
             return response.content
 
     def get_street_data_zip(self, **kwargs):
@@ -48,7 +52,9 @@ class RapidAddress(Base):
         if self.check_required_params(kwargs, ['zipcode', 'api_key', ]):
             url = '{0}{1}/'.format(url, kwargs.pop('zipcode'))
             if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
-                url = '{0}{1}/{2}/'.format(url, kwargs.pop('offset'), kwargs.pop('limit'))
+                url = '{0}{1}/{2}/'.format(url,
+                                           kwargs.pop('offset'),
+                                           kwargs.pop('limit'))
             response = self.api._request_get(url, kwargs)
             try:
                 return json.loads(response.content)
@@ -65,10 +71,16 @@ class RapidAddress(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         url = RAPID_ADDRESS_SERVICE
-        if self.check_required_params(kwargs, ['zipcode', 'api_key', 'housenumber', ]):
-            url = '{0}{1}/{2}/'.format(url, kwargs.pop('zipcode'), kwargs.pop('housenumber'))
+        if self.check_required_params(kwargs, ['zipcode',
+                                               'api_key',
+                                               'housenumber', ]):
+            url = '{0}{1}/{2}/'.format(url,
+                                       kwargs.pop('zipcode'),
+                                       kwargs.pop('housenumber'))
             if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
-                url = '{0}{1}/{2}/'.format(url, kwargs.pop('offset'), kwargs.pop('limit'))
+                url = '{0}{1}/{2}/'.format(url,
+                                           kwargs.pop('offset'),
+                                           kwargs.pop('limit'))
             response = self.api._request_get(url, kwargs)
             try:
                 return json.loads(response.content)

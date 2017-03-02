@@ -1,6 +1,5 @@
 # codebeat:disable[SIMILARITY]
 from route4me import Route4Me
-from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
@@ -27,11 +26,13 @@ def main():
     else:
         territory_id = response.territory_id
         print 'Territory ID: {0} -> Created'.format(territory_id)
-        response = avoidance_zones.delete_avoidance_zone(territory_id=territory_id)
+        response = avoidance_zones.delete_avoidance_zone(
+            territory_id=territory_id)
         if hasattr(response, 'errors'):
             print '. '.join(response.errors)
         else:
-            print 'Territory ID: {0} -> Deleted: {1}'.format(territory_id, response.status)
+            print 'Territory ID: {0} -> Deleted: {1}'.format(territory_id,
+                                                             response.status)
 
 if __name__ == '__main__':
     main()

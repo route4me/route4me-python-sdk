@@ -2,7 +2,14 @@
 import re
 import types
 
-from route4me.constants import *
+from route4me.constants import (
+    TRAVEL_MODE,
+    OPTIMIZE, DEVICE_TYPE,
+    DISTANCE_UNIT,
+    ROUTE_PATH_OUTPUT,
+    TRUCK_HAZARDOUS_GOODS,
+    FORMAT,
+)
 from route4me.exceptions import ParamValueException
 from route4me.utils import check_string_type
 
@@ -354,11 +361,12 @@ class Base(object):
         :param trailer_weight_t:
         :return:
         """
-        if isinstance(trailer_weight_t, types.LongType) or isinstance(trailer_weight_t,
-                                                                      types.IntType):
+        if isinstance(trailer_weight_t, types.LongType) or \
+           isinstance(trailer_weight_t, types.IntType):
             self._copy_data({'trailer_weight_t': trailer_weight_t})
         else:
-            raise ParamValueException('trailer_weight_t', 'Must be integer or long')
+            raise ParamValueException('trailer_weight_t',
+                                      'Must be integer or long')
 
     def limited_weight_t(self, limited_weight_t):
         """
@@ -371,7 +379,8 @@ class Base(object):
            isinstance(limited_weight_t, types.IntType):
             self._copy_data({'limited_weight_t': limited_weight_t})
         else:
-            raise ParamValueException('limited_weight_t', 'Must be integer or long')
+            raise ParamValueException('limited_weight_t',
+                                      'Must be integer or long')
 
     def weight_per_axle_t(self, weight_per_axle_t):
         """
@@ -384,7 +393,8 @@ class Base(object):
            isinstance(weight_per_axle_t, types.IntType):
             self._copy_data({'weight_per_axle_t': weight_per_axle_t})
         else:
-            raise ParamValueException('weight_per_axle_t', 'Must be integer or long')
+            raise ParamValueException('weight_per_axle_t',
+                                      'Must be integer or long')
 
     def truck_height(self, truck_height):
         """
@@ -431,11 +441,12 @@ class Base(object):
         :param min_tour_size:
         :return:
         """
-        if isinstance(min_tour_size, types.LongType) or isinstance(min_tour_size,
-                                                                   types.IntType):
+        if isinstance(min_tour_size, types.LongType) or \
+           isinstance(min_tour_size, types.IntType):
             self._copy_data({'min_tour_size': min_tour_size})
         else:
-            raise ParamValueException('min_tour_size', 'Must be integer or long')
+            raise ParamValueException('min_tour_size',
+                                      'Must be integer or long')
 
     def route_date(self, route_date):
         """
@@ -672,7 +683,8 @@ class Base(object):
         if 1 <= optimization_quality <= 3:
             self._copy_data({'optimization_quality': optimization_quality})
         else:
-            raise ParamValueException('optimization_quality', 'Must be between 1 to 3')
+            raise ParamValueException('optimization_quality',
+                                      'Must be between 1 to 3')
 
     def directions(self, directions):
         """
@@ -692,9 +704,12 @@ class Base(object):
         :return:
         """
         if 0 <= device_tracking_history <= 1:
-            self._copy_param({'device_tracking_history': device_tracking_history})
+            self._copy_param({
+                'device_tracking_history': device_tracking_history
+            })
         else:
-            raise ParamValueException('device_tracking_history', 'Must be 0 or 1')
+            raise ParamValueException('device_tracking_history',
+                                      'Must be 0 or 1')
 
     def uturn(self, uturn_type):
         """
@@ -742,11 +757,13 @@ class Base(object):
         if dm in [1, 3, 6]:
             self._copy_data({'dm': dm})
         else:
-            raise ParamValueException('dm',
-                                      'Must be : '
-                                      'R4M_PROPRIETARY_ROUTING or '
-                                      'R4M_TRAFFIC_ENGINE or '
-                                      'TRUCKING')
+            raise ParamValueException(
+                'dm',
+                'Must be : '
+                'R4M_PROPRIETARY_ROUTING or '
+                'R4M_TRAFFIC_ENGINE or '
+                'TRUCKING'
+            )
 
     def dirm(self, dirm):
         """
@@ -759,10 +776,12 @@ class Base(object):
         if dirm in [1, 3]:
             self._copy_data({'dirm': dirm})
         else:
-            raise ParamValueException('dirm',
-                                      'Must be : '
-                                      'R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM or'
-                                      'TRUCKING')
+            raise ParamValueException(
+                'dirm',
+                'Must be : '
+                'R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM or'
+                'TRUCKING'
+            )
 
     def _copy_data(self, params):
         """
@@ -831,15 +850,16 @@ class Base(object):
         self.data.update(data)
         self.params.update(params)
 
-    def truck_hazardous_goods(self, truck_hazardous_goods):
+    def truck_hazardous_goods(self, hazardous_goods):
         """
         Set truck_hazardous_goods param
         :param truck_hazardous_goods:
         :return:
         """
-        if truck_hazardous_goods in TRUCK_HAZARDOUS_GOODS.reverse_mapping.keys():
-            self._copy_data({'truck_hazardous_goods': truck_hazardous_goods})
+        if hazardous_goods in TRUCK_HAZARDOUS_GOODS.reverse_mapping.keys():
+            self._copy_data({'truck_hazardous_goods': hazardous_goods})
         else:
-            raise ParamValueException('truck_hazardous_goods', 'Must be MI or KM')
+            raise ParamValueException('truck_hazardous_goods',
+                                      'Must be MI or KM')
 
 # codebeat:enable[TOTAL_LOC, TOO_MANY_FUNCTIONS, TOTAL_COMPLEXITY]

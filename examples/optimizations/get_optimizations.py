@@ -12,12 +12,9 @@ def main():
     else:
         print response
         for i, optimization in enumerate(response.optimizations):
-            print 'Optimization #{}'.format(i+1)
-            print '\tOptimization ID: {}'.format(optimization.optimization_problem_id)
-            #     print '\tActivity Message: {}'.format(activity.activity_message)
-            #     print '\tActivity Type: {}'.format(activity.activity_type)
-            #     print '\tRoute ID: {}'.format(activity.route_id)
-            #     print '\tRoute Name: {}'.format(activity.route_name)
+            optimization_problem_id = optimization.optimization_problem_id
+            print 'Optimization #{}'.format(i + 1)
+            print '\tOptimization ID: {}'.format(optimization_problem_id)
 
 if __name__ == '__main__':
     main()

@@ -56,9 +56,12 @@ class Territory(Base):
         :return: API response
         :raise: ParamValueException if required params are not present.
         """
-        if self.check_required_params(kwargs, ['territory_name', 'territory_color', 'territory']):
+        if self.check_required_params(kwargs, ['territory_name',
+                                               'territory_color',
+                                               'territory']):
             self.response = self.api._request_post(TERRITORY_HOST,
-                                                   self.params, data=json.dumps(kwargs))
+                                                   self.params,
+                                                   data=json.dumps(kwargs))
             response = json2obj(self.response.content)
             return response
         else:
@@ -86,9 +89,12 @@ class Territory(Base):
         :raise: ParamValueException if required params are not present.
         """
         self.params.update({'territory_id': territory_id})
-        if self.check_required_params(kwargs, ['territory_name', 'territory_color', 'territory']):
+        if self.check_required_params(kwargs, ['territory_name',
+                                               'territory_color',
+                                               'territory']):
             self.response = self.api._request_put(TERRITORY_HOST,
-                                                  self.params, data=json.dumps(kwargs))
+                                                  self.params,
+                                                  data=json.dumps(kwargs))
             response = json2obj(self.response.content)
             return response
         else:
