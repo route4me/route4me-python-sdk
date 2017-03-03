@@ -10,7 +10,7 @@ KEY = "11111111111111111111111111111111"
 
 def main():
     route4me = Route4Me(KEY)
-    gps = route4me.setGPS
+    gps = route4me.gps
     route = route4me.route
     response = route.get_routes(limit=10, Offset=5)
     if hasattr(response, 'errors'):

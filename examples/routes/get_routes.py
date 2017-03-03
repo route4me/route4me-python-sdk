@@ -11,9 +11,10 @@ def main():
         print '. '.join(response.errors)
     else:
         for i, route in enumerate(response):
-            print 'Route #{}'.format(i+1)
-            print '\tOptimization Problem ID: {}'.format(route.optimization_problem_id)
-            print '\tRoute ID: {}'.format(route.route_id)
+            print('Route #{}'.format(i + 1))
+            print('\tOptimization Problem ID: {}'.format(
+                route.optimization_problem_id))
+            print('\tRoute ID: {}'.format(route.route_id))
 
 if __name__ == '__main__':
     main()

@@ -1,9 +1,17 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DEVICE_TYPE,
+    DISTANCE_UNIT,
+    TRAVEL_MODE,
+)
 
 KEY = "11111111111111111111111111111111"
 
 # codebeat:disable[LOC, ABC]
+
+
 def main():
     r4m = Route4Me(KEY)
     optimization = r4m.optimization
@@ -78,8 +86,8 @@ def main():
     route_id = response.addresses[1].route_id
 
     response = r4m.route.update_route(data, route_id)
-    print 'Driver Alias: {}'.format(response.driver_alias)
+    print('Driver Alias: {}'.format(response.driver_alias))
 # codebeat:enable[LOC, ABC]
-	
+
 if __name__ == '__main__':
     main()

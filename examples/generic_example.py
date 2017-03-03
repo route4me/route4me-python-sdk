@@ -1,5 +1,4 @@
 from route4me import Route4Me
-from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
@@ -13,8 +12,10 @@ def main():
     else:
         print response
         for i, optimization in enumerate(response.optimizations):
-            print 'Optimization #{}'.format(i + 1)
-            print '\tOptimization ID: {}'.format(optimization.optimization_problem_id)
+            print('Optimization #{}'.format(i + 1))
+            print('\tOptimization ID: {}'.format(
+                optimization.optimization_problem_id
+            ))
 
 
 if __name__ == '__main__':

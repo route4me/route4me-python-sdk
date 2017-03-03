@@ -1,5 +1,4 @@
 from route4me import Route4Me
-from route4me.constants import *
 
 KEY = "11111111111111111111111111111111"
 
@@ -13,7 +12,7 @@ def main():
     else:
         contacts = response['results']
         for i, contact in enumerate(contacts):
-            print 'Address: {0} -  ID: {1}'.format(i+1, contact['address_id'])
+            print 'Address: {0} -  ID: {1}'.format(i + 1, contact['address_id'])
             print '\tFirst Name: {0}'.format(contact['first_name'])
             print '\tLast Name: {0}'.format(contact['last_name'])
             print '\tAddress: {0}'.format(contact['address_1'])

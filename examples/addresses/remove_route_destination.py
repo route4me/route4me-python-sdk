@@ -1,9 +1,17 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DISTANCE_UNIT,
+    DEVICE_TYPE,
+    TRAVEL_MODE,
+)
 
 KEY = "11111111111111111111111111111111"
 
 # codebeat:disable[LOC, ABC]
+
+
 def main():
     r4m = Route4Me(KEY)
     optimization = r4m.optimization
@@ -73,19 +81,22 @@ def main():
 
     response = r4m.run_optimization()
 
-    print 'Current Addresses'
+    print('Current Addresses')
     for i, address in enumerate(response.addresses):
-        print 'Number {}:'.format(i)
-        print '\taddress: {}'.format(address.address)
-        print '\t'
+        print('Number {}:'.format(i))
+        print('\taddress: {}'.format(address.address))
+        print('\t')
 
     route_id = response.addresses[1].route_id
     route_destination_id = response.addresses[1].route_destination_id
 
-    print 'Deleting address {0} from Route: {1}'.format(route_destination_id, route_id)
-
-    response = r4m.address.delete_address_from_route(route_id, route_destination_id)
-    print 'Address id: {1} deleted: {0}'.format(response.deleted, response.route_destination_id)
+    print('Deleting address {0} from Route: {1}'.format(
+        route_destination_id, route_id
+    ))
+    response = r4m.address.delete_address_from_route(route_id,
+                                                     route_destination_id)
+    print('Address id: {1} deleted: {0}'.format(response.deleted,
+                                                response.route_destination_id))
 # codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':

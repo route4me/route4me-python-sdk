@@ -47,7 +47,7 @@ class Route4Me(object):
         self.members = Members(self)
         self.vehicles = Vehicle(self)
         self.order = Order(self)
-        self.setGPS = SetGPS(self)
+        self.gps = SetGPS(self)
         self.route = Route(self)
         self.rapid_address = RapidAddress(self)
         self.territory = Territory(self)

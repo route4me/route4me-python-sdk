@@ -21,9 +21,10 @@ class Route4MeGPSTests(Route4MeAPITestSuite):
         self.assertFalse(hasattr(response, 'errors'))
         self.assertTrue(len(response) > 0)
         route_id = response[0].get('route_id', False)
-        setGPS = self.route4me.setGPS
+        gps = self.route4me.gps
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         params = {
-            'format': 'serialized',
+            'format': FORMAT.SERIALIZED,
             'route_id': route_id,
             'lat': 38.141598,
             'lng': -85.793846,
@@ -32,24 +33,24 @@ class Route4MeGPSTests(Route4MeAPITestSuite):
             'device_type': DEVICE_TYPE.IPHONE,
             'member_id': 1,
             'device_guid': 'qweqweqwe',
-            'device_timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'device_timestamp': now,
         }
-        return self.assertTrue(setGPS.set_gps_track(**params))
+        return self.assertTrue(gps.set_gps_track(**params))
 
     def test_set_valid_device_timestamp(self):
         """
         Valid Timestamp
         :return:
         """
-        setGPS = self.route4me.setGPS
+        gps = self.route4me.gps
         device_timestamp = '2014-36-99 57:83:85'
         return self.assertRaises(ParamValueException,
-                                 setGPS.device_timestamp, device_timestamp)
+                                 gps.device_timestamp, device_timestamp)
 
     def test_param_dict_validation(self):
-        gps = self.route4me.setGPS
+        gps = self.route4me.gps
         self.assertRaises(ParamValueException,
-                                 gps.add, {'xxxx': 100})
+                          gps.add, {'xxxx': 100})
 
 
 if __name__ == '__main__':

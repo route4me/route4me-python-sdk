@@ -1,9 +1,17 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DISTANCE_UNIT,
+    DEVICE_TYPE,
+    TRAVEL_MODE,
+)
 
 KEY = "11111111111111111111111111111111"
 
 # codebeat:disable[LOC, ABC]
+
+
 def main():
     r4m = Route4Me(KEY)
     optimization = r4m.optimization
@@ -90,34 +98,34 @@ def main():
     addresses = {'addresses': []}
     response = r4m.run_optimization()
 
-    print 'Current Addresses'
+    print('Current Addresses')
     for i, address in enumerate(response.addresses):
-        print 'Number {}:'.format(i)
+        print('Number {}:'.format(i))
         if address.is_depot:
-            print '\t This is a Depot'
-        print '\taddress: {}'.format(address.address)
-        print '\t'
+            print('\t This is a Depot')
+        print('\taddress: {}'.format(address.address))
+        print('\t')
         if new_sequence[i] == 0:
-            addresses['addresses'].append(
-                {
-                    "route_destination_id": address.route_destination_id,
-                    "is_depot": True
-                })
+            addresses['addresses'].append({
+                "route_destination_id": address.route_destination_id,
+                "is_depot": True
+            })
         else:
-            addresses['addresses'].append({"route_destination_id": address.route_destination_id,
-                                           "sequence_no": new_sequence[i],
-                                           "is_depot": False
-                                           })
+            addresses['addresses'].append({
+                "route_destination_id": address.route_destination_id,
+                "sequence_no": new_sequence[i],
+                "is_depot": False
+            })
 
-    print 'Moving addresses'
+    print('Moving addresses')
 
     route_id = response.addresses[1].route_id
 
     response = r4m.route.move_addresses_from_route(addresses, route_id)
-    print 'Addresses after move'
+    print('Addresses after move')
 
     for i, address in enumerate(response.addresses):
-        print 'Number {}:'.format(i)
+        print('Number {}:'.format(i))
         if address.is_depot:
             print '\t This is a Depot'
         print '\taddress: {}'.format(address.address)
