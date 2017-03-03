@@ -22,13 +22,13 @@ def auto_enum(*sequential, **named):
     enums = dict(zip(sequential, range(1, len(sequential) + 1)), **named)
     return enum(**enums)
 
+
 TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1,
                       R4M_TRAFFIC_ENGINE=3,
                       TRUCKING=6)
 
 DIRECTIONS_METHOD = enum(R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM=1,
                          TRUCKING=3)
-
 
 ALGORITHM_TYPE = enum(TSP=1,
                       VRP=2,
@@ -61,7 +61,7 @@ METRIC = auto_enum('ROUTE4ME_METRIC_EUCLIDEAN',
                    'ROUTE4ME_METRIC_MANHATTAN',
                    'ROUTE4ME_METRIC_GEODESIC',
                    'ROUTE4ME_METRIC_MATRIX',
-                   'ROUTE4ME_METRIC_EXACT_2D',)
+                   'ROUTE4ME_METRIC_EXACT_2D', )
 
 DEVICE_TYPE = enum(WEB="web",
                    IPHONE="iphone",
@@ -79,7 +79,7 @@ OPTIMIZATION_STATE = auto_enum('OPTIMIZATION_STATE_INITIAL',
                                'OPTIMIZATION_STATE_OPTIMIZING',
                                'OPTIMIZATION_STATE_OPTIMIZED',
                                'OPTIMIZATION_STATE_ERROR',
-                               'OPTIMIZATION_STATE_COMPUTING_DIRECTIONS',)
+                               'OPTIMIZATION_STATE_COMPUTING_DIRECTIONS', )
 
 ROUTE_PATH_OUTPUT = enum(NONE='None',
                          POINTS='Points')

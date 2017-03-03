@@ -1,9 +1,9 @@
 import json
 
-from route4me.base import Base
-from route4me.exceptions import ParamValueException
 from route4me.api_endpoints import RAPID_ADDRESS_SERVICE, \
     RAPID_ADDRESS, RAPID_ADDRESS_ZIP
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
 
 
 class RapidAddress(Base):

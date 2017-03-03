@@ -1,12 +1,12 @@
 # codebeat:disable[TOO_MANY_FUNCTIONS]
 import json
 
-from route4me.base import Base
-from route4me.exceptions import ParamValueException
-from route4me.utils import json2obj
 from route4me.api_endpoints import ROUTE_HOST, EXPORTER, \
     ADDRESS_HOST, GET_ACTIVITIES_HOST, DUPLICATE_ROUTE, SHARE_ROUTE_HOST, \
     MERGE_ROUTES_HOST, RESEQUENCE_ROUTE
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.utils import json2obj
 
 
 class Route(Base):

@@ -1,8 +1,8 @@
-import unittest
 import datetime
-from route4me.exceptions import ParamValueException
-from route4me.constants import FORMAT, DEVICE_TYPE
+import unittest
 
+from route4me.constants import FORMAT, DEVICE_TYPE
+from route4me.exceptions import ParamValueException
 from tests.base import Route4MeAPITestSuite
 
 

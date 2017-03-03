@@ -1,16 +1,16 @@
 import json
 
+from route4me.api_endpoints import ADDRESSBOOK
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
 from route4me.utils import json2obj
-from route4me.api_endpoints import ADDRESSBOOK
 
 
 class AddressBook(Base):
     """
     Address Book Management
     """
-    REQUIRED_FIELDS = ('address_1', 'cached_lat', 'cached_lng', )
+    REQUIRED_FIELDS = ('address_1', 'cached_lat', 'cached_lng',)
 
     def __init__(self, api, addresses=[]):
         """

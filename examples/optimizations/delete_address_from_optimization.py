@@ -95,10 +95,10 @@ def main():
     response = route4me.run_optimization()
     optimization_id = response.addresses[0].optimization_problem_id
     route_destination_id = response.addresses[1].route_destination_id
-    print 'Deleting Address: {0}  from Optimization Problem: {1}'.format(
+    print('Deleting Address: {0}  from Optimization Problem: {1}'.format(
         route_destination_id,
         optimization_id
-    )
+    ))
     response = route4me.optimization.delete_address_from_optimization(
         optimization_problem_id=optimization_id,
         route_destination_id=route_destination_id

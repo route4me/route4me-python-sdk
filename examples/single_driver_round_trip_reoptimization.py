@@ -1,4 +1,5 @@
 from route4me import Route4Me
+from route4me.api_endpoints import ROUTE_HOST
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
@@ -7,9 +8,9 @@ from route4me.constants import (
     TRAVEL_MODE,
     OPTIMIZATION_STATE,
 )
-from route4me.api_endpoints import ROUTE_HOST
 
 KEY = "11111111111111111111111111111111"
+
 
 # codebeat:disable[LOC, ABC]
 
@@ -96,8 +97,6 @@ def main():
         time=0
     )
 
-    print optimization.data
-
     response = route4me.run_optimization()
     print('Optimization status: {}'.format(
         OPTIMIZATION_STATE.reverse_mapping.get(response.state)
@@ -112,9 +111,11 @@ def main():
     print('Re-optimization...')
     optimization_problem_id = response.optimization_problem_id
     response = api.reoptimization(optimization_problem_id)
-    print('Reoptimization status: {}'.format(
+    print('Re-optimization status: {}'.format(
         OPTIMIZATION_STATE.reverse_mapping.get(response.state)
     ))
+
+
 # codebeat:enable[LOC, ABC]
 
 

@@ -1,19 +1,20 @@
 # codebeat:disable[ABC]
-import xmltodict
-import time
-import random
-import requests
 import json
+import random
+import time
 
-from route4me.base import Base
-from route4me.exceptions import ParamValueException
-from route4me.utils import json2obj
+import requests
+import xmltodict
+
 from route4me.api_endpoints import (
     ADD_ROUTE_NOTES_HOST,
     BATCH_GEOCODER,
     ADDRESS_HOST,
     SINGLE_GEOCODER,
 )
+from route4me.base import Base
+from route4me.exceptions import ParamValueException
+from route4me.utils import json2obj
 
 
 class Address(Base):
@@ -217,4 +218,5 @@ class Address(Base):
 
         else:
             raise ParamValueException('params', 'Params are not complete')
+
 # codebeat:enable[ABC]

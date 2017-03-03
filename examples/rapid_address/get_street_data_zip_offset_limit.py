@@ -10,9 +10,10 @@ def main():
                                                  offset=10,
                                                  limit=20)
     for street in response:
-        print 'Street Name:\t{0}\t\tZip Code:\t{1}'.format(
+        print('Street Name:\t{0}\t\tZip Code:\t{1}'.format(
             street.get('street_name'),
-            street.get('zipcode'))
+            street.get('zipcode')))
+
 
 if __name__ == '__main__':
     main()

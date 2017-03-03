@@ -9,6 +9,7 @@ from route4me.constants import (
 
 KEY = "11111111111111111111111111111111"
 
+
 # codebeat:disable[LOC, ABC]
 
 
@@ -95,10 +96,12 @@ def main():
 
     response = route4me.run_optimization()
     optimization_id = response.addresses[0].optimization_problem_id
-    print 'Deleting Optimization Problem: {}'.format(optimization_id)
+    print('Deleting Optimization Problem: {}'.format(optimization_id))
     response = route4me.optimization.delete_optimization(
         optimization_problem_ids=[optimization_id, ])
-    print (response)
+    print(response)
+
+
 # codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':

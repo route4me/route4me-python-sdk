@@ -1,13 +1,14 @@
 from route4me import Route4Me
+from route4me.api_endpoints import ROUTE_HOST
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
     DISTANCE_UNIT,
     DEVICE_TYPE,
 )
-from route4me.api_endpoints import ROUTE_HOST
 
 KEY = "11111111111111111111111111111111"
+
 
 # codebeat:disable[LOC, ABC]
 
@@ -86,14 +87,14 @@ def main():
         time=0
     )
 
-    print optimization.data
-
     response = route4me.run_optimization()
     print('Optimization Link: {}'.format(response.links.view))
     for address in response.addresses:
         print('Route {0} link: {1} route_id={2}'.format(address.address,
                                                         ROUTE_HOST,
                                                         address.route_id))
+
+
 # codebeat:enable[LOC, ABC]
 
 

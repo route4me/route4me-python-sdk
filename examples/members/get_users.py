@@ -8,7 +8,7 @@ def main():
     members = route4me.members
     response = members.get_users(limit=5, offset=0)
     if 'errors' in list(response.keys()):
-        print '. '.join(response.get('errors'))
+        print('. '.join(response.get('errors')))
     else:
         for i, member in enumerate(response):
             print('Member #{}'.format(i + 1))

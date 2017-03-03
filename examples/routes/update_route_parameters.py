@@ -91,7 +91,8 @@ def main():
 
     response = r4m.update_route_parameters(parameters, route_id)
 
-    print 'Route Name: {}'.format(response.parameters.route_name)
+    print('Route Name: {}'.format(response.parameters.route_name))
+
 
 if __name__ == '__main__':
     main()

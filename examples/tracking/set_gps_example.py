@@ -12,21 +12,21 @@ def main():
     route = route4me.route
     response = route.get_routes(limit=10, Offset=5)
     if hasattr(response, 'errors'):
-        print '. '.join(response.errors)
+        print('. '.join(response.errors))
     else:
-        setGPS = route4me.gps
-        setGPS.format(FORMAT.CSV)
-        setGPS.route_id(response[0].route_id)
-        setGPS.lat(33.14384),
-        setGPS.lng(-83.22466)
-        setGPS.course(1)
-        setGPS.speed(120)
-        setGPS.device_type(DEVICE_TYPE.IPHONE, 'param')
-        setGPS.member_id(1, 'param')
-        setGPS.device_guid('TEST_GPS')
-        setGPS.device_timestamp('2014-06-14 17:43:35')
-        print setGPS.params
-        print setGPS.set_gps_track()
+        gps = route4me.gps
+        gps.format(FORMAT.CSV)
+        gps.route_id(response[0].route_id)
+        gps.lat(33.14384),
+        gps.lng(-83.22466)
+        gps.course(1)
+        gps.speed(120)
+        gps.device_type(DEVICE_TYPE.IPHONE, 'param')
+        gps.member_id(1, 'param')
+        gps.device_guid('TEST_GPS')
+        gps.device_timestamp('2014-06-14 17:43:35')
+        print(gps.params)
+        print(gps.set_gps_track())
 
 
 if __name__ == '__main__':

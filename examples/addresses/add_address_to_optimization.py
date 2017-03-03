@@ -65,6 +65,7 @@ def main():
                     print('\tLongitude: {}'.format(address.lng))
                     print('\tAlias: {}'.format(address.alias))
 
+
 if __name__ == '__main__':
     main()
 # codebeat:enable[LOC, ABC, BLOCK_NESTING]

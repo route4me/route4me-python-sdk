@@ -22,5 +22,6 @@ def main():
             for i, address in enumerate(response.addresses):
                 print('\t{0} - {1}'.format(i, address.address))
 
+
 if __name__ == '__main__':
     main()

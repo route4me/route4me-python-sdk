@@ -5,6 +5,7 @@ class APIException(Exception):
     """
     Handle API Exceptions
     """
+
     def __init__(self, status_code, response, url):
         self.status_code = status_code
         self.response = response
@@ -34,6 +35,7 @@ class ParamValueException(Exception):
     """
     Handle Params exceptions
     """
+
     def __init__(self, param, msg):
         self.param = param
         self.msg = msg

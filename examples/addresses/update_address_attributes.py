@@ -9,6 +9,7 @@ from route4me.constants import (
 
 KEY = "11111111111111111111111111111111"
 
+
 # codebeat:disable[LOC, ABC]
 
 
@@ -117,6 +118,8 @@ def main():
             print('New Address and Alias')
             print('\taddress: {}'.format(response.address))
             print('\talias: {}'.format(response.alias))
+
+
 # codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':

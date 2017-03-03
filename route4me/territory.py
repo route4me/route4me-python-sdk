@@ -1,10 +1,10 @@
 # codebeat:disable[SIMILARITY, BLOCK_NESTING]
 import json
 
+from route4me.api_endpoints import TERRITORY_HOST
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
 from route4me.utils import json2obj
-from route4me.api_endpoints import TERRITORY_HOST
 
 
 class Territory(Base):
@@ -99,4 +99,5 @@ class Territory(Base):
             return response
         else:
             raise ParamValueException('params', 'Params are not complete')
+
 # codebeat:enable[SIMILARITY, BLOCK_NESTING]

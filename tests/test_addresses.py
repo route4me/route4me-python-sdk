@@ -1,7 +1,6 @@
 import unittest
 
 from route4me.exceptions import ParamValueException
-
 from tests.base import Route4MeAPITestSuite
 
 

@@ -11,7 +11,7 @@ def main():
     route = route4me.route
     response = route.get_routes(limit=10, Offset=5)
     if hasattr(response, 'errors'):
-        print '. '.join(response.errors)
+        print('. '.join(response.errors))
     else:
         params = {
             'route_id': response[0].route_id,
@@ -41,6 +41,7 @@ def main():
                 print('\tDirections: {}'.format(step.directions))
                 print('\tDuration: {} sec'.format(step.duration_sec))
                 print('\tCompass Direction: {}'.format(step.compass_direction))
+
 
 if __name__ == '__main__':
     main()

@@ -18,5 +18,6 @@ def main():
             print('\tActivity ID: {}'.format(activity.activity_id))
             print('\tActivity Type: {}'.format(activity.activity_type))
 
+
 if __name__ == '__main__':
     main()

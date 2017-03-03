@@ -9,6 +9,7 @@ from route4me.constants import (
 
 KEY = "11111111111111111111111111111111"
 
+
 # codebeat:disable[LOC, ABC]
 
 
@@ -87,6 +88,8 @@ def main():
 
     response = r4m.route.update_route(data, route_id)
     print('Driver Alias: {}'.format(response.driver_alias))
+
+
 # codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':

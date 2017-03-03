@@ -12,7 +12,7 @@ def main():
     files = {'strFilename': upload_file}
     response = file_uploading.upload_file_geocode(strUploadID=upload_id,
                                                   files=files)
-    print response
+    print(response)
 
 
 if __name__ == '__main__':

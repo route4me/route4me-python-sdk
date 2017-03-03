@@ -11,6 +11,7 @@ from route4me.constants import (
 
 KEY = "11111111111111111111111111111111"
 
+
 # codebeat:disable[LOC, ABC]
 
 
@@ -386,11 +387,13 @@ def main():
         time=300,
     )
     response = route4me.run_optimization()
-    print 'Optimization Link: %s' % response.links.view
+    print('Optimization Link: %s'.format(response.links.view))
     for address in response.addresses:
-        print 'Route %s link: %sroute_id=%s' % (address.address,
-                                                ROUTE_HOST,
-                                                address.route_id)
+        print('Route {0}\tlink: {1}\troute_id: {2}'.format(address.address,
+                                                           ROUTE_HOST,
+                                                           address.route_id))
+
+
 # codebeat:enable[LOC, ABC]
 
 

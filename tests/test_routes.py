@@ -12,7 +12,7 @@ class Route4MeRoutesTests(Route4MeAPITestSuite):
         route = self.route4me.route
         response = route.get_routes(limit=10, offset=5)
         if hasattr(response, 'errors'):
-            print ('. '.join(response.get('errors')))
+            print('. '.join(response.get('errors')))
         else:
             self.assertTrue(len(response) > 0)
             route_id = response[0].get('route_id', False)

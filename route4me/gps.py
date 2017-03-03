@@ -1,6 +1,6 @@
+from route4me.api_endpoints import SET_GPS_HOST
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
-from route4me.api_endpoints import SET_GPS_HOST
 
 
 class SetGPS(Base):

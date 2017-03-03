@@ -1,6 +1,5 @@
 from route4me import Route4Me
 
-
 KEY = "11111111111111111111111111111111"
 
 
@@ -9,14 +8,14 @@ def main():
     route = r4m.route
     response = route.get_routes(limit=10, Offset=5)
     if hasattr(response, 'errors'):
-        print '. '.join(response.errors)
+        print('. '.join(response.errors))
     else:
         route_id1 = response[0].route_id
         route_id2 = response[1].route_id
         data = {'route_ids': [route_id1, route_id2]}
         response = route.merge_routes(**data)
         if hasattr(response, 'errors'):
-            print '. '.join(response.errors)
+            print('. '.join(response.errors))
         else:
             print('Optimization Problem ID: {}'.format(
                 response.optimization_problem_id

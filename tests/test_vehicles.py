@@ -4,7 +4,6 @@ from tests.base import Route4MeAPITestSuite
 
 
 class Route4MeVehicleTests(Route4MeAPITestSuite):
-
     def test_get_vehicles(self):
         response = self.route4me.vehicles.get_vehicles()
         self.assertTrue(len(response) > 0)

@@ -6,11 +6,10 @@ KEY = "11111111111111111111111111111111"
 def main():
     route4me = Route4Me(KEY)
     optimization = route4me.optimization
-    response = optimization.get_optimizations(limit=10, Offset=5)
+    response = optimization.get_optimizations(limit=10, offset=5)
     if hasattr(response, 'errors'):
-        print '. '.join(response.errors)
+        print('. '.join(response.errors))
     else:
-        print response
         for i, optimization in enumerate(response.optimizations):
             print('Optimization #{}'.format(i + 1))
             print('\tOptimization ID: {}'.format(

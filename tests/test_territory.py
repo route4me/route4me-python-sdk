@@ -1,7 +1,7 @@
-import unittest
 import json
-from route4me.utils import json2obj
+import unittest
 
+from route4me.utils import json2obj
 from tests.base import Route4MeAPITestSuite
 
 

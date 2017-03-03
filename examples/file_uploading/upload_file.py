@@ -11,7 +11,7 @@ def main():
     upload_file = open(filename, 'rb')
     files = {'strFilename': upload_file}
     response = file_uploading.upload_file(files=files, format='json')
-    print response
+    print(response)
 
 
 if __name__ == '__main__':

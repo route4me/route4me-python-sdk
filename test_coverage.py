@@ -1,7 +1,7 @@
 import os
 import unittest
-import coverage
 
+import coverage
 
 COV = coverage.coverage(
     branch=True,

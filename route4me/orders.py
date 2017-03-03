@@ -1,7 +1,8 @@
 import json
+
+from route4me.api_endpoints import ORDERS_HOST
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
-from route4me.api_endpoints import ORDERS_HOST
 
 
 class Order(Base):
@@ -9,7 +10,7 @@ class Order(Base):
     Orders are transactional events.
     """
 
-    REQUIRED_FIELDS = ('address_1', 'cached_lat', 'cached_lng', )
+    REQUIRED_FIELDS = ('address_1', 'cached_lat', 'cached_lng',)
 
     def __init__(self, api):
         """

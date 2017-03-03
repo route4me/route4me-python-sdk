@@ -1,6 +1,5 @@
 import unittest
 
-from route4me.exceptions import ParamValueException
 from route4me.constants import (
     OPTIMIZE,
     ALGORITHM_TYPE,
@@ -8,7 +7,7 @@ from route4me.constants import (
     DEVICE_TYPE,
     DISTANCE_UNIT,
 )
-
+from route4me.exceptions import ParamValueException
 from tests.base import Route4MeAPITestSuite
 
 
@@ -52,7 +51,7 @@ class Route4MeOptimizationTests(Route4MeAPITestSuite):
             'share_route': 0,
             'store_route': 0,
             'route_time': 0,
-            'route_max_duration': 86400L,
+            'route_max_duration': 86400,
             'vehicle_capacity': 1,
             'vehicle_max_distance_mi': 10000,
             'route_name': 'Single Driver Round Trip',

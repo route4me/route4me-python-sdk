@@ -9,7 +9,7 @@ def main():
     upload_id = 'b2130b5fc36ae1109ef63b6db73781f6'
     response = file_uploading.get_file_preview(format='json',
                                                strUploadID=upload_id)
-    print response
+    print(response)
 
 
 if __name__ == '__main__':

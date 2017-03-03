@@ -8,13 +8,13 @@ def main():
     optimization = route4me.optimization
     response = optimization.get_optimizations(limit=10, Offset=5)
     if hasattr(response, 'errors'):
-        print '. '.join(response.errors)
+        print('. '.join(response.errors))
     else:
-        print response
         for i, optimization in enumerate(response.optimizations):
             optimization_problem_id = optimization.optimization_problem_id
-            print 'Optimization #{}'.format(i + 1)
-            print '\tOptimization ID: {}'.format(optimization_problem_id)
+            print('{}.-\tOptimization ID: {}'.format(i + 1,
+                                                     optimization_problem_id))
+
 
 if __name__ == '__main__':
     main()
