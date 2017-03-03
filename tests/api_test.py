@@ -11,7 +11,7 @@ class TestSuiteRoute4MeAPI(object):
     Route4Me Test Suite
     """
 
-    def setUp(self):
+    def setup_method(self):
         self.route4me = Route4Me(KEY)
 
     def test_api_key(self):
@@ -19,7 +19,7 @@ class TestSuiteRoute4MeAPI(object):
         Test that API key is set
         :return:
         """
-        return self.assertEquals(self.route4me.key, KEY)
+        assert self.route4me.key == KEY
 
     def test_route_name(self):
         """
@@ -29,7 +29,7 @@ class TestSuiteRoute4MeAPI(object):
         route_name = 'Single Driver Round Trip'
         self.route4me.optimization.route_name(route_name)
         data = self.route4me.optimization.data['parameters']
-        return self.assertEquals(route_name, data['route_name'])
+        assert route_name == data['route_name']
 
     def test_route_name_validation(self):
         """
@@ -38,8 +38,8 @@ class TestSuiteRoute4MeAPI(object):
         """
         route_name = 234567890
         optimization = self.route4me.optimization
-        return self.assertRaises(ParamValueException,
-                                 optimization.route_name, route_name)
+        with pytest.raises(ParamValueException) as excinfo:
+            optimization.route_name(route_name)
 
     def test_set(self):
         """
@@ -59,7 +59,7 @@ class TestSuiteRoute4MeAPI(object):
             'device_guid': 'qweqweqwe',
             'device_timestamp': '2014-06-14 17:43:35',
         })
-        return self.assertTrue(setGPS.set_gps_params())
+        assert True == setGPS.set_gps_params()
 
     def test_set_valid_device_timestamp(self):
         """
@@ -68,19 +68,8 @@ class TestSuiteRoute4MeAPI(object):
         """
         setGPS = self.route4me.setGPS
         device_timestamp = '2014-36-99 57:83:85'
-        return self.assertRaises(ParamValueException,
-                                 setGPS.device_timestamp, device_timestamp)
-
-    def test_route(self):
-        route = self.route4me.route
-        response = route.get_routes(limit=10, Offset=5)
-        if hasattr(response, 'errors'):
-            print '. '.join(response.errors)
-        else:
-            route_id = response[0].route_id
-            response = route.get_route(route_id=route_id)
-            return self.assertEqual(response.route_id,
-                                    route_id)
+        with pytest.raises(ParamValueException) as excinfo:
+            setGPS.device_timestamp(device_timestamp)
 
     def test_optimization(self):
         optimization = self.route4me.optimization
@@ -164,18 +153,26 @@ class TestSuiteRoute4MeAPI(object):
             time=0
         )
         response = self.route4me.run_optimization()
-        return self.assertEqual(4, response.state)
+        assert 4 == response.state
+
+    def test_route(self):
+        route = self.route4me.route
+        response = route.get_routes(limit=10, offset=5)
+        assert False == hasattr(response, 'errors')
+        # print '. '.join(response.errors)
+
+        route_id = response[0].route_id
+        response = route.get_route(route_id=route_id)
+        assert response.route_id == route_id
 
     def test_param_dict_validation(self):
         gps = self.route4me.setGPS
-        return self.assertRaises(ParamValueException,
-                                 gps.add, {'xxxx': 100})
+        with pytest.raises(ParamValueException) as excinfo:
+            gps.add({'xxxx': 100})
 
     def test_addresses_params(self):
         addresses = self.route4me.address
-        return self.assertRaises(ParamValueException,
-                                 addresses.add_address,
-                                 address='754 5th Ave New York, NY 10019')
-
-if __name__ == '__main__':
-    unittest.main()
+        with pytest.raises(ParamValueException) as excinfo:
+            addresses.add_address(
+                address='754 5th Ave New York, NY 10019'
+            )

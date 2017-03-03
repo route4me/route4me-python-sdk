@@ -69,7 +69,7 @@ class Route(Base):
 
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['limit', 'Offset', ]):
+        if self.check_required_params(kwargs, ['limit', 'offset', ]):
             self.response = self.api._request_get(self._build_route_url(),
                                                   kwargs)
             response = json2obj(self.response.content)
@@ -85,7 +85,7 @@ class Route(Base):
 
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['route_id', 'limit', 'Offset', ]):
+        if self.check_required_params(kwargs, ['route_id', 'limit', 'offset', ]):
             self.response = self.api._request_get(self.api.get_activities_host_url(),
                                                   kwargs)
             response = json2obj(self.response.content)

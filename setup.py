@@ -9,7 +9,7 @@ def read(fname):
 
 setup(
     name = "Route4Me SDK",
-    version = "0.0.1",
+    version = "0.0.2",
     author = "Route4Me",
     author_email = "juan@route4me.com",
     description = ("Route4Me Python SDK"),
