@@ -1,6 +1,5 @@
 # codebeat:disable[TOTAL_LOC, TOO_MANY_FUNCTIONS, TOTAL_COMPLEXITY]
 import re
-import types
 
 from route4me.constants import (
     TRAVEL_MODE,
@@ -52,11 +51,10 @@ class Base(object):
         :return:
         :raise: ParamValueException if member_id is not Integer
         """
-        if isinstance(member_id, types.LongType) or isinstance(member_id,
-                                                               types.IntType):
+        if isinstance(member_id, int):
             getattr(self, '_copy_%s' % target)({'member_id': member_id})
         else:
-            raise ParamValueException('member_id', 'Must be Integer or Long')
+            raise ParamValueException('member_id', 'Must be integer')
 
     def route_id(self, route_id):
         """
@@ -99,11 +97,10 @@ class Base(object):
         :param vehicle_id:
         :return:
         """
-        if isinstance(vehicle_id, types.LongType) or isinstance(vehicle_id,
-                                                                types.IntType):
+        if isinstance(vehicle_id, int):
             self._copy_data({'vehicle_id': vehicle_id})
         else:
-            raise ParamValueException('vehicle_id', 'Must be integer or long')
+            raise ParamValueException('vehicle_id', 'Must be integer')
 
     def course(self, course):
         """
@@ -111,11 +108,10 @@ class Base(object):
         :param course:
         :return:
         """
-        if isinstance(course, types.LongType) or isinstance(course,
-                                                            types.IntType):
+        if isinstance(course, int):
             self._copy_param({'course': course})
         else:
-            raise ParamValueException('course', 'Must be integer or long')
+            raise ParamValueException('course', 'Must be integer')
 
     def speed(self, speed):
         """
@@ -123,8 +119,7 @@ class Base(object):
         :param speed:
         :return:
         """
-        if isinstance(speed, types.LongType) or isinstance(speed,
-                                                           types.IntType):
+        if isinstance(speed, int):
             self._copy_param({'speed': speed})
         else:
             raise ParamValueException('speed', 'Must be Float')
@@ -135,7 +130,7 @@ class Base(object):
         :param lat:
         :return:
         """
-        if isinstance(lat, types.FloatType):
+        if isinstance(lat, float):
             self._copy_param({'lat': lat})
         else:
             raise ParamValueException('lat', 'Must be Float')
@@ -146,7 +141,7 @@ class Base(object):
         :param lng:
         :return:
         """
-        if isinstance(lng, types.FloatType):
+        if isinstance(lng, float):
             self._copy_param({'lng': lng})
         else:
             raise ParamValueException('lng', 'Must be Float')
@@ -157,7 +152,7 @@ class Base(object):
         :param lat:
         :return:
         """
-        if isinstance(lat, types.FloatType):
+        if isinstance(lat, float):
             self._copy_param({'lat': lat})
         else:
             raise ParamValueException('lat', 'Must be Float')
@@ -168,7 +163,7 @@ class Base(object):
         :param lng:
         :return:
         """
-        if isinstance(lng, types.FloatType):
+        if isinstance(lng, float):
             self._copy_param({'lng': lng})
         else:
             raise ParamValueException('lng', 'Must be Float')
@@ -179,7 +174,7 @@ class Base(object):
         :param altitude:
         :return:
         """
-        if isinstance(altitude, types.FloatType):
+        if isinstance(altitude, float):
             self._copy_param({'altitude': altitude})
         else:
             raise ParamValueException('altitude', 'Must be Float')
@@ -272,11 +267,10 @@ class Base(object):
         :param remote_ip:
         :return:
         """
-        if isinstance(remote_ip, types.LongType) or isinstance(remote_ip,
-                                                               types.IntType):
+        if isinstance(remote_ip, int):
             self._copy_data({'remote_ip': remote_ip})
         else:
-            raise ParamValueException('remote_ip', 'Must be integer or long')
+            raise ParamValueException('remote_ip', 'Must be integer')
 
     def travel_mode(self, travel_mode):
         """
@@ -349,11 +343,10 @@ class Base(object):
         :param route_time:
         :return:
         """
-        if isinstance(route_time, types.LongType) or isinstance(route_time,
-                                                                types.IntType):
+        if isinstance(route_time, int):
             self._copy_data({'route_time': route_time})
         else:
-            raise ParamValueException('route_time', 'Must be integer or long')
+            raise ParamValueException('route_time', 'Must be integer')
 
     def trailer_weight_t(self, trailer_weight_t):
         """
@@ -361,12 +354,11 @@ class Base(object):
         :param trailer_weight_t:
         :return:
         """
-        if isinstance(trailer_weight_t, types.LongType) or \
-           isinstance(trailer_weight_t, types.IntType):
+        if isinstance(trailer_weight_t, int):
             self._copy_data({'trailer_weight_t': trailer_weight_t})
         else:
             raise ParamValueException('trailer_weight_t',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def limited_weight_t(self, limited_weight_t):
         """
@@ -374,13 +366,12 @@ class Base(object):
         :param limited_weight_t:
         :return:
         """
-        if isinstance(limited_weight_t, types.LongType) or \
-           isinstance(limited_weight_t, float) or \
-           isinstance(limited_weight_t, types.IntType):
+        if isinstance(limited_weight_t, float) or \
+           isinstance(limited_weight_t, int):
             self._copy_data({'limited_weight_t': limited_weight_t})
         else:
             raise ParamValueException('limited_weight_t',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def weight_per_axle_t(self, weight_per_axle_t):
         """
@@ -388,13 +379,12 @@ class Base(object):
         :param weight_per_axle_t:
         :return:
         """
-        if isinstance(weight_per_axle_t, types.LongType) or \
-           isinstance(weight_per_axle_t, float) or \
-           isinstance(weight_per_axle_t, types.IntType):
+        if isinstance(weight_per_axle_t, float) or \
+           isinstance(weight_per_axle_t, int):
             self._copy_data({'weight_per_axle_t': weight_per_axle_t})
         else:
             raise ParamValueException('weight_per_axle_t',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def truck_height(self, truck_height):
         """
@@ -402,12 +392,11 @@ class Base(object):
         :param truck_height:
         :return:
         """
-        if isinstance(truck_height, types.LongType) or \
-           isinstance(truck_height, float) or \
-           isinstance(truck_height, types.IntType):
+        if isinstance(truck_height, float) or \
+           isinstance(truck_height, int):
             self._copy_data({'truck_height': truck_height})
         else:
-            raise ParamValueException('truck_height', 'Must be integer or long')
+            raise ParamValueException('truck_height', 'Must be integer')
 
     def truck_width(self, truck_width):
         """
@@ -415,12 +404,11 @@ class Base(object):
         :param truck_width:
         :return:
         """
-        if isinstance(truck_width, types.LongType) or \
-           isinstance(truck_width, float) or \
-           isinstance(truck_width, types.IntType):
+        if isinstance(truck_width, float) or \
+           isinstance(truck_width, int):
             self._copy_data({'truck_width': truck_width})
         else:
-            raise ParamValueException('truck_width', 'Must be integer or long')
+            raise ParamValueException('truck_width', 'Must be integer')
 
     def truck_length(self, truck_length):
         """
@@ -428,12 +416,11 @@ class Base(object):
         :param truck_length:
         :return:
         """
-        if isinstance(truck_length, types.LongType) or \
-           isinstance(truck_length, float) or \
-           isinstance(truck_length, types.IntType):
+        if isinstance(truck_length, float) or \
+           isinstance(truck_length, int):
             self._copy_data({'truck_length': truck_length})
         else:
-            raise ParamValueException('truck_length', 'Must be integer or long')
+            raise ParamValueException('truck_length', 'Must be integer')
 
     def min_tour_size(self, min_tour_size):
         """
@@ -441,12 +428,11 @@ class Base(object):
         :param min_tour_size:
         :return:
         """
-        if isinstance(min_tour_size, types.LongType) or \
-           isinstance(min_tour_size, types.IntType):
+        if isinstance(min_tour_size, int):
             self._copy_data({'min_tour_size': min_tour_size})
         else:
             raise ParamValueException('min_tour_size',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def route_date(self, route_date):
         """
@@ -454,11 +440,10 @@ class Base(object):
         :param route_date:
         :return:
         """
-        if isinstance(route_date, types.LongType) or isinstance(route_date,
-                                                                types.IntType):
+        if isinstance(route_date, int):
             self._copy_data({'route_date': route_date})
         else:
-            raise ParamValueException('route_date', 'Must be integer or long')
+            raise ParamValueException('route_date', 'Must be integer')
 
     def route_max_duration(self, route_max_duration):
         """
@@ -466,12 +451,11 @@ class Base(object):
         :param route_max_duration:
         :return:
         """
-        if isinstance(route_max_duration, types.LongType) or \
-                isinstance(route_max_duration, types.IntType):
+        if isinstance(route_max_duration, int):
             self._copy_data({'route_max_duration': route_max_duration})
         else:
             raise ParamValueException('route_max_duration',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def vehicle_capacity(self, vehicle_capacity):
         """
@@ -479,12 +463,11 @@ class Base(object):
         :param vehicle_capacity:
         :return:
         """
-        if isinstance(vehicle_capacity, types.LongType) or \
-                isinstance(vehicle_capacity, types.IntType):
+        if isinstance(vehicle_capacity, int):
             self._copy_data({'vehicle_capacity': vehicle_capacity})
         else:
             raise ParamValueException('vehicle_capacity',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def parts(self, parts):
         """
@@ -492,12 +475,11 @@ class Base(object):
         :param parts:
         :return:
         """
-        if isinstance(parts, types.LongType) or \
-                isinstance(parts, types.IntType):
+        if isinstance(parts, int):
             self._copy_data({'parts': parts})
         else:
             raise ParamValueException('parts',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def limit(self, limit):
         """
@@ -505,12 +487,11 @@ class Base(object):
         :param limit:
         :return:
         """
-        if isinstance(limit, types.LongType) or \
-                isinstance(limit, types.IntType):
+        if isinstance(limit, int):
             self._copy_param({'limit': limit})
         else:
             raise ParamValueException('limit',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def offset(self, offset):
         """
@@ -518,12 +499,11 @@ class Base(object):
         :param offset:
         :return:
         """
-        if isinstance(offset, types.LongType) or \
-                isinstance(offset, types.IntType):
+        if isinstance(offset, int):
             self._copy_param({'offset': offset})
         else:
             raise ParamValueException('offset',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def vehicle_max_distance_mi(self, vehicle_max_distance_mi):
         """
@@ -531,13 +511,12 @@ class Base(object):
         :param vehicle_max_distance_mi:
         :return:
         """
-        if isinstance(vehicle_max_distance_mi, types.LongType) or \
-                isinstance(vehicle_max_distance_mi, types.IntType):
+        if isinstance(vehicle_max_distance_mi, int):
             self._copy_data({'vehicle_max_distance_mi':
                              vehicle_max_distance_mi})
         else:
             raise ParamValueException('vehicle_max_distance_mi',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def max_tour_size(self, max_tour_size):
         """
@@ -545,13 +524,12 @@ class Base(object):
         :param max_tour_size:
         :return:
         """
-        if isinstance(max_tour_size, types.LongType) or \
-                isinstance(max_tour_size, types.IntType):
+        if isinstance(max_tour_size, int):
             self._copy_data({'max_tour_size':
                              max_tour_size})
         else:
             raise ParamValueException('max_tour_size',
-                                      'Must be integer or long')
+                                      'Must be integer')
 
     def route_email(self, route_email):
         """
