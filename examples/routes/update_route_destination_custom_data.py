@@ -1,5 +1,4 @@
 from route4me import Route4Me
-from route4me.constants import *
 
 
 KEY = "11111111111111111111111111111111"
@@ -19,15 +18,22 @@ def main():
             print 'Route ID: {}'.format(response.route_id)
             route_destination_id = response.addresses[1].route_destination_id
             print 'Route Destination ID: {}'.format(route_destination_id)
-            data = {"route_destination_id": route_destination_id,
-                    "route_id": response.route_id,
-                    "custom_fields": {"SDK": "Python"}
-                    }
+            data = {
+                "route_destination_id": route_destination_id,
+                "route_id": response.route_id,
+                "custom_fields": {
+                    "SDK": "Python"
+                }
+            }
             response = route.update_route_destination_custom_data(**data)
-            print 'Optimization Problem ID: {}'.format(response.optimization_problem_id)
+            print 'Optimization Problem ID: {}'.format(
+                response.optimization_problem_id
+            )
             print 'Route ID: {}'.format(response.route_id)
             print '\tAddress: {0}'.format(response.address)
-            print '\tRoute Destination ID: {0}'.format(response.route_destination_id)
+            print '\tRoute Destination ID: {0}'.format(
+                response.route_destination_id
+            )
             print '\tCustom Fields: {0}'.format(response.custom_fields)
 
 

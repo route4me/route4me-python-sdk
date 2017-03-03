@@ -12,7 +12,10 @@ def main():
     else:
         for i, member in enumerate(response):
             print('Member #{}'.format(i + 1))
-            print('\tName: {0}, {1}'.format(member.get('member_first_name'), member.get('member_last_name')))
+            print('\tName: {0}, {1}'.format(
+                member.get('member_first_name'),
+                member.get('member_last_name')
+            ))
             print('\tEmail: {}'.format(member.get('member_email')))
 
 

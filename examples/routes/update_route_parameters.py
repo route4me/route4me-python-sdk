@@ -1,8 +1,15 @@
 # codebeat:disable[LOC, ABC]
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DISTANCE_UNIT,
+    DEVICE_TYPE,
+    TRAVEL_MODE
+)
 
 KEY = "11111111111111111111111111111111"
+
 
 def main():
     r4m = Route4Me(KEY)
@@ -73,10 +80,12 @@ def main():
 
     response = r4m.run_optimization()
 
-    parameters = {"parameters": {"member_id":  1,
-                                 "route_name": "Route name updated"
-                                 }
-                  }
+    parameters = {
+        "parameters": {
+            "member_id": 1,
+            "route_name": "Route name updated",
+        }
+    }
 
     route_id = response.addresses[1].route_id
 

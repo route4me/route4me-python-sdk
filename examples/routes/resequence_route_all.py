@@ -1,5 +1,4 @@
 from route4me import Route4Me
-from route4me.constants import *
 
 
 KEY = "11111111111111111111111111111111"
@@ -16,7 +15,7 @@ def main():
         if hasattr(response, 'errors'):
             print '. '.join(response.errors)
         else:
-            print 'Route ID: {}'.format(response.route_id)
+            print('Route ID: {}'.format(response.route_id))
             data = {"disable_optimization": 0,
                     "optimize": 'Distance',
                     "route_id": response.route_id,

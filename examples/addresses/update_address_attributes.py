@@ -1,9 +1,17 @@
 from route4me import Route4Me
-from route4me.constants import *
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DISTANCE_UNIT,
+    DEVICE_TYPE,
+    TRAVEL_MODE
+)
 
 KEY = "11111111111111111111111111111111"
 
 # codebeat:disable[LOC, ABC]
+
+
 def main():
     r4m = Route4Me(KEY)
     optimization = r4m.optimization
@@ -88,23 +96,27 @@ def main():
     response = r4m.run_optimization()
 
     for i, address in enumerate(response.addresses):
-        print 'Number {}:'.format(i)
-        print '\taddress: {}'.format(address.address)
-        print '\troute_id: {}'.format(address.route_id)
-        print '\troute_destination_id: {}'.format(address.route_destination_id)
-        print '\t'
+        print('Number {}:'.format(i))
+        print('\taddress: {}'.format(address.address))
+        print('\troute_id: {}'.format(address.route_id))
+        print('\troute_destination_id: {}'.format(address.route_destination_id))
+        print('\t')
         if address.route_id:
-            print 'Modifying Address and Alias'
-            print 'Current Address and Alias'
-            data = {"address": "{} - Modified".format(address.address), "alias": '{0} - {1}'.format(address.alias,
-                                                                                                    address.address)}
-            print '\taddress: {}'.format(address.address)
-            print '\talias: {}'.format(address.alias)
-            print 'Updating Address'
-            response = r4m.address.update_address(data, address.route_id, address.route_destination_id)
-            print 'New Address and Alias'
-            print '\taddress: {}'.format(response.address)
-            print '\talias: {}'.format(response.alias)
+            print('Modifying Address and Alias')
+            print('Current Address and Alias')
+            data = {
+                "address": "{} - Modified".format(address.address),
+                "alias": '{0} - {1}'.format(address.alias, address.address)
+            }
+            print('\taddress: {}'.format(address.address))
+            print('\talias: {}'.format(address.alias))
+            print('Updating Address')
+            response = r4m.address.update_address(data,
+                                                  address.route_id,
+                                                  address.route_destination_id)
+            print('New Address and Alias')
+            print('\taddress: {}'.format(response.address))
+            print('\talias: {}'.format(response.alias))
 # codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':

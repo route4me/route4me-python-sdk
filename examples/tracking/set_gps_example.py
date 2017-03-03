@@ -14,7 +14,7 @@ def main():
     if hasattr(response, 'errors'):
         print '. '.join(response.errors)
     else:
-        setGPS = route4me.setGPS
+        setGPS = route4me.gps
         setGPS.format(FORMAT.CSV)
         setGPS.route_id(response[0].route_id)
         setGPS.lat(33.14384),
