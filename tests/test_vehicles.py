@@ -13,5 +13,6 @@ class Route4MeVehicleTests(Route4MeAPITestSuite):
         self.assertTrue('member_id' in response[0].keys())
         self.assertTrue('created_time' in response[0].keys())
 
+
 if __name__ == '__main__':
     unittest.main()

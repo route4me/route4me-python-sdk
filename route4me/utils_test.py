@@ -22,6 +22,6 @@ class TestUtils(object):
 
         act = utils.json2obj('{"key#11": 12}')
         exp = {
-            "key#11" : 12
+            "key#11": 12
         }
         assert act == exp
