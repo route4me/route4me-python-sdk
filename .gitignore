@@ -1,9 +1,9 @@
 .idea/*
 *.py[co]
-.idea/
-*.json
 Route4Me_SDK.egg-info/
-build/
-dist/
-docs_source
-/coverage
+/build/
+/dist/
+/docs_source
+/cover-html/
+.coverage
+/.cache/
