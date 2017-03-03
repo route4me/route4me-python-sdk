@@ -1,4 +1,4 @@
-import unittest
+import pytest
 from route4me.exceptions import ParamValueException
 from route4me import Route4Me
 from route4me.constants import *
@@ -6,7 +6,7 @@ from route4me.constants import *
 KEY = '11111111111111111111111111111111'
 
 
-class Route4MeAPITestSuite(unittest.TestCase):
+class TestSuiteRoute4MeAPI(object):
     """
     Route4Me Test Suite
     """
