@@ -7,7 +7,7 @@ build:
           file: '.coverage'
           config_file: '.coveragerc'
           format: 'py-cc'
-    dependencies:
-        override:
-          - pip install -r requirements-dev.txt -q
-          - pip install -r requirements.txt -q
+  dependencies:
+      override:
+        - pip install -r requirements-dev.txt -q
+        - pip install -r requirements.txt -q
