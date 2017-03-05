@@ -1,0 +1,9 @@
+build:
+  tests:
+    override:
+      -
+        command: pytest
+        coverage:
+          file: '.coverage'
+          config_file: '.coveragerc'
+          format: 'py-cc'
