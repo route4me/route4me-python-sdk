@@ -1,0 +1,13 @@
+build:
+  tests:
+    override:
+      -
+        command: pytest
+        coverage:
+          file: '.coverage'
+          config_file: '.coveragerc'
+          format: 'py-cc'
+  dependencies:
+      override:
+        - pip install -r requirements-dev.txt -q
+        - pip install -r requirements.txt -q
