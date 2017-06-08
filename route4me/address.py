@@ -210,8 +210,9 @@ class Address(Base):
         """
         if 'format' not in kwargs:
             kwargs.update({'format': 'csv'})
-        kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['addresses', ]):
+        kwargs['api_key'] = self.params['api_key']
+
+        if self.check_required_params(kwargs, ['addresses']):
             response = self.api._request_post(BATCH_GEOCODER,
                                               kwargs)
             return response.content

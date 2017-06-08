@@ -22,7 +22,7 @@ setup(
     packages=['route4me', 'examples', 'tests', ],
     long_description=read('README.md'),
     classifiers=[
-        "Development Status :: 1 - Beta",
+        "Development Status :: 1 - Alpha",
         "Topic :: SDK",
         "License :: ISC",
     ],
