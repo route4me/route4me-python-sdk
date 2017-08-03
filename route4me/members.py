@@ -1,6 +1,6 @@
 import json
 
-from route4me.api_endpoints import (
+from .api_endpoints import (
     MEMBER_AUTHENTICATE,
     USER_LICENSE_HOST,
     VALIDATE_SESSION,
@@ -10,8 +10,8 @@ from route4me.api_endpoints import (
     USER_URL,
     REGISTER_ACTION
 )
-from route4me.base import Base
-from route4me.exceptions import ParamValueException
+from .base import Base
+from .exceptions import ParamValueException
 
 
 class Members(Base):

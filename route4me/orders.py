@@ -1,8 +1,8 @@
 import json
 
-from route4me.api_endpoints import ORDERS_HOST
-from route4me.base import Base
-from route4me.exceptions import ParamValueException
+from .api_endpoints import ORDERS_HOST
+from .base import Base
+from .exceptions import ParamValueException
 
 
 class Order(Base):

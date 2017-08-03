@@ -1,7 +1,7 @@
 # codebeat:disable[SIMILARITY, BLOCK_NESTING]
-from route4me.api_endpoints import VEHICLES_HOST
-from route4me.base import Base
-from route4me.exceptions import ParamValueException, APIException
+from .api_endpoints import VEHICLES_HOST
+from .base import Base
+from .exceptions import ParamValueException, APIException
 
 
 class Vehicle(Base):

@@ -24,6 +24,3 @@ def json2obj(data):
     :return: object
     """
     return json.loads(data, object_hook=_json_object_hook)
-
-
-

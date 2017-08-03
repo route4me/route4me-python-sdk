@@ -11,3 +11,8 @@ build:
       override:
         - pip install -r requirements-dev.txt -q
         - pip install -r requirements.txt -q
+
+checks:
+    python:
+        code_rating: true
+        duplicate_code: true

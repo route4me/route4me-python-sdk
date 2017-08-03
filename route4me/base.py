@@ -279,8 +279,7 @@ class Base(object):
         :return:
         """
         if self.check_string_type(optimized_callback_url):
-            self._copy_param({'optimized_callback_url':
-                                  optimized_callback_url})
+            self._copy_param({'optimized_callback_url': optimized_callback_url})
         else:
             raise ParamValueException('optimized_callback_url',
                                       'Must be String')

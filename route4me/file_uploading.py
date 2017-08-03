@@ -1,7 +1,7 @@
-from route4me.api_endpoints import FILE_UPLOAD_HOST, \
+from .api_endpoints import FILE_UPLOAD_HOST, \
     FILE_UPLOAD_PREVIEW_HOST, FILE_UPLOAD_GEOCODE_HOST
-from route4me.base import Base
-from route4me.exceptions import ParamValueException
+from .base import Base
+from .exceptions import ParamValueException
 
 
 class FileUploading(Base):

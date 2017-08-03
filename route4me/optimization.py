@@ -1,9 +1,8 @@
 import json
 
-from route4me.api_endpoints import ADDRESS_HOST, API_HOST
-from route4me.base import Base
-from route4me.exceptions import ParamValueException
-from route4me.utils import json2obj
+from .api_endpoints import ADDRESS_HOST, API_HOST
+from .base import Base
+from .exceptions import ParamValueException
 
 
 class Optimization(Base):

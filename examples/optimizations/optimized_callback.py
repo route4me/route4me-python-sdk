@@ -103,8 +103,10 @@ def main():
                                                           ROUTE_HOST,
                                                           address['route_id']))
 
-    print('\nPlease open this url {0}?inspect.\nVerify that there is a POST request with this {1} optimization_problem_id'.format(callback_url,
-                                                                                                                                  response['optimization_problem_id']))
+    print('\nPlease open this url {0}?inspect.')
+    print('Verify that there is a POST request with this {1} \
+           optimization_problem_id'.format(callback_url,
+                                           response['optimization_problem_id']))
 
 
 if __name__ == '__main__':
