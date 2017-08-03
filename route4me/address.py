@@ -6,15 +6,15 @@ import time
 import requests
 import xmltodict
 
-from route4me.api_endpoints import (
+from .api_endpoints import (
     ADD_ROUTE_NOTES_HOST,
     BATCH_GEOCODER,
     ADDRESS_HOST,
     SINGLE_GEOCODER,
 )
-from route4me.base import Base
-from route4me.exceptions import ParamValueException
-from route4me.utils import json2obj
+from .base import Base
+from .exceptions import ParamValueException
+from .utils import json2obj
 
 
 class Address(Base):

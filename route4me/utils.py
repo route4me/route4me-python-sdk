@@ -26,13 +26,4 @@ def json2obj(data):
     return json.loads(data, object_hook=_json_object_hook)
 
 
-def check_string_type(obj):
-    """
-    Check if an object is string type
-    :param obj:
-    :return:
-    """
-    try:
-        return isinstance(obj, basestring)
-    except NameError:
-        return isinstance(obj, str)
+

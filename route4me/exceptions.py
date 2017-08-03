@@ -1,4 +1,4 @@
-from .api_endpoints import DRIVER_VERSION
+DRIVER_VERSION = 'route4me-python-driver-0.0.1'
 
 
 class APIException(Exception):

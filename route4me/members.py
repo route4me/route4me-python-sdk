@@ -7,7 +7,8 @@ from route4me.api_endpoints import (
     WEBINAR_REGISTER,
     VERIFY_DEVICE_LICENSE,
     GET_USERS_HOST,
-    USER_URL
+    USER_URL,
+    REGISTER_ACTION
 )
 from route4me.base import Base
 from route4me.exceptions import ParamValueException
@@ -183,7 +184,7 @@ class Members(Base):
             kwargs['device_type'] = kwargs.pop('device_type')
             kwargs['strPassword_1'] = kwargs.pop('password_1')
             kwargs['strPassword_2'] = kwargs.pop('password_2')
-            response = self.api._request_post(self.api.register_action_url(),
+            response = self.api._request_post(REGISTER_ACTION,
                                               params,
                                               data=kwargs)
             try:

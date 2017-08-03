@@ -34,7 +34,7 @@ class Optimization(Base):
         if self.check_required_params(kwargs, ['limit', 'Offset', ]):
             self.response = self.api._request_get(API_HOST,
                                                   kwargs)
-            response = json2obj(self.response.content)
+            response = self.response.json()
             return response
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -50,7 +50,7 @@ class Optimization(Base):
         if self.check_required_params(kwargs, ['optimization_problem_id', ]):
             self.response = self.api._request_get(API_HOST,
                                                   kwargs)
-            response = json2obj(self.response.content)
+            response = self.response.json()
             return response
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -68,7 +68,7 @@ class Optimization(Base):
                                                'reoptimize']):
             self.response = self.api._request_put(API_HOST,
                                                   kwargs)
-            response = json2obj(self.response.content)
+            response = self.response.json()
             return response
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -86,7 +86,7 @@ class Optimization(Base):
             self.response = self.api._request_delete(API_HOST,
                                                      self.params,
                                                      data=data)
-            response = json2obj(self.response.content)
+            response = self.response.json()
             return response
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -103,7 +103,7 @@ class Optimization(Base):
                                                'route_destination_id']):
             self.response = self.api._request_delete(ADDRESS_HOST,
                                                      kwargs)
-            response = json2obj(self.response.content)
+            response = self.response.json()
             return response
         else:
             raise ParamValueException('params', 'Params are not complete')

@@ -7,23 +7,29 @@ try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
-from route4me.activity_feed import ActivityFeed
-from route4me.address import Address
-from route4me.address_book import AddressBook
-from route4me.avoidance_zones import AvoindanceZones
-from route4me.exceptions import APIException
-from route4me.gps import SetGPS
-from route4me.optimization import Optimization
-from route4me.orders import Order
-from route4me.rapid_address import RapidAddress
-from route4me.route import Route
-from route4me.territory import Territory
-from route4me.utils import json2obj
-from route4me.file_uploading import FileUploading
-from route4me.members import Members
-from route4me.vehicles import Vehicle
-from route4me.constants import HEADERS
-from route4me.api_endpoints import API_HOST
+from .activity_feed import ActivityFeed
+from .address import Address
+from .address_book import AddressBook
+from .avoidance_zones import AvoindanceZones
+from .exceptions import APIException
+from .gps import GPS
+from .optimization import Optimization
+from .orders import Order
+from .rapid_address import RapidAddress
+from .route import Route
+from .territory import Territory
+from .utils import json2obj
+from .file_uploading import FileUploading
+from .members import Members
+from .vehicles import Vehicle
+from .api_endpoints import API_HOST
+
+
+HEADERS = {
+    'User-Agent': 'python-sdk',
+    'Accept-Encoding': 'identity, deflate, compress, gzip',
+    'Accept': '*/*',
+}
 
 
 class Route4Me(object):
@@ -48,7 +54,7 @@ class Route4Me(object):
         self.members = Members(self)
         self.vehicles = Vehicle(self)
         self.order = Order(self)
-        self.gps = SetGPS(self)
+        self.gps = GPS(self)
         self.route = Route(self)
         self.rapid_address = RapidAddress(self)
         self.territory = Territory(self)
@@ -67,6 +73,7 @@ class Route4Me(object):
         :return: response
         :raise: APIException
         """
+        params['api_key'] = self.key
         request_params = self._transform_params(params)
         response = request_method(url, request_params, data)
         if not 200 <= response.status_code < 400:
