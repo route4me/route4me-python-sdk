@@ -1,7 +1,7 @@
 # codebeat:disable[TOTAL_LOC, TOO_MANY_FUNCTIONS, TOTAL_COMPLEXITY]
 import re
 
-from route4me.constants import (
+from .constants import (
     TRAVEL_MODE,
     OPTIMIZE, DEVICE_TYPE,
     DISTANCE_UNIT,
@@ -9,8 +9,7 @@ from route4me.constants import (
     TRUCK_HAZARDOUS_GOODS,
     FORMAT,
 )
-from route4me.exceptions import ParamValueException
-from route4me.utils import check_string_type
+from .exceptions import ParamValueException
 
 
 class Base(object):
@@ -30,6 +29,18 @@ class Base(object):
                      'addresses': {},
                      }
         self.params = {'api_key': api.key, }
+
+    @staticmethod
+    def check_string_type(obj):
+        """
+        Check if an object is string type
+        :param obj:
+        :return:
+        """
+        try:
+            return isinstance(obj, basestring)
+        except NameError:
+            return isinstance(obj, str)
 
     def format(self, set_format):
         """
@@ -63,7 +74,7 @@ class Base(object):
         :return:
         :raise: ParamValueException if route_id is not String
         """
-        if check_string_type(route_id):
+        if self.check_string_type(route_id):
             self._copy_param({'route_id': route_id})
         else:
             raise ParamValueException('route_id', 'Must be String')
@@ -75,7 +86,7 @@ class Base(object):
         :return:
         :raise: ParamValueException if address_1 is not String
         """
-        if check_string_type(address_1):
+        if self.check_string_type(address_1):
             self._copy_param({'address_1': address_1})
         else:
             raise ParamValueException('address_1', 'Must be String')
@@ -86,7 +97,7 @@ class Base(object):
         :param tx_id:
         :return:
         """
-        if check_string_type(tx_id):
+        if self.check_string_type(tx_id):
             self._copy_param({'tx_id': tx_id})
         else:
             raise ParamValueException('tx_id', 'Must be String')
@@ -185,7 +196,7 @@ class Base(object):
         :param device_guid:
         :return:
         """
-        if check_string_type(device_guid):
+        if self.check_string_type(device_guid):
             self._copy_param({'device_guid': device_guid})
         else:
             raise ParamValueException('device_guid', 'Must be String')
@@ -196,7 +207,7 @@ class Base(object):
         :param app_version:
         :return:
         """
-        if check_string_type(app_version):
+        if self.check_string_type(app_version):
             self._copy_param({'app_version': app_version})
         else:
             raise ParamValueException('app_version', 'Must be String')
@@ -243,7 +254,7 @@ class Base(object):
         :param route_name:
         :return:
         """
-        if check_string_type(route_name):
+        if self.check_string_type(route_name):
             self._copy_data({'route_name': route_name})
         else:
             raise ParamValueException('route_name', 'Must be String')
@@ -254,11 +265,24 @@ class Base(object):
         :param optimization_problem_id:
         :return:
         """
-        if check_string_type(optimization_problem_id):
+        if self.check_string_type(optimization_problem_id):
             self._copy_param({'optimization_problem_id':
                               optimization_problem_id})
         else:
             raise ParamValueException('optimization_problem_id',
+                                      'Must be String')
+
+    def optimized_callback_url(self, optimized_callback_url):
+        """
+        Set optimized_callback_url param
+        :param optimized_callback_url:
+        :return:
+        """
+        if self.check_string_type(optimized_callback_url):
+            self._copy_param({'optimized_callback_url':
+                                  optimized_callback_url})
+        else:
+            raise ParamValueException('optimized_callback_url',
                                       'Must be String')
 
     def remote_ip(self, remote_ip):
@@ -537,7 +561,7 @@ class Base(object):
         :param route_email:
         :return:
         """
-        if check_string_type(route_email):
+        if self.check_string_type(route_email):
             self._copy_data({'route_email': route_email})
         else:
             raise ParamValueException('route_email', 'Must be String')
