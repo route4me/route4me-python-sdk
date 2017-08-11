@@ -6,6 +6,7 @@ version: win.{build}-{branch}
 # Test against the latest version of this Node.js version
 environment:
   global:
+    REQUIREMENTS_SUBPATH: pip\libs
     REQUIREMENTS_PATH: pip/libs
   matrix:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
@@ -30,11 +31,11 @@ pull_requests:
 
 # Install scripts. (runs after repo cloning)
 install:
-  - set PATH=C:\Python%PYTHON_VERSION%;%REQUIREMENTS_PATH%;%PATH%
+  - set PATH=C:\Python%PYTHON_VERSION%;%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PATH%
   - pip install --upgrade pip %PIP_FLAGS%
   - python setup.py install
-  - pip install -r requirements-dev.txt %PIP_FLAGS% -t %REQUIREMENTS_PATH%
-  - pip install -r requirements.txt %PIP_FLAGS% -t %REQUIREMENTS_PATH%
+  - pip install -r requirements-dev.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%
+  - pip install -r requirements.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%
 
 
 before_test:
