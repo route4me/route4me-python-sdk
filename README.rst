@@ -8,8 +8,18 @@ Route4Me Route Optimization Python SDK
     :target: https://ci.appveyor.com/project/route4me/route4me-python-sdk
 
 
+.. image:: https://img.shields.io/pypi/pyversions/route4me-python-sdk.svg
+    :target: PYPI_
+.. image:: https://img.shields.io/pypi/l/route4me-python-sdk.svg
+    :target: PYPI_
+
+
+.. _PYPI: https://pypi.python.org/pypi/route4me-python-sdk
+
+
 [![PyPI](https://img.shields.io/pypi/pyversions/route4me-python-sdk.svg)][PYPI]
 [![PyPI](https://img.shields.io/pypi/l/route4me-python-sdk.svg)][PYPI]
+
 [![PyPI](https://img.shields.io/pypi/v/route4me-python-sdk.svg)][PYPI]
 [![PyPI](https://img.shields.io/pypi/dm/route4me-python-sdk.svg)][PYPI]
 [![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic)](https://github.com/route4me/route4me-python-sdk)
