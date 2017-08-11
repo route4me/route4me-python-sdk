@@ -45,7 +45,7 @@ Route4Me Route Optimization Python SDK
 Install
 =====
 
-::bash
+::
 
     pip install route4me-python-sdk
 
