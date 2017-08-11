@@ -1,7 +1,6 @@
-# Development dependencies
-# in one place
+# Development dependencies in one place
 
-pytest           >=3.0.6
-pytest-cov       >=2.4.0
-flake8           >=3.3.0
-mock             >=1.0.0; python_version<='3.3'
+pytest
+pytest-cov
+flake8
+mock          ; python_version<='3.3'

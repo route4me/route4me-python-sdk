@@ -9,9 +9,9 @@ environment:
     REQUIREMENTS_SUBPATH: pip\libs
   matrix:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
-    - PYTHON_VERSION: 27
+    # - PYTHON_VERSION: 27
     # - PYTHON_VERSION: 33
-    # - PYTHON_VERSION: 35
+    - PYTHON_VERSION: 35
     # - PYTHON_VERSION: 36
 
 # matrix:
