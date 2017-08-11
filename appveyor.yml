@@ -31,8 +31,8 @@ pull_requests:
 # Install scripts. (runs after repo cloning)
 install:
   - set PATH=C:\Python%PYTHON_VERSION%;%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PATH%
-  - echo %PATH%
-  - echo '--------------------------------------'
+  - set PYTHONPATH=%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PYTHONPATH%
+
   - pip install --upgrade pip %PIP_FLAGS%
   - python setup.py install
   - pip install -r requirements-dev.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%
