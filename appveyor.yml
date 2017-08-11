@@ -7,13 +7,12 @@ version: win.{build}-{branch}
 environment:
   global:
     REQUIREMENTS_SUBPATH: pip\libs
-    REQUIREMENTS_PATH: pip/libs
   matrix:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
     - PYTHON_VERSION: 27
-    - PYTHON_VERSION: 33
-    - PYTHON_VERSION: 35
-    - PYTHON_VERSION: 36
+    # - PYTHON_VERSION: 33
+    # - PYTHON_VERSION: 35
+    # - PYTHON_VERSION: 36
 
 # matrix:
 #   allow_failures:
@@ -23,7 +22,7 @@ init:
   - git config --global core.autocrlf true
 
 cache:
-  - pip/libs -> requirements.txt  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - pip\libs -> requirements.txt  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
 pull_requests:
   do_not_increment_build_number: true
@@ -32,6 +31,8 @@ pull_requests:
 # Install scripts. (runs after repo cloning)
 install:
   - set PATH=C:\Python%PYTHON_VERSION%;%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PATH%
+  - echo %PATH%
+  - echo '--------------------------------------'
   - pip install --upgrade pip %PIP_FLAGS%
   - python setup.py install
   - pip install -r requirements-dev.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%
