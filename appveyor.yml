@@ -34,9 +34,9 @@ install:
   - set PATH=C:\Python%PYTHON_VERSION%;%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PATH%
   - set PYTHONPATH=%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PYTHONPATH%
 
-  - pip install --upgrade pip %PIP_FLAGS%
-  - pip install  --upgrade --force-reinstall -r requirements-dev.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%
-  - pip install  --upgrade --force-reinstall -r requirements.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%
+  - python -m pip install --upgrade pip %PIP_FLAGS%
+  - python -m pip install --upgrade --force-reinstall -r requirements-dev.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%
+  - python -m pip install --upgrade --force-reinstall -r requirements.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%
 
 
 before_test:
