@@ -42,7 +42,7 @@ before_test:
   - flake8 --version
   - pytest --version
 
-script:
+test_script:
   - flake8
   - pytest -m ''
 
