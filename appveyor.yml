@@ -10,10 +10,11 @@ environment:
     REQUIREMENTS_SUBPATH: libs\
   matrix:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
+    - PYTHON_VERSION: 26
     - PYTHON_VERSION: 27
-    # - PYTHON_VERSION: 33
+    - PYTHON_VERSION: 33
     - PYTHON_VERSION: 35
-    # - PYTHON_VERSION: 36
+    - PYTHON_VERSION: 36
 
 # matrix:
 #   allow_failures:
@@ -42,7 +43,7 @@ install:
 before_test:
   - pip --version
   - python --version
-  - python -m flake8 --version
+  # - python -m flake8 --version
   - python -m pytest --version
 
 test_script:
