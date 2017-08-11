@@ -6,10 +6,11 @@ version: win.{build}-{branch}
 # Test against the latest version of this Node.js version
 environment:
   global:
-    REQUIREMENTS_SUBPATH: pip\libs
+    # don't forget: this path should match with CACHE section
+    REQUIREMENTS_SUBPATH: libs\
   matrix:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
-    # - PYTHON_VERSION: 27
+    - PYTHON_VERSION: 27
     # - PYTHON_VERSION: 33
     - PYTHON_VERSION: 35
     # - PYTHON_VERSION: 36
@@ -22,7 +23,7 @@ init:
   - git config --global core.autocrlf true
 
 cache:
-  - pip\libs -> requirements.txt  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - libs\ -> requirements.txt  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
 pull_requests:
   do_not_increment_build_number: true
