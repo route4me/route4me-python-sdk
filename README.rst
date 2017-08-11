@@ -1,5 +1,6 @@
+######################################
 Route4Me Route Optimization Python SDK
-
+######################################
 
 
 .. image:: https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master
@@ -8,44 +9,60 @@ Route4Me Route Optimization Python SDK
     :target: https://ci.appveyor.com/project/route4me/route4me-python-sdk
 
 
-.. image:: https://img.shields.io/pypi/pyversions/route4me-python-sdk.svg
-    :target: PYPI_
-.. image:: https://img.shields.io/pypi/l/route4me-python-sdk.svg
-    :target: PYPI_
+
+.. image:: https://img.shields.io/pypi/pyversions/route4me-python-sdk.svg :target: PYPI_
+.. image:: https://img.shields.io/pypi/l/route4me-python-sdk.svg          :target: PYPI_
+.. image:: https://img.shields.io/pypi/v/route4me-python-sdk.svg          :target: PYPI_
+.. image:: https://img.shields.io/pypi/dm/route4me-python-sdk.svg         :target: PYPI_
+
+
+
+.. image:: https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic
+    :target: https://github.com/route4me/route4me-python-sdk
+
+
+
+.. image:: https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00
+    :target: https://codebeat.co/projects/github-com-route4me-route4me-python-sdk
+.. image:: https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/quality-score.png?b=master
+    :target: https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/?branch=master
+.. image:: https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/build.png?b=master
+    :target: https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/build-status/master
+.. image:: https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/coverage.png?b=master
+    :target: https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/?branch=master
+.. image:: https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/route4me/route4me-python-sdk
 
 
 .. _PYPI: https://pypi.python.org/pypi/route4me-python-sdk
 
 
-[![PyPI](https://img.shields.io/pypi/pyversions/route4me-python-sdk.svg)][PYPI]
-[![PyPI](https://img.shields.io/pypi/l/route4me-python-sdk.svg)][PYPI]
+=====
+FAQ
+=====
 
-[![PyPI](https://img.shields.io/pypi/v/route4me-python-sdk.svg)][PYPI]
-[![PyPI](https://img.shields.io/pypi/dm/route4me-python-sdk.svg)][PYPI]
-[![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic)](https://github.com/route4me/route4me-python-sdk)
-
-[![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/build.png?b=master)](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/build-status/master)
-[![Code Coverage](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/?branch=master)
-[![codecov](https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/route4me/route4me-python-sdk)
-
-[PYPI]: https://pypi.python.org/pypi/route4me-python-sdk
-
-### What does the Route4Me SDK permit me to do?
+^^^^^
+What does the Route4Me SDK permit me to do?
+^^^^^
 
 This SDK makes it easier for you use the Route4Me API, which creates optimally sequenced driving routes for many drivers.
 
-### Who can use the Route4Me SDK (and API)?
+^^^^^
+Who can use the Route4Me SDK (and API)?
+^^^^^
 
 The service is typically used by organizations who must route many drivers to many destinations. In addition to route optimization for new (future) routes, the API can also be used to analyze historical routes, and to distribute routes to field personnel.
 
-### Who is prohibited from using the Route4Me SDK (and API)?
+^^^^^
+Who is prohibited from using the Route4Me SDK (and API)?
+^^^^^
 
 The Route4Me SDK and API cannot be resold or used in a product or system that competes directly with Route4Me. This means that developers cannot resell route optimization services to other businesses or developers. However, developers can integrate our route optimization SDK/API into their software applications. Developers and startups are also permitted to use our software for internal purposes (i.e. a same day delivery startup).
 
 
-### How does the API/SDK Integration Work?
+^^^^^
+How does the API/SDK Integration Work?
+^^^^^
 
 A Route4Me customer, integrator, or partner incorporates the Route4Me SDK or API into their code base.
 Route4Me permits any paying subscriber to interact with every part of its system using it’s API.
