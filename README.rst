@@ -1,6 +1,10 @@
-# Route4Me Route Optimization Python SDK
+Route4Me Route Optimization Python SDK
 
-.. image:: https://img.shields.io/travis/rust-lang/rust/master.svg   :target: 
+
+
+.. image:: https://img.shields.io/codecov/c/github/codecov/example-python.svg   :http://route4me.com:
+
+
 
 [![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
 [![Build status](https://ci.appveyor.com/api/projects/status/br52a8ybj49gdroh?svg=true)](https://ci.appveyor.com/project/route4me/route4me-python-sdk)
