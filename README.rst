@@ -3,26 +3,30 @@ Route4Me Route Optimization Python SDK
 ######################################
 
 
-.. image:: https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master
+| .. image:: https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master
     :target: https://travis-ci.org/route4me/route4me-python-sdk
 .. image:: https://ci.appveyor.com/api/projects/status/br52a8ybj49gdroh?svg=true
     :target: https://ci.appveyor.com/project/route4me/route4me-python-sdk
 
 
 
-.. image:: https://img.shields.io/pypi/pyversions/route4me-python-sdk.svg :target: PYPI_
-.. image:: https://img.shields.io/pypi/l/route4me-python-sdk.svg          :target: PYPI_
-.. image:: https://img.shields.io/pypi/v/route4me-python-sdk.svg          :target: PYPI_
-.. image:: https://img.shields.io/pypi/dm/route4me-python-sdk.svg         :target: PYPI_
+| .. image:: https://img.shields.io/pypi/pyversions/route4me-python-sdk.svg
+    :target: PYPI_
+.. image:: https://img.shields.io/pypi/l/route4me-python-sdk.svg
+    :target: PYPI_
+.. image:: https://img.shields.io/pypi/v/route4me-python-sdk.svg
+    :target: PYPI_
+.. image:: https://img.shields.io/pypi/dm/route4me-python-sdk.svg
+    :target: PYPI_
 
 
 
-.. image:: https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic
+| .. image:: https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic
     :target: https://github.com/route4me/route4me-python-sdk
 
 
 
-.. image:: https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00
+| .. image:: https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00
     :target: https://codebeat.co/projects/github-com-route4me-route4me-python-sdk
 .. image:: https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/quality-score.png?b=master
     :target: https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/?branch=master
@@ -119,7 +123,7 @@ Because Route4Me processes all routes asynchronously, Route4Me will conveniently
 
 ### Does the Route4Me API and SDK work in my country?
 Route4Me.com, as well as all of Route4Me’s mobile applications use the Route4Me SDK’s and API.
-Since Route4Me works globally, this means that all of Route4Me’s capabilities are available using the SDK’s in every country 
+Since Route4Me works globally, this means that all of Route4Me’s capabilities are available using the SDK’s in every country
 
 
 ### Will the Route4Me API/SDK work in my program on the Mac, PC, or Linux?
@@ -194,7 +198,7 @@ The time required to integrate the SDK can be as little as 1 hour or may take se
         alias='Frank Stella Clothier',
         time=0
     )
-    address.add_address( 
+    address.add_address(
         address='324 Columbus Ave #1 New York, NY 10023',
         lat=40.7803123,
         lng=-73.9793079,
