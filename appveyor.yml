@@ -41,12 +41,13 @@ install:
 
 before_test:
   - pip --version
-  - flake8 --version
-  - pytest --version
+  - python --version
+  - python -m flake8 --version
+  - python -m pytest --version
 
 test_script:
-  - flake8
-  - pytest -m ''
+  - python -m flake8
+  - python -m pytest -m ''
 
 # Don't actually build.
 build: off
