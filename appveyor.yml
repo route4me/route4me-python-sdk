@@ -5,20 +5,24 @@ version: win.{build}-{branch}
 
 # Test against the latest version of this Node.js version
 environment:
+  global:
+    REQUIREMENTS_PATH: pip/libs
   matrix:
-    - nodejs_version: "4"
-    - nodejs_version: "6"
-    - nodejs_version: "8"
+    # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
+    - PYTHON_VERSION: 27
+    - PYTHON_VERSION: 33
+    - PYTHON_VERSION: 35
+    - PYTHON_VERSION: 36
 
-matrix:
-  allow_failures:
-    - nodejs_version: "8"
+# matrix:
+#   allow_failures:
+#     - PYTHON_VERSION: 36
 
 init:
   - git config --global core.autocrlf true
 
 cache:
-  - node_modules -> package.json  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+  - pip/libs -> requirements.txt  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
 pull_requests:
   do_not_increment_build_number: true
@@ -26,24 +30,21 @@ pull_requests:
 
 # Install scripts. (runs after repo cloning)
 install:
-  # Get the latest stable version of Node.js or io.js
-  - ps: Install-Product node $env:nodejs_version
-  - npm config set spin false
-  # install modules
-  - npm install
+  - set PATH=C:\Python%PYTHON_VERSION%;%REQUIREMENTS_PATH%;%PATH%
+  - pip install --upgrade pip %PIP_FLAGS%
+  - python setup.py install
+  - pip install -r requirements-dev.txt %PIP_FLAGS% -t %REQUIREMENTS_PATH%
+  - pip install -r requirements.txt %PIP_FLAGS% -t %REQUIREMENTS_PATH%
 
-  # AppVeyor SPECIFIC:
-  - npm install --global mocha
-  - npm install --global mocha-appveyor-reporter
 
-# Post-install test scripts.
-test_script:
-  # Output useful info for debugging.
-  - node --version
-  - npm --version
-  # run tests
-  # - npm test # not a crossplatform solution..
-  - mocha --reporter mocha-appveyor-reporter
+before_test:
+  - pip --version
+  - flake8 --version
+  - pytest --version
+
+script:
+  - flake8
+  - pytest -m ''
 
 # Don't actually build.
 build: off

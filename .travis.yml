@@ -16,20 +16,21 @@ python:
   - "2.7"
   - "3.3"
   - "3.5"
-  - "nightly" # currently points to 3.7-dev
-  - "pypy"
+  - nightly # currently points to 3.7-dev
+  - pypy
+  - pypy3
 
 before_install:
-  - pip install --upgrade pip
+  - pip install --upgrade pip ${PIP_FLAGS}
   - python setup.py install
 
 install:
-  - pip install -r requirements-dev.txt -q
-  - pip install -r requirements.txt -q
+  - pip install -r requirements-dev.txt ${PIP_FLAGS}
+  - pip install -r requirements.txt ${PIP_FLAGS}
 
   # we are going to send coverage only from Travis. So this package
   # is Travis-specific. We don't list this package in `requirements-dev.txt`
-  - pip install codecov -q
+  - pip install codecov ${PIP_FLAGS}
 
   - pip --version
   - flake8 --version
