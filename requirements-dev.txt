@@ -1,6 +1,7 @@
 # Development dependencies in one place
 
+flake8
 pytest
 pytest-cov
-flake8
+configparser
 mock          ; python_version<='3.3'
