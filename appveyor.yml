@@ -51,7 +51,7 @@ before_test:
 test_script:
   # - python setup.py install
 
-  - python -m flake8
+  - flake8
   - python -m pytest -m ''
 
 # Don't actually build.
