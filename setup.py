@@ -11,7 +11,7 @@ def read(file_name):
 
 
 setup(
-    name="Route4Me SDK",
+    name="Route4Me Python SDK",
     version="0.0.1",
     author="Route4Me",
     author_email="juan@route4me.com",

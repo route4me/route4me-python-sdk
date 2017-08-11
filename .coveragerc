@@ -4,7 +4,9 @@
 branch = True
 omit =
     examples/*
+    *_test.py
     tests/*
+    spec/*
     setup.py
 
 [report]

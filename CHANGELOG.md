@@ -1,6 +1,6 @@
 # CHANGELOG
 
-This is the history of changes of the `route4me-python` package
+This is the history of changes of the `route4me-python-sdk` package
 
 > This file should be filled by maintainers, using pull requests
 > Please, follow this [guide](http://keepachangelog.com/en/0.3.0/)
