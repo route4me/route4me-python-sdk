@@ -13,6 +13,7 @@ cache:
   pip: true
 
 python:
+  - "2.6"
   - "2.7"
   - "3.3"
   - "3.5"
@@ -22,22 +23,22 @@ python:
 
 before_install:
   - pip install --upgrade pip ${PIP_FLAGS}
-  - python setup.py install
 
 install:
   - pip install -r requirements-dev.txt ${PIP_FLAGS}
   - pip install -r requirements.txt ${PIP_FLAGS}
+  - python setup.py install
 
   # we are going to send coverage only from Travis. So this package
   # is Travis-specific. We don't list this package in `requirements-dev.txt`
   - pip install codecov ${PIP_FLAGS}
 
   - pip --version
-  - flake8 --version
+  - "[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8 --version"
   - pytest --version
 
 script:
-  - flake8
+  - "[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8"
   - pytest -m ''
   - codecov
 
