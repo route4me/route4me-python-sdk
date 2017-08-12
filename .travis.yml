@@ -29,16 +29,17 @@ install:
   - pip install -r requirements.txt ${PIP_FLAGS}
   - python setup.py install
 
+
   # we are going to send coverage only from Travis. So this package
   # is Travis-specific. We don't list this package in `requirements-dev.txt`
   - pip install codecov ${PIP_FLAGS}
 
   - pip --version
-  - "[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8 --version"
+  - '[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8 --version'
   - pytest --version
 
 script:
-  - "[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8"
+  - '[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8'
   - pytest -m ''
   - codecov
 
@@ -49,6 +50,6 @@ deploy:
     secure: RAPnjiuSq+8//cPRDMvn1H77uJUyBGrLnpsmABSZKwnaz6e2Wu6qI464hDOYfDTZNslKygVJXZfW+EcXsvQtyv12cMPnnVU8UPJzVRlyfzSQzP4NbzxWmMP12peXY8IEfv3KYuv0w8gAHlvpgn/ERcT2dt8312YSKLqs5VMZP/8=
   on:
     tags: true                            # published only for tags
-    python: "2.7"                         # published only for one NPM version
+    python: "3.5"                         # published only for one PYTHON version
     repo: route4me/route4me-python-sdk    # published only from ONE repo
-    distributions: sdist bdist_wheel
+    distributions: sdist   # bdist_wheel  # we need only source distribution
