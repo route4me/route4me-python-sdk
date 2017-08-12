@@ -45,13 +45,14 @@ install:
 before_test:
   - '%PIP% --version'
   - python --version
-  # - python -m flake8 --version
-  - python -m pytest --version
+  - if not "%PYTHON_VERSION%"=="26" flake8 --version
+  - pytest --version
 
 test_script:
   # - python setup.py install
 
-  - flake8
+  # flake8 doesn't support python2.6
+  - if not "%PYTHON_VERSION%"=="26" flake8
   - python -m pytest -m ''
 
 # Don't actually build.
