@@ -13,14 +13,14 @@ cache:
   pip: true
 
 python:
-  - "2.6"
-  - "2.7"
-  - "3.3"
+  # - "2.6"
+  # - "2.7"
+  # - "3.3"
   - "3.5"
-  - "3.6"
-  - nightly # currently points to 3.7-dev
-  - pypy
-  - pypy3
+  # - "3.6"
+  # - nightly # currently points to 3.7-dev
+  # - pypy
+  # - pypy3
 
 before_install:
   - pip install --upgrade pip ${PIP_FLAGS}
@@ -46,7 +46,7 @@ deploy:
   provider: pypi
   user: route4me
   password:
-    secure: "Nav9LS4++71lfNHFSVAscEBcJlxjzQDuEzEg1QUKxfflH+5L2jfk2O/lHWMeqdvaBYbJxkiNLXwGv5Fw/RnkEAPIaIuIZP8gqGew/JiErMo+DG6eB22WeGI7o/nukDIiHzGf1K/P2hqqutuYYFFB8DpW0V8X8gFOKpreCeufGCo="
+    secure: "L/YOr/3GiXoY/cQgZzxon31lyvf9ZQRasimlsP5Hu1sKAzpoBhUyhiZXJ54Oz4zN1fDOV+ZfF9cBidaMVtUQmmF3bR/kqeZdJDGqqSZhOfBU2hJLM2w1w9MFTbWHNXcWP0lK/Xbq5xEoBACepiDZtMM2QgRIPfPrv4P+H+6NErM="
   on:
     all_branches: true
     # tags: true                            # published only for tags
