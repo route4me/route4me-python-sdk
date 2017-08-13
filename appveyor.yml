@@ -56,7 +56,7 @@ test_script:
 
   # flake8 doesn't support python2.6
   - if not "%PYTHON_VERSION%"=="26" python -m flake8
-  - python -m pytest -m ''
+  - python -m pytest
 
 # Don't actually build.
 build: off
