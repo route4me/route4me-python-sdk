@@ -12,7 +12,7 @@ environment:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
     - PYTHON_VERSION: 26
     - PYTHON_VERSION: 27
-    - PYTHON_VERSION: 33
+    # - PYTHON_VERSION: 33
     - PYTHON_VERSION: 35
     - PYTHON_VERSION: 36
 
@@ -48,14 +48,14 @@ install:
 before_test:
   - '%PIP% --version'
   - python --version
-  - if not "%PYTHON_VERSION%"=="26" flake8 --version
-  - pytest --version
+  - if not "%PYTHON_VERSION%"=="26" python -m flake8 --version
+  - python -m pytest --version
 
 test_script:
   # - python setup.py install
 
   # flake8 doesn't support python2.6
-  - if not "%PYTHON_VERSION%"=="26" flake8
+  - if not "%PYTHON_VERSION%"=="26" python -m flake8
   - python -m pytest -m ''
 
 # Don't actually build.
