@@ -5,3 +5,12 @@ pytest
 pytest-cov
 configparser
 mock          ; python_version<='3.3'
+
+
+# 'blinker',
+# 'python-dotenv',
+# 'greenlet',
+# 'pytest>=3',
+# 'coverage',
+# 'sphinx',
+# 'sphinxcontrib-log-cabinet'

@@ -3,5 +3,5 @@
 VERSION = (0, 1, 0)
 VERSION_SUFFIX = '-dev'
 
-_v = map(str, VERSION)
-VERSION_STRING = '.'.join(_v[0:3]) + VERSION_SUFFIX
+_v = [str(x) for x in VERSION[0:3]]
+VERSION_STRING = '.'.join(_v) + VERSION_SUFFIX
