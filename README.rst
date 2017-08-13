@@ -13,6 +13,8 @@ PyPI info
 
 .. image:: https://img.shields.io/pypi/pyversions/route4me-sdk.svg
     :target: PYPI_
+.. image:: https://img.shields.io/pypi/implementation/route4me-sdk.svg
+    :target: PYPI_
 .. image:: https://img.shields.io/pypi/l/route4me-sdk.svg
     :target: PYPI_
 .. image:: https://img.shields.io/pypi/v/route4me-sdk.svg
@@ -46,15 +48,15 @@ This is the official python SDK for `Route4Me API <https://route4me.io/docs/>`_
 Install
 ================================================================================
 
-::
+.. code-block:: bash
 
-    pip install route4me-python-sdk
+    $ pip install route4me-sdk
 
 ================================================================================
 Example
 ================================================================================
 
-::
+.. code-block:: python
 
     from route4me.sdk import Route4Me
 

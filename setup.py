@@ -18,7 +18,8 @@ def read_all(file_name):
 setup(
     name='route4me-sdk',
     version=VERSION_STRING,
-    url='https://github.com/route4me/route4me-python-sdk',   # ???
+    url='https://github.com/route4me/route4me-python-sdk',
+    bugtrack_url='https://github.com/route4me/route4me-python-sdk/issues',
     license='ISC',                                           # ???
     author='Route4Me Python Team',
     author_email='python-team@route4me.com',
