@@ -35,11 +35,11 @@ install:
 
   - pip --version
   - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]]; then flake8 --version;  fi
-  - pytest --version
+  - python -m pytest --version
 
 script:
   - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]]; then flake8;  fi
-  - pytest -m ''
+  - python -m pytest -m ''
   - codecov
 
 deploy:
