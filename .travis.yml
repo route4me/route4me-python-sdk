@@ -34,11 +34,11 @@ install:
   - pip install codecov ${PIP_FLAGS}
 
   - pip --version
-  - '[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8 --version'
+  - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]];; then flake8 --version;  fi
   - pytest --version
 
 script:
-  - '[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8'
+  - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]];; then flake8;  fi
   - pytest -m ''
   - codecov
 

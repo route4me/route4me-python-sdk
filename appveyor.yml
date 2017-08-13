@@ -37,7 +37,7 @@ install:
   - set PYTHONPATH=%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PYTHONPATH%
 
   - '%PIP% install --upgrade pip %PIP_FLAGS%'
-  - if not "%PYTHON_VERSION%"=="26" '%PIP% install flake8'
+  - if not "%PYTHON_VERSION%"=="26" %PIP% install flake8
 
   # think about caching deps:
   # - python setup.py install ?????? %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
