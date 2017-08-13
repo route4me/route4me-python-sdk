@@ -2,4 +2,5 @@
 *        text=auto
 
 *.js     text
-*.py     text
+*.py     text diff=python
+*.csv    text eol=crlf

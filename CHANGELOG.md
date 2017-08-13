@@ -7,7 +7,9 @@ This is the history of changes of the `route4me-python-sdk` package
 
 ## unreleased // ???
 
-* __describe plz__
+## 2017-08-13 // 0.1.0-dev
+
+* **The first version was published on PyPI**
 
 ## 2014-07-01 // 0.0.1
 

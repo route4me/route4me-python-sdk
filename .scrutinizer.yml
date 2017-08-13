@@ -2,7 +2,7 @@ build:
   tests:
     override:
       -
-        command: python3 -m pytest -m ''
+        command: python -m pytest -m ''
         coverage:
           file: '.coverage'
           config_file: '.coveragerc'
@@ -10,7 +10,7 @@ build:
   dependencies:
       override:
         - pip install -r requirements-dev.txt -q
-        - pip install -r requirements.txt -q
+        - python setup.py install
 
 checks:
     python:

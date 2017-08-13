@@ -26,10 +26,8 @@ before_install:
   - pip install --upgrade pip ${PIP_FLAGS}
 
 install:
-  - pip install -r requirements-dev.txt ${PIP_FLAGS}
-  - pip install -r requirements.txt ${PIP_FLAGS}
   - python setup.py install
-
+  - pip install -r requirements-dev.txt ${PIP_FLAGS}
 
   # we are going to send coverage only from Travis. So this package
   # is Travis-specific. We don't list this package in `requirements-dev.txt`
@@ -40,10 +38,9 @@ install:
   - pytest --version
 
 script:
-  # - '[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8'
-  # - pytest -m ''
-  # - codecov
-  - true
+  - '[ "$TRAVIS_PYTHON_VERSION" != "2.6" ] && flake8'
+  - pytest -m ''
+  - codecov
 
 deploy:
   provider: pypi
@@ -51,7 +48,7 @@ deploy:
   password:
     secure: "Nav9LS4++71lfNHFSVAscEBcJlxjzQDuEzEg1QUKxfflH+5L2jfk2O/lHWMeqdvaBYbJxkiNLXwGv5Fw/RnkEAPIaIuIZP8gqGew/JiErMo+DG6eB22WeGI7o/nukDIiHzGf1K/P2hqqutuYYFFB8DpW0V8X8gFOKpreCeufGCo="
   on:
-    # tags: true                            # published only for tags
+    tags: true                            # published only for tags
     python: "3.5"                         # published only for one PYTHON version
-    # repo: route4me/route4me-python-sdk    # published only from ONE repo
+    repo: route4me/route4me-python-sdk    # published only from ONE repo
     distributions: sdist   # bdist_wheel  # we need only source distribution

@@ -1,6 +1,6 @@
 .idea/*
 *.py[co]
-Route4Me_SDK.egg-info/
+/*.egg-info
 /build/
 /dist/
 /docs_source

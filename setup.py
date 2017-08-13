@@ -15,16 +15,6 @@ def read_all(file_name):
         return f.read()
 
 
-def read_lines(file_name):
-    fullname = os.path.join(cwd, file_name)
-    with open(fullname) as f:
-        return [x.strip() for x in f.readlines()]
-
-
-REQUIREMENTS = read_lines('requirements.txt')
-REQUIREMENTS_DEV = read_lines('requirements-dev.txt')
-
-
 setup(
     name='route4me-sdk',
     version=VERSION_STRING,
@@ -61,12 +51,15 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    test_suite='',
+    test_suite='pytest',
 
-    install_requires=REQUIREMENTS,
-    extras_require={
-        'dev': REQUIREMENTS_DEV,
-    },
+    install_requires=[
+        'six             ==1.10.0',
+        'requests        ==2.13.0',
+    ],
+    # extras_require={
+    #     'dev': REQUIREMENTS_DEV,
+    # },
     # entry_points='''
     #     [console_scripts]
     #     flask=flask.cli:main
