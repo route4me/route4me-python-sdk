@@ -35,7 +35,6 @@ setup(
         'Development Status :: 1 - Planning',
         'Intended Audience :: Developers',
         'Environment :: Other Environment',
-        'Topic :: SDK',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
