@@ -46,7 +46,7 @@ deploy:
   provider: pypi
   user: route4me
   password:
-    secure: "L/YOr/3GiXoY/cQgZzxon31lyvf9ZQRasimlsP5Hu1sKAzpoBhUyhiZXJ54Oz4zN1fDOV+ZfF9cBidaMVtUQmmF3bR/kqeZdJDGqqSZhOfBU2hJLM2w1w9MFTbWHNXcWP0lK/Xbq5xEoBACepiDZtMM2QgRIPfPrv4P+H+6NErM="
+    secure: "sgi4gIiDcIQlwkqnoSHa61lRpfdD8KkmuDp2OUsfN2lYnyVr6KrTLz7yxi1v1rMCn0I0jxSy94fgoETzVVU+ld5Aj2P8oX01xUUEi26631E0HQrntpFtpQ/KcSDZMzMYKJk2DG/mzT/vFp17JcPo1+gXG6jai+T/IIuCR8d08LU="
   on:
     all_branches: true
     # tags: true                            # published only for tags
