@@ -48,7 +48,8 @@ deploy:
   password:
     secure: "Nav9LS4++71lfNHFSVAscEBcJlxjzQDuEzEg1QUKxfflH+5L2jfk2O/lHWMeqdvaBYbJxkiNLXwGv5Fw/RnkEAPIaIuIZP8gqGew/JiErMo+DG6eB22WeGI7o/nukDIiHzGf1K/P2hqqutuYYFFB8DpW0V8X8gFOKpreCeufGCo="
   on:
-    tags: true                            # published only for tags
+    all_branches: true
+    # tags: true                            # published only for tags
     python: "3.5"                         # published only for one PYTHON version
     repo: route4me/route4me-python-sdk    # published only from ONE repo
     distributions: sdist   # bdist_wheel  # we need only source distribution
