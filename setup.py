@@ -23,7 +23,7 @@ setup(
     author='Route4Me Python Team',
     author_email='python-team@route4me.com',
     description=('Route4Me Python SDK'),
-    long_description=read_all('README.rst'),
+    long_description=read_all('README.md'),
     keywords='route4me, python, sdk, api',                   # ???
     packages=['route4me.sdk', 'route4me.sdk.examples'],      # ???
     platforms='any',
