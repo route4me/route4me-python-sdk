@@ -1,10 +1,11 @@
-from route4me import Route4Me
+from route4me.sdk import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
-def main():
-    route4me = Route4Me(KEY)
+def test_main():
+
+    route4me = Route4Me(API_KEY)
     optimization = route4me.optimization
     response = optimization.get_optimizations(limit=10, offset=5)
     if hasattr(response, 'errors'):
@@ -18,4 +19,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    test_main()
