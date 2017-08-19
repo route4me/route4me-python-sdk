@@ -43,7 +43,7 @@ install:
 
 script:
   # validate RST (a documentation build step):
-  - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]]; ./dbin/lint-rst; fi
+  - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]]; then ./dbin/lint-rst; fi
 
   - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]]; then flake8;  fi
   - python -m pytest -m ''
