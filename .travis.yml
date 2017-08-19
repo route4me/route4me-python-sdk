@@ -42,9 +42,10 @@ install:
   - python -m pytest --version
 
 script:
+  # validate RST (a documentation build step):
+  - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]]; ./dbin/lint-rst; fi
+
   - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]]; then flake8;  fi
-  # validate RST:
-  - ./dbin/lint-rst
   - python -m pytest -m ''
   - codecov
 
