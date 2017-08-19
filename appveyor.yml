@@ -8,10 +8,13 @@ environment:
   global:
     # don't forget: this path should match with CACHE section
     REQUIREMENTS_SUBPATH: libs\
+    USE_FLAKE8: 1
   matrix:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
     - PYTHON_VERSION: 26
+      USE_FLAKE8: 0
     - PYTHON_VERSION: 27
+      USE_FLAKE8: 0
     # - PYTHON_VERSION: 33
     - PYTHON_VERSION: 35
     - PYTHON_VERSION: 36
@@ -37,7 +40,12 @@ install:
   - set PYTHONPATH=%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PYTHONPATH%
 
   - '%PIP% install --upgrade pip %PIP_FLAGS%'
-  - if not "%PYTHON_VERSION%"=="26" %PIP% install flake8
+
+  # because python 2 fails on HTTPS check with "InsecurePlatformWarning":
+  # https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  - '%PIP% install urllib3[secure] %PIP_FLAGS%'
+
+  - if not "%USE_FLAKE8%"=="1" %PIP% install flake8
 
   # think about caching deps:
   # - python setup.py install ?????? %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
@@ -48,14 +56,14 @@ install:
 before_test:
   - '%PIP% --version'
   - python --version
-  - if not "%PYTHON_VERSION%"=="26" python -m flake8 --version
+  - if not "%USE_FLAKE8%"=="1" python -m flake8 --version
   - python -m pytest --version
 
 test_script:
   # - python setup.py install
 
   # flake8 doesn't support python2.6
-  - if not "%PYTHON_VERSION%"=="26" python -m flake8
+  - if not "%USE_FLAKE8%"=="1" python -m flake8
   - python -m pytest
 
 # Don't actually build.
