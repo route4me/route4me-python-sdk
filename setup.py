@@ -21,7 +21,7 @@ setup(
     url='https://github.com/route4me/route4me-python-sdk',
     bugtrack_url='https://github.com/route4me/route4me-python-sdk/issues',
     license='ISC',                                           # ???
-    author='Route4Me Python Team',
+    author='Route4Me Python Team (SDK)',
     author_email='python-team@route4me.com',
     description=('Route4Me Python SDK'),
     long_description=read_all('README.rst'),
