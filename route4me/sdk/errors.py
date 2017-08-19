@@ -12,40 +12,26 @@ class Route4MeError(Exception):
 		details=None,
 		inner=None,
 	):
-		"""
-		Constructor.
-
-		Creates a new instance of Route4MeError.
-
-		:param message: Error message
-		:type message: str
-		"""
-
 		super(Route4MeError, self).__init__(message)
 
+		#: Unique error code. Helps to distinguish different errors.
+		#:
+		#: :type: str
 		self.code = code
-		"""
-		Unique error code. Helps to distinguish different errors.
-
-		:type: str
-		"""
 
 		if details is not None:
 			assert isinstance(details, dict)
 
+		#: Some error details
+		#:
+		#: :type: dict
 		self.details = details
-		"""
-		Some error details
 
-		:type: dict
-		"""
-
+		#: Internal exception that describes an original error.
+		#:
+		#: :type: Exception
 		self.inner = inner
-		"""
-		Internal exception that describes an original error.
 
-		:type: Exception
-		"""
 	def get_message(self):
 		return super(Route4MeError, self).__str__()
 

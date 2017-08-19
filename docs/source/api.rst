@@ -1,5 +1,8 @@
+.. include: common.rst
+
 API
 ===
 
 .. automodule:: route4me.sdk
-   :members:
+	:members:
+	:show-inheritance:

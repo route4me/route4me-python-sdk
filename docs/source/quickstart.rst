@@ -1,3 +1,5 @@
+.. include: common.rst
+
 Quick Start
 ===========
 
@@ -6,14 +8,18 @@ Quick start guide
 Install
 -------
 
-The best way --- use PIP:
+Probably, the best and simplest way --- use PIP:
 
 .. code-block:: bash
 
     $ pip install route4me-sdk
 
-Run
----
+.. seealso::
+
+	The full installation guide: :doc:`/install`
+
+Run example
+-----------
 
 .. code-block:: python
 
