@@ -1,8 +1,16 @@
+"""
+Official Python SDK for Route4Me
+
+"""
+
 import logging
 
 from . import version
 
 log = logging.getLogger(__name__)
+
+
+__version__ = version.VERSION_STRING
 
 
 class Route4Me:
@@ -15,4 +23,4 @@ class Route4Me:
 	version = version.VERSION_STRING
 
 	def __init__(self, api_key=None):
-		log.info('Init Route4Me Python SDK')
+		log.info('Init Route4Me Python SDK [%s]', self.version)
