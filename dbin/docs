@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# sphinx-build ./docs/src ./docs/build
+make -C ./docs $@
