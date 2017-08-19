@@ -5,13 +5,17 @@ pytest
 pytest-cov
 # pytest-capturelog
 configparser
-mock          ; python_version<='3.2'
+mock                                     ; python_version<='3.2'
 
+# DOCUMENTATION
+
+sphinx               >=1.6.3  , <1.99
+sphinx_rtd_theme     >=0.2.4  , <0.2.99
+rstcheck             >=3.1    , <3.99
+recommonmark         >=0.4.0  , <0.4.99
 
 # 'blinker',
 # 'python-dotenv',
 # 'greenlet',
 # 'pytest>=3',
-# 'coverage',
-# 'sphinx',
 # 'sphinxcontrib-log-cabinet'

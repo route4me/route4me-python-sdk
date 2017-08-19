@@ -3,7 +3,7 @@
 /*.egg-info
 /build/
 /dist/
-/docs_source
+/docs/build
 /cover-html/
 .coverage
 /.cache/

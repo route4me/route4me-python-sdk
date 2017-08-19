@@ -42,7 +42,9 @@ Code metrics
 
 .. _PYPI: https://pypi.python.org/pypi/route4me-python-sdk
 
-This is the official python SDK for `Route4Me API <https://route4me.io/docs/>`_
+.. class:: bold
+
+The official Python SDK for `Route4Me API <https://route4me.io/docs/>`_
 
 ================================================================================
 Install
