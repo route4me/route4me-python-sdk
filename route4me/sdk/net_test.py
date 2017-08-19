@@ -32,7 +32,7 @@ class TestNetworkClientRequestsOverHttpbin:
 	def test_get(self):
 		# http://httpbin.org/stream/20
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
-		res = nc.get('get')
+		res = nc.get('get', timeout_sec=8)
 
 		# https://www.httpbin.org/get?param3=345&api_key=AAAA&param1=1&param4=False&format=json&param2=str'
 		url = res['url']
@@ -56,7 +56,7 @@ class TestNetworkClientRequestsOverHttpbin:
 	def test_get_with_subdomains(self, subdomains):
 		# http://httpbin.org/stream/20
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
-		res = nc.get('get', subdomains=subdomains)
+		res = nc.get('get', subdomains=subdomains, timeout_sec=8)
 
 		# https://www.httpbin.org/get?param3=345&api_key=AAAA&param1=1&param4=False&format=json&param2=str'
 		url = res['url']
@@ -70,6 +70,8 @@ class TestNetworkClientRequestsOverHttpbin:
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		res = nc.get(
 			path='get',
+			timeout_sec=8,
+
 			param1=1,
 			param2='str',
 			param3='345',
@@ -93,7 +95,7 @@ class TestNetworkClientRequestsOverHttpbin:
 		# http://httpbin.org/stream/20
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		with pytest.raises(Route4MeNetworkError) as exc_info:
-			nc.get('delay/10', timeout_sec=2)
+			nc.get('delay/10')
 
 		exc = exc_info.value
 		assert exc is not None
@@ -114,7 +116,7 @@ class TestNetworkClientRequestsOverHttpbin:
 	def test_raises_on_no_connection(self):
 		nc = NetworkClient(api_key='AAAA', base_host='no.such.host.httpbin.org')
 		with pytest.raises(Route4MeNetworkError) as exc_info:
-			nc.get('get/1')
+			nc.get('get/1', timeout_sec=8)
 
 		exc = exc_info.value
 		assert exc is not None
@@ -123,7 +125,7 @@ class TestNetworkClientRequestsOverHttpbin:
 	def test_raises_on_ssl_compromised(self):
 		nc = NetworkClient(api_key='BBBB', base_host='expired.badssl.com')
 		with pytest.raises(Route4MeNetworkError) as exc_info:
-			nc.get('get/1')
+			nc.get('get/1', timeout_sec=8)
 
 		exc = exc_info.value
 		print(exc)

@@ -29,7 +29,7 @@ class NetworkClient:
 	.. versionadded:: 0.1.0.dev5
 	"""
 
-	DEFAULT_TIMEOUT_SEC = 1  # 0.1
+	DEFAULT_TIMEOUT_SEC = 0.1
 
 	def __init__(self, api_key=None, base_host='route4me.com'):
 
