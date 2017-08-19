@@ -14,7 +14,7 @@ class Route4MeError(Exception):
 		details=None,
 		inner=None,
 	):
-		super().__init__(message)
+		super(Route4MeError, self).__init__(message)
 
 		self.code = code
 
