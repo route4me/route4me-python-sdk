@@ -45,7 +45,7 @@ install:
   # https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
   - '%PIP% install urllib3[secure] %PIP_FLAGS%'
 
-  - if not "%USE_FLAKE8%"=="1" %PIP% install flake8
+  - if "%USE_FLAKE8%"=="1" %PIP% install flake8
 
   # think about caching deps:
   # - python setup.py install ?????? %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
@@ -56,14 +56,14 @@ install:
 before_test:
   - '%PIP% --version'
   - python --version
-  - if not "%USE_FLAKE8%"=="1" python -m flake8 --version
+  - if "%USE_FLAKE8%"=="1" python -m flake8 --version
   - python -m pytest --version
 
 test_script:
   # - python setup.py install
 
   # flake8 doesn't support python2.6
-  - if not "%USE_FLAKE8%"=="1" python -m flake8
+  - if "%USE_FLAKE8%"=="1" python -m flake8
   - python -m pytest
 
 # Don't actually build.
