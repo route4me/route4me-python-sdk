@@ -10,6 +10,5 @@ BUILD = None   # TRAVIS_COMMIT
 COMMIT = None  # TRAVIS_BUILD_NUMBER
 # ==============================================================================
 
-# SUFFIX
-_v = [str(x) for x in VERSION[0:3]]
-VERSION_STRING = '.'.join(_v) + VERSION_SUFFIX
+VERSION_STRING = '.'.join([str(x) for x in VERSION[0:3]])
+RELEASE_STRING = VERSION_STRING + VERSION_SUFFIX

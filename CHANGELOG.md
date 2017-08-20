@@ -1,14 +1,23 @@
 # CHANGELOG
 
-This is the history of changes of the `route4me-python-sdk` package.
+The history of changes of the `route4me/route4me-python-sdk` project.
 
-This file should be filled by maintainers, using pull requests.
+This file should be filled by maintainers, using messages from pull requests.
 
 Please, follow this [guide](http://keepachangelog.com/en/0.3.0/).
 
-## unreleased // ???
+## unreleased // 0.0.0
 
-## 2017-08-13 // 0.1.0-dev
+* network agent
+* core error handling (network access, SSL issues)
+
+#### Package design
+
+* embed meta variables `__version__`, `__author__` e.t.c
+* auto-generated docs
+* build for python versions 2.6-3.6 on Travis CI and Appveyor
+
+## 2017-08-13 // 0.1.0-dev.4
 
 **The first version** was published on PyPI.
 

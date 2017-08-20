@@ -9,11 +9,14 @@ from . import version
 
 log = logging.getLogger(__name__)
 
-
+__project__ = 'Route4Me Python SDK'
+__copyright__ = '2016-2017 © Route4Me Python Team'
+__author__ = 'Route4Me Python Team (SDK)'
+__title__ = 'route4me-sdk'
 __version__ = version.VERSION_STRING
+__release__ = version.RELEASE_STRING
 __build__ = version.BUILD
 __commit__ = version.COMMIT
-__title__ = 'route4me-sdk'
 
 
 class Route4Me:

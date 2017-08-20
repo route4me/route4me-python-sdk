@@ -3,8 +3,11 @@
 import os
 from setuptools import setup
 
-from route4me.sdk.version import VERSION_STRING
+from route4me.sdk import __release__ as RELEASE
 from route4me.sdk import __title__ as TITLE
+from route4me.sdk import __copyright__ as COPYRIGHT
+from route4me.sdk import __author__ as AUTHOR
+from route4me.sdk import __project__ as PROJECT
 
 cwd = os.path.dirname(__file__)
 
@@ -17,13 +20,14 @@ def read_all(file_name):
 
 setup(
     name=TITLE,
-    version=VERSION_STRING,
+    version=RELEASE,
     url='https://github.com/route4me/route4me-python-sdk',
     bugtrack_url='https://github.com/route4me/route4me-python-sdk/issues',
     license='ISC',                                           # ???
-    author='Route4Me Python Team (SDK)',
+    copyright=COPYRIGHT,
+    author=AUTHOR,
     author_email='python-team@route4me.com',
-    description=('Route4Me Python SDK'),
+    description=PROJECT,
     long_description=read_all('README.rst'),
     keywords='route4me, python, sdk, api',                   # ???
     packages=['route4me.sdk', 'route4me.sdk.examples'],      # ???

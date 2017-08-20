@@ -19,6 +19,7 @@ Module Index
 	:maxdepth: 1
 	:hidden:
 
-	Changelog <changelog>
+	Changelog <CHANGELOG>
+	license
 
 - :ref:`genindex`
