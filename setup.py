@@ -4,7 +4,7 @@ import os
 from setuptools import setup
 
 from route4me.sdk.version import VERSION_STRING
-
+from route4me.sdk import __title__ as TITLE
 
 cwd = os.path.dirname(__file__)
 
@@ -16,7 +16,7 @@ def read_all(file_name):
 
 
 setup(
-    name='route4me-sdk',
+    name=TITLE,
     version=VERSION_STRING,
     url='https://github.com/route4me/route4me-python-sdk',
     bugtrack_url='https://github.com/route4me/route4me-python-sdk/issues',

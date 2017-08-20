@@ -11,6 +11,9 @@ log = logging.getLogger(__name__)
 
 
 __version__ = version.VERSION_STRING
+__build__ = version.BUILD
+__commit__ = version.COMMIT
+__title__ = 'route4me-sdk'
 
 
 class Route4Me:
