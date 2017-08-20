@@ -1,9 +1,12 @@
-.. include: common.rst
+.. include:: common.rst
 
-Route4Me Python SDK
-===================
+.. include:: ../../README.rst
+
+Module Index
+------------
 
 .. toctree::
+	:hidden:
 	:maxdepth: 2
 	:caption: Contents:
 
@@ -14,13 +17,8 @@ Route4Me Python SDK
 
 .. toctree::
 	:maxdepth: 1
+	:hidden:
 
 	Changelog <changelog>
 
-
-Content
--------
-
 - :ref:`genindex`
-- :ref:`modindex`
-- :ref:`search`
