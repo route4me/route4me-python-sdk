@@ -1,4 +1,6 @@
 #!/bin/sh
 
 # sphinx-build ./docs/src ./docs/build
+# sphinx-apidoc -e -T -o docs/source/resources/ route4me/sdk/resources/
+
 make -C ./docs $@

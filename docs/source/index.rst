@@ -1,5 +1,7 @@
 .. include:: common.rst
 
+.. todolist::
+
 .. include:: ../../README.rst
 
 Module Index
@@ -8,16 +10,25 @@ Module Index
 .. toctree::
 	:hidden:
 	:maxdepth: 2
-	:caption: Contents:
+	:caption: Intro
 
+	Main <self>
 	quickstart
 	install
+
+.. toctree::
+	:hidden:
+	:maxdepth: 2
+	:caption: Code
+
 	api
+	utils
 	errors
 
 .. toctree::
 	:maxdepth: 1
 	:hidden:
+	:caption: Misc
 
 	Changelog <CHANGELOG>
 	license

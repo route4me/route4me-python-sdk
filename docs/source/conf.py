@@ -41,7 +41,8 @@ from route4me.sdk import __project__ as PROJECT       # noqa: E402
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
+extensions = [
+    'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
@@ -49,7 +50,10 @@ extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages']
+    'sphinx.ext.githubpages',
+
+#    'sphinx_paramlinks',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -68,7 +72,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = PROJECT
-copyright = COPYRIGHT
+copyright = COPYRIGHT.replace('©', ',')  # because Doc theme already has ©-sign
 author = AUTHOR
 
 # The version info for the project you're documenting, acts as replacement for
@@ -96,7 +100,7 @@ exclude_patterns = []
 pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = True
+todo_include_todos = False if os.getenv('CI') else True
 
 
 # -- Options for HTML output ----------------------------------------------

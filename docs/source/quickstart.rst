@@ -18,8 +18,8 @@ Probably, the best and simplest way --- use PIP:
 
 	The full installation guide: :doc:`/install`
 
-Run example
------------
+Use
+---
 
 .. code-block:: python
 
@@ -27,3 +27,6 @@ Run example
 
     r4m = route4me.sdk.Route4Me(api_key='1111111')
     print(r4m.version)
+
+    opt = r4m.optimizations.get('07372F2CF3814EC6DFFAFE92E22771AA')
+    print(opt)

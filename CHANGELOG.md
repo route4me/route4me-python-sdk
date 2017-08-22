@@ -2,7 +2,8 @@
 
 The history of changes of the `route4me/route4me-python-sdk` project.
 
-This file should be filled by maintainers, using messages from pull requests.
+This file **MUST** be filled only by maintainers, using messages from pull
+requests.
 
 Please, follow this [guide](http://keepachangelog.com/en/0.3.0/).
 
