@@ -69,3 +69,10 @@ class Route4MeValidationError(Route4MeError):
 	Variable has invalid format/data
 	"""
 	pass
+
+
+class Route4MeEntityNotFoundError(Route4MeError):
+	"""
+	Requested entity was not found on Route4Me
+	"""
+	pass

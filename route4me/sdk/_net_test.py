@@ -3,7 +3,7 @@
 import re
 import pytest
 
-from .net import NetworkClient
+from ._net import NetworkClient
 from .errors import Route4MeNetworkError
 
 
@@ -29,16 +29,20 @@ class TestNetworkClient:
 
 @pytest.mark.network
 class TestNetworkClientRequestsOverHttpbin:
+
+	# ==========================================================================
+	# GET
+	# ==========================================================================
+
 	def test_get(self):
-		# http://httpbin.org/stream/20
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		res = nc.get('get', timeout_sec=8)
 
 		# https://www.httpbin.org/get?param3=345&api_key=AAAA&param1=1&param4=False&format=json&param2=str'
 		url = res['url']
 		assert url in (
-			'https://www.httpbin.org/get?api_key=AAAA&format=json',
-			'https://www.httpbin.org/get?format=json&api_key=AAAA'
+			'https://httpbin.org/get?api_key=AAAA&format=json',
+			'https://httpbin.org/get?format=json&api_key=AAAA'
 		)
 
 		# requests/2.18.3 (Linux 4.8.0-53-generic) Route4Me-Python-SDK/0.1.0-dev.4 CPython/3.5.2
@@ -50,32 +54,34 @@ class TestNetworkClientRequestsOverHttpbin:
 		accept = res['headers']['Accept']
 		assert accept == 'application/json'
 
-	@pytest.mark.parametrize('subdomains', [
-		('www'),
+	@pytest.mark.parametrize('subdomain, exp_prefix', [
+		(None, 'https://httpbin.org/get'),
+		('', 'https://httpbin.org/get'),
+		('www', 'https://www.httpbin.org/get'),
 	])
-	def test_get_with_subdomains(self, subdomains):
-		# http://httpbin.org/stream/20
+	def test_get_with_subdomains(self, subdomain, exp_prefix):
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
-		res = nc.get('get', subdomains=subdomains, timeout_sec=8)
+		res = nc.get('get', subdomain=subdomain, timeout_sec=8)
 
 		# https://www.httpbin.org/get?param3=345&api_key=AAAA&param1=1&param4=False&format=json&param2=str'
 		url = res['url']
-		assert url in (
-			'https://www.httpbin.org/get?api_key=AAAA&format=json',
-			'https://www.httpbin.org/get?format=json&api_key=AAAA'
-		)
+		assert url.startswith(exp_prefix)
+		assert 'api_key=AAAA' in url
+		assert 'format=json' in url
 
 	def test_get_with_params(self):
-		# http://httpbin.org/stream/20
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		res = nc.get(
 			path='get',
 			timeout_sec=8,
+			subdomain='www',
 
-			param1=1,
-			param2='str',
-			param3='345',
-			param4=False,
+			query={
+				'param1': 1,
+				'param2': 'str',
+				'param3': '345',
+				'param4': False,
+			}
 		)
 
 		# https://www.httpbin.org/get?param3=345&api_key=AAAA&param1=1&param4=False&format=json&param2=str'
@@ -89,10 +95,37 @@ class TestNetworkClientRequestsOverHttpbin:
 		assert 'param4=False' in url
 
 	# ==========================================================================
+	# POST
+	# ==========================================================================
+
+	# def test_post_with_params(self):
+	# 	nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
+	# 	res = nc.post(
+	# 		path='post',
+	# 		timeout_sec=8,
+	# 		query={
+	# 			'param1': 1,
+	# 			'param2': 'str',
+	# 			'param3': '345',
+	# 			'param4': False,
+	# 		}
+	# 	)
+
+	# 	# https://www.httpbin.org/get?param3=345&api_key=AAAA&param1=1&param4=False&format=json&param2=str'
+	# 	url = res['url']
+	# 	assert url.startswith('https://www.httpbin.org/get')
+	# 	assert 'api_key=AAAA' in url
+	# 	assert 'format=json' in url
+	# 	assert 'param1=1' in url
+	# 	assert 'param2=str' in url
+	# 	assert 'param3=345' in url
+	# 	assert 'param4=False' in url
+
+	# ==========================================================================
 	# EXCEPTIONS
+	# ==========================================================================
 	@pytest.mark.slow
 	def test_raises_on_timeout(self):
-		# http://httpbin.org/stream/20
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		with pytest.raises(Route4MeNetworkError) as exc_info:
 			nc.get('delay/10')
@@ -103,7 +136,6 @@ class TestNetworkClientRequestsOverHttpbin:
 
 	@pytest.mark.slow
 	def test_raises_on_many_redirect(self):
-		# http://httpbin.org/stream/20
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		with pytest.raises(Route4MeNetworkError) as exc_info:
 			nc.get('relative-redirect/10', timeout_sec=10)

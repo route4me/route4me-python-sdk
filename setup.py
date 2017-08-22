@@ -59,7 +59,8 @@ setup(
 
     install_requires=[
         'six             ==1.10.0',
-        'requests        ==2.13.0',
+        'requests        ==2.18.4',
+        'enum34          ==1.1.6',
     ],
     # extras_require={
     #     'dev': REQUIREMENTS_DEV,

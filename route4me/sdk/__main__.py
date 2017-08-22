@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from route4me.sdk import __title__
 from route4me.sdk import __version__
 from route4me.sdk import __release__
