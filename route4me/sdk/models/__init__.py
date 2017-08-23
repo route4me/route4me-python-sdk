@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # reimport enums for convenience:
-from ..enums import *
 from ..enums import AlgorithmTypeEnum
 from ..enums import OptimizationStateEnum
 from ..enums import RouteMetricEnum

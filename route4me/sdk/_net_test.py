@@ -115,7 +115,7 @@ class TestNetworkClientRequestsOverHttpbin:
 			}
 		)
 
-		print (res)
+		print(res)
 
 		# https://www.httpbin.org/anything?param3=345&api_key=AAAA&param1=1&param4=False&format=json&param2=str'
 		url = res['url']
@@ -163,7 +163,7 @@ class TestNetworkClientRequestsOverHttpbin:
 			}
 		)
 
-		print (res)
+		print(res)
 
 		url = res['url']
 		assert url.startswith('https://httpbin.org/anything')

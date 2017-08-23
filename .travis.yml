@@ -26,13 +26,9 @@ before_install:
   - pip install --upgrade pip ${PIP_FLAGS}
 
 install:
-  # update submodules (there are data from other our projects):
-  - git submodule update --init --recursive ./submodules/
-
   # write BUILD and COMMIT data to the VERSION.py:
   - echo "BUILD = '${TRAVIS_BUILD_NUMBER}'" >> VERSION.py
   - echo "COMMIT = '${TRAVIS_COMMIT}'" >> VERSION.py
-  - cat VERSION.py
 
   - python setup.py install
   - pip install -r requirements-dev.txt ${PIP_FLAGS}

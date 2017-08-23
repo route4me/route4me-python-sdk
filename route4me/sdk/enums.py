@@ -205,7 +205,6 @@ class RouteMetricEnum(Enum):
 	EXACT2D = 5
 
 
-
 # TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1,
 #                       R4M_TRAFFIC_ENGINE=3,
 #                       TRUCKING=6)
