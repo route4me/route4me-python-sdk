@@ -1,7 +1,10 @@
+include VERSION.py
+
 include AUTHORS
 include CHANGELOG.md
 include README.rst
-include LICENSE.md
+include LICENSE
 
 exclude .travis.yml
 exclude appveyor.yml
+global-exclude *_test.py
