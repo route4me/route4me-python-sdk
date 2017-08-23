@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
+
 # -*- coding: utf-8 -*-
-#
+
 # Route4Me Python SDK documentation build configuration file, created by
 # sphinx-quickstart on Mon Aug 14 02:13:15 2017.
 #
@@ -31,6 +32,12 @@ from route4me.sdk import __release__ as RELEASE       # noqa: E402
 from route4me.sdk import __copyright__ as COPYRIGHT   # noqa: E402
 from route4me.sdk import __author__ as AUTHOR         # noqa: E402
 from route4me.sdk import __project__ as PROJECT       # noqa: E402
+
+IN_CI = False
+if os.getenv('CI'):
+    IN_CI = True
+if os.getenv('READTHEDOCS'):
+    IN_CI = True
 
 # -- General configuration ------------------------------------------------
 
@@ -89,7 +96,7 @@ release = RELEASE
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -100,8 +107,10 @@ exclude_patterns = []
 pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False if os.getenv('CI') else True
+todo_include_todos = not IN_CI
 
+add_function_parentheses = True
+add_module_names = True
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -135,7 +144,7 @@ html_sidebars = {
         'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
         'donate.html',
-        'genindex.html',
+        # 'genindex.html',
     ]
 }
 
@@ -145,6 +154,7 @@ html_sidebars = {
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Route4MePythonSDKdoc'
 
+html_logo = '_static/logo.png'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -202,8 +212,22 @@ intersphinx_mapping = {
 }
 
 
+# add __init__ to documentation (crazy Sphinx)
+# https://stackoverflow.com/a/5599712/1115187
+# #DOCINIT
+def skip(app, what, name, obj, skip, options):
+    if name == "__init__":
+        return False
+    return skip
+
+
 # At the bottom of conf.py
 def setup(app):
+    # add __init__ to documentation (crazy Sphinx)
+    # https://stackoverflow.com/a/5599712/1115187
+    # #DOCINIT
+    app.connect("autodoc-skip-member", skip)
+
     app.add_config_value('recommonmark_config', {
         'url_resolver': lambda url: 'http://github.com/route4me/route4me-python-sdk/' + url,
         'auto_toc_tree_section': 'Contents',
