@@ -11,7 +11,7 @@ def _handle_auto_doc_for_property(doc, typename):
 		subst = (
 			':getter: Get\n'
 			'{pref}:setter: Set\n'
-			'{pref}:rtype: ~{typename}'
+			'{pref}:rtype: {typename}'
 		).format(
 			typename=typename,
 			pref='\t\t',
@@ -38,7 +38,7 @@ def dict_enum_property(path, enumtype):
 
 		doc = _handle_auto_doc_for_property(
 			fn.__doc__,
-			'{mod}.{nm}'.format(
+			'~{mod}.{nm}'.format(
 				mod=enumtype.__module__,
 				nm=enumtype.__name__,
 			)

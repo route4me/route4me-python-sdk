@@ -1,7 +1,7 @@
 .. include:: common.rst
 
-API Access
-==========
+API
+===
 
 .. automodule:: route4me.sdk
 	:members:
@@ -24,8 +24,8 @@ Enums and constants
 	:members:
 	:show-inheritance:
 
-Resources
----------
+API endpoints
+-------------
 
 Geocoding
 """""""""

@@ -6,6 +6,6 @@ Utilities
 Typeconv
 --------
 
-.. automodule:: route4me.typeconv
+.. automodule:: route4me.sdk.utils.typeconv
 	:members:
 	:show-inheritance:

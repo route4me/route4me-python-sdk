@@ -51,7 +51,7 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 			'/api.v4/optimization_problem.php',
 			json=dict(o),
 			query=None,
-			subdomains='www'
+			subdomain='www'
 		)
 		assert isinstance(res, Optimization)
 		assert res.ID == '1EDB78F63556D99336E06A13A34CF139'

@@ -159,6 +159,8 @@ class NetworkClient:
 		res = self.__handle_net_exceptions(req)
 
 		if res.status_code >= 300:
+			print(res.status_code)
+
 			# TODO: need more details!
 			raise Route4MeApiError(
 				'Error on Route4Me API',

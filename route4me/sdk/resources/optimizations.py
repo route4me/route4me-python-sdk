@@ -76,7 +76,7 @@ class Optimizations:
 
 		res = self.__nc.post(
 			'/api.v4/optimization_problem.php',
-			subdomains='www',
+			subdomain='www',
 			query=query,
 			json=optimization_data,
 		)
@@ -96,7 +96,7 @@ class Optimizations:
 
 		res = self.__nc.get(
 			'/api.v4/optimization_problem.php',
-			subdomains='www',
+			subdomain='www',
 			query={
 				'optimization_problem_id': str(ID),
 			}
