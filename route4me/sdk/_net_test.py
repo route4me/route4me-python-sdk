@@ -32,6 +32,11 @@ class TestNetworkClient:
 @pytest.mark.network
 class TestNetworkClientRequestsOverHttpbin:
 
+	def test_ctor(self):
+		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
+
+		assert isinstance(nc, NetworkClient)
+
 	# ==========================================================================
 	# GET
 	# ==========================================================================
@@ -191,16 +196,6 @@ class TestNetworkClientRequestsOverHttpbin:
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		with pytest.raises(Route4MeNetworkError) as exc_info:
 			nc.get('delay/10')
-
-		exc = exc_info.value
-		assert exc is not None
-		assert exc.code == 'route4me.sdk.network.timeout'
-
-	@pytest.mark.slow
-	def test_post_raises_on_timeout(self):
-		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
-		with pytest.raises(Route4MeNetworkError) as exc_info:
-			nc.post('delay/10')
 
 		exc = exc_info.value
 		assert exc is not None
