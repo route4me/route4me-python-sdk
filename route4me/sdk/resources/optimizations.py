@@ -72,6 +72,8 @@ class Optimizations:
 				'optimized_callback_url': str(optimized_callback_url),
 			}
 
+		print(self.__nc)
+
 		res = self.__nc.post(
 			'/api.v4/optimization_problem.php',
 			subdomains='www',

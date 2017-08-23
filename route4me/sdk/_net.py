@@ -10,6 +10,7 @@ import platform
 import logging
 
 from .errors import Route4MeNetworkError
+from .errors import Route4MeApiError
 
 from .version import VERSION_STRING
 
@@ -54,8 +55,6 @@ class FluentRequest:
 
 	def method(self, method):
 		m = method.upper()
-		if m == 'DEL':
-			m = 'DELETE'
 		self._r.method = m
 		return self
 
@@ -69,7 +68,7 @@ class FluentRequest:
 		return self
 
 	def form(self, form):
-		self.header('Content-Type', 'multipart/form-data')
+		self.header('Content-Type', 'application/x-www-form-urlencoded')
 		self._r.data = form
 		return self
 
@@ -85,7 +84,7 @@ class FluentRequest:
 
 			preq = s.prepare_request(self._r)
 			log.debug(
-				'send request [%s] [%s]',
+				'send prepared request [%s] [%s]',
 				preq.method,
 				FluentRequest.__cut_qs(preq.url)
 			)
@@ -94,6 +93,12 @@ class FluentRequest:
 				preq,
 				timeout=self.__timeout
 			)
+
+	def __repr__(self):
+		return '<FluentRequest, [{method}] [{url}]>'.format(
+			method=self._r.method,
+			url=self._r.url,
+		)
 
 
 class NetworkClient:
@@ -142,10 +147,7 @@ class NetworkClient:
 
 	def __url(self, path, subdomain):
 		subdomain = subdomain + '.' if subdomain else ''
-		# if subdomain:
-		# 	subdomain = subdomain + '.'
 
-		# https://www.httpbin.org/get
 		url = 'https://{subdomain}{base_host}/{path}'.format(
 			subdomain=subdomain,
 			base_host=self.base_host,
@@ -156,6 +158,16 @@ class NetworkClient:
 	def __read_response(self, req):
 		res = self.__handle_net_exceptions(req)
 
+		if res.status_code >= 300:
+			# TODO: need more details!
+			raise Route4MeApiError(
+				'Error on Route4Me API',
+				code='route4me.sdk.api_error',
+				details={
+					'req': req.__repr__(),
+					'status_code': res.status_code,
+				}
+			)
 		res.encoding = 'utf-8'
 		return res.json()
 
@@ -227,21 +239,37 @@ class NetworkClient:
 
 		return self.__read_response(req)
 
-		# return self.__request(
-		# 	method='GET',
-		# 	subdomains=subdomains,
-		# 	path=path,
-		# 	query=query
-		# )
+	def delete(self, path, query=None, data=None, subdomain=None, timeout_sec=None):
 
-	def post(self, path, query=None, json=None, subdomain=None, timeout_sec=None):
-		return self.__request(
-			method='POST',
-			subdomains=subdomain,
-			path=path
-		)
+		url = self.__url(path, subdomain=subdomain)
 
-	def form(self, path, subdomains=None, **qargs):
+		req = FluentRequest()
+		req.method('DELETE')
+		req.url(url)
+		req.qs(query)
+		req.json(data)
+
+		if timeout_sec is not None:
+			req.timeout(timeout_sec)
+
+		return self.__read_response(req)
+
+	def post(self, path, query=None, data=None, subdomain=None, timeout_sec=None):
+
+		url = self.__url(path, subdomain=subdomain)
+
+		req = FluentRequest()
+		req.method('POST')
+		req.url(url)
+		req.qs(query)
+		req.json(data)
+
+		if timeout_sec is not None:
+			req.timeout(timeout_sec)
+
+		return self.__read_response(req)
+
+	def form(self, path, query=None, data=None, subdomain=None, timeout_sec=None):
 		"""
 		Posts form data as `multipart/form-data`.
 
@@ -251,9 +279,15 @@ class NetworkClient:
 		:returns: API response, JSON converted to ..
 		:rtype: {dict}
 		"""
-		return self.__request(
-			method='POST',
-			subdomains=subdomains,
-			path=path,
-			**qargs
-		)
+		url = self.__url(path, subdomain=subdomain)
+
+		req = FluentRequest()
+		req.method('POST')
+		req.url(url)
+		req.qs(query)
+		req.form(data)
+
+		if timeout_sec is not None:
+			req.timeout(timeout_sec)
+
+		return self.__read_response(req)

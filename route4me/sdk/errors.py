@@ -3,7 +3,7 @@
 
 class Route4MeError(Exception):
 	"""
-	Base (abstract) Exception
+	Base (abstract) error-class
 	"""
 	def __init__(
 		self,
@@ -58,6 +58,17 @@ class Route4MeNetworkError(Route4MeError):
 
 	More details could be observed using :py:attr:`~.Route4MeError.code` and
 	:py:attr:`~.Route4MeError.details`
+	"""
+	pass
+
+
+class Route4MeApiError(Route4MeError):
+	"""
+	Error on Route4Me SDK
+
+	.. todo::
+		Make this exception more detailed
+
 	"""
 	pass
 

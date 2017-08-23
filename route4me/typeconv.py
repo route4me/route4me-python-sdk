@@ -19,7 +19,7 @@ def str2bool(strvalue, default=None):
 	If value is not recognized -- the value of the :paramref:`~str2bool.default`
 	argument will be returned.
 
-	.. info::
+	.. note::
 
 		:func:`str2bool` is not an extension of default :class:`bool`. For
 		example, it doesn't recognize integer ``2`` (or any other number) as
@@ -29,11 +29,9 @@ def str2bool(strvalue, default=None):
 	:type strvalue: str
 	:param default:  Default value, defaults to :data:`None`
 	:type default: *
-
-	:returns: Parsed boolean value or :paramref:`~str2bool.default`
-	(if defined). Not a bool value will be returned **only** if value was not
+	:returns: Parsed boolean value or :paramref:`~str2bool.default` \
+	(if defined). Not a bool value will be returned **only** if value was not \
 	recognized.
-
 	:rtype: bool or *
 
 	"""

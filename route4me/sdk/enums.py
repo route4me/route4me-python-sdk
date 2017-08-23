@@ -184,6 +184,27 @@ class TravelModeEnum(Enum):
 	TRANSIT = 'Transit'
 
 
+class RouteMetricEnum(Enum):
+	"""
+	Metric
+	"""
+
+	#: Euclidean
+	EUCLIDEAN = 1
+
+	#: Manhattan
+	MANHATTAN = 2
+
+	#: Geodesic
+	GEODESIC = 3
+
+	#: Matrix
+	MATRIX = 4
+
+	#: Exact 2d
+	EXACT2D = 5
+
+
 
 # TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1,
 #                       R4M_TRAFFIC_ENGINE=3,
@@ -197,12 +218,6 @@ class TravelModeEnum(Enum):
 #              MINIMIZE_HIGHWAYS='minimizeHighways',
 #              MINIMIZE_TOLLS='minimizeTolls',
 #              NONE='')
-
-# METRIC = auto_enum('ROUTE4ME_METRIC_EUCLIDEAN',
-#                    'ROUTE4ME_METRIC_MANHATTAN',
-#                    'ROUTE4ME_METRIC_GEODESIC',
-#                    'ROUTE4ME_METRIC_MATRIX',
-#                    'ROUTE4ME_METRIC_EXACT_2D', )
 
 
 # FORMAT = enum(CSV='csv',
