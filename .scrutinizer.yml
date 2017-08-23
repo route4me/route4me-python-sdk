@@ -9,6 +9,9 @@ build:
           format: 'py-cc'
   dependencies:
       override:
+        # update submodules (there are data from other our projects):
+        - git submodule update --init --recursive ./submodule/
+
         - pip install -r requirements-dev.txt -q
         - python setup.py install
 
