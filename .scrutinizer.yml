@@ -2,7 +2,7 @@ build:
   tests:
     override:
       -
-        command: pytest
+        command: python3 -m pytest
         coverage:
           file: '.coverage'
           config_file: '.coveragerc'
