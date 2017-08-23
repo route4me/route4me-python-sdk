@@ -27,7 +27,7 @@ before_install:
 
 install:
   # update submodules (there are data from other our projects):
-  - git submodule update --init --recursive ./submodule/
+  - git submodule update --init --recursive ./submodules/
 
   # write BUILD and COMMIT data to the VERSION.py:
   - echo "BUILD = '${TRAVIS_BUILD_NUMBER}'" >> VERSION.py

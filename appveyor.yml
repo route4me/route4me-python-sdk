@@ -36,7 +36,7 @@ pull_requests:
 # Install scripts. (runs after repo cloning)
 install:
   # update submodules (there are data from other our projects):
-  - git submodule update --init --recursive ./submodule/
+  - git submodule update --init --recursive .\submodules\
 
   - set PIP=C:\Python%PYTHON_VERSION%\Scripts\pip.exe
   - set PATH=C:\Python%PYTHON_VERSION%;%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PATH%
