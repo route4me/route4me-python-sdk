@@ -7,10 +7,11 @@ requests.
 
 Please, follow this [guide](http://keepachangelog.com/en/0.3.0/).
 
-## unreleased // 0.0.0
+## 2017-08-24 // 0.1.0-dev.6
 
 * network agent
 * core error handling (network access, SSL issues)
+* scaffold for `Optimizations`
 
 #### Package design
 
