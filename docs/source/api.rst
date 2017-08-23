@@ -7,8 +7,11 @@ API Access
 	:members:
 	:show-inheritance:
 
-Data Structures/Models
-----------------------
+Data Structures
+---------------
+
+Models
+""""""
 
 .. automodule:: route4me.sdk.models
 	:members:

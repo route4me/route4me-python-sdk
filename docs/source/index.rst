@@ -18,7 +18,7 @@ Module Index
 
 .. toctree::
 	:hidden:
-	:maxdepth: 2
+	:maxdepth: 6
 	:caption: Code
 
 	api
