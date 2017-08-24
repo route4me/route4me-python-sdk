@@ -31,6 +31,9 @@ install:
   - echo "COMMIT = '${TRAVIS_COMMIT}'" >> VERSION.py
 
   - python setup.py install
+  # this is a directory, created with python setup.install
+  - rm -r build/
+
   - pip install -r requirements-dev.txt ${PIP_FLAGS}
 
   # we are going to send coverage only from Travis. So this package
