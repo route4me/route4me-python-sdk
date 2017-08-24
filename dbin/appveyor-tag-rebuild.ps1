@@ -1,9 +1,7 @@
 # restart builds for tag
 
-if ($Env:APPVEYOR_REPO_TAG == "true");
-then
-	if ($Env:CUSTOM_BUILD_TAG -eq "true");
-	then
+if ($Env:APPVEYOR_REPO_TAG == "true"); then
+	if ($Env:CUSTOM_BUILD_TAG -eq "true"); then
 		echo "Trying to build tag without custom tunings"
 	else
 		Start-AppveyorBuild \
