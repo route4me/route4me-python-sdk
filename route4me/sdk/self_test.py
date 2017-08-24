@@ -10,7 +10,7 @@ class MockerResourceWithNetworkClient(object):
 	mock_fluent_request_class = None
 
 	@classmethod
-	def setup_method(cls):
+	def setup_method(cls, *args, **qw):
 
 		# there are several similar modules-resources.
 		# all we need to test them -- mock NetworkClient, to prevent
@@ -26,7 +26,7 @@ class MockerResourceWithNetworkClient(object):
 		cls.mock_fluent_request_class = cls._patcher_fluent_request_class.start()
 
 	@classmethod
-	def teardown_method(cls):
+	def teardown_method(cls, *args, **qw):
 		"""Teardown test environment for the entire class
 		"""
 		cls._patcher_fluent_request_class.stop()
