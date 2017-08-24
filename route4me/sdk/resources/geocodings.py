@@ -3,7 +3,7 @@
 from .._net import NetworkClient
 
 
-class Geocodings:
+class Geocodings(object):
 	"""
 	Geocondings stuff
 

@@ -3,14 +3,14 @@
 import mock
 
 
-class MockerResourceWithNetworkClient:
+class MockerResourceWithNetworkClient(object):
 
 	resource_module = None
 
 	mock_fluent_request_class = None
 
 	@classmethod
-	def setup_class(cls):
+	def setup_method(cls):
 
 		# there are several similar modules-resources.
 		# all we need to test them -- mock NetworkClient, to prevent
@@ -26,7 +26,7 @@ class MockerResourceWithNetworkClient:
 		cls.mock_fluent_request_class = cls._patcher_fluent_request_class.start()
 
 	@classmethod
-	def teardown_class(cls):
+	def teardown_method(cls):
 		"""Teardown test environment for the entire class
 		"""
 		cls._patcher_fluent_request_class.stop()

@@ -138,6 +138,21 @@ class OptimizationStateEnum(Enum):
 	COMPUTING_DIRECTIONS = 6
 
 
+class OptimizationQualityEnum(Enum):
+	"""
+	Optimization Quality
+	"""
+
+	#: Generate Optimized Routes As Quickly as Possible
+	FAST = 1
+
+	#: Generate Routes That Look Better On A Map
+	MEDIUM = 2
+
+	#: Generate The Shortest And Quickest Possible Routes
+	BEST = 3
+
+
 class DeviceTypeEnum(Enum):
 	"""
 	Device Type

@@ -70,7 +70,25 @@ class Route4MeApiError(Route4MeError):
 		Make this exception more detailed
 
 	"""
-	pass
+	def __init__(
+		self,
+		message,
+		code='route4me.sdk.other',
+		details=None,
+		inner=None,
+
+		method=None,
+		url=None,
+	):
+		super(Route4MeApiError, self).__init__(
+			message,
+			code,
+			details,
+			inner
+		)
+
+		self.method = method
+		self.url = url
 
 
 class Route4MeValidationError(Route4MeError):

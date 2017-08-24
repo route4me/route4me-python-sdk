@@ -44,7 +44,7 @@ __all__ = [
 ]
 
 
-class ApiClient:
+class ApiClient(object):
 	"""
 	Route4Me API client
 

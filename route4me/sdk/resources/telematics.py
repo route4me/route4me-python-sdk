@@ -3,7 +3,7 @@
 from .._net import NetworkClient
 
 
-class Telematics:
+class Telematics(object):
 	def __init__(self, api_key=None, _network_client=None):
 		nc = _network_client
 		if nc is None:

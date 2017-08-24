@@ -7,6 +7,13 @@ requests.
 
 Please, follow this [guide](http://keepachangelog.com/en/0.3.0/).
 
+## 2017-08-25 // 0.1.0-dev.8
+
+* Optimizations Problem endpoints:
+  * create
+  * get (get one)
+  * remove
+
 ## 2017-08-24 // 0.1.0-dev.7
 
 * network agent

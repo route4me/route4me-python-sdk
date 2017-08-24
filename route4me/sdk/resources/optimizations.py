@@ -21,11 +21,15 @@ a number of routes. (Possibly recurring in the future)
 
 """
 
+import pydash
+
 from .._net import NetworkClient
 from ..models import Optimization
 
+from ..errors import Route4MeApiError
 
-class Optimizations:
+
+class Optimizations(object):
 	"""
 	Optimizations resource
 	"""
@@ -39,12 +43,12 @@ class Optimizations:
 	def create(
 		self,
 		optimization_data,
-		optimized_callback_url=None,
+		callback_url=None,
 	):
 		"""
 		Create a new optimization through the Route4Me API
 
-		You could pass any valid URL as :paramref:`optimized_callback_url`
+		You could pass any valid URL as :paramref:`callback_url`
 		parameter.
 
 		The callback URL is a URL that gets called when the optimization is
@@ -59,26 +63,29 @@ class Optimizations:
 		:class:`route4me.sdk.enums.OptimizationStateEnum`
 
 		:param optimization_data: Optimization data
-		:type optimization_data: ~route4me.sdk.models.Optimization
-		:param optimized_callback_url: *Optimization done* callback URL
-		:type optimized_callback_url: str or None
+		:type optimization_data: ~route4me.sdk.models.Optimization or dict
+		:param callback_url: *Optimization done* callback URL
+		:type callback_url: str or None
 		:returns: New optimization
 		:rtype: ~route4me.sdk.models.Optimization
 		"""
 
 		query = None
-		if optimized_callback_url:
+		if callback_url:
 			query = {
-				'optimized_callback_url': str(optimized_callback_url),
+				'optimized_callback_url': str(callback_url),
 			}
 
-		print(self.__nc)
+		data = optimization_data
+
+		# if isinstance(optimization_data, BaseModel):
+		# 	data = optimization_data.raw
 
 		res = self.__nc.post(
 			'/api.v4/optimization_problem.php',
 			subdomain='www',
 			query=query,
-			data=optimization_data,
+			data=data,
 		)
 		return Optimization(res)
 
@@ -91,7 +98,8 @@ class Optimizations:
 		:returns: Optimization data
 		:rtype: ~route4me.sdk.models.Optimization
 
-		:raises ~route4me.sdk.errors.Route4MeEntityNotFoundError: if optimization was not found
+		:raises ~route4me.sdk.errors.Route4MeEntityNotFoundError: if \
+			optimization was not found
 		"""
 
 		res = self.__nc.get(
@@ -110,5 +118,39 @@ class Optimizations:
 	def update(self):
 		pass
 
-	def remove(self):
-		pass
+	def remove(self, ID):
+		"""
+		Remove an existing optimization belonging to an user.
+
+		:param ID: Optimization Problem ID
+		:type ID: str
+		:returns: Always :data:`True`
+		:rtype: bool
+
+		:raises ~route4me.sdk.errors.Route4MeApiError: if Route4Me API \
+			returned not expected response
+		:raises ~route4me.sdk.errors.Route4MeEntityNotFoundError: if \
+			optimization was not found
+		"""
+
+		res = self.__nc.delete(
+			'/api.v4/optimization_problem.php',
+			subdomain='www',
+			query={
+				'optimization_problem_id': str(ID),
+			}
+		)
+
+		if not pydash.get(res, 'status'):
+			# TODO: this exception should contain METHOD and URL fields
+			raise Route4MeApiError(
+				'Not expected response',
+				code='route4me.sdk.api_error',
+				details={
+					'res': res,
+				},
+				method='DELETE',
+				# url=''
+			)
+
+		return True

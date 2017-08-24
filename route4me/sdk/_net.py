@@ -20,7 +20,7 @@ from .version import COMMIT
 log = logging.getLogger(__name__)
 
 
-class FluentRequest:
+class FluentRequest(object):
 	def __init__(self):
 		self._r = requests.Request(
 			method='GET'
@@ -104,7 +104,7 @@ class FluentRequest:
 		)
 
 
-class NetworkClient:
+class NetworkClient(object):
 	"""
 	Internal API-client
 

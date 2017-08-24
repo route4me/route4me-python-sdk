@@ -25,14 +25,18 @@ def dict_enum_property(path, enumtype):
 	def decorator(fn):
 
 		def _get(self):
-			v = pydash.get(self, path)
+			v = pydash.get(self.raw, path)
+
+			if v is None:
+				return None
+
 			return enumtype(v)
 
 		def _set(self, value):
 			if isinstance(value, enumtype):
 				value = value.value
 			value = fn(self, value)
-			pydash.set_(self, path, value)
+			pydash.set_(self.raw, path, value)
 
 			return enumtype(value)
 
@@ -49,16 +53,24 @@ def dict_enum_property(path, enumtype):
 	return decorator
 
 
+# TODO: test over unicode in python 2
 def dict_property(path, anytype):
+	"""
+	Creates new strict-typed PROPERTY for classes inherited from :class:`dict`
+	"""
 	def decorator(fn):
 
 		def _get(self):
-			v = pydash.get(self, path)
+			v = pydash.get(self.raw, path)
+
+			if v is None:
+				return None
+
 			return anytype(v)
 
 		def _set(self, value):
 			value = fn(self, value)
-			pydash.set_(self, path, value)
+			pydash.set_(self.raw, path, value)
 
 			return value
 
