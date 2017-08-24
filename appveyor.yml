@@ -9,6 +9,8 @@ environment:
     # don't forget: this path should match with CACHE section
     REQUIREMENTS_SUBPATH: libs\
     USE_FLAKE8: 1
+    CUSTOM_API_KEY:
+      secure: kHWq/7C/ruzwVfaGDcS0mZWW95EI7dks4WxR6DRMw+E=
   matrix:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
     - PYTHON_VERSION: 26
