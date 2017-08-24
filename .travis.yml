@@ -30,6 +30,10 @@ install:
   - echo "BUILD = '${TRAVIS_BUILD_NUMBER}'" >> VERSION.py
   - echo "COMMIT = '${TRAVIS_COMMIT}'" >> VERSION.py
 
+  # because python 2 and pypy fails on HTTPS check with "InsecurePlatformWarning":
+  # https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+  - pip install urllib3[secure] ${PIP_FLAGS}
+
   - python setup.py install
   # this is a directory, created with python setup.install
   - rm -r build/
@@ -43,9 +47,6 @@ install:
   - pip --version
   - if [[ $TRAVIS_PYTHON_VERSION != 2.6* ]]; then flake8 --version;  fi
 
-  # because python 2.6 fails on HTTPS check with "InsecurePlatformWarning":
-  # https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.6* ]]; then pip install --upgrade urllib3[secure] ${PIP_FLAGS}; fi
   - python -m pytest --version
 
 script:
