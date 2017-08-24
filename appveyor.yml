@@ -24,6 +24,7 @@ environment:
 #     - PYTHON_VERSION: 36
 
 init:
+  - if "%APPVEYOR_REPO_TAG%"=="true" SET APPVEYOR_REPO_BRANCH=%APPVEYOR_REPO_TAG_NAME%
   - git config --global core.autocrlf true
 
 cache:
