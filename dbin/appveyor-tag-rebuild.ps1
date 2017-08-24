@@ -2,6 +2,9 @@
 
 if ($Env:APPVEYOR_REPO_TAG -eq "true") {
 	if ($Env:CUSTOM_BUILD_TAG -eq "true") {
+		echo "Build tag with custom tunings"
+	} else {
+		echo "Trying to build tag without custom tunings"
 		Start-AppveyorBuild `
 			-ApiKey $env:CUSTOM_API_KEY `
 			-ProjectSlug 'route4me-python-sdk' `
@@ -9,7 +12,5 @@ if ($Env:APPVEYOR_REPO_TAG -eq "true") {
 			-EnvironmentVariables @{ CUSTOM_BUILD_TAG='true' }
 
 		Exit-AppveyorBuild
-	} else {
-		echo "Trying to build tag without custom tunings"
 	}
 }
