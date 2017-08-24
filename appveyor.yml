@@ -24,7 +24,6 @@ environment:
 #     - PYTHON_VERSION: 36
 
 init:
-  - ps: .\dbin\appveyor-tag-rebuild.ps1
   - git config --global core.autocrlf true
 
 cache:
@@ -36,6 +35,8 @@ pull_requests:
 
 # Install scripts. (runs after repo cloning)
 install:
+  - ps: .\dbin\appveyor-tag-rebuild.ps1
+
   # update submodules (there are data from other our projects):
   - git submodule update --init --recursive .\submodules\
 
