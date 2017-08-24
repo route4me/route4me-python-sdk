@@ -53,7 +53,7 @@ class TestNetworkClientRequestsOverHttpbin:
 		)
 
 		# requests/2.18.3 (Linux 4.8.0-53-generic) Route4Me-Python-SDK/0.1.0-dev.4 CPython/3.5.2
-		user_agent = res['headers']['Route4Me-User-Agent']
+		user_agent = res['headers']['Route4Me-Agent']
 		assert re.match(r'^requests\/.*Route4Me-Python-SDK\/.*$', user_agent), (
 			'user_agent contains `requests` and `Route4Me`'
 		)

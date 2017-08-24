@@ -78,7 +78,7 @@ class Optimizations:
 			'/api.v4/optimization_problem.php',
 			subdomain='www',
 			query=query,
-			json=optimization_data,
+			data=optimization_data,
 		)
 		return Optimization(res)
 

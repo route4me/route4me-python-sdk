@@ -7,7 +7,7 @@
 # ==============================================================================
 
 VERSION = (0, 1, 0)
-RELEASE_SUFFIX = '-dev.6'
+RELEASE_SUFFIX = '-dev.7'
 
 VERSION_STRING = '.'.join([str(x) for x in VERSION[0:3]])
 RELEASE_STRING = VERSION_STRING + RELEASE_SUFFIX

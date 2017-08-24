@@ -6,7 +6,8 @@ import mock
 class MockerResourceWithNetworkClient:
 
 	resource_module = None
-	client = None
+
+	mock_fluent_request_class = None
 
 	@classmethod
 	def setup_class(cls):
@@ -18,14 +19,28 @@ class MockerResourceWithNetworkClient:
 		#
 		# Mocked client will be accessible in tests as `cls.client`
 
-		cls.client = mock.MagicMock()
-
-		cls.patcher_client = mock.patch.object(cls.resource_module, 'NetworkClient')
-		mock_client = cls.patcher_client.start()
-		mock_client.return_value = cls.client
+		# mock FluentRequest
+		cls._patcher_fluent_request_class = mock.patch(
+			'route4me.sdk._net.FluentRequest'
+		)
+		cls.mock_fluent_request_class = cls._patcher_fluent_request_class.start()
 
 	@classmethod
 	def teardown_class(cls):
 		"""Teardown test environment for the entire class
 		"""
-		cls.patcher_client.stop()
+		cls._patcher_fluent_request_class.stop()
+
+	def set_response(self, status_code=200, data=None, **qw):
+
+		x = mock.MagicMock()
+		x.status_code = status_code
+		x.json.return_value = data
+
+		for k in qw:
+			x.k = qw[k]
+
+		self.mock_fluent_request_class.return_value.send.return_value = x
+
+	def last_request(self):
+		return self.mock_fluent_request_class.return_value

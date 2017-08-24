@@ -13,6 +13,9 @@ from .errors import Route4MeNetworkError
 from .errors import Route4MeApiError
 
 from .version import VERSION_STRING
+from .version import RELEASE_STRING
+from .version import BUILD
+from .version import COMMIT
 
 log = logging.getLogger(__name__)
 
@@ -148,6 +151,9 @@ class NetworkClient:
 	def __url(self, path, subdomain):
 		subdomain = subdomain + '.' if subdomain else ''
 
+		# remove leading slashes from path
+		path = re.sub(r'^/+', '', path)
+
 		url = 'https://{subdomain}{base_host}/{path}'.format(
 			subdomain=subdomain,
 			base_host=self.base_host,
@@ -175,7 +181,10 @@ class NetworkClient:
 
 	def __handle_net_exceptions(self, req):
 		req.user_agent(self.user_agent)
-		req.header('Route4Me-User-Agent', self.user_agent)
+		req.header('Route4Me-Agent', self.user_agent)
+		req.header('Route4Me-Agent-Release', RELEASE_STRING)
+		req.header('Route4Me-Agent-Commit', COMMIT)
+		req.header('Route4Me-Agent-Build', BUILD)
 		req.accept('application/json')
 		req.header('Route4Me-Api-Key', self.api_key)
 

@@ -4,7 +4,7 @@ import os
 import json
 
 # import pytest
-import mock
+# import mock
 
 from route4me.sdk.self_test import MockerResourceWithNetworkClient
 from .optimizations import Optimizations
@@ -36,9 +36,9 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 			'submodules', 'route4me-api-data-examples', 'Optimizations',
 			'create_response.json'
 		)) as f:
-			sample_response = json.load(f)
+			sample_response_data = json.load(f)
 
-		self.client.post.return_value = sample_response
+		self.set_response(data=sample_response_data)
 
 		o = Optimization()
 		o.algorithm_type = AlgorithmTypeEnum.TSP
@@ -46,13 +46,29 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		r = Optimizations(api_key='test')
 		res = r.create(o)
 
-		print(self.client.mock_calls)
-		assert self.client.post.call_args == mock.call(
-			'/api.v4/optimization_problem.php',
-			json=dict(o),
-			query=None,
-			subdomain='www'
+		print(self.mock_fluent_request_class.mock_calls)
+		# call(),
+		# call().method('POST'),
+		# call().url('https://www.route4me.com//api.v4/optimization_problem.php'),
+		# call().qs(None),
+		# call().json({'links': {}, 'parameters': {'algorithm_type': 1}}),
+		# call().user_agent('requests/2.18.3 (Linux 4.8.0-53-generic) Route4Me-Python-SDK/0.1.0 CPython/3.5.2'),
+		# call().header('Route4Me-User-Agent', 'requests/2.18.3 (Linux 4.8.0-53-generic) ..'),
+		# call().accept('application/json'),
+		# call().header('Route4Me-Api-Key', 'test'),
+		# call().qs({'format': 'json', 'api_key': 'test'}),
+		# call().send(),
+		# call().send().json()
+
+		# assertions
+		mock_freq = self.last_request()
+		mock_freq.method.assert_called_with('POST')
+		mock_freq.url.assert_called_with(
+			'https://www.route4me.com/api.v4/optimization_problem.php'
 		)
+		mock_freq.json.assert_called_with(dict(o))
+
+		# assertions on response
 		assert isinstance(res, Optimization)
 		assert res.ID == '1EDB78F63556D99336E06A13A34CF139'
 		assert res.name == 'Fri, 17 Jun 2016 08:21:59 +0000 UTC'
