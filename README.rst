@@ -6,7 +6,7 @@ Build
 
 .. image:: https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master
     :target: https://travis-ci.org/route4me/route4me-python-sdk
-.. image:: https://ci.appveyor.com/api/projects/status/br52a8ybj49gdroh?svg=true
+.. image:: https://ci.appveyor.com/api/projects/status/br52a8ybj49gdroh/branch/master?svg=true
     :target: https://ci.appveyor.com/project/route4me/route4me-python-sdk
 
 PyPI info
@@ -40,9 +40,15 @@ Code metrics
 .. image:: https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/route4me/route4me-python-sdk
 
-.. _PYPI: https://pypi.python.org/pypi/route4me-python-sdk
+.. image:: https://readthedocs.org/projects/route4me-python-sdk/badge/?version=latest
+    :target: http://route4me-python-sdk.readthedocs.io/?version=latest
+    :alt: Documentation Status
+
+.. _PYPI: https://pypi.org/project/route4me-sdk/
 
 The official Python SDK for `Route4Me API <https://route4me.io/docs/>`_
+
+`Documentation on ReadTheDocs <http://route4me-python-sdk.readthedocs.io/>`_
 
 --------------------------------------------------------------------------------
 Install
