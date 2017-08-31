@@ -220,6 +220,24 @@ class RouteMetricEnum(Enum):
 	EXACT2D = 5
 
 
+class AddressStopTypeEnum(Enum):
+	"""
+	Address stop type
+	"""
+
+	#: Pickup
+	PICKUP = "PICKUP"
+
+	#: Delivery
+	DELIVERY = "DELIVERY"
+
+	#: Break
+	BREAK = "BREAK"
+
+	#: Meetup
+	MEETUP = "MEETUP"
+
+
 # TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1,
 #                       R4M_TRAFFIC_ENGINE=3,
 #                       TRUCKING=6)

@@ -182,6 +182,7 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		assert res.member_id == '44143'
 		assert res.vehicle_id is None
 		assert res.device_id is None
+		assert res.round_trip is True
 
 	def test_remove(self):
 

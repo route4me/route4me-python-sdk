@@ -24,12 +24,12 @@ PyPI info
 
 GitHub info
 
-.. https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic
-
 .. image:: http://githubbadges.com/star.svg?user=route4me&repo=route4me-python-sdk&style=flat
     :target: GITHUB_
 .. image:: http://githubbadges.com/fork.svg?user=route4me&repo=route4me-python-sdk&style=flat
     :target: GITHUB_
+
+.. https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic
 
 Code metrics
 

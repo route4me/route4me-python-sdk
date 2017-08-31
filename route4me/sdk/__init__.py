@@ -3,7 +3,14 @@
 """
 Official Python SDK for Route4Me
 
-Contains all required functions to work with Route4Me from Python's environment.
+Consists of classes:
+
+- access to all Route4Me API's endpoints
+- convenient models for Route4Me's entities
+- constants and enums
+
+Look out the appropriate section for details.
+
 """
 
 import logging
@@ -88,7 +95,7 @@ class ApiClient(object):
 	@property
 	def geocodings(self):
 		"""
-		Geocodings functions
+		Geocodings endpoint functions
 
 		:returns: Geocoding namespace
 		:rtype: :class:`~resources.geocodings.Geocodings`
@@ -101,6 +108,12 @@ class ApiClient(object):
 
 	@property
 	def optimizations(self):
+		"""
+		Optimization endpoint functions
+
+		:returns: Optimization namespace
+		:rtype: :class:`~resources.optimizations.Optimizations`
+		"""
 		return self._optimizations
 
 	@property

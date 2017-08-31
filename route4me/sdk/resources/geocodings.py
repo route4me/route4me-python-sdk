@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
 
+"""
+Geocoding is the process of converting addresses (like *"1600 Amphitheatre
+Parkway, Mountain View, CA"*) into geographic coordinates (like *"latitude
+37.423021 and longitude -122.083739"*), which you can use to place markers on
+a map or position the map.
+
+.. seealso:: https://route4me.io/docs/#geocoding
+
+"""
+
 from .._net import NetworkClient
 
 
@@ -7,7 +17,6 @@ class Geocodings(object):
 	"""
 	Geocondings stuff
 
-	.. seealso:: https://route4me.io/docs/#geocoding
 	"""
 	def __init__(self, api_key=None, _network_client=None):
 		nc = _network_client
