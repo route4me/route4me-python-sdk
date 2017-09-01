@@ -7,6 +7,8 @@ import datetime
 import pytest
 # import mock
 
+import pytz
+
 from route4me.sdk.self_test import MockerResourceWithNetworkClient
 from .optimizations import Optimizations
 import route4me.sdk.resources.optimizations as M
@@ -87,7 +89,7 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		assert res.vehicle_id is None
 		assert res.device_id is None
 
-		assert res.route_datetime == datetime.datetime(2016, 6, 17)  # , tzinfo=datetime.timezone.utc)
+		assert res.route_datetime == datetime.datetime(2016, 6, 17, tzinfo=pytz.utc)
 
 	def test_create_with_callback(self):
 

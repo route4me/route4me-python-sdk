@@ -17,6 +17,7 @@ from route4me.sdk._internals.utils import dict_property
 from route4me.sdk._internals.utils import dict_enum_property
 from route4me.sdk._internals.utils import timestamp_and_seconds2datetime
 from route4me.sdk._internals.utils import datetime2timestamp_and_seconds
+from route4me.sdk._internals.utils import unix_timestamp_today
 
 
 class BaseModel(dict):
@@ -60,6 +61,8 @@ class Optimization(BaseModel):
 				'parameters': {
 					'store_route': True,
 					'route_max_duration': 24 * 60 * 60,
+					'route_time': 0,
+					'route_date': unix_timestamp_today()
 				},
 				'links': {},
 				'addresses': []

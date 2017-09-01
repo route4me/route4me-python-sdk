@@ -81,6 +81,7 @@ setup(
 		'requests        ==2.18.4',
 		'enum34          ==1.1.6',
 		'pydash          ==4.1.0',
+		'arrow           ==0.10.0',
 	],
 	# include_package_data=True,
 

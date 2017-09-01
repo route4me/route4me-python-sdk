@@ -1,30 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import six
-
-import pydash
 import datetime
 import logging
 
+import pydash
+import arrow
 
 log = logging.getLogger(__name__)
-
-
-if six.PY2:
-	import time
-
-	def get6_timestamp(dt):
-		return int(time.mktime(dt.timetuple()))
-
-	def get6_total_seconds(td):
-		return td.seconds + td.days * 24 * 3600
-
-else:
-	def get6_timestamp(dt):
-		return int(dt.timestamp())
-
-	def get6_total_seconds(td):
-		return td.total_seconds()
 
 
 def _handle_auto_doc_for_property(doc, typename):
@@ -113,43 +95,35 @@ def dict_property(path, anytype):
 	return decorator
 
 
-def timestamp_and_seconds2datetime(unix_timestamp, seconds):
+def unix_timestamp_today(tz=None):
+	"""
+	Returns unix timestamp for TODAY (00:00) in ``tz`` timezone (UTC by default)
 
-	d = unix_timestamp
-	t = seconds
+	:param tz: Timezone, defaults to None (UTC)
+	:type tz: datetime.tzinfo, optional
+	:returns: Unix-timestamp (seconds) for today
+	:rtype: int
+	"""
+	return arrow.get(tz).floor('day').timestamp
 
-	if d is None:
+
+def timestamp_and_seconds2datetime(ts, sec=0):
+
+	if ts is None:
 		return None
-	if t is None:
-		return None
+	if sec is None:
+		sec = 0
 
-	dd = datetime.datetime.utcfromtimestamp(d)
-	# lets drop hours/minutes/seconds
-	if dd.hour + dd.minute + dd.second > 0:
-		log.warn('route date contains TIME info; expected only DATE')
-
-	dd = dd.replace(
-		hour=0,
-		minute=0,
-		second=0,
-		microsecond=0
-	)
-
-	return dd + datetime.timedelta(seconds=t)
+	dd = arrow.get(int(ts) + int(sec))
+	return dd.datetime
 
 
 def datetime2timestamp_and_seconds(dt):
 	if not isinstance(dt, datetime.datetime):
 		raise TypeError('dt', 'datetime.datetime expected!')
 
-	d = dt.replace(
-		hour=0,
-		minute=0,
-		second=0,
-		microsecond=0,
-	)
-	td = dt - d
+	adt = arrow.get(dt)
 
-	ts = get6_timestamp(d)
-	sec = get6_total_seconds(td)
+	ts = adt.floor('day').timestamp
+	sec = adt.timestamp - ts
 	return ts, sec

@@ -18,6 +18,13 @@ Module Index
 
 .. toctree::
 	:hidden:
+	:maxdepth: 2
+	:caption: Articles
+
+	date-and-time
+
+.. toctree::
+	:hidden:
 	:maxdepth: 6
 	:caption: Code
 
