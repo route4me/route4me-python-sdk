@@ -3,6 +3,8 @@
 import pytest
 import datetime
 
+import pytz
+
 from .utils import timestamp_and_seconds2datetime
 from .utils import datetime2timestamp_and_seconds
 
@@ -45,7 +47,7 @@ class Test_timestamp_and_seconds2datetime(object):
 
 class Test_datetime2timestamp_and_seconds(object):
 
-	TIMEZONE_0300 = datetime.timezone(datetime.timedelta(hours=3))
+	TIMEZONE_0300 = pytz.FixedOffset(180)
 
 	@pytest.mark.parametrize('dt', [
 		(None),
@@ -64,13 +66,13 @@ class Test_datetime2timestamp_and_seconds(object):
 		assert 'dt' in str(exc)
 
 	@pytest.mark.parametrize('dt, exp_ts, exp_sec', [
-		(datetime.datetime(2014, 5, 14, 0, 0, 11, tzinfo=datetime.timezone.utc), 1400025600, 11),
+		(datetime.datetime(2014, 5, 14, 0, 0, 11, tzinfo=pytz.utc), 1400025600, 11),
 
 		# 1504137600 is equivalent to:
 		# 2017-08-31T00:00:00+00:00 in ISO 8601
 		# (from https://www.unixtimestamp.com/index.php)
-		(datetime.datetime(2017, 8, 31, 0, 0, 0, tzinfo=datetime.timezone.utc), 1504137600, 0),
-		(datetime.datetime(2017, 8, 31, 4, 31, 21, tzinfo=datetime.timezone.utc), 1504137600, 16281),
+		(datetime.datetime(2017, 8, 31, 0, 0, 0, tzinfo=pytz.utc), 1504137600, 0),
+		(datetime.datetime(2017, 8, 31, 4, 31, 21, tzinfo=pytz.utc), 1504137600, 16281),
 	])
 	def test_normal_conversion_in_utc(self, dt, exp_ts, exp_sec):
 		act_ts, act_sec = datetime2timestamp_and_seconds(dt)

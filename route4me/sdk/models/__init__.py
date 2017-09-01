@@ -309,11 +309,7 @@ class Optimization(BaseModel):
 		pydash.set_(self.raw, 'parameters.route_date', d)
 		pydash.set_(self.raw, 'parameters.route_time', t)
 
-
 	# addresses,
-
-
-
 
 
 class Address(BaseModel):
