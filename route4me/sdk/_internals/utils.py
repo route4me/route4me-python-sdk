@@ -13,11 +13,18 @@ log = logging.getLogger(__name__)
 if six.PY2:
 	import time
 
-	def get_timestamp(dt):
-		return time.mktime(dt.timetuple())
+	def get6_timestamp(dt):
+		return int(time.mktime(dt.timetuple()))
+
+	def get6_total_seconds(td):
+		return td.seconds + td.days * 24 * 3600
+
 else:
-	def get_timestamp(dt):
+	def get6_timestamp(dt):
 		return int(dt.timestamp())
+
+	def get6_total_seconds(td):
+		return td.total_seconds()
 
 
 def _handle_auto_doc_for_property(doc, typename):
@@ -143,6 +150,6 @@ def datetime2timestamp_and_seconds(dt):
 	)
 	td = dt - d
 
-	ts = get_timestamp(d)
-	sec = td.total_seconds()
+	ts = get6_timestamp(d)
+	sec = get6_total_seconds(td)
 	return ts, sec
