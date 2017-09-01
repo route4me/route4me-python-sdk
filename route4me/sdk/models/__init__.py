@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import pydash
+
 # reimport enums for convenience:
 from ..enums import AlgorithmTypeEnum
 from ..enums import OptimizationStateEnum
@@ -13,6 +15,8 @@ from ..enums import AddressStopTypeEnum
 
 from route4me.sdk._internals.utils import dict_property
 from route4me.sdk._internals.utils import dict_enum_property
+from route4me.sdk._internals.utils import timestamp_and_seconds2datetime
+from route4me.sdk._internals.utils import datetime2timestamp_and_seconds
 
 
 class BaseModel(dict):
@@ -250,7 +254,61 @@ class Optimization(BaseModel):
 		"""
 		return value
 
-	# 'route_time': route_timestamp,
+	@dict_property('parameters.vehicle_id', str)
+	def addresses(self, value):
+		"""
+		Vehicle ID
+
+		The unique internal id of a vehicle
+
+		<AUTO>
+		"""
+		return value
+
+	# ==========================================================================
+	@property
+	def route_datetime(self):
+		"""
+		Route DateTime
+
+		.. note::
+
+			In Route4Me API this parameter is broken into 2 parts: fields
+			``parameters.route_date`` and ``parameters.route_time``
+
+		:getter: returns a :class:`~datetime.datetime` combining values from \
+			two fields
+		:setter: sets ``parameters.route_date`` and ``parameters.route_time`` \
+			in the raw data
+		:rtype: ~datetime.datetime
+		"""
+
+		# from JSON Schema:
+		# "route_date": { "type": ["integer", "null"],
+		# 	// ...
+		# 	"description": "The route start date in UTC, unix timestamp seconds.
+		# 		Used to show users when the route will begin, also used for
+		# 		reporting and analytics"
+		# },
+		# "route_time": { "type": "integer",
+		# 	// ...
+		# 	"description": "Time when the route starts (relative to route_date)
+		# 		(Seconds). UTC timezone as well"
+		#
+		# So, we have UNIX timestamp (seconds) and seconds from day start. Lets
+		# create date
+
+		d = pydash.get(self.raw, 'parameters.route_date')
+		t = pydash.get(self.raw, 'parameters.route_time')
+
+		return timestamp_and_seconds2datetime(d, t)
+
+	@route_datetime.setter
+	def route_datetime(self, value):
+		d, t = datetime2timestamp_and_seconds(value)
+		pydash.set_(self.raw, 'parameters.route_date', d)
+		pydash.set_(self.raw, 'parameters.route_time', t)
+
 
 	# addresses,
 

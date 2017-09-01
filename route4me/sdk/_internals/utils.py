@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import pydash
+import datetime
+import logging
+
+
+log = logging.getLogger(__name__)
 
 
 def _handle_auto_doc_for_property(doc, typename):
@@ -87,3 +92,45 @@ def dict_property(path, anytype):
 		p = property(_get, _set, None, doc)
 		return p
 	return decorator
+
+
+def timestamp_and_seconds2datetime(unix_timestamp, seconds):
+
+	d = unix_timestamp
+	t = seconds
+
+	if d is None:
+		return None
+	if t is None:
+		return None
+
+	dd = datetime.datetime.utcfromtimestamp(d)
+	# lets drop hours/minutes/seconds
+	if dd.hour + dd.minute + dd.second > 0:
+		log.warn('route date contains TIME info; expected only DATE')
+
+	dd = dd.replace(
+		hour=0,
+		minute=0,
+		second=0,
+		microsecond=0
+	)
+
+	return dd + datetime.timedelta(seconds=t)
+
+
+def datetime2timestamp_and_seconds(dt):
+	if not isinstance(dt, datetime.datetime):
+		raise TypeError('dt', 'datetime.datetime expected!')
+
+	d = dt.replace(
+		hour=0,
+		minute=0,
+		second=0,
+		microsecond=0,
+	)
+	td = dt - d
+
+	ts = int(d.timestamp())
+	sec = td.total_seconds()
+	return ts, sec

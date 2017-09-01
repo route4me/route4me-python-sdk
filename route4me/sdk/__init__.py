@@ -5,9 +5,9 @@ Official Python SDK for Route4Me
 
 Consists of classes:
 
-- access to all Route4Me API's endpoints
-- convenient models for Route4Me's entities
-- constants and enums
+- access to all Route4Me API's endpoints;
+- convenient models for Route4Me's entities;
+- constants and enums;
 
 Look out the appropriate section for details.
 

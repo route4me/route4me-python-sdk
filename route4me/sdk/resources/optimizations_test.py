@@ -2,6 +2,7 @@
 
 import os
 import json
+import datetime
 
 import pytest
 # import mock
@@ -47,6 +48,7 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		o.algorithm_type = AlgorithmTypeEnum.TSP
 		o.state = OptimizationStateEnum.MATRIX_PROCESSING
 		o.optimization_factor = OptimizationFactorEnum.DISTANCE
+		o.route_datetime = datetime.datetime(2016, 6, 17)
 
 		r = Optimizations(api_key='test')
 		res = r.create(o)
@@ -84,6 +86,9 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		assert res.member_id == '1'
 		assert res.vehicle_id is None
 		assert res.device_id is None
+
+		assert res.route_datetime == datetime.datetime(2016, 6, 17) #  , tzinfo=datetime.timezone.utc)
+
 
 	def test_create_with_callback(self):
 
