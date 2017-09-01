@@ -1,11 +1,23 @@
 # -*- coding: utf-8 -*-
 
+import six
+
 import pydash
 import datetime
 import logging
 
 
 log = logging.getLogger(__name__)
+
+
+if six.PY2:
+	import time
+
+	def get_timestamp(dt):
+		return time.mktime(dt.timetuple())
+else:
+	def get_timestamp(dt):
+		return int(dt.timestamp())
 
 
 def _handle_auto_doc_for_property(doc, typename):
@@ -131,6 +143,6 @@ def datetime2timestamp_and_seconds(dt):
 	)
 	td = dt - d
 
-	ts = int(d.timestamp())
+	ts = get_timestamp(d)
 	sec = td.total_seconds()
 	return ts, sec
