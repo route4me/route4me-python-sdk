@@ -15,7 +15,7 @@ To install **Route4Me Python SDK** run this command in your terminal:
 	$ pip install route4me-sdk
 
 If you don't have ``pip`` installed you can use this
-`guide to install pip <https://pip.pypa.io/en/stable/installing/>`_.
+`guide to install pip <https://pip.pypa.io/en/stable/installing/>`__.
 
 Source Code
 -----------

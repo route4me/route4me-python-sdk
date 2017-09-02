@@ -1,8 +1,18 @@
+.. _PYPI: https://pypi.org/project/route4me-sdk/
+.. _GITHUB: https://github.com/route4me/route4me-python-sdk
+.. _READTHEDOCS: http://route4me-python-sdk.readthedocs.io/?version=latest
+
 ======================================
 Route4Me Route Optimization Python SDK
 ======================================
 
-Build
+Documentation
+
+.. image:: https://readthedocs.org/projects/route4me-python-sdk/badge/?version=latest
+    :target: READTHEDOCS_
+    :alt: Documentation Status
+
+Build status
 
 .. image:: https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master
     :target: https://travis-ci.org/route4me/route4me-python-sdk
@@ -31,7 +41,7 @@ GitHub info
 
 .. https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&style=plastic
 
-Code metrics
+Code metrics/quality
 
 .. image:: https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00
     :target: https://codebeat.co/projects/github-com-route4me-route4me-python-sdk
@@ -44,17 +54,7 @@ Code metrics
 .. image:: https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/route4me/route4me-python-sdk
 
-
-.. _PYPI: https://pypi.org/project/route4me-sdk/
-.. _GITHUB: https://github.com/route4me/route4me-python-sdk
-
-The official Python SDK for `Route4Me API <https://route4me.io/docs/>`_
-
-`Documentation on ReadTheDocs <http://route4me-python-sdk.readthedocs.io/>`_
-
-.. image:: https://readthedocs.org/projects/route4me-python-sdk/badge/?version=latest
-    :target: http://route4me-python-sdk.readthedocs.io/?version=latest
-    :alt: Documentation Status
+The official Python SDK for `Route4Me API <https://route4me.io/docs/>`__
 
 --------------------------------------------------------------------------------
 Install
@@ -70,10 +70,10 @@ Example
 
 .. code-block:: python
 
-    from route4me.sdk import Route4Me
+    from route4me.sdk import ApiClient
 
-    r4m = Route4Me(api_key='11111111111111111111111111111111')
-    opt = r4m.Optimizations.get('07372F2CF3814EC6DFFAFE92E22771AA')
+    r4m = ApiClient(api_key='11111111111111111111111111111111')
+    opt = r4m.optimizations.get('07372F2CF3814EC6DFFAFE92E22771AA')
 
     print(opt)
 

@@ -8,7 +8,7 @@ Route4Me works worldwide, this means that we know what the **time zone** is.
 Handling time zones is a challenge when we want to handle date and time
 correctly for any time zone for many ``python`` implementations. For example,
 *python 2* can't process the following code
-(`test online <https://repl.it/KdT6/0>`_), and *python >3.3* --- can:
+(`test online <https://repl.it/KdT6/0>`__), and *python >3.3* --- can:
 
 .. code-block:: python
 
