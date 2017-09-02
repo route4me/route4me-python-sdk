@@ -12,7 +12,7 @@ It is preferable to create an optimization problem with as many orders in it
 as possible, so that the optimization engine is able to consider the entire
 problem set.
 
-This is different from a :class:`~route4me.sdk.resources.routes.Route`, which
+This is different from a :class:`~route4me.sdk.endpoints.routes.Route`, which
 is a sequence of addresses that need to be visited by a single vehicle and
 driver in a fixed time period. Solving an Optimization Problem results in
 a number of routes. (Possibly recurring in the future)
@@ -219,7 +219,6 @@ class Optimizations(object):
 		.. seealso::
 
 			Route4Me API: https://route4me.io/docs/#remove-an-optimization
-
 
 		:param ID: Optimization Problem ID
 		:type ID: str

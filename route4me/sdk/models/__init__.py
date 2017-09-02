@@ -17,7 +17,6 @@ from route4me.sdk._internals.utils import dict_property
 from route4me.sdk._internals.utils import dict_enum_property
 from route4me.sdk._internals.utils import timestamp_and_seconds2datetime
 from route4me.sdk._internals.utils import datetime2timestamp_and_seconds
-from route4me.sdk._internals.utils import unix_timestamp_today
 
 
 class BaseModel(dict):
@@ -48,8 +47,8 @@ class Address(BaseModel):
 		"""
 		Create instance **LOCALLY**.
 
-		Use :meth:`~route4me.sdk.resources.optimizations.Optimizations.add_address`
-		or :meth:`~route4me.sdk.resources.routes.Routes.add_address`
+		Use :meth:`~route4me.sdk.endpoints.optimizations.Optimizations.add_address`
+		or :meth:`~route4me.sdk.endpoints.routes.Routes.add_address`
 		to create new Address in the Route4Me API
 
 		:param raw: Raw values for new address, example: \
@@ -60,9 +59,9 @@ class Address(BaseModel):
 		"""
 		if raw is None:
 			raw = {
-				'manifest': {},
-				'path_to_next': [],
-				'directions': [],
+				# 'manifest': {},
+				# 'path_to_next': [],
+				# 'directions': [],
 			}
 		super(Address, self).__init__(raw=raw)
 
@@ -212,7 +211,7 @@ class Optimization(BaseModel):
 		"""
 		Create instance **LOCALLY**.
 
-		Use :meth:`~route4me.sdk.resources.optimizations.Optimizations.create`
+		Use :meth:`~route4me.sdk.endpoints.optimizations.Optimizations.create`
 		to create new Optimization Problem in the Route4Me API
 
 		:param raw: Raw values for new optimization, example: \
@@ -222,17 +221,17 @@ class Optimization(BaseModel):
 		"""
 		if raw is None:
 			raw = {
-				'parameters': {
-					'store_route': True,
-					'route_max_duration': 24 * 60 * 60,
-					'route_time': 0,
-					'route_date': unix_timestamp_today()
-				},
-				'user_errors': [],
-				'optimization_errors': [],
-				'links': {},
-				'addresses': [],
-				'routes': [],
+				# 'parameters': {
+				# 	'store_route': True,
+				# 	'route_max_duration': 24 * 60 * 60,
+				# 	'route_time': 0,
+				# 	'route_date': unix_timestamp_today()
+				# },
+				# 'user_errors': [],
+				# 'optimization_errors': [],
+				# 'links': {},
+				# 'addresses': [],
+				# 'routes': [],
 			}
 		super(Optimization, self).__init__(raw=raw)
 
@@ -473,8 +472,6 @@ class Optimization(BaseModel):
 	def addresses(self, value):
 		"""
 		Addresses included to this Optimization Problem
-
-		The unique internal id of a vehicle
 
 		<AUTO>
 		"""

@@ -15,7 +15,7 @@ class MockerResourceWithNetworkClient(object):
 	@classmethod
 	def setup_method(cls, *args, **qw):
 
-		# there are several similar modules-resources.
+		# there are several similar modules-endpoints.
 		# all we need to test them -- mock NetworkClient, to prevent
 		# network access.
 		# Let's do it with mock.patch.object

@@ -16,14 +16,14 @@ ApiClient
 Geocoding
 """""""""
 
-.. automodule:: route4me.sdk.resources.geocodings
+.. automodule:: route4me.sdk.endpoints.geocodings
 	:members:
 	:show-inheritance:
 
 Optimizations
 """""""""""""
 
-.. automodule:: route4me.sdk.resources.optimizations
+.. automodule:: route4me.sdk.endpoints.optimizations
 	:members:
 	:show-inheritance:
 

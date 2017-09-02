@@ -17,10 +17,10 @@ import logging
 
 from ._net import NetworkClient
 
-from .resources.geocodings import Geocodings
-from .resources.members import Members
-from .resources.optimizations import Optimizations
-from .resources.telematics import Telematics
+from .endpoints.geocodings import Geocodings
+from .endpoints.members import Members
+from .endpoints.optimizations import Optimizations
+from .endpoints.telematics import Telematics
 
 from .version import PROJECT
 from .version import COPYRIGHT
@@ -98,7 +98,7 @@ class ApiClient(object):
 		Geocodings endpoint functions
 
 		:returns: Geocoding namespace
-		:rtype: :class:`~resources.geocodings.Geocodings`
+		:rtype: :class:`~endpoints.geocodings.Geocodings`
 		"""
 		return self._geocodings
 
@@ -112,7 +112,7 @@ class ApiClient(object):
 		Optimization endpoint functions
 
 		:returns: Optimization namespace
-		:rtype: :class:`~resources.optimizations.Optimizations`
+		:rtype: :class:`~endpoints.optimizations.Optimizations`
 		"""
 		return self._optimizations
 

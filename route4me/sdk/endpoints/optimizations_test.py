@@ -11,7 +11,7 @@ from route4me.sdk.self_test import MockerResourceWithNetworkClient
 from route4me.sdk.self_test import load_json
 
 from .optimizations import Optimizations
-import route4me.sdk.resources.optimizations as M
+import route4me.sdk.endpoints.optimizations as M
 
 from route4me.sdk.utils import PagedList
 
