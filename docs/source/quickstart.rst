@@ -25,7 +25,7 @@ Use
 
     import route4m.sdk
 
-    r4m = route4me.sdk.Route4Me(api_key='1111111')
+    r4m = route4me.sdk.ApiClient(api_key='11111111111111111111111111111111')
     print(r4m.version)
 
     opt = r4m.optimizations.get('07372F2CF3814EC6DFFAFE92E22771AA')

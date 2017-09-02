@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import six
 import datetime
 import logging
 
@@ -71,6 +72,9 @@ def dict_property(path, anytype):
 
 			if v is None:
 				return None
+
+			if v == str:
+				return six.u(v)
 
 			return anytype(v)
 

@@ -112,7 +112,7 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		r = Optimizations(api_key='test')
 		res = r.create(
 			optimization_data=o,
-			callback_url='https://callback.route4me.com/callback?q=1'
+			optimized_callback_url='https://callback.route4me.com/callback?q=1'
 		)
 
 		# ----------

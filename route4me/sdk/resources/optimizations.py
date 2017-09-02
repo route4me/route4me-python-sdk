@@ -21,6 +21,7 @@ a number of routes. (Possibly recurring in the future)
 
 """
 
+import six
 import pydash
 
 from .._net import NetworkClient
@@ -47,37 +48,44 @@ class Optimizations(object):
 	def create(
 		self,
 		optimization_data,
-		callback_url=None,
+		optimized_callback_url=None,
 	):
 		"""
 		Create a new optimization through the Route4Me API
 
-		You could pass any valid URL as :paramref:`callback_url`
+		You could pass any valid URL as :paramref:`optimized_callback_url`
 		parameter.
 
 		The callback URL is a URL that gets called when the optimization is
 		solved, or if there is an error. The callback is called with a
-		``POST`` request. The POST data sent is:
+		**POST** request. The example of the POST data sent:
 
-		- ``timestamp`` (seconds)
-		- ``optimization_problem_id``
-		- ``state`` (id  of the optimization state)
+		.. code-block:: javascript
 
-		The state is a value from the enumeration
-		:class:`route4me.sdk.enums.OptimizationStateEnum`
+			{
+				"timestamp": 1500111222,        // seconds
+				"state": 4,                     // ID of the optimization state
+
+				// ID of Optimization Problem
+				"optimization_problem_id": "1EDB78F63556D99336E06A13A34CF139"
+			}
+
+		The ``state`` is a value from the enumeration
+		:class:`~route4me.sdk.enums.OptimizationStateEnum`
 
 		:param optimization_data: Optimization data
 		:type optimization_data: ~route4me.sdk.models.Optimization or dict
-		:param callback_url: *Optimization done* callback URL
-		:type callback_url: str or None
+		:param optimized_callback_url: Optimization done callback URL, defaults \
+			to None
+		:type optimized_callback_url: str or None, optional
 		:returns: New optimization
 		:rtype: ~route4me.sdk.models.Optimization
 		"""
 
 		query = None
-		if callback_url:
+		if optimized_callback_url:
 			query = {
-				'optimized_callback_url': str(callback_url),
+				'optimized_callback_url': six.u(optimized_callback_url),
 			}
 
 		data = optimization_data

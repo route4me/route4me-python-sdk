@@ -41,6 +41,7 @@ class TestNetworkClientRequestsOverHttpbin:
 	# GET
 	# ==========================================================================
 
+	@pytest.mark.slow
 	def test_get(self):
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		res = nc.get('anything', timeout_sec=8)
@@ -62,6 +63,7 @@ class TestNetworkClientRequestsOverHttpbin:
 		assert accept == 'application/json'
 		assert res['method'] == 'GET'
 
+	@pytest.mark.slow
 	@pytest.mark.parametrize('subdomain, exp_prefix', [
 		(None, 'https://httpbin.org/anything'),
 		('', 'https://httpbin.org/anything'),
@@ -77,6 +79,7 @@ class TestNetworkClientRequestsOverHttpbin:
 		assert 'api_key=AAAA' in url
 		assert 'format=json' in url
 
+	@pytest.mark.slow
 	def test_get_with_params(self):
 		nc = NetworkClient(api_key='AAAA', base_host='httpbin.org')
 		res = nc.get(
@@ -221,6 +224,7 @@ class TestNetworkClientRequestsOverHttpbin:
 		assert exc is not None
 		assert exc.code == 'route4me.sdk.network.no_connection'
 
+	@pytest.mark.slow
 	def test_get_raises_on_ssl_compromised(self):
 		nc = NetworkClient(api_key='BBBB', base_host='expired.badssl.com')
 		with pytest.raises(Route4MeNetworkError) as exc_info:
@@ -233,6 +237,7 @@ class TestNetworkClientRequestsOverHttpbin:
 
 	# --------------------------------------------------------------------------
 
+	@pytest.mark.slow
 	def test_get_raises_on_status_400(self):
 		nc = NetworkClient(api_key='AAAABBBB', base_host='httpbin.org')
 		with pytest.raises(Route4MeApiError) as exc_info:
