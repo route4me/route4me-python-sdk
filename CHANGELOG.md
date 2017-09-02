@@ -11,6 +11,8 @@ Please, follow this [guide](http://keepachangelog.com/en/0.3.0/).
 
 * Optimizations Problem endpoints:
   * list
+  * update
+  * reoptimize
 * `Address` wrapper
 * `PagedList` - structure for array-like responces
 

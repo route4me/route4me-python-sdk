@@ -250,12 +250,13 @@ class NetworkClient(object):
 
 		return self.__read_response(req)
 
-	def delete(self, path, query=None, data=None, subdomain=None, timeout_sec=None):
+	# TODO: post, put and delete have the same body. Remove duplicate code!
+	def post(self, path, query=None, data=None, subdomain=None, timeout_sec=None):
 
 		url = self.__url(path, subdomain=subdomain)
 
 		req = FluentRequest()
-		req.method('DELETE')
+		req.method('POST')
 		req.url(url)
 		req.qs(query)
 		req.json(data)
@@ -265,12 +266,29 @@ class NetworkClient(object):
 
 		return self.__read_response(req)
 
-	def post(self, path, query=None, data=None, subdomain=None, timeout_sec=None):
+	# TODO: post, put and delete have the same body. Remove duplicate code!
+	def put(self, path, query=None, data=None, subdomain=None, timeout_sec=None):
 
 		url = self.__url(path, subdomain=subdomain)
 
 		req = FluentRequest()
-		req.method('POST')
+		req.method('PUT')
+		req.url(url)
+		req.qs(query)
+		req.json(data)
+
+		if timeout_sec is not None:
+			req.timeout(timeout_sec)
+
+		return self.__read_response(req)
+
+	# TODO: post, put and delete have the same body. Remove duplicate code!
+	def delete(self, path, query=None, data=None, subdomain=None, timeout_sec=None):
+
+		url = self.__url(path, subdomain=subdomain)
+
+		req = FluentRequest()
+		req.method('DELETE')
 		req.url(url)
 		req.qs(query)
 		req.json(data)

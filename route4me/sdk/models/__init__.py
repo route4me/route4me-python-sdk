@@ -390,7 +390,7 @@ class Optimization(BaseModel):
 		"""
 		return value
 
-	@dict_property('parameters.member_id', str)
+	@dict_property('parameters.member_id', int)
 	def member_id(self, value):
 		"""
 		Member ID

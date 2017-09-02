@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import os
-import json
 import datetime
 
 import pytest
-# import mock
+import mock
 
 import pytz
 
 from route4me.sdk.self_test import MockerResourceWithNetworkClient
+from route4me.sdk.self_test import load_json
+
 from .optimizations import Optimizations
 import route4me.sdk.resources.optimizations as M
 
@@ -33,18 +33,17 @@ class TestOptimizations(object):
 		assert ns is not None
 
 
-class TestOptimizationApi(MockerResourceWithNetworkClient):
+class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 
 	resource_module = M
 
 	def test_create(self):
 
-		with open(os.path.join(
+		sample_response_data = load_json(
 			# '..', '..', '..',
 			'submodules', 'route4me-api-data-examples', 'Optimizations',
 			'create_response.json'
-		)) as f:
-			sample_response_data = json.load(f)
+		)
 
 		self.set_response(data=sample_response_data)
 
@@ -87,7 +86,7 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		assert res.algorithm_type == AlgorithmTypeEnum.TSP
 		assert res.state == OptimizationStateEnum.MATRIX_PROCESSING
 		assert res.optimization_factor == OptimizationFactorEnum.DISTANCE
-		assert res.member_id == '1'
+		assert res.member_id == 1
 		assert res.vehicle_id is None
 		assert res.device_id is None
 
@@ -95,12 +94,11 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 
 	def test_create_with_callback(self):
 
-		with open(os.path.join(
+		sample_response_data = load_json(
 			# '..', '..', '..',
 			'submodules', 'route4me-api-data-examples', 'Optimizations',
 			'create_response.json'
-		)) as f:
-			sample_response_data = json.load(f)
+		)
 
 		self.set_response(data=sample_response_data)
 
@@ -153,12 +151,11 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 
 	def test_get(self):
 
-		with open(os.path.join(
+		sample_response_data = load_json(
 			# '..', '..', '..',
 			'submodules', 'route4me-api-data-examples', 'Optimizations',
 			'get_response.json'
-		)) as f:
-			sample_response_data = json.load(f)
+		)
 
 		self.set_response(data=sample_response_data)
 
@@ -187,19 +184,18 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		assert res.algorithm_type == AlgorithmTypeEnum.CVRP_TW_SD
 		assert res.state == OptimizationStateEnum.OPTIMIZED
 		assert res.optimization_factor == OptimizationFactorEnum.TIME
-		assert res.member_id == '44143'
+		assert res.member_id == 44143
 		assert res.vehicle_id is None
 		assert res.device_id is None
 		assert res.round_trip is True
 
 	def test_list_no_states(self):
 
-		with open(os.path.join(
+		sample_response_data = load_json(
 			# '..', '..', '..',
 			'submodules', 'route4me-api-data-examples', 'Optimizations',
 			'list_response.json'
-		)) as f:
-			sample_response_data = json.load(f)
+		)
 
 		self.set_response(data=sample_response_data)
 
@@ -234,19 +230,18 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		assert res0.algorithm_type == AlgorithmTypeEnum.CVRP_TW_SD
 		assert res0.state == OptimizationStateEnum.INITIAL
 		assert res0.optimization_factor == OptimizationFactorEnum.DISTANCE
-		assert res0.member_id == '1'
+		assert res0.member_id == 1
 		assert res0.vehicle_id is None
 		assert res0.device_id is None
 		assert res0.round_trip is True
 
 	def test_list_with_states(self):
 
-		with open(os.path.join(
+		sample_response_data = load_json(
 			# '..', '..', '..',
 			'submodules', 'route4me-api-data-examples', 'Optimizations',
 			'list_response.json'
-		)) as f:
-			sample_response_data = json.load(f)
+		)
 
 		self.set_response(data=sample_response_data)
 
@@ -279,14 +274,64 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		res0 = res[0]
 		assert isinstance(res0, Optimization)
 
+	def test_update(self):
+
+		sample_response_data = load_json(
+			# '..', '..', '..',
+			'submodules', 'route4me-api-data-examples', 'Optimizations',
+			'reoptimization_response.json'
+		)
+
+		sample_optimization_data = load_json(
+			# '..', '..', '..',
+			'submodules', 'route4me-api-data-examples', 'Optimizations',
+			'reoptimization_request.json'
+		)
+
+		self.set_response(data=sample_response_data)
+
+		ep = Optimizations(api_key='test')
+		res = ep.update(
+			ID='07372F2CF3814EC6DFFAFE92E22771AA',
+			optimization_data=sample_optimization_data,
+		)
+
+		print(self.mock_fluent_request_class.mock_calls)
+
+		# ----------
+		# assertions
+		mock_freq = self.last_request()
+		mock_freq.method.assert_called_with('PUT')
+		mock_freq.url.assert_called_with(
+			'https://www.route4me.com/api.v4/optimization_problem.php'
+		)
+		mock_freq.qs.assert_any_call({
+			'optimization_problem_id': '07372F2CF3814EC6DFFAFE92E22771AA',
+			'reoptimize': '0',
+		})
+		mock_freq.json.assert_called_with(sample_optimization_data)
+		assert not mock_freq.data.called
+
+		# assertions on response
+		assert isinstance(res, Optimization)
+		assert res.ID == '07372F2CF3814EC6DFFAFE92E22771AA'
+		assert res.name == 'Sunday 10th of April 2016 01:20 AM (+03:00)'
+		assert res.algorithm_type == AlgorithmTypeEnum.CVRP_TW_SD
+		assert res.state == OptimizationStateEnum.INITIAL
+		assert res.optimization_factor == OptimizationFactorEnum.TIME
+		assert res.member_id == 44143
+		assert res.vehicle_id is None
+		assert res.device_id is None
+		assert res.round_trip is True
+
 	def test_remove(self):
 
-		with open(os.path.join(
+		sample_response_data = load_json(
+
 			# '..', '..', '..',
 			'submodules', 'route4me-api-data-examples', 'Optimizations',
 			'remove_response.json'
-		)) as f:
-			sample_response_data = json.load(f)
+		)
 
 		self.set_response(data=sample_response_data)
 
@@ -331,3 +376,17 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		# TODO: implement this!
 		# assert exc.method == 'DELETE'
 		# assert exc.url == 'https://www.route4me.com/api.v4/optimization_problem.php'
+
+	def test_reoptimize(self):
+
+		self.set_response(data={})
+
+		ep = Optimizations(api_key='test')
+
+		with mock.patch.object(ep, 'update') as mock_update:
+			ep.reoptimize(ID='07372F2CF3814EC6DFFAFE92E22771AA')
+
+		mock_update.assert_called_once_with(
+			ID='07372F2CF3814EC6DFFAFE92E22771AA',
+			reoptimize=True
+		)

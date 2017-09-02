@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import six
+
 """
 Type-conversion helpers
 
@@ -45,3 +47,22 @@ def str2bool(strvalue, default=None):
 		return False
 
 	return default
+
+
+def bool201(boolvalue):
+	"""
+	Converts :class:`bool` value to string: ``u'0'`` or ``u'1'`` --- a returned
+	value is in unicode.
+
+	:param boolvalue: Value to convert
+	:type boolvalue: bool
+	:returns: String ``'0'`` or ``'1'``
+	:rtype: str
+	:raises TypeError: if not a bool argument was passed
+	"""
+	if not isinstance(boolvalue, bool):
+		raise TypeError('bool expected')
+
+	if boolvalue:
+		return six.u('1')
+	return six.u('0')

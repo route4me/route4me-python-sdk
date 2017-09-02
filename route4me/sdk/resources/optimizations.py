@@ -21,7 +21,6 @@ a number of routes. (Possibly recurring in the future)
 
 """
 
-import six
 import pydash
 
 from .._net import NetworkClient
@@ -30,13 +29,14 @@ from ..enums import OptimizationStateEnum
 
 from ..errors import Route4MeApiError
 from route4me.sdk.utils import PagedList
+from route4me.sdk.utils.typeconv import bool201
 
 from route4me.sdk._internals.utils import add_limit_offset_to_query_string
 
 
 class Optimizations(object):
 	"""
-	Optimizations resource
+	Optimizations endpoint
 	"""
 
 	def __init__(self, api_key=None, _network_client=None):
@@ -45,11 +45,7 @@ class Optimizations(object):
 			nc = NetworkClient(api_key)
 		self.__nc = nc
 
-	def create(
-		self,
-		optimization_data,
-		optimized_callback_url=None,
-	):
+	def create(self, optimization_data, optimized_callback_url=None):
 		"""
 		Create a new optimization through the Route4Me API
 
@@ -73,6 +69,10 @@ class Optimizations(object):
 		The ``state`` is a value from the enumeration
 		:class:`~route4me.sdk.enums.OptimizationStateEnum`
 
+		.. seealso::
+
+			Route4Me API: https://route4me.io/docs/#create-an-optimization
+
 		:param optimization_data: Optimization data
 		:type optimization_data: ~route4me.sdk.models.Optimization or dict
 		:param optimized_callback_url: Optimization done callback URL, defaults \
@@ -85,7 +85,7 @@ class Optimizations(object):
 		query = None
 		if optimized_callback_url:
 			query = {
-				'optimized_callback_url': six.u(optimized_callback_url),
+				'optimized_callback_url': optimized_callback_url,
 			}
 
 		data = optimization_data
@@ -105,6 +105,10 @@ class Optimizations(object):
 		"""
 		GET a single optimization by ID.
 
+		.. seealso::
+
+			Route4Me API: https://route4me.io/docs/#get-an-optimization
+
 		:param ID: Optimization Problem ID
 		:type ID: str
 		:returns: Optimization data
@@ -118,7 +122,7 @@ class Optimizations(object):
 			'/api.v4/optimization_problem.php',
 			subdomain='www',
 			query={
-				'optimization_problem_id': str(ID),
+				'optimization_problem_id': ID,
 			}
 		)
 
@@ -163,12 +167,59 @@ class Optimizations(object):
 			items=[Optimization(item) for item in res['optimizations']],
 		)
 
-	def update(self):
-		pass
+	def update(
+		self,
+		ID,
+		optimization_data=None,
+		reoptimize=False,
+		# TODO: try to implement or remove!
+		# optimized_callback_url=None,
+	):
+		"""
+		Update existing optimization problem, by changing some parameters or
+		addresses. Optionally you can re-run the optimization engine for the
+		optimization problem
+
+		Notice, that you can re-run optimization without modifications.
+
+		.. seealso::
+
+			Route4Me API: https://route4me.io/docs/#re-optimize-an-optimization
+
+		:param ID: Optimization problem ID
+		:type ID: str
+		:param optimization_data: Optimization data, defaults to None
+		:type optimization_data: ~route4me.sdk.models.Optimization or dict, \
+			optional
+		:param reoptimize: Whether to re-run optimization, defaults to \
+			:data:`False`
+		:type reoptimize: bool, optional
+		:returns: Updated optimization
+		:rtype: ~route4me.sdk.models.Optimization
+		"""
+		query = {
+			'optimization_problem_id': ID,
+			'reoptimize': bool201(reoptimize),
+		}
+
+		data = optimization_data if optimization_data else {}
+
+		res = self.__nc.put(
+			'/api.v4/optimization_problem.php',
+			subdomain='www',
+			query=query,
+			data=data,
+		)
+		return Optimization(res)
 
 	def remove(self, ID):
 		"""
 		Remove an existing optimization belonging to an user.
+
+		.. seealso::
+
+			Route4Me API: https://route4me.io/docs/#remove-an-optimization
+
 
 		:param ID: Optimization Problem ID
 		:type ID: str
@@ -185,7 +236,7 @@ class Optimizations(object):
 			'/api.v4/optimization_problem.php',
 			subdomain='www',
 			query={
-				'optimization_problem_id': str(ID),
+				'optimization_problem_id': ID,
 			}
 		)
 
@@ -202,3 +253,14 @@ class Optimizations(object):
 			)
 
 		return True
+
+	def reoptimize(
+		self,
+		ID,
+		# optimization_data=None,
+		# optimized_callback_url=None,
+	):
+		"""
+		An alias for :meth:`.update`, with ``reoptimize`` set to :data:`True`
+		"""
+		return self.update(ID=ID, reoptimize=True)

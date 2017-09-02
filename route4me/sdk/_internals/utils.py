@@ -65,7 +65,8 @@ def dict_property(path, anytype):
 	"""
 	Creates new strict-typed PROPERTY for classes inherited from :class:`dict`
 	"""
-	def decorator(fn):
+
+	def decorator_str(fn):
 
 		def _get(self):
 			v = pydash.get(self.raw, path)
@@ -73,30 +74,64 @@ def dict_property(path, anytype):
 			if v is None:
 				return None
 
-			if v == str:
-				return six.u(v)
+			return six.u(v)
+
+		def _set(self, value):
+			v = six.u(value)
+			v = fn(self, v)
+			pydash.set_(self.raw, path, v)
+
+			return v
+
+		doc = fn.__doc__
+
+		typename = type(six.u('')).__name__
+
+		doc = _handle_auto_doc_for_property(
+			fn.__doc__,
+			typename
+		)
+
+		p = property(_get, _set, None, doc)
+
+		return p
+
+	def decorator_other(fn):
+
+		def _get(self):
+			v = pydash.get(self.raw, path)
+
+			if v is None:
+				return None
 
 			return anytype(v)
 
 		def _set(self, value):
-			value = fn(self, value)
-			pydash.set_(self.raw, path, value)
+			v = fn(self, value)
+			pydash.set_(self.raw, path, v)
 
-			return value
+			return v
 
 		doc = fn.__doc__
 
 		if doc is None:
 			doc = '<AUTO>'
 
+		typename = anytype.__name__
+
 		doc = _handle_auto_doc_for_property(
 			fn.__doc__,
-			anytype.__name__
+			typename
 		)
 
 		p = property(_get, _set, None, doc)
+
 		return p
-	return decorator
+
+	if anytype == str:
+		return decorator_str
+
+	return decorator_other
 
 
 def unix_timestamp_today(tz=None):

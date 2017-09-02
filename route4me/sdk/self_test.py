@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import os
+import json
+
 import mock
 
 
@@ -44,3 +47,12 @@ class MockerResourceWithNetworkClient(object):
 
 	def last_request(self):
 		return self.mock_fluent_request_class.return_value
+
+
+def load_json(*path_names):
+	with open(os.path.join(
+		# '..', '..', '..',
+		*path_names
+	)) as f:
+		d = json.load(f)
+	return d
