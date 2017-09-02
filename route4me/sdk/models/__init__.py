@@ -35,6 +35,170 @@ class BaseModel(dict):
 		return self
 
 
+class Address(BaseModel):
+	"""
+	Single *Address*, also known as *Route Destination*
+
+	.. seealso::
+		- **api doc**: https://route4me.io/docs/#addresses
+		- **schema**: https://github.com/route4me/route4me-json-schemas/blob/master/Address.dtd
+	"""
+
+	def __init__(self, raw=None):
+		"""
+		Create instance **LOCALLY**.
+
+		Use :meth:`~route4me.sdk.resources.optimizations.Optimizations.add_address`
+		or :meth:`~route4me.sdk.resources.routes.Routes.add_address`
+		to create new Address in the Route4Me API
+
+		:param raw: Raw values for new address, example: \
+			`add address to optimization \
+			<https://route4me.io/docs/#insert-an-address-into-an-optimization>`_, \
+			defaults to :data:`None`
+		:type raw: dict, optional
+		"""
+		if raw is None:
+			raw = {
+				'manifest': {},
+				'path_to_next': [],
+				'directions': [],
+			}
+		super(Address, self).__init__(raw=raw)
+
+	@property
+	def ID(self):
+		"""
+		Route Destination ID
+
+		Internal unique address identifier
+
+		:getter: Gets value
+		:setter: Sets value
+		:rtype: str
+		"""
+		return self.raw.get('route_destination_id')
+
+	@dict_property('alias', str)
+	def name(self, value):
+		"""
+		Address Alias / Address Name
+
+		.. note::
+
+			In Route4Me API this field is known as ``alias``
+
+		<AUTO>
+		"""
+		return value
+
+	# ==========================================================================
+
+	@dict_enum_property('address_stop_type', AddressStopTypeEnum)
+	def address_stop_type(self, value):
+		"""
+		Address stop type
+
+		<AUTO>
+		"""
+		return value
+
+	# ==========================================================================
+
+	@dict_property('address', str)
+	def address_string(self, value):
+		"""
+		The route's Address Line
+
+		.. note::
+
+			In Route4Me API this field is known as ``address``
+
+		<AUTO>
+		"""
+		return value
+
+	@dict_property('lat', float)
+	def latitude(self, value):
+		"""
+		Latitude
+
+		Shoud be -90.0 ≤ lat ≤ 90
+
+		.. note::
+
+			In Route4Me API this field is known as ``lat``
+
+		<AUTO>
+		"""
+		return value
+
+	@dict_property('lng', float)
+	def longitude(self, value):
+		"""
+		Longitude
+
+		Shoud be -180.0 ≤ lng ≤ 180
+
+		.. note::
+
+			In Route4Me API this field is known as ``lng``
+
+		<AUTO>
+		"""
+		return value
+
+	@dict_property('sequence_no', int)
+	def sequence_no(self, value):
+		"""
+		The sequence number for the address
+
+		<AUTO>
+		"""
+		return value
+
+	@dict_property('time', int)
+	def service_time_sec(self, value):
+		"""
+		Service time (seconds)
+
+		.. note::
+
+			In Route4Me API this field is known as ``time``
+
+		<AUTO>
+		"""
+		return value
+
+	@dict_property('is_depot', bool)
+	def is_depot(self, value):
+		"""
+		Indicates that this address is a depot
+
+		<AUTO>
+		"""
+		return value
+
+	@dict_property('geocoded', bool)
+	def geocoded(self, value):
+		"""
+		:data:`True` means the :attr:`address_string` field was successfully geocoded
+
+		<AUTO>
+		"""
+		return value
+
+	@dict_property('failed_geocoding', bool)
+	def failed_geocoding(self, value):
+		"""
+		:data:`True` means there was a geocoding attempt which failed. \
+		:data:`False` means success or no geocoding
+
+		<AUTO>
+		"""
+		return value
+
+
 class Optimization(BaseModel):
 	"""
 	Optimization problem (or simple *Optimization*)
@@ -64,8 +228,11 @@ class Optimization(BaseModel):
 					'route_time': 0,
 					'route_date': unix_timestamp_today()
 				},
+				'user_errors': [],
+				'optimization_errors': [],
 				'links': {},
-				'addresses': []
+				'addresses': [],
+				'routes': [],
 			}
 		super(Optimization, self).__init__(raw=raw)
 
@@ -257,17 +424,6 @@ class Optimization(BaseModel):
 		"""
 		return value
 
-	@dict_property('parameters.vehicle_id', str)
-	def addresses(self, value):
-		"""
-		Vehicle ID
-
-		The unique internal id of a vehicle
-
-		<AUTO>
-		"""
-		return value
-
 	# ==========================================================================
 	@property
 	def route_datetime(self):
@@ -312,167 +468,13 @@ class Optimization(BaseModel):
 		pydash.set_(self.raw, 'parameters.route_date', d)
 		pydash.set_(self.raw, 'parameters.route_time', t)
 
-	# addresses,
-
-
-class Address(BaseModel):
-	"""
-	Single *Address*, also known as *Route Destination*
-
-	.. seealso::
-		- **api doc**: https://route4me.io/docs/#addresses
-		- **schema**: https://github.com/route4me/route4me-json-schemas/blob/master/Address.dtd
-	"""
-
-	def __init__(self, raw=None):
-		"""
-		Create instance **LOCALLY**.
-
-		Use :meth:`~route4me.sdk.resources.optimizations.Optimizations.add_address`
-		or :meth:`~route4me.sdk.resources.routes.Routes.add_address`
-		to create new Address in the Route4Me API
-
-		:param raw: Raw values for new address, example: \
-			`add address to optimization \
-			<https://route4me.io/docs/#insert-an-address-into-an-optimization>`_, \
-			defaults to :data:`None`
-		:type raw: dict, optional
-		"""
-		if raw is None:
-			raw = {
-				'manifest': {},
-				'path_to_next': [],
-				'directions': [],
-			}
-		super(Address, self).__init__(raw=raw)
-
-	@property
-	def ID(self):
-		"""
-		Route Destination ID
-
-		Internal unique address identifier
-
-		:getter: Gets value
-		:setter: Sets value
-		:rtype: str
-		"""
-		return self.raw.get('route_destination_id')
-
-	@dict_property('alias', str)
-	def name(self, value):
-		"""
-		Address Alias / Address Name
-
-		.. note::
-
-			In Route4Me API this field is known as ``alias``
-
-		<AUTO>
-		"""
-		return value
-
 	# ==========================================================================
 
-	@dict_enum_property('address_stop_type', AddressStopTypeEnum)
-	def address_stop_type(self, value):
+	def addresses(self, value):
 		"""
-		Address stop type
+		Addresses included to this Optimization Problem
 
-		<AUTO>
-		"""
-		return value
-
-	# ==========================================================================
-
-	@dict_property('address', str)
-	def address_string(self, value):
-		"""
-		The route Address Line
-
-		.. note::
-
-			In Route4Me API this field is known as ``address``
-
-		<AUTO>
-		"""
-		return value
-
-	@dict_property('lat', float)
-	def latitude(self, value):
-		"""
-		Latitude
-
-		Shoud be -90.0 ≤ lat ≤ 90
-
-		.. note::
-
-			In Route4Me API this field is known as ``lat``
-
-		<AUTO>
-		"""
-		return value
-
-	@dict_property('lng', float)
-	def longitude(self, value):
-		"""
-		Longitude
-
-		Shoud be -180.0 ≤ lng ≤ 180
-
-		.. note::
-
-			In Route4Me API this field is known as ``lng``
-
-		<AUTO>
-		"""
-		return value
-
-	@dict_property('sequence_no', int)
-	def sequence_no(self, value):
-		"""
-		The sequence number for the address
-
-		<AUTO>
-		"""
-		return value
-
-	@dict_property('time', int)
-	def service_time_sec(self, value):
-		"""
-		Service time (seconds)
-
-		.. note::
-
-			In Route4Me API this field is known as ``time``
-
-		<AUTO>
-		"""
-		return value
-
-	@dict_property('is_depot', bool)
-	def is_depot(self, value):
-		"""
-		Indicates that this address is a depot
-
-		<AUTO>
-		"""
-		return value
-
-	@dict_property('geocoded', bool)
-	def geocoded(self, value):
-		"""
-		:data:`True` means the :attr:`address_string` field was successfully geocoded
-
-		<AUTO>
-		"""
-		return value
-
-	@dict_property('failed_geocoding', bool)
-	def failed_geocoding(self, value):
-		"""
-		:data:`True` means there was a geocoding attempt which failed. \
-		:data:`False` means success or no geocoding
+		The unique internal id of a vehicle
 
 		<AUTO>
 		"""

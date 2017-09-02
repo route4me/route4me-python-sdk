@@ -1,9 +1,45 @@
 # -*- coding: utf-8 -*-
 
+import six
 from enum import Enum
 
 
-class AlgorithmTypeEnum(Enum):
+class PEnum(Enum):
+	@classmethod
+	def parse_many(cls, value):
+		"""
+		Parses enum items from string/list
+
+		:param value: string or enumerable with enum items
+		:type value: str or list or OptimizationStateEnum
+		:returns: list of parsed items
+		:rtype: str or list(str) or list(OptimizationStateEnum)
+		"""
+		v = value
+
+		if isinstance(v, six.string_types):
+			v = [i.strip() for i in v.split(',') if i]
+		else:
+			try:
+				v = [i for i in v]
+			except TypeError:  # as exc:
+				# if 'iterable' in str(exc):
+				v = [v]
+
+		res = []
+		for i in v:
+			try:
+				x = cls(i)
+			except ValueError:
+				# probably, there are strings instead of int
+				x = cls(int(i))
+
+			res.append(x)
+
+		return res
+
+
+class AlgorithmTypeEnum(PEnum):
 	"""
 	The algorithm type to be used.
 	"""
@@ -81,7 +117,7 @@ class AlgorithmTypeEnum(Enum):
 	"""
 
 
-class OptimizationFactorEnum(Enum):
+class OptimizationFactorEnum(PEnum):
 	"""
 	The driving directions can be generated biased for this selection. This
 	has no impact on route sequencing.
@@ -102,7 +138,7 @@ class OptimizationFactorEnum(Enum):
 	TIME_TRAFFIC = 'timeWithTraffic'
 
 
-class DistanceUnitEnum(Enum):
+class DistanceUnitEnum(PEnum):
 	"""
 	:class:`~.Optimization` problem can be at one state at any given time
 	"""
@@ -114,7 +150,7 @@ class DistanceUnitEnum(Enum):
 	KILOMETER = 'km'
 
 
-class OptimizationStateEnum(Enum):
+class OptimizationStateEnum(PEnum):
 	"""
 	The distance measurement unit
 	"""
@@ -138,7 +174,7 @@ class OptimizationStateEnum(Enum):
 	COMPUTING_DIRECTIONS = 6
 
 
-class OptimizationQualityEnum(Enum):
+class OptimizationQualityEnum(PEnum):
 	"""
 	Optimization Quality
 	"""
@@ -153,7 +189,7 @@ class OptimizationQualityEnum(Enum):
 	BEST = 3
 
 
-class DeviceTypeEnum(Enum):
+class DeviceTypeEnum(PEnum):
 	"""
 	Device Type
 
@@ -161,22 +197,22 @@ class DeviceTypeEnum(Enum):
 	"""
 
 	#: Web
-	WEB = "web"
+	WEB = 'web'
 
 	#: IPhone
-	IPHONE = "iphone"
+	IPHONE = 'iphone'
 
 	#: IPad
-	IPAD = "ipad"
+	IPAD = 'ipad'
 
 	#: Android phone
-	ANDROID_PHONE = "android_phone"
+	ANDROID_PHONE = 'android_phone'
 
 	#: Android tablet
-	ANDROID_TABLET = "android_tablet"
+	ANDROID_TABLET = 'android_tablet'
 
 
-class TravelModeEnum(Enum):
+class TravelModeEnum(PEnum):
 	"""
 	Travel Mode
 
@@ -199,7 +235,7 @@ class TravelModeEnum(Enum):
 	TRANSIT = 'Transit'
 
 
-class RouteMetricEnum(Enum):
+class RouteMetricEnum(PEnum):
 	"""
 	Metric
 	"""
@@ -220,22 +256,22 @@ class RouteMetricEnum(Enum):
 	EXACT2D = 5
 
 
-class AddressStopTypeEnum(Enum):
+class AddressStopTypeEnum(PEnum):
 	"""
 	Address stop type
 	"""
 
 	#: Pickup
-	PICKUP = "PICKUP"
+	PICKUP = 'PICKUP'
 
 	#: Delivery
-	DELIVERY = "DELIVERY"
+	DELIVERY = 'DELIVERY'
 
 	#: Break
-	BREAK = "BREAK"
+	BREAK = 'BREAK'
 
 	#: Meetup
-	MEETUP = "MEETUP"
+	MEETUP = 'MEETUP'
 
 
 # TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1,

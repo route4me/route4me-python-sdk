@@ -13,6 +13,8 @@ from route4me.sdk.self_test import MockerResourceWithNetworkClient
 from .optimizations import Optimizations
 import route4me.sdk.resources.optimizations as M
 
+from route4me.sdk.utils import PagedList
+
 from ..models import Optimization
 from ..models import AlgorithmTypeEnum
 from ..models import OptimizationStateEnum
@@ -189,6 +191,93 @@ class TestOptimizationApi(MockerResourceWithNetworkClient):
 		assert res.vehicle_id is None
 		assert res.device_id is None
 		assert res.round_trip is True
+
+	def test_list_no_states(self):
+
+		with open(os.path.join(
+			# '..', '..', '..',
+			'submodules', 'route4me-api-data-examples', 'Optimizations',
+			'list_response.json'
+		)) as f:
+			sample_response_data = json.load(f)
+
+		self.set_response(data=sample_response_data)
+
+		r = Optimizations(api_key='test')
+		res = r.list()
+
+		print(self.mock_fluent_request_class.mock_calls)
+
+		# ----------
+		# assertions
+		mock_freq = self.last_request()
+		mock_freq.method.assert_called_with('GET')
+		mock_freq.url.assert_called_with(
+			'https://www.route4me.com/api.v4/optimization_problem.php'
+		)
+		mock_freq.qs.assert_any_call({})
+
+		assert not mock_freq.json.called
+		assert not mock_freq.data.called
+
+		# assertions on response
+		assert isinstance(res, list)
+		assert isinstance(res, PagedList)
+		assert res.total == 447
+		assert res.limit is None
+		assert res.offset is None
+
+		res0 = res[0]
+		assert isinstance(res0, Optimization)
+		assert res0.ID == '7EC3FC88737C29E93A54E88243ACBC77'
+		assert res0.name == 'Fri, 20 May 2016 12:43:46 +0000 UTC'
+		assert res0.algorithm_type == AlgorithmTypeEnum.CVRP_TW_SD
+		assert res0.state == OptimizationStateEnum.INITIAL
+		assert res0.optimization_factor == OptimizationFactorEnum.DISTANCE
+		assert res0.member_id == '1'
+		assert res0.vehicle_id is None
+		assert res0.device_id is None
+		assert res0.round_trip is True
+
+	def test_list_with_states(self):
+
+		with open(os.path.join(
+			# '..', '..', '..',
+			'submodules', 'route4me-api-data-examples', 'Optimizations',
+			'list_response.json'
+		)) as f:
+			sample_response_data = json.load(f)
+
+		self.set_response(data=sample_response_data)
+
+		r = Optimizations(api_key='test')
+		res = r.list(states=[OptimizationStateEnum.INITIAL, OptimizationStateEnum.OPTIMIZED])
+
+		print(self.mock_fluent_request_class.mock_calls)
+
+		# ----------
+		# assertions
+		mock_freq = self.last_request()
+		mock_freq.method.assert_called_with('GET')
+		mock_freq.url.assert_called_with(
+			'https://www.route4me.com/api.v4/optimization_problem.php'
+		)
+		mock_freq.qs.assert_any_call({
+			'state': '1,4'
+		})
+
+		assert not mock_freq.json.called
+		assert not mock_freq.data.called
+
+		# assertions on response
+		assert isinstance(res, list)
+		assert isinstance(res, PagedList)
+		assert res.total == 447
+		assert res.limit is None
+		assert res.offset is None
+
+		res0 = res[0]
+		assert isinstance(res0, Optimization)
 
 	def test_remove(self):
 

@@ -127,3 +127,13 @@ def datetime2timestamp_and_seconds(dt):
 	ts = adt.floor('day').timestamp
 	sec = adt.timestamp - ts
 	return ts, sec
+
+
+def add_limit_offset_to_query_string(limit, offset, qs):
+	if limit is not None:
+		qs['limit'] = limit
+
+	if offset is not None:
+		qs['offset'] = offset
+
+	return qs

@@ -25,8 +25,12 @@ import pydash
 
 from .._net import NetworkClient
 from ..models import Optimization
+from ..enums import OptimizationStateEnum
 
 from ..errors import Route4MeApiError
+from route4me.sdk.utils import PagedList
+
+from route4me.sdk._internals.utils import add_limit_offset_to_query_string
 
 
 class Optimizations(object):
@@ -112,8 +116,44 @@ class Optimizations(object):
 
 		return Optimization(res)
 
-	def list(self):
-		pass
+	def list(self, states=None, limit=None, offset=None):
+		"""
+		GET all optimizations belonging to a user.
+
+		Optionally filtered
+
+		.. seealso::
+
+			Route4Me API: https://route4me.io/docs/#get-optimizations
+
+		:param states: Comma separated list of states, you can pass one CSV \
+			string or any enumerable of state IDS (string and enums are \
+			supported), defaults to None
+		:type states: str or list(str) or list(OptimizationStateEnum), optional
+		:param limit: Search limitation, defaults to None
+		:type limit: int, optional
+		:param offset: Search starting position, defaults to None
+		:type offset: int, optional
+		"""
+		qs = {}
+		add_limit_offset_to_query_string(limit, offset, qs)
+
+		if states:
+			s = OptimizationStateEnum.parse_many(states)
+			qs['state'] = ','.join([str(i.value) for i in s])
+
+		res = self.__nc.get(
+			'/api.v4/optimization_problem.php',
+			subdomain='www',
+			query=qs
+		)
+
+		return PagedList(
+			total=res['totalRecords'],
+			limit=limit,
+			offset=offset,
+			items=[Optimization(item) for item in res['optimizations']],
+		)
 
 	def update(self):
 		pass

@@ -7,6 +7,18 @@ requests.
 
 Please, follow this [guide](http://keepachangelog.com/en/0.3.0/).
 
+## ?? // unreleased
+
+* Optimizations Problem endpoints:
+  * list
+* `Address` wrapper
+* `PagedList` - structure for array-like responces
+
+#### Internal features
+
+* Handle datetimes with TZ
+* Parse enums function
+
 ## 2017-08-25 // 0.1.0-dev.8
 
 * Optimizations Problem endpoints:
