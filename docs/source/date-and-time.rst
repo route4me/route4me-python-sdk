@@ -3,11 +3,12 @@
 Date, Time and Timezones
 ========================
 
-Route4Me works worldwide, this means that we know what the timezone is.
+Route4Me works worldwide, this means that we know what the **time zone** is.
 
 Handling time zones is a challenge when we want to handle date and time
 correctly for any time zone for many ``python`` implementations. For example,
-*python 2.6* can't process the following code:
+*python 2* can't process the following code
+(`test online <https://repl.it/KdT6/0>`_), and *python >3.3* --- can:
 
 .. code-block:: python
 
@@ -56,7 +57,7 @@ convert date/time:
 	loc = arrow.get(dt).to('local').datetime
 
 	print(loc.isoformat())
-	# >>> '2016-01-01T16:25:42.465805+04:00'
+	# >>> '2016-01-01T11:25:42.465805-01:00'
 
 	# PROFIT!
 

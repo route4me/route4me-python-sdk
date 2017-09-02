@@ -3,6 +3,13 @@
 Utilities
 =========
 
+Data structures
+---------------
+
+.. autoclass:: route4me.sdk.utils.PagedList
+	:members:
+	:show-inheritance:
+
 Typeconv
 --------
 
