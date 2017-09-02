@@ -64,5 +64,5 @@ def bool201(boolvalue):
 		raise TypeError('bool expected')
 
 	if boolvalue:
-		return six.u('1')
-	return six.u('0')
+		return six.text_type('1')
+	return six.text_type('0')

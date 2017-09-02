@@ -74,10 +74,10 @@ def dict_property(path, anytype):
 			if v is None:
 				return None
 
-			return six.u(v)
+			return six.text_type(v)
 
 		def _set(self, value):
-			v = six.u(value)
+			v = six.text_type(value)
 			v = fn(self, v)
 			pydash.set_(self.raw, path, v)
 
@@ -85,7 +85,7 @@ def dict_property(path, anytype):
 
 		doc = fn.__doc__
 
-		typename = type(six.u('')).__name__
+		typename = type(six.text_type('')).__name__
 
 		doc = _handle_auto_doc_for_property(
 			fn.__doc__,
