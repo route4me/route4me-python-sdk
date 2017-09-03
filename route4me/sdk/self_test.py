@@ -24,7 +24,7 @@ class MockerResourceWithNetworkClient(object):
 
 		# mock FluentRequest
 		cls._patcher_fluent_request_class = mock.patch(
-			'route4me.sdk._net.FluentRequest'
+			'route4me.sdk._internals.net.FluentRequest'
 		)
 		cls.mock_fluent_request_class = cls._patcher_fluent_request_class.start()
 

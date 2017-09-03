@@ -10,7 +10,7 @@ a map or position the map.
 
 """
 
-from .._net import NetworkClient
+from route4me.sdk._internals.net import NetworkClient
 
 
 class Geocodings(object):

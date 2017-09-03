@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .._net import NetworkClient
+from route4me.sdk._internals.net import NetworkClient
 
 
 class Members(object):

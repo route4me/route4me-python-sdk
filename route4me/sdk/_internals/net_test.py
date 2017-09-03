@@ -4,9 +4,9 @@ import re
 import pytest
 import json
 
-from ._net import NetworkClient
-from .errors import Route4MeNetworkError
-from .errors import Route4MeApiError
+from .net import NetworkClient
+from ..errors import Route4MeNetworkError
+from ..errors import Route4MeApiError
 
 
 class TestNetworkClient:

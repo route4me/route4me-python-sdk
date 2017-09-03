@@ -15,8 +15,6 @@ Look out the appropriate section for details.
 
 import logging
 
-from ._net import NetworkClient
-
 from .endpoints.geocodings import Geocodings
 from .endpoints.members import Members
 from .endpoints.optimizations import Optimizations
@@ -31,6 +29,9 @@ from .version import VERSION_STRING
 from .version import RELEASE_STRING
 from .version import BUILD
 from .version import COMMIT
+
+from route4me.sdk._internals.net import NetworkClient
+
 
 log = logging.getLogger(__name__)
 

@@ -9,13 +9,13 @@ import requests
 import platform
 import logging
 
-from .errors import Route4MeNetworkError
-from .errors import Route4MeApiError
+from ..errors import Route4MeNetworkError
+from ..errors import Route4MeApiError
 
-from .version import VERSION_STRING
-from .version import RELEASE_STRING
-from .version import BUILD
-from .version import COMMIT
+from ..version import VERSION_STRING
+from ..version import RELEASE_STRING
+from ..version import BUILD
+from ..version import COMMIT
 
 log = logging.getLogger(__name__)
 
