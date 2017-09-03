@@ -12,7 +12,7 @@ It is preferable to create an optimization problem with as many orders in it
 as possible, so that the optimization engine is able to consider the entire
 problem set.
 
-This is different from a :class:`~route4me.sdk.endpoints.routes.Route`, which
+This is different from a :class:`~route4me.sdk.models.Route`, which
 is a sequence of addresses that need to be visited by a single vehicle and
 driver in a fixed time period. Solving an Optimization Problem results in
 a number of routes. (Possibly recurring in the future)

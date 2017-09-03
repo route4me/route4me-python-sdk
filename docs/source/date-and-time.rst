@@ -8,7 +8,7 @@ Route4Me works worldwide, this means that we know what the **time zone** is.
 Handling time zones is a challenge when we want to handle date and time
 correctly for any time zone for many ``python`` implementations. For example,
 *python 2* can't process the following code
-(`test online <https://repl.it/KdT6/0>`__), and *python >3.3* --- can:
+(`an online proof <https://repl.it/KdT6/0>`__), and *python >3.3* --- can:
 
 .. code-block:: python
 
@@ -38,8 +38,9 @@ Under the hood we use two additional libraries:
 Display local time
 ------------------
 
-If you want to print *local* time (not UTC), you could use `arrow`_ to
-convert date/time:
+If you want to print *local* time (not UTC), or time in **any other** time zone
+(it is the same moment of time, but convenient for people in the other
+location), you could use `arrow`_ package to convert date/time presentation:
 
 .. code-block:: python
 
