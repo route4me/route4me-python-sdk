@@ -3,15 +3,15 @@
 API
 ===
 
-Endpoints
----------
-
 ApiClient
-"""""""""
+---------
 
 .. automodule:: route4me.sdk
 	:members:
 	:show-inheritance:
+
+Endpoints
+---------
 
 Geocoding
 """""""""
