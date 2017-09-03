@@ -5,8 +5,8 @@ import datetime
 
 import pytz
 
-from .utils import timestamp_and_seconds2datetime
-from .utils import datetime2timestamp_and_seconds
+from . import timestamp_and_seconds2datetime
+from . import datetime2timestamp_and_seconds
 
 
 class Test_timestamp_and_seconds2datetime(object):

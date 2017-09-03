@@ -13,10 +13,10 @@ from ..enums import DeviceTypeEnum
 
 from ..enums import AddressStopTypeEnum
 
-from route4me.sdk._internals.utils import dict_property
-from route4me.sdk._internals.utils import dict_enum_property
-from route4me.sdk._internals.utils import timestamp_and_seconds2datetime
-from route4me.sdk._internals.utils import datetime2timestamp_and_seconds
+from route4me.sdk._internals.decorators import dict_property
+from route4me.sdk._internals.decorators import dict_enum_property
+from route4me.sdk._internals import timestamp_and_seconds2datetime
+from route4me.sdk._internals import datetime2timestamp_and_seconds
 
 
 class BaseModel(dict):

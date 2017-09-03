@@ -29,9 +29,9 @@ from ..enums import OptimizationStateEnum
 
 from ..errors import Route4MeApiError
 from route4me.sdk.utils import PagedList
-from route4me.sdk.utils.typeconv import bool201
 
-from route4me.sdk._internals.utils import add_limit_offset_to_query_string
+from route4me.sdk._internals import add_limit_offset_to_query_string
+from route4me.sdk._internals.typeconv import bool201
 
 
 class Optimizations(object):

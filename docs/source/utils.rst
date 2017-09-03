@@ -13,6 +13,6 @@ Data structures
 Typeconv
 --------
 
-.. automodule:: route4me.sdk.utils.typeconv
+.. automodule:: route4me.sdk._internals.typeconv
 	:members:
 	:show-inheritance:
