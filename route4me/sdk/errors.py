@@ -79,16 +79,23 @@ class Route4MeApiError(Route4MeError):
 
 		method=None,
 		url=None,
+		status_code=None,
 	):
+		m = '[{status}] {message}'.format(
+			status=status_code,
+			message=message
+		)
+
 		super(Route4MeApiError, self).__init__(
-			message,
+			m,
 			code,
 			details,
-			inner
+			inner,
 		)
 
 		self.method = method
 		self.url = url
+		self.status_code = status_code
 
 
 class Route4MeValidationError(Route4MeError):

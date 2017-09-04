@@ -25,7 +25,7 @@ class FluentRequest(object):
 		self._r = requests.Request(
 			method='GET'
 		)
-		self.__timeout = 0.1
+		self.__timeout = 10
 
 		# self.method = method
 		# self.url = url
@@ -110,9 +110,6 @@ class NetworkClient(object):
 
 	.. versionadded:: 0.1.0
 	"""
-
-	DEFAULT_TIMEOUT_SEC = 0.1
-
 	def __init__(self, api_key, base_host='route4me.com'):
 
 		user_agent = (
@@ -165,17 +162,22 @@ class NetworkClient(object):
 		res = self.__handle_net_exceptions(req)
 
 		if res.status_code >= 300:
-			print(res.status_code)
+			# TODO: need to parse text!
+			msg = res.text
 
 			# TODO: need more details!
-			raise Route4MeApiError(
-				'Error on Route4Me API',
+			ex = Route4MeApiError(
+				msg,
 				code='route4me.sdk.api_error',
 				details={
 					'req': req.__repr__(),
 					'status_code': res.status_code,
-				}
+				},
+				# TODO: implement! currently we have link to method, not a value
+				# method=req.method,
+				status_code=res.status_code,
 			)
+			raise ex
 		res.encoding = 'utf-8'
 		return res.json()
 

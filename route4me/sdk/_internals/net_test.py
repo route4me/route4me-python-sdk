@@ -3,10 +3,13 @@
 import re
 import pytest
 import json
+import logging
 
 from .net import NetworkClient
 from ..errors import Route4MeNetworkError
 from ..errors import Route4MeApiError
+
+log = logging.getLogger(__name__)
 
 
 class TestNetworkClient:
@@ -123,7 +126,7 @@ class TestNetworkClientRequestsOverHttpbin:
 			}
 		)
 
-		print(res)
+		log.debug(res)
 
 		# https://www.httpbin.org/anything?param3=345&api_key=AAAA&param1=1&param4=False&format=json&param2=str'
 		url = res['url']
@@ -171,7 +174,7 @@ class TestNetworkClientRequestsOverHttpbin:
 			}
 		)
 
-		print(res)
+		log.debug(res)
 
 		url = res['url']
 		assert url.startswith('https://httpbin.org/anything')
@@ -211,7 +214,7 @@ class TestNetworkClientRequestsOverHttpbin:
 			nc.get('relative-redirect/10', timeout_sec=10)
 
 		exc = exc_info.value
-		print(exc)
+		log.debug(exc)
 		assert exc is not None
 		assert exc.code == 'route4me.sdk.network.many_redirects'
 
@@ -231,7 +234,7 @@ class TestNetworkClientRequestsOverHttpbin:
 			nc.get('get/1', timeout_sec=8)
 
 		exc = exc_info.value
-		print(exc)
+		log.debug(exc)
 		assert exc is not None
 		assert exc.code == 'route4me.sdk.security.invalid_certificate'
 

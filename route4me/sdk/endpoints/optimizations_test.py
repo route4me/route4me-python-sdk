@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import logging
 
 import pytest
 import mock
@@ -15,12 +16,16 @@ import route4me.sdk.endpoints.optimizations as M
 
 from route4me.sdk.utils import PagedList
 
+from ..models import Address
 from ..models import Optimization
+
 from ..models import AlgorithmTypeEnum
 from ..models import OptimizationStateEnum
 from ..models import OptimizationFactorEnum
 
 from ..errors import Route4MeApiError
+
+log = logging.getLogger(__name__)
 
 
 class TestOptimizations(object):
@@ -56,7 +61,7 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 		r = Optimizations(api_key='test')
 		res = r.create(o)
 
-		# print(self.mock_fluent_request_class.mock_calls)
+		# log.debug(self.mock_fluent_request_class.mock_calls)
 		# call(),
 		# call().method('POST'),
 		# call().url('https://www.route4me.com//api.v4/optimization_problem.php'),
@@ -116,7 +121,7 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 		# ----------
 		# assertions
 
-		print(self.mock_fluent_request_class.mock_calls)
+		log.debug(self.mock_fluent_request_class.mock_calls)
 		# call(),
 		# call().method('POST'),
 		# call().url('https://www.route4me.com/api.v4/optimization_problem.php'),
@@ -162,7 +167,7 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 		r = Optimizations(api_key='test')
 		res = r.get('07372F2CF3814EC6DFFAFE92E22771AA')
 
-		print(self.mock_fluent_request_class.mock_calls)
+		log.debug(self.mock_fluent_request_class.mock_calls)
 
 		# ----------
 		# assertions
@@ -189,6 +194,13 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 		assert res.device_id is None
 		assert res.round_trip is True
 
+		log.debug(res)
+		assert isinstance(res.addresses, list)
+		assert len(res.addresses) > 0
+		a0 = res.addresses[0]
+		assert isinstance(a0, Address)
+		assert a0.ID == 154456307
+
 	def test_list_no_states(self):
 
 		sample_response_data = load_json(
@@ -202,7 +214,7 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 		r = Optimizations(api_key='test')
 		res = r.list()
 
-		print(self.mock_fluent_request_class.mock_calls)
+		log.debug(self.mock_fluent_request_class.mock_calls)
 
 		# ----------
 		# assertions
@@ -248,7 +260,7 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 		r = Optimizations(api_key='test')
 		res = r.list(states=[OptimizationStateEnum.INITIAL, OptimizationStateEnum.OPTIMIZED])
 
-		print(self.mock_fluent_request_class.mock_calls)
+		log.debug(self.mock_fluent_request_class.mock_calls)
 
 		# ----------
 		# assertions
@@ -296,7 +308,7 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 			optimization_data=sample_optimization_data,
 		)
 
-		print(self.mock_fluent_request_class.mock_calls)
+		log.debug(self.mock_fluent_request_class.mock_calls)
 
 		# ----------
 		# assertions
@@ -339,7 +351,7 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 		r = Optimizations(api_key='test')
 		res = r.remove(ID=opt_id)
 
-		# print(self.mock_fluent_request_class.mock_calls)
+		# log.debug(self.mock_fluent_request_class.mock_calls)
 
 		# ----------
 		# assertions
@@ -368,7 +380,7 @@ class TestOptimizationsMocked(MockerResourceWithNetworkClient):
 		with pytest.raises(Route4MeApiError) as exc_info:
 			r.remove(ID=opt_id)
 
-		print(self.mock_fluent_request_class.mock_calls)
+		log.debug(self.mock_fluent_request_class.mock_calls)
 
 		exc = exc_info.value
 		assert exc is not None

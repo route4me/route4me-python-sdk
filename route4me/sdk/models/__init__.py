@@ -34,6 +34,79 @@ class BaseModel(dict):
 		return self
 
 
+class TiedListWrapper(list):
+	def __init__(self, parent, key, anytype):
+		self._parent = parent
+		self._key = key
+		self._t = anytype
+
+		r = self._raw
+		if r is None:
+			r = []
+
+		super(TiedListWrapper, self).__init__(r)
+
+	@property
+	def _raw(self):
+		"""
+		Mostly - internal field.
+
+		Raw - is a low-level content. It is a :class:`list` instance stored
+		in the parent object. Raw - because it is a low-level presentation,
+		which will be used to send data to R4M
+
+		:returns: A raw object from parent
+		:rtype: list
+		"""
+		return pydash.get(self._parent, self._key)
+
+	def link(self):
+		"""
+		Put SELF instance to the parent object
+
+		If parent contains None = put self
+		If parent already contains SELF - do nothing
+		If parent contains smth. - load content to self and connect
+		"""
+		r = self._raw
+
+		if r is not None and r != self:
+			super(TiedListWrapper, self).__init__(r)
+
+		self._parent.raw[self._key] = self
+
+	def unlink(self):
+		self._parent.raw[self._key] = None
+
+	def unset(self):
+		self._parent.pop(self._key)
+
+	def __getitem__(self, index):
+		r = super(TiedListWrapper, self).__getitem__(index)
+		return self._t(r)
+
+	def __setitem__(self, index, value):
+		self.link()
+		r = value
+		if isinstance(r, BaseModel):
+			r = r.raw
+		res = super(TiedListWrapper, self).__setitem__(index, r)
+		return res
+
+	def __iter__(self):
+		for r in list.__iter__(self):
+			yield self._t(r)
+
+	def append(self, item):
+		r = item
+		if isinstance(r, BaseModel):
+			r = r.raw
+
+		self.link()
+		res = super(TiedListWrapper, self).append(r)
+		return res
+
+
 class Address(BaseModel):
 	"""
 	Single *Address*, also known as *Route Destination*
@@ -105,7 +178,7 @@ class Address(BaseModel):
 	# ==========================================================================
 
 	@dict_property('address', str)
-	def address_string(self, value):
+	def address(self, value):
 		"""
 		The route's Address Line
 
@@ -142,6 +215,17 @@ class Address(BaseModel):
 		.. note::
 
 			In Route4Me API this field is known as ``lng``
+
+		<AUTO>
+		"""
+		return value
+
+	@dict_property('route_id', str)
+	def route_id(self, value):
+		"""
+		Route ID
+
+		Parent route
 
 		<AUTO>
 		"""
@@ -234,6 +318,12 @@ class Optimization(BaseModel):
 				# 'routes': [],
 			}
 		super(Optimization, self).__init__(raw=raw)
+
+		self._addresses = TiedListWrapper(
+			parent=self,
+			key='addresses',
+			anytype=Address
+		)
 
 	# ==========================================================================
 
@@ -469,10 +559,27 @@ class Optimization(BaseModel):
 
 	# ==========================================================================
 
-	def addresses(self, value):
+	@property
+	def addresses(self):
 		"""
 		Addresses included to this Optimization Problem
 
 		<AUTO>
 		"""
-		return value
+		return self._addresses
+
+	@property
+	def links(self):
+		"""
+		Links to the GET operations for the optimization problem
+
+		:getter: Get
+		:setter: Set
+		:deleter: Del
+		:rtype: dict or None
+		"""
+		return pydash.get(self.raw, 'links')
+
+	@links.deleter
+	def links(self, value):
+		return self.raw.pop('links')
