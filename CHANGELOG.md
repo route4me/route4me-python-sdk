@@ -9,17 +9,22 @@ Please, follow this [guide](http://keepachangelog.com/en/0.3.0/).
 
 ## ?? // unreleased
 
+**UPGRAGE TO ALPHA VERSION**
+
 * Optimizations Problem endpoints:
   * list
   * update
   * reoptimize
 * `Address` wrapper
-* `PagedList` - structure for array-like responces
+* Increase default timeout up to 10 seconds
+* First working example (create optimization)
 
 #### Internal features
 
 * Handle datetimes with TZ
 * Parse enums function
+* `PagedList` - structure for array-like responces
+* `TiedList` - wrapper for array-like properties of the main Model
 
 ## 2017-08-25 // 0.1.0-dev.8
 
