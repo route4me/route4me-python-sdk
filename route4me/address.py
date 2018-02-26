@@ -4,7 +4,6 @@ import random
 import time
 
 import requests
-import xmltodict
 
 from .api_endpoints import (
     ADD_ROUTE_NOTES_HOST,
@@ -72,26 +71,20 @@ class Address(Base):
 
     def batch_fix_geocodes(self, addresses):
         geocoding_error = []
-        param_address = 'addresses='
-        for a in addresses:
-            param_address = '{0}{1}||'.format(param_address, a.get('address'))
-        params = {'format': 'xml', 'addresses': param_address}
-        content = self.get_batch_geocodes(params)
-        obj = xmltodict.parse(content)
-        geocoded_addresses = []
-        for i, d in enumerate(obj.get('destinations').get('destination')):
+        params = {
+            'format': 'json',
+            'addresses': '||'.join([x['address'] for x in addresses])
+        }
+        json_data = self.get_batch_geocodes(params)
+        for address, geocoded_address in zip(addresses, json_data):
             try:
-                address = dict([('lat', float(d.get('@lat'))),
-                                ('lng', float(d.get('@lng'))),
-                                ('time', addresses[i].get('time')),
-                                ('alias', addresses[i].get('alias')),
-                                ('address', d.get('@destination'))])
-                if addresses[i].get('is_depot') == 1:
-                    address.update(dict([('is_depot', 1)]))
-                geocoded_addresses.append(address)
-            except IndexError:
-                geocoding_error.append(d)
-        return geocoding_error, geocoded_addresses
+                address.update({
+                    'lat': float(geocoded_address['lat']),
+                    'lng': float(geocoded_address['lng']),
+                })
+            except (IndexError, ValueError):
+                geocoding_error.append(addresses)
+        return geocoding_error, addresses
 
     def get_geocode(self, params):
         """
@@ -103,7 +96,7 @@ class Address(Base):
                                                params,
                                                [],
                                                self.api._request_get)
-        return self.response.content
+        return self.response.json()
 
     def get_batch_geocodes(self, params):
         """
@@ -115,19 +108,16 @@ class Address(Base):
                                                params,
                                                [],
                                                self.api._request_get)
-        return self.response.content
+        return self.response.json()
 
     def fix_geocode(self, address):
         geocoding_error = None
-        params = {'format': 'xml', 'address': address.get('address')}
+        params = {'format': 'json', 'address': address.get('address')}
         count = 0
         while True:
             try:
-                content = self.get_geocode(params)
-                obj = xmltodict.parse(content)
-                obj = obj.get('result')
-                address.update(dict([('lat', float(obj.get('@lat'))),
-                                     ('lng', float(obj.get('@lng'))), ]))
+                json_data = self.get_geocode(params)
+                address.update(json_data)
                 return geocoding_error, address
             except (AttributeError, requests.exceptions.ConnectionError):
                 count += 1
