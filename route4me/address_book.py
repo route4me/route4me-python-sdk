@@ -45,7 +45,7 @@ class AddressBook(Base):
         :raise: ParamValueException if required params are not present.
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['limit', 'Offset', ]):
+        if self.check_required_params(kwargs, ['api_key', ]):
             self.response = self.api._request_get(ADDRESSBOOK,
                                                   kwargs)
             response = json.loads(self.response.content)
