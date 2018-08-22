@@ -7,3 +7,6 @@ Route4Me_SDK.egg-info/
 /cover-html/
 .coverage
 /.cache/
+/tmp/
+/development/
+.venv
