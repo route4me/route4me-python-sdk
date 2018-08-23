@@ -37,8 +37,7 @@ class GPS(Base):
         if self.check_required_params(kwargs, self.requirements):
             self.response = self.api._request_get(SET_GPS_HOST,
                                                   kwargs)
-            response = self.response.json()
-            return response.get('status')
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
