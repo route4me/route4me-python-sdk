@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[TOTAL_LOC, TOO_MANY_FUNCTIONS, TOTAL_COMPLEXITY]
+
 import re
 
 from .constants import (

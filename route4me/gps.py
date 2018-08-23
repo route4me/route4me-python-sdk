@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from .api_endpoints import SET_GPS_HOST, DEVICE_LOCATION_URL
 from .base import Base
 from .exceptions import ParamValueException

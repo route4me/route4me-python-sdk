@@ -1,8 +1,9 @@
-import json
+# -*- coding: utf-8 -*-
+# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
 
 import requests
+import json
 
-# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
 try:
     from urllib import urlencode
 except ImportError:
@@ -18,7 +19,6 @@ from .orders import Order
 from .rapid_address import RapidAddress
 from .route import Route
 from .territory import Territory
-from .utils import json2obj
 from .file_uploading import FileUploading
 from .members import Members
 from .vehicles import Vehicle
@@ -100,7 +100,7 @@ class Route4Me(object):
                                   json.dumps(self.optimization.data),
                                   request_method)
 
-    def _request_post(self, url, request_params, data=None, files=None):
+    def _request_post(self, url, request_params, data=None, json=None, files=None):
         """
         POST request
         :param url:
@@ -113,6 +113,7 @@ class Route4Me(object):
                              allow_redirects=self.redirects,
                              proxies=self.proxies, files=files,
                              data=data, headers=self.headers,
+                             json=json,
                              verify=self.verify_ssl)
 
     def _request_get(self, url, request_params, data=None):
@@ -130,7 +131,7 @@ class Route4Me(object):
                             headers=self.headers,
                             verify=self.verify_ssl)
 
-    def _request_put(self, url, request_params, data=None):
+    def _request_put(self, url, request_params, json=None, data=None):
         """
         PUT request
         :param url:
@@ -141,6 +142,7 @@ class Route4Me(object):
         return requests.request('PUT', url, params=request_params,
                                 proxies=self.proxies,
                                 data=data,
+                                json=json,
                                 headers=self.headers,
                                 verify=self.verify_ssl)
 
@@ -177,6 +179,7 @@ class Route4Me(object):
         """
         Execute reoptimization
         :param optimization_id:
+        :param data:
         :return: response as a object
         """
         self.optimization.optimization_problem_id(optimization_id)
@@ -187,8 +190,7 @@ class Route4Me(object):
                                            json.dumps(data),
                                            self._request_put)
         try:
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         except ValueError:
             raise
         except Exception:
@@ -209,7 +211,7 @@ class Route4Me(object):
         Parse response and set it to Route4me instance
         :return:
         """
-        response = json.loads(self.response.content)
+        response = self.response.json()
         if 'addresses' in response:
             self.address.addresses = self.response['addresses']
 
@@ -246,5 +248,6 @@ class Route4Me(object):
                 f.close()
             except Exception:
                 raise
+
 
 # codebeat:enable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]

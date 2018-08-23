@@ -1,4 +1,4 @@
-import json
+# -*- coding: utf-8 -*-
 
 from .api_endpoints import RAPID_ADDRESS_SERVICE, \
     RAPID_ADDRESS, RAPID_ADDRESS_ZIP
@@ -37,7 +37,7 @@ class RapidAddress(Base):
 
         response = self.api._request_get(url, kwargs)
         try:
-            return json.loads(response.content)
+            return response.json()
         except ValueError:
             return response.content
 
@@ -57,7 +57,7 @@ class RapidAddress(Base):
                                            kwargs.pop('limit'))
             response = self.api._request_get(url, kwargs)
             try:
-                return json.loads(response.content)
+                return response.json()
             except ValueError:
                 return response.content
         else:
@@ -83,7 +83,7 @@ class RapidAddress(Base):
                                            kwargs.pop('limit'))
             response = self.api._request_get(url, kwargs)
             try:
-                return json.loads(response.content)
+                return response.json()
             except ValueError:
                 return response.content
         else:

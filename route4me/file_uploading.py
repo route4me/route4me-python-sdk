@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from .api_endpoints import FILE_UPLOAD_HOST, \
     FILE_UPLOAD_PREVIEW_HOST, FILE_UPLOAD_GEOCODE_HOST
 from .base import Base

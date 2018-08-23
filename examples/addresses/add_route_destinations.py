@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 from route4me.constants import (
     ALGORITHM_TYPE,
@@ -7,14 +9,14 @@ from route4me.constants import (
     TRAVEL_MODE,
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 # codebeat:disable[LOC, ABC]
 
 
 def main():
-    r4m = Route4Me(KEY)
+    r4m = Route4Me(API_KEY)
     optimization = r4m.optimization
     address = r4m.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -22,7 +24,6 @@ def main():
     optimization.store_route(0)
     optimization.route_time(0)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Single Driver Round Trip')
     optimization.optimize(OPTIMIZE.DISTANCE)
@@ -83,9 +84,9 @@ def main():
     response = r4m.run_optimization()
 
     print('Current Addresses')
-    for i, address in enumerate(response.addresses):
+    for i, address in enumerate(response['addresses']):
         print('Number {}:'.format(i))
-        print('\taddress: {}'.format(address.address))
+        print('\taddress: {}'.format(address['address']))
         print('\t')
     addresses = {
         'addresses': [
@@ -94,27 +95,27 @@ def main():
                 'lat': 40.7718005,
                 'lng': -73.9897716,
                 'alias': 'BMW of Manhattan',
-                'time': 0,
+                'time': 300,
             },
             {
                 'address': '57 W 57th St New York, NY 10019',
                 'lat': 40.7558695,
                 'lng': -73.9862019,
                 'alias': 'Verizon Wireless',
-                'time': 0,
+                'time': 300,
             }
         ]
     }
 
-    route_id = response.addresses[1].route_id
+    route_id = response['addresses'][1]['route_id']
 
     print('Inserting addresses in Route: {}'.format(route_id))
 
-    response = r4m.address.insert_address_into_route(addresses, route_id)
+    response = r4m.route.insert_address_into_route(addresses, route_id)
     print('Addresses after insert')
-    for i, address in enumerate(response.addresses):
+    for i, address in enumerate(response['addresses']):
         print('Number {}:'.format(i))
-        print('\taddress: {}'.format(address.address))
+        print('\taddress: {}'.format(address['address']))
         print('\t')
 
 

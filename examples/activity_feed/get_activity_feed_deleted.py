@@ -1,22 +1,32 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     activity_feed = route4me.activity_feed
-    response = activity_feed.get_activity_feed_deleted(
-        route_id='C9F6F9F664169DFB4042110069EBE688'
-    )
-    if hasattr(response, 'errors'):
-        print('. '.join(response.errors))
+    route = route4me.route
+    print('Getting Last Route')
+    response = route.get_routes(limit=1, offset=0)
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
     else:
-        print('Total affected: {}'.format(response.total))
-        for i, activity in enumerate(response.results):
-            print('Activity #{}'.format(i + 1))
-            print('\tActivity ID: {}'.format(activity.activity_id))
-            print('\tActivity Type: {}'.format(activity.activity_type))
+        route_id = response[0]['route_id']
+        print('Route ID: {}'.format(route_id))
+        response = activity_feed.get_activity_feed_deleted(
+            route_id=route_id
+        )
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
+        else:
+            print('Total affected: {}'.format(response['total']))
+            for i, activity in enumerate(response['results']):
+                print('Activity #{}'.format(i + 1))
+                print('\tActivity ID: {}'.format(activity['activity_id']))
+                print('\tActivity Type: {}'.format(activity['activity_type']))
 
 
 if __name__ == '__main__':

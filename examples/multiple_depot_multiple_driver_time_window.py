@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
-from route4me.api_endpoints import ROUTE_HOST
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
@@ -9,20 +10,19 @@ from route4me.constants import (
     METRIC,
 )
 
-KEY = "11111111111111111111111111111111"
-
+API_KEY = "11111111111111111111111111111111"
 
 # codebeat:disable[LOC, ABC]
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     optimization = route4me.optimization
     address = route4me.address
     optimization.route_name('Multiple Depot, Multiple Driver, Time window')
     optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_MD)
     optimization.share_route(0)
-    optimization.store_route(1)
+    optimization.store_route(0)
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
@@ -30,7 +30,7 @@ def main():
     optimization.vehicle_capacity(9999)
     optimization.vehicle_max_distance_mi(99999)
     optimization.parts(10)
-    optimization.route_time(0)
+    optimization.route_time(7 * 3600)
     optimization.rt(1)
     optimization.route_max_duration(86400)
     optimization.optimize(OPTIMIZE.TIME)
@@ -40,18 +40,14 @@ def main():
         lat=38.251698,
         lng=-85.757308,
         is_depot=1,
-        time=300,
-        time_window_start=28800,
-        time_window_end=29400
+        time=300
     )
     address.add_address(
         address="1604 PARKRIDGE PKWY, Louisville, KY, 40214",
         lat=38.141598,
         lng=-85.793846,
-        is_depot=0,
-        time=300,
-        time_window_start=29400,
-        time_window_end=30000
+        is_depot=1,
+        time=300
     )
     address.add_address(
         address="1407 MCCOY, Louisville, KY, 40215",
@@ -486,13 +482,12 @@ def main():
         time_window_end=58800
     )
 
-    optimization = route4me.run_optimization()
-    print('Optimization Link: {}'.format(optimization.links.view))
-    for address in optimization.addresses:
-        print('Route {0} link: {1} route_id: {2}'.format(address.address,
-                                                         ROUTE_HOST,
-                                                         address.route_id))
-
+    response = route4me.run_optimization()
+    print('Optimization Link: {}'.format(response['links']['view']))
+    for i, route in enumerate(response['routes']):
+        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
+        for address in route['addresses']:
+            print('\t\t\tAddress: {0}'.format(address['address']))
 
 # codebeat:enable[LOC, ABC]
 

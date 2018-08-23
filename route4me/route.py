@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 # codebeat:disable[TOO_MANY_FUNCTIONS]
+
 import json
 
 from .api_endpoints import ROUTE_HOST, EXPORTER, \
@@ -6,7 +9,6 @@ from .api_endpoints import ROUTE_HOST, EXPORTER, \
     MERGE_ROUTES_HOST, RESEQUENCE_ROUTE
 from .base import Base
 from .exceptions import ParamValueException
-from .utils import json2obj
 
 
 class Route(Base):
@@ -40,8 +42,7 @@ class Route(Base):
         if self.check_required_params(self.params, self.requirements):
             self.response = self.api._request_get(ROUTE_HOST,
                                                   self.params)
-            response = self.response.json()
-            return response
+            return self.response.json()
 
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -58,9 +59,7 @@ class Route(Base):
         if self.check_required_params(self.params, self.requirements):
             self.response = self.api._request_get(ROUTE_HOST,
                                                   self.params)
-            response = self.response.json()
-            return response
-
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -75,8 +74,7 @@ class Route(Base):
         if self.check_required_params(kwargs, ['limit', 'offset', ]):
             self.response = self.api._request_get(ROUTE_HOST,
                                                   kwargs)
-            response = self.response.json()
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -93,8 +91,7 @@ class Route(Base):
                                                'offset', ]):
             self.response = self.api._request_get(GET_ACTIVITIES_HOST,
                                                   kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -108,8 +105,7 @@ class Route(Base):
         if self.check_required_params(kwargs, ['route_id', ]):
             self.response = self.api._request_get(DUPLICATE_ROUTE,
                                                   kwargs)
-            response = self.response.json()
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -124,8 +120,7 @@ class Route(Base):
             kwargs['route_id'] = ','.join(kwargs['route_id'])
             self.response = self.api._request_delete(ROUTE_HOST,
                                                      kwargs)
-            response = self.response.json()
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -150,22 +145,22 @@ class Route(Base):
 
     def insert_address_into_route(self, addresses, route_id):
         params = {'route_id': route_id}
-        response = self.api.update_route(params, addresses)
+        response = self._update_route(params, addresses)
         return response.json()
 
     def move_addresses_from_route(self, addresses, route_id):
         params = {'route_id': route_id}
-        response = self.api.update_route(params, addresses)
+        response = self._update_route(params, addresses)
         return response.json()
 
     def update_route_parameters(self, data, route_id):
         params = {'route_id': route_id}
-        response = self.api.update_route(params, data)
+        response = self._update_route(params, data)
         return response.json()
 
     def update_route(self, data, route_id):
         params = {'route_id': route_id}
-        response = self.api.update_route(params, data)
+        response = self._update_route(params, data)
         return response.json()
 
     def insert_address_into_route_optimal_position(self, **kwargs):
@@ -185,7 +180,6 @@ class Route(Base):
                                              params,
                                              data=data)
             return response.json()
-
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -235,10 +229,9 @@ class Route(Base):
             params = {'api_key': self.params['api_key'],
                       'route_id': kwargs.pop('route_id'),
                       'response_format': kwargs.pop('response_format')}
-            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(SHARE_ROUTE_HOST,
                                               params,
-                                              data=data)
+                                              json=kwargs)
             return response.json()
 
         else:
@@ -335,5 +328,10 @@ class Route(Base):
         self.response = self.api._make_request(EXPORTER, {}, data,
                                                self.api._request_post)
         return self.response.content
+
+    def _update_route(self, params, data):
+        params.update({'api_key': self.api.key})
+        data = json.dumps(data)
+        return self.api._make_request(ROUTE_HOST, params, data, self.api._request_put)
 
 # codebeat:enable[TOO_MANY_FUNCTIONS]

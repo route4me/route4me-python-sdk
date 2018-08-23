@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 from route4me.constants import (
     ALGORITHM_TYPE,
@@ -7,14 +9,14 @@ from route4me.constants import (
     TRAVEL_MODE,
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 # codebeat:disable[LOC, ABC]
 
 
 def main():
-    r4m = Route4Me(KEY)
+    r4m = Route4Me(API_KEY)
     optimization = r4m.optimization
     address = r4m.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -22,7 +24,6 @@ def main():
     optimization.store_route(0)
     optimization.route_time(0)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Single Driver Round Trip')
     optimization.optimize(OPTIMIZE.DISTANCE)
@@ -34,8 +35,7 @@ def main():
         lat=40.7636197,
         lng=-73.9744388,
         alias='Bergdorf Goodman',
-        is_depot=1,
-        time=0
+        is_depot=1
     )
     address.add_address(
         address='717 5th Ave New York, NY 10022',
@@ -100,36 +100,36 @@ def main():
     response = r4m.run_optimization()
 
     print('Current Addresses')
-    for i, address in enumerate(response.addresses):
+    for i, address in enumerate(response['addresses']):
         print('Number {}:'.format(i))
-        if address.is_depot:
+        if address['is_depot']:
             print('\t This is a Depot')
-        print('\taddress: {}'.format(address.address))
+        print('\taddress: {}'.format(address['address']))
         print('\t')
         if new_sequence[i] == 0:
             addresses['addresses'].append({
-                "route_destination_id": address.route_destination_id,
+                "route_destination_id": address['route_destination_id'],
                 "is_depot": True
             })
         else:
             addresses['addresses'].append({
-                "route_destination_id": address.route_destination_id,
+                "route_destination_id": address['route_destination_id'],
                 "sequence_no": new_sequence[i],
                 "is_depot": False
             })
 
     print('Moving addresses')
 
-    route_id = response.addresses[1].route_id
+    route_id = response['addresses'][1]['route_id']
 
     response = r4m.route.move_addresses_from_route(addresses, route_id)
     print('Addresses after move')
 
-    for i, address in enumerate(response.addresses):
+    for i, address in enumerate(response['addresses']):
         print('Number {}:'.format(i))
-        if address.is_depot:
+        if address['is_depot']:
             print('\t This is a Depot')
-        print('\taddress: {}'.format(address.address))
+        print('\taddress: {}'.format(address['address']))
         print('\t')
 
 

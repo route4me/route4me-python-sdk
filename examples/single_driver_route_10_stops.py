@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
-from route4me.api_endpoints import ROUTE_HOST
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
@@ -7,14 +8,14 @@ from route4me.constants import (
     DEVICE_TYPE,
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 # codebeat:disable[LOC, ABC]
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     optimization = route4me.optimization
     address = route4me.address
     optimization.add({
@@ -88,11 +89,11 @@ def main():
     )
 
     response = route4me.run_optimization()
-    print('Optimization Link: {}'.format(response.links.view))
-    for address in response.addresses:
-        print('Route {0} link: {1} route_id={2}'.format(address.address,
-                                                        ROUTE_HOST,
-                                                        address.route_id))
+    print('Optimization Link: {}'.format(response['links']['view']))
+    for i, route in enumerate(response['routes']):
+        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
+        for address in route['addresses']:
+            print('\t\t\tAddress: {0}'.format(address['address']))
 
 
 # codebeat:enable[LOC, ABC]

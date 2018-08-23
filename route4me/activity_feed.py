@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import json
 
 from .api_endpoints import ACTIVITY_FEED
 from .base import Base
 from .exceptions import ParamValueException
-from .utils import json2obj
 
 
 class ActivityFeed(Base):
@@ -30,8 +31,7 @@ class ActivityFeed(Base):
         if self.check_required_params(kwargs, ['api_key', ]):
             self.response = self.api._request_get(ACTIVITY_FEED,
                                                   kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -45,8 +45,7 @@ class ActivityFeed(Base):
         if self.check_required_params(kwargs, ['api_key', 'activity_type']):
             self.response = self.api._request_get(ACTIVITY_FEED,
                                                   kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -61,8 +60,7 @@ class ActivityFeed(Base):
         if self.check_required_params(kwargs, ['api_key', 'route_id']):
             self.response = self.api._request_get(ACTIVITY_FEED,
                                                   kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -77,8 +75,7 @@ class ActivityFeed(Base):
         if self.check_required_params(kwargs, ['api_key', 'route_id']):
             self.response = self.api._request_get(ACTIVITY_FEED,
                                                   kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -93,8 +90,7 @@ class ActivityFeed(Base):
         if self.check_required_params(kwargs, ['api_key', 'route_id']):
             self.response = self.api._request_get(ACTIVITY_FEED,
                                                   kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -113,8 +109,6 @@ class ActivityFeed(Base):
             data = json.dumps(self.json_data, ensure_ascii=False)
             self.response = self.api._request_post(ACTIVITY_FEED,
                                                    self.params, data=data)
-            response = json2obj(self.response.content)
-            return response
-
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')

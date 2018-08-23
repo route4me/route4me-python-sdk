@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, BLOCK_NESTING]
+
 import json
 
 from .api_endpoints import TERRITORY_HOST
 from .base import Base
 from .exceptions import ParamValueException
-from .utils import json2obj
 
 
 class Territory(Base):
@@ -30,8 +31,7 @@ class Territory(Base):
         if self.check_required_params(self.params, ['api_key', ]):
             self.response = self.api._request_get(TERRITORY_HOST,
                                                   self.params)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -45,8 +45,7 @@ class Territory(Base):
         if self.check_required_params(kwargs, ['api_key', 'territory_id']):
             self.response = self.api._request_get(TERRITORY_HOST,
                                                   kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -62,8 +61,7 @@ class Territory(Base):
             self.response = self.api._request_post(TERRITORY_HOST,
                                                    self.params,
                                                    data=json.dumps(kwargs))
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -77,8 +75,7 @@ class Territory(Base):
         if self.check_required_params(kwargs, ['territory_id']):
             self.response = self.api._request_delete(TERRITORY_HOST,
                                                      kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -95,8 +92,7 @@ class Territory(Base):
             self.response = self.api._request_put(TERRITORY_HOST,
                                                   self.params,
                                                   data=json.dumps(kwargs))
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 

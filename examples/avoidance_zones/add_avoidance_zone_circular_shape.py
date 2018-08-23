@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # codebeat:disable[SIMILARITY]
 from route4me import Route4Me
 

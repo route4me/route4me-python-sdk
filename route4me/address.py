@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[ABC]
+
 import json
 import random
 import time
-
 import requests
 
 from .api_endpoints import (
@@ -13,7 +14,6 @@ from .api_endpoints import (
 )
 from .base import Base
 from .exceptions import ParamValueException
-from .utils import json2obj
 
 
 class Address(Base):
@@ -129,18 +129,18 @@ class Address(Base):
         return geocoding_error, address
 
     def request_address(self, params):
-        params.update({'api_key': self.key})
-        return self._make_request(ADDRESS_HOST,
-                                  params,
-                                  None,
-                                  self._request_get)
+        params.update({'api_key': self.api.key})
+        return self.api._make_request(ADDRESS_HOST,
+                                      params,
+                                      None,
+                                      self.api._request_get)
 
     def get_address(self, route_id, route_destination_id):
         params = {'route_id': route_id,
                   'route_destination_id': route_destination_id
                   }
-        response = self.api.request_address(params)
-        return json2obj(response.content)
+        response = self.request_address(params)
+        return response.json()
 
     def get_address_notes(self, route_id, route_destination_id):
         params = {'route_id': route_id,
@@ -148,31 +148,30 @@ class Address(Base):
                   'notes': True,
                   }
         response = self.api.request_address(params)
-        return json2obj(response.content)
+        return response.json()
 
     def update_address(self, data, route_id, route_destination_id):
         params = {'route_id': route_id,
                   'route_destination_id': route_destination_id
                   }
-        params.update({'api_key': self.key})
+        params.update({'api_key': self.api.key})
         data = json.dumps(data)
         response = self.api._make_request(ADDRESS_HOST,
                                           params,
                                           data,
                                           self.api._request_put)
-        return json2obj(response.content)
+        return response.json()
 
     def delete_address_from_route(self, route_id, route_destination_id):
         params = {'route_id': route_id,
                   'route_destination_id': route_destination_id
                   }
-        params.update({'api_key': self.key})
+        params.update({'api_key': self.api.key})
         response = self.api._make_request(ADDRESS_HOST,
                                           params,
                                           None,
                                           self.api._request_delete)
-
-        return json2obj(response.content)
+        return response.json()
 
     def add_address_notes(self, note, **kwargs):
         """
@@ -186,9 +185,7 @@ class Address(Base):
             kwargs.update({'api_key': self.params['api_key'], })
             self.response = self.api._request_post(ADD_ROUTE_NOTES_HOST,
                                                    kwargs, data)
-            response = json2obj(self.response.content)
-            return response
-
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 

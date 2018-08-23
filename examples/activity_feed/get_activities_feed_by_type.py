@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
+
 # codebeat:disable[SIMILARITY]
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
-ACTYVITY_TYPE = (
+ACTIVITY_TYPE = (
     'delete-destination',
     'insert-destination',
     'mark-destination-departed',
@@ -36,28 +38,27 @@ ACTYVITY_TYPE = (
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     activity_feed = route4me.activity_feed
-    for activity_type in ACTYVITY_TYPE:
+    for activity_type in ACTIVITY_TYPE:
         response = activity_feed.get_activities_feed_by_type(
             activity_type=activity_type,
             limit=1,
             offset=0
         )
         print(' '.join(activity_type.split('-')).upper())
-        if hasattr(response, 'errors'):
-            print('. '.join(response.errors))
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
         else:
-            print('Total Found: {}'.format(response.total))
-            for i, activity in enumerate(response.results):
+            print('Total Found: {}'.format(response['total']))
+            for i, activity in enumerate(response['results']):
                 print('Activity #{}'.format(i + 1))
-                print('\tActivity ID: {}'.format(activity.activity_id))
+                print('\tActivity ID: {}'.format(activity['activity_id']))
                 print('\tActivity Message: {}'.format(
-                    activity.activity_message
+                    activity['activity_message']
                 ))
-                print('\tActivity Type: {}'.format(activity.activity_type))
-                print('\tRoute ID: {}'.format(activity.route_id))
-                print('\tRoute Name: {}'.format(activity.route_name))
+                print('\tActivity Type: {}'.format(activity['activity_type']))
+                print('\tRoute ID: {}'.format(activity['route_id']))
 
 
 if __name__ == '__main__':

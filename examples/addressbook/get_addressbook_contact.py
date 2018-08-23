@@ -1,18 +1,20 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     address_book = route4me.address_book
-    response = address_book.get_addressbook_contacts(limit=10, Offset=5)
-    if 'errors' in response.keys():
+    response = address_book.get_addressbook_contacts(limit=10, offset=5)
+    if isinstance(response, dict) and 'errors' in response.keys():
         print('. '.join(response['errors']))
     else:
         address_id = "'{}'".format(response['results'][0]['address_id'])
         response = address_book.get_addressbook_contact(address_id=address_id)
-        if 'errors' in response.keys():
+        if isinstance(response, dict) and 'errors' in response.keys():
             print('. '.join(response['errors']))
         else:
             contacts = response['results']

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 
 from .api_endpoints import ORDERS_HOST
@@ -32,7 +34,7 @@ class Order(Base):
                                               self.params,
                                               data=data)
             try:
-                return json.loads(response.content)
+                return response.json()
             except ValueError:
                 return response.content
         else:

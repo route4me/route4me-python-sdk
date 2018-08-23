@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import json
 
 from .api_endpoints import ADDRESSBOOK
 from .base import Base
 from .exceptions import ParamValueException
-from .utils import json2obj
 
 
 class AddressBook(Base):
@@ -29,12 +30,10 @@ class AddressBook(Base):
         """
         self.json_data = kwargs
         if self.check_required_params(self.json_data, self.REQUIRED_FIELDS):
-            data = json.dumps(self.json_data, ensure_ascii=False)
             self.response = self.api._request_post(ADDRESSBOOK,
                                                    self.params,
-                                                   data=data)
-            return self.response.content
-
+                                                   json=self.json_data)
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -48,8 +47,7 @@ class AddressBook(Base):
         if self.check_required_params(kwargs, ['api_key', ]):
             self.response = self.api._request_get(ADDRESSBOOK,
                                                   kwargs)
-            response = json.loads(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -63,8 +61,7 @@ class AddressBook(Base):
         if self.check_required_params(kwargs, ['address_id', ]):
             self.response = self.api._request_get(ADDRESSBOOK,
                                                   kwargs)
-            response = json.loads(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -77,9 +74,8 @@ class AddressBook(Base):
         if self.check_required_params(kwargs, ['address_id', ]):
             self.response = self.api._request_put(ADDRESSBOOK,
                                                   self.params,
-                                                  data=json.dumps(kwargs))
-            response = json.loads(self.response.content)
-            return response
+                                                  json=kwargs)
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -93,7 +89,6 @@ class AddressBook(Base):
             self.response = self.api._request_delete(ADDRESSBOOK,
                                                      self.params,
                                                      data=json.dumps(kwargs))
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')

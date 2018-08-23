@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
+
 MAIN_HOST = 'https://www.route4me.com'
 
 ACTIVITY_FEED = '{0}/api.v4/activity_feed.php'.format(MAIN_HOST)
@@ -36,3 +39,4 @@ USER_LICENSE_HOST = '{0}/api/member/user_license.php'.format(MAIN_HOST)
 VALIDATE_SESSION = '{0}/datafeed/session/validate_session.php'.format(MAIN_HOST)
 VEHICLES_HOST = '{}/api/vehicles/view_vehicles.php'.format(MAIN_HOST)
 WEBINAR_REGISTER = '{0}/actions/webinar_register.php'.format(MAIN_HOST)
+ZIPCODE_TERRITORIES = 'https://rapid.route4me.com/street_data/territories'

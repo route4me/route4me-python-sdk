@@ -21,6 +21,7 @@ class Route4MeGPSTests(Route4MeAPITestSuite):
         self.assertFalse(hasattr(response, 'errors'))
         self.assertTrue(len(response) > 0)
         route_id = response[0].get('route_id', False)
+        print(route_id)
         gps = self.route4me.gps
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         params = {

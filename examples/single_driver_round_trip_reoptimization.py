@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
-from route4me.api_endpoints import ROUTE_HOST
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
@@ -9,17 +10,16 @@ from route4me.constants import (
     OPTIMIZATION_STATE,
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 # codebeat:disable[LOC, ABC]
 
 
 def main():
-    route4me = Route4Me(KEY)
-    api = route4me
-    optimization = api.optimization
-    address = api.address
+    route4me = Route4Me(API_KEY)
+    optimization = route4me.optimization
+    address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
     optimization.share_route(0)
     optimization.store_route(0)
@@ -99,20 +99,18 @@ def main():
 
     response = route4me.run_optimization()
     print('Optimization status: {}'.format(
-        OPTIMIZATION_STATE.reverse_mapping.get(response.state)
+        OPTIMIZATION_STATE.reverse_mapping.get(response['state'])
     ))
-    print('Optimization Link: {}'.format(response.links.view))
-    for address in response.addresses:
-        print('Route {0} link: {1} route_id={2}'.format(
-            address.address,
-            ROUTE_HOST,
-            address.route_id
-        ))
+    print('Optimization Link: {}'.format(response['links']['view']))
+
+    for address in response['addresses']:
+        print('\t\t\tAddress: {0}'.format(address['address']))
+
     print('Re-optimization...')
-    optimization_problem_id = response.optimization_problem_id
-    response = api.reoptimization(optimization_problem_id)
+    optimization_problem_id = response['optimization_problem_id']
+    response = route4me.re_optimization(optimization_problem_id)
     print('Re-optimization status: {}'.format(
-        OPTIMIZATION_STATE.reverse_mapping.get(response.state)
+        OPTIMIZATION_STATE.reverse_mapping.get(response['state'])
     ))
 
 

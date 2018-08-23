@@ -1,22 +1,22 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
-from route4me.api_endpoints import ROUTE_HOST
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
     DEVICE_TYPE,
     TRAVEL_MODE,
     DISTANCE_UNIT,
-    METRIC,
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 # codebeat:disable[LOC, ABC]
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     optimization = route4me.optimization
     address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_SD)
@@ -25,23 +25,18 @@ def main():
     optimization.route_time(0)
     optimization.parts(20)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Single Depot, Multiple Driver Time Window')
-    optimization.optimize(OPTIMIZE.DISTANCE)
+    optimization.optimize(OPTIMIZE.TIME)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
-    optimization.metric(METRIC.ROUTE4ME_METRIC_GEODESIC)
 
     address.add_address(
         address="455 S 4th St, Louisville, KY 40202",
         lat=38.251698,
         lng=-85.757308,
-        is_depot=1,
-        time=300,
-        time_window_start=28800,
-        time_window_end=29400
+        is_depot=1
     )
     address.add_address(
         address="1604 PARKRIDGE PKWY, Louisville, KY, 40214",
@@ -486,11 +481,11 @@ def main():
     )
 
     response = route4me.run_optimization()
-    print('Optimization Link: {0}'.format(response.links.view))
-    for address in response.addresses:
-        print('Route {0} link: {1} route_id: {2}'.format(address.address,
-                                                         ROUTE_HOST,
-                                                         address.route_id))
+    print('Optimization Link: {}'.format(response['links']['view']))
+    for i, route in enumerate(response['routes']):
+        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
+        for address in route['addresses']:
+            print('\t\t\tAddress: {0}'.format(address['address']))
 
 
 # codebeat:enable[LOC, ABC]

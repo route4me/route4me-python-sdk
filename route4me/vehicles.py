@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, BLOCK_NESTING]
+
 from .api_endpoints import VEHICLES_HOST
 from .base import Base
 from .exceptions import ParamValueException, APIException

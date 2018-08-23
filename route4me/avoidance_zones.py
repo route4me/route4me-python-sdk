@@ -1,10 +1,11 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, ABC]
+
 import json
 
 from .api_endpoints import AVOIDANCE
 from .base import Base
 from .exceptions import ParamValueException
-from .utils import json2obj
 
 
 class AvoindanceZones(Base):
@@ -30,8 +31,7 @@ class AvoindanceZones(Base):
         if self.check_required_params(self.params, ['api_key', ]):
             self.response = self.api._request_get(AVOIDANCE,
                                                   self.params)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -45,8 +45,7 @@ class AvoindanceZones(Base):
         if self.check_required_params(kwargs, ['api_key', 'territory_id']):
             self.response = self.api._request_get(AVOIDANCE,
                                                   kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -62,8 +61,7 @@ class AvoindanceZones(Base):
             self.response = self.api._request_post(AVOIDANCE,
                                                    self.params,
                                                    data=json.dumps(kwargs))
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -77,8 +75,7 @@ class AvoindanceZones(Base):
         if self.check_required_params(kwargs, ['territory_id']):
             self.response = self.api._request_delete(AVOIDANCE,
                                                      kwargs)
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -95,8 +92,7 @@ class AvoindanceZones(Base):
             self.response = self.api._request_put(AVOIDANCE,
                                                   self.params,
                                                   data=json.dumps(kwargs))
-            response = json2obj(self.response.content)
-            return response
+            return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
 

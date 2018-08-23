@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 
 from setuptools import setup
@@ -12,14 +13,14 @@ def read(file_name):
 
 setup(
     name="Route4Me SDK",
-    version="0.0.2",
+    version="0.0.4",
     author="Route4Me",
     author_email="juan@route4me.com",
     description=("Route4Me Python SDK"),
     license="ISC",
     keywords="rout4me, python, sdk, api",
     url="http://route4me.com/api/demo",
-    packages=['route4me', 'examples', 'tests', ],
+    packages=['route4me'],
     long_description=read('README.md'),
     classifiers=[
         "Development Status :: 1 - Beta",

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 DRIVER_VERSION = 'route4me-python-driver-0.0.1'
 
 
