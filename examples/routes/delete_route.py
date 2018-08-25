@@ -1,18 +1,23 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     route = route4me.route
-    response = route.get_routes(limit=10, Offset=5)
-    if hasattr(response, 'errors'):
-        print('. '.join(response.errors))
+    print('Getting Last Route')
+    response = route.get_routes(limit=1, offset=0)
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
     else:
-        response = route.delete_route(route_id=response[0].route_id)
-        if hasattr(response, 'errors'):
-            print('. '.join(response.errors))
+        route_id = response[0]['route_id']
+        print('Route ID: {}'.format(route_id))
+        response = route.delete_route(route_id=route_id)
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
         else:
             print('Route Deleted:')
             print(response)

@@ -105,6 +105,7 @@ class Route(Base):
         if self.check_required_params(kwargs, ['route_id', ]):
             self.response = self.api._request_get(DUPLICATE_ROUTE,
                                                   kwargs)
+            print(self.response.content)
             return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -331,7 +332,6 @@ class Route(Base):
 
     def _update_route(self, params, data):
         params.update({'api_key': self.api.key})
-        data = json.dumps(data)
-        return self.api._make_request(ROUTE_HOST, params, data, self.api._request_put)
+        return self.api._request_put(ROUTE_HOST, request_params=params, json=data)
 
 # codebeat:enable[TOO_MANY_FUNCTIONS]

@@ -1,11 +1,13 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[ABC]
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     order = route4me.order
     url = "http://www.bk.com/restaurants/ny/new-york/106-fulton-st-17871.html"
     data = {
@@ -20,35 +22,41 @@ def main():
         }
     }
     response = order.create_order(**data)
-    print('Member ID:\t{0}'.format(response.get('member_id')))
-    print('Order ID:\t{0}'.format(response.get('order_id')))
-    print('Order Status ID:\t{0}'.format(response.get('order_status_id')))
-    print('In Route Count:\t{0}'.format(response.get('in_route_count')))
-    print('Day Added:\t{0}'.format(response.get('day_added_YYMMDD')))
-    print('Is Pending:\t{0}'.format(response.get('is_pending')))
-    print('Is Accepted:\t{0}'.format(response.get('is_accepted')))
-    print('Is Started:\t{0}'.format(response.get('is_started')))
-    print('Is Validated:\t{0}'.format(response.get('is_validated')))
-    print('Is Completed:\t{0}'.format(response.get('is_completed')))
-    print('********************************************************')
-    print('Updating')
-    print('********************************************************')
-    response.update({
-        'is_pending': False,
-        'is_accepted': True,
-        'is_started': True,
-    })
-    response = order.update_order(**response)
-    print('Member ID:\t{0}'.format(response.get('member_id')))
-    print('Order ID:\t{0}'.format(response.get('order_id')))
-    print('Order Status ID:\t{0}'.format(response.get('order_status_id')))
-    print('In Route Count:\t{0}'.format(response.get('in_route_count')))
-    print('Day Added:\t{0}'.format(response.get('day_added_YYMMDD')))
-    print('Is Pending:\t{0}'.format(response.get('is_pending')))
-    print('Is Accepted:\t{0}'.format(response.get('is_accepted')))
-    print('Is Started:\t{0}'.format(response.get('is_started')))
-    print('Is Validated:\t{0}'.format(response.get('is_validated')))
-    print('Is Completed:\t{0}'.format(response.get('is_completed')))
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
+    else:
+        print('Member ID:\t{0}'.format(response.get('member_id')))
+        print('Order ID:\t{0}'.format(response.get('order_id')))
+        print('Order Status ID:\t{0}'.format(response.get('order_status_id')))
+        print('In Route Count:\t{0}'.format(response.get('in_route_count')))
+        print('Day Added:\t{0}'.format(response.get('day_added_YYMMDD')))
+        print('Is Pending:\t{0}'.format(response.get('is_pending')))
+        print('Is Accepted:\t{0}'.format(response.get('is_accepted')))
+        print('Is Started:\t{0}'.format(response.get('is_started')))
+        print('Is Validated:\t{0}'.format(response.get('is_validated')))
+        print('Is Completed:\t{0}'.format(response.get('is_completed')))
+        print('********************************************************')
+        print('Updating')
+        print('********************************************************')
+        response.update({
+            'is_pending': False,
+            'is_accepted': True,
+            'is_started': True,
+        })
+        response = order.update_order(**response)
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
+        else:
+            print('Member ID:\t{0}'.format(response.get('member_id')))
+            print('Order ID:\t{0}'.format(response.get('order_id')))
+            print('Order Status ID:\t{0}'.format(response.get('order_status_id')))
+            print('In Route Count:\t{0}'.format(response.get('in_route_count')))
+            print('Day Added:\t{0}'.format(response.get('day_added_YYMMDD')))
+            print('Is Pending:\t{0}'.format(response.get('is_pending')))
+            print('Is Accepted:\t{0}'.format(response.get('is_accepted')))
+            print('Is Started:\t{0}'.format(response.get('is_started')))
+            print('Is Validated:\t{0}'.format(response.get('is_validated')))
+            print('Is Completed:\t{0}'.format(response.get('is_completed')))
 
 
 if __name__ == '__main__':

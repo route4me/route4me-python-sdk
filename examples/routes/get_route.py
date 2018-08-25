@@ -1,29 +1,28 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    r4m = Route4Me(KEY)
+    r4m = Route4Me(API_KEY)
     route = r4m.route
-    response = route.get_routes(limit=10, Offset=5)
-    if hasattr(response, 'errors'):
-        print('. '.join(response.errors))
+    response = route.get_routes(limit=1, offset=0)
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
     else:
-        response = route.get_route(route_id=response[0].route_id)
-        if hasattr(response, 'errors'):
-            print('. '.join(response.errors))
+        route_id = response[0]['route_id']
+        print('Route ID: {}'.format(route_id))
+        response = route.get_route(route_id=route_id)
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
         else:
             print('Optimization Problem ID: {}'.format(
-                response.optimization_problem_id
+                response['optimization_problem_id']
             ))
-            print('Route ID: {}'.format(response.route_id))
-            for i, address in enumerate(response.addresses):
-                print('Address #{}'.format(i))
-                print('\tAddress: {0}'.format(address.address))
-                print('\tRoute Destination ID: {0}'.format(
-                    address.route_destination_id
-                ))
+            for address in response['addresses']:
+                print('\t\t\tID: {0} - Address: {1}'.format(address['route_destination_id'], address['address']))
 
 
 if __name__ == '__main__':

@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[LOC, ABC]
+
 from route4me import Route4Me
 from route4me.constants import (
     ALGORITHM_TYPE,
@@ -8,11 +10,11 @@ from route4me.constants import (
     TRAVEL_MODE
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    r4m = Route4Me(KEY)
+    r4m = Route4Me(API_KEY)
     optimization = r4m.optimization
     address = r4m.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -20,7 +22,6 @@ def main():
     optimization.store_route(0)
     optimization.route_time(0)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Single Driver Round Trip')
     optimization.optimize(OPTIMIZE.DISTANCE)
@@ -80,6 +81,8 @@ def main():
 
     response = r4m.run_optimization()
 
+    route_id = response['addresses'][1]['route_id']
+
     parameters = {
         "parameters": {
             "member_id": 1,
@@ -87,11 +90,9 @@ def main():
         }
     }
 
-    route_id = response.addresses[1].route_id
+    response = r4m.route.update_route_parameters(parameters, route_id)
 
-    response = r4m.update_route_parameters(parameters, route_id)
-
-    print('Route Name: {}'.format(response.parameters.route_name))
+    print('Route Name: {}'.format(response['parameters']['route_name']))
 
 
 if __name__ == '__main__':

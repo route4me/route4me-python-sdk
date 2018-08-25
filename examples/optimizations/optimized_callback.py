@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, LOC, ABC]
+
 from route4me import Route4Me
-from route4me.api_endpoints import ROUTE_HOST
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
@@ -9,12 +10,12 @@ from route4me.constants import (
     DISTANCE_UNIT,
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
     callback_url = 'https://requestb.in/y8bybfy8'
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     optimization = route4me.optimization
     address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -22,7 +23,6 @@ def main():
     optimization.store_route(0)
     optimization.route_time(0)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Optimization Example')
     optimization.optimize(OPTIMIZE.DISTANCE)
@@ -98,12 +98,13 @@ def main():
     response = route4me.run_optimization()
     print('Optimization Problem ID: {}'.format(response['optimization_problem_id']))
     print('Optimization Link: {}'.format(response['links']['view']))
-    for address in response['addresses']:
-        print('Route {0} \tlink: {1}route_id: {2}'.format(address['address'],
-                                                          ROUTE_HOST,
-                                                          address['route_id']))
 
-    print('\nPlease open this url {0}?inspect.')
+    for i, route in enumerate(response['routes']):
+        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
+        for address in route['addresses']:
+            print('\t\t\tAddress: {0}'.format(address['address']))
+
+    print('\nPlease open this url {0}?inspect.'.format(callback_url))
     print('Verify that there is a POST request with this {1} \
            optimization_problem_id'.format(callback_url,
                                            response['optimization_problem_id']))

@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     addresses = [{'address': '455 S 4th St, Louisville, KY 40202'},
                  {'address': '1604 PARKRIDGE PKWY, Louisville, KY, 40214'},
                  {'address': '1407 MCCOY, Louisville, KY, 40215'},

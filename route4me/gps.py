@@ -20,6 +20,7 @@ class GPS(Base):
                     'lng',
                     'device_type',
                     'device_guid',
+                    'device_timestamp',
                     )
 
     def __init__(self, api):
@@ -33,7 +34,7 @@ class GPS(Base):
         :return: Response status
         :raise: ParamValueException if any required param is not set
         """
-        kwargs.update({'api_key': self.params['api_key'], })
+        kwargs.update(self.params)
         if self.check_required_params(kwargs, self.requirements):
             self.response = self.api._request_get(SET_GPS_HOST,
                                                   kwargs)

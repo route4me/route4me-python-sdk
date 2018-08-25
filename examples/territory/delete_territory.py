@@ -1,11 +1,13 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY]
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     territories = route4me.territory
     print('Creating Poly Territory')
     territory = {
@@ -24,17 +26,17 @@ def main():
         }
     }
     response = territories.add_territory(**territory)
-    if hasattr(response, 'errors'):
-        print('. '.join(response.errors))
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
     else:
-        territory_id = response.territory_id
+        territory_id = response['territory_id']
         print('Territory ID: {0} -> Created'.format(territory_id))
         response = territories.delete_territory(territory_id=territory_id)
-        if hasattr(response, 'errors'):
-            print('. '.join(response.errors))
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
         else:
             print('Territory ID: {0} -> Deleted: {1}'.format(territory_id,
-                                                             response.status))
+                                                             response['status']))
 
 
 if __name__ == '__main__':

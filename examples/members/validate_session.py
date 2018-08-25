@@ -1,19 +1,21 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     members = route4me.members
     data = {
         "session_guid": "4552222222",
-        "member_id": "787544566",
+        "member_id": "1",
         "format": "json"
     }
     response = members.validate_session(**data)
-    if hasattr(response, 'errors'):
-        print('. '.join(response.errors))
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
     else:
         print(response)
 

@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, LOC, ABC]
+
 from route4me import Route4Me
-from route4me.api_endpoints import ROUTE_HOST
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
@@ -9,11 +10,11 @@ from route4me.constants import (
     DISTANCE_UNIT,
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     optimization = route4me.optimization
     address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -21,7 +22,6 @@ def main():
     optimization.store_route(0)
     optimization.route_time(0)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Optimization Example')
     optimization.optimize(OPTIMIZE.DISTANCE)
@@ -33,8 +33,7 @@ def main():
         lat=40.7636197,
         lng=-73.9744388,
         alias='Bergdorf Goodman',
-        is_depot=1,
-        time=0
+        is_depot=1
     )
     address.add_address(
         address='717 5th Ave New York, NY 10022',
@@ -94,11 +93,11 @@ def main():
     )
 
     response = route4me.run_optimization()
-    print('Optimization Link: {}'.format(response.links.view))
-    for address in response.addresses:
-        print('Route {0} \tlink: {1}route_id: {2}'.format(address.address,
-                                                          ROUTE_HOST,
-                                                          address.route_id))
+    print('Optimization Link: {}'.format(response['links']['view']))
+    for i, route in enumerate(response['routes']):
+        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
+        for address in route['addresses']:
+            print('\t\t\tAddress: {0}'.format(address['address']))
 
 
 if __name__ == '__main__':

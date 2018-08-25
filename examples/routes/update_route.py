@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 from route4me.constants import (
     ALGORITHM_TYPE,
@@ -7,14 +9,14 @@ from route4me.constants import (
     TRAVEL_MODE,
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 # codebeat:disable[LOC, ABC]
 
 
 def main():
-    r4m = Route4Me(KEY)
+    r4m = Route4Me(API_KEY)
     optimization = r4m.optimization
     address = r4m.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -22,7 +24,6 @@ def main():
     optimization.store_route(0)
     optimization.route_time(0)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Single Driver Round Trip')
     optimization.optimize(OPTIMIZE.DISTANCE)
@@ -35,7 +36,6 @@ def main():
         lng=-73.9744388,
         alias='Bergdorf Goodman',
         is_depot=1,
-        time=0
     )
     address.add_address(
         address='717 5th Ave New York, NY 10022',
@@ -81,13 +81,13 @@ def main():
     )
 
     response = r4m.run_optimization()
-
     data = {"driver_alias": "Juan", }
-
-    route_id = response.addresses[1].route_id
-
+    route_id = response['addresses'][1]['route_id']
+    print('Route ID: {}'.format(route_id))
+    print('Driver Alias: {}'.format(data['driver_alias']))
     response = r4m.route.update_route(data, route_id)
-    print('Driver Alias: {}'.format(response.driver_alias))
+    print('Updating Route')
+    print('Driver Alias: {}'.format(response['driver_alias']))
 
 
 # codebeat:enable[LOC, ABC]

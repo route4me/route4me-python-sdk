@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[LOC, ABC]
+
 from route4me import Route4Me
 from route4me.constants import (
     ALGORITHM_TYPE,
@@ -8,11 +10,11 @@ from route4me.constants import (
     TRAVEL_MODE
 )
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     optimization = route4me.optimization
     address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -20,7 +22,6 @@ def main():
     optimization.store_route(0)
     optimization.route_time(0)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Optimization Example')
     optimization.optimize(OPTIMIZE.DISTANCE)
@@ -93,8 +94,8 @@ def main():
     )
 
     response = route4me.run_optimization()
-    optimization_id = response.addresses[0].optimization_problem_id
-    route_destination_id = response.addresses[1].route_destination_id
+    optimization_id = response['addresses'][0]['optimization_problem_id']
+    route_destination_id = response['addresses'][1]['route_destination_id']
     print('Deleting Address: {0}  from Optimization Problem: {1}'.format(
         route_destination_id,
         optimization_id
@@ -103,7 +104,9 @@ def main():
         optimization_problem_id=optimization_id,
         route_destination_id=route_destination_id
     )
-    print(response)
+
+    print('Route Destination ID: {}'.format(response['route_destination_id']))
+    print('Deleted: {}'.format(response['deleted']))
 
 
 if __name__ == '__main__':

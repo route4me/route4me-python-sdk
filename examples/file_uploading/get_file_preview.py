@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from route4me import Route4Me
 
 KEY = "11111111111111111111111111111111"

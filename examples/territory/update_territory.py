@@ -1,11 +1,13 @@
+# -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, BLOCK_NESTING, LOC, ABC]
+
 from route4me import Route4Me
 
-KEY = "11111111111111111111111111111111"
+API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    route4me = Route4Me(KEY)
+    route4me = Route4Me(API_KEY)
     territories = route4me.territory
     print('Creating Poly Zone')
     territory = {
@@ -24,18 +26,18 @@ def main():
         }
     }
     response = territories.add_territory(**territory)
-    if hasattr(response, 'errors'):
-        print('. '.join(response.errors))
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
     else:
-        territory_id = response.territory_id
+        territory_id = response['territory_id']
         print('Territory ID: {0} -> Created'.format(territory_id))
-        print('\tTerritory Name: {}'.format(response.territory_name))
-        print('\tTerritory Color: {}'.format(response.territory_color))
-        print('\tMember ID: {}'.format(response.member_id))
-        print('\tTerritory Type: {}'.format(response.territory.type))
-        if response.territory.data:
+        print('\tTerritory Name: {}'.format(response['territory_name']))
+        print('\tTerritory Color: {}'.format(response['territory_color']))
+        print('\tMember ID: {}'.format(response['member_id']))
+        print('\tTerritory Type: {}'.format(response['territory']['type']))
+        if response['territory']['data']:
             print('\tData:')
-            for data in response.territory.data:
+            for data in response['territory']['data']:
                 print('\t\t{0}'.format(data))
         territory = {
             "territory_name": "Polygon Territory Updated",
@@ -54,17 +56,17 @@ def main():
         }
         response = territories.update_territory(territory_id=territory_id,
                                                 **territory)
-        if hasattr(response, 'errors'):
-            print('. '.join(response.errors))
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
         else:
-            print('Territory ID: {}'.format(response.territory_id))
-            print('\tTerritory Name: {}'.format(response.territory_name))
-            print('\tTerritory Color: {}'.format(response.territory_color))
-            print('\tMember ID: {}'.format(response.member_id))
-            print('\tTerritory Type: {}'.format(response.territory.type))
-            if response.territory.data:
+            print('Territory ID: {}'.format(response['territory_id']))
+            print('\tTerritory Name: {}'.format(response['territory_name']))
+            print('\tTerritory Color: {}'.format(response['territory_color']))
+            print('\tMember ID: {}'.format(response['member_id']))
+            print('\tTerritory Type: {}'.format(response['territory']['type']))
+            if response['territory']['data']:
                 print('\tData:')
-                for data in response.territory.data:
+                for data in response['territory']['data']:
                     print('\t\t{0}'.format(data))
 
 

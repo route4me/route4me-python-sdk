@@ -147,7 +147,7 @@ class Address(Base):
                   'route_destination_id': route_destination_id,
                   'notes': True,
                   }
-        response = self.api.request_address(params)
+        response = self.request_address(params)
         return response.json()
 
     def update_address(self, data, route_id, route_destination_id):
