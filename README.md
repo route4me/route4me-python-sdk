@@ -102,6 +102,10 @@ The time required to integrate the SDK can be as little as 1 hour or may take se
 
    pip install -r requirements.txt
 
+## Installing SDK
+
+   pip install git+https://github.com/route4me/route4me-python-sdk.git
+
 ## Creating a Simple Route
 
     KEY = "11111111111111111111111111111111"
