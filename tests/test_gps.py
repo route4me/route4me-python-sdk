@@ -17,7 +17,7 @@ class Route4MeGPSTests(Route4MeAPITestSuite):
         :return:
         """
         route = self.route4me.route
-        response = route.get_routes(limit=10, offset=5)
+        response = route.get_routes(limit=10, offset=0)
         self.assertFalse(isinstance(response, dict) and 'errors' in response.keys())
         self.assertTrue(len(response) == 10)
         route_id = response[0].get('route_id', False)
