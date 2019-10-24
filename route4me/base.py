@@ -836,7 +836,7 @@ class Base(object):
                 self.__getattribute__(k)(v)
             except ParamValueException as e:
                 raise e
-            except AttributeError as e:
+            except AttributeError:
                 raise ParamValueException(k, 'Not supported')
         return True
 
