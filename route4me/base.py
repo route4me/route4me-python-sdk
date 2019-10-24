@@ -216,13 +216,12 @@ class Base(object):
 
     def device_timestamp(self, device_timestamp):
         """
-        Set device_timestamp param. Must be a vale date time
+        Set device_timestamp param. Must be a valid date time
         with this format:  YYYY-MM-DD HH:MM:SS
         :param device_timestamp:
         :return:
         """
-        pattern = '^(\d{4})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]) ' \
-                  '([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$'
+        pattern = r'^(\d{4})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$'
         if re.match(pattern, device_timestamp):
             self._copy_param({'device_timestamp': device_timestamp})
         else:
