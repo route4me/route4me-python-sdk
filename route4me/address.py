@@ -73,17 +73,21 @@ class Address(Base):
         geocoding_error = []
         params = {
             'format': 'json',
-            'addresses': '||'.join([x['address'] for x in addresses])
         }
-        json_data = self.get_batch_geocodes(params)
-        for address, geocoded_address in zip(addresses, json_data):
+        addresses_map = {x['address']: x for x in addresses}
+        data = {'addresses': '||'.join([x['address'] for x in addresses])}
+        json_data = self.get_batch_geocodes(params, data)
+        geocoded_addresses = []
+        for address in json_data:
             try:
-                address.update({
-                    'lat': float(geocoded_address['lat']),
-                    'lng': float(geocoded_address['lng']),
+                original_address = addresses_map[address['original']]
+                original_address.update({
+                    'lat': address['lat'],
+                    'lng': address['lng'],
                 })
+                geocoded_addresses.append(original_address)
             except (IndexError, ValueError):
-                geocoding_error.append(addresses)
+                geocoding_error.append(address)
         return geocoding_error, addresses
 
     def get_geocode(self, params):
@@ -98,16 +102,17 @@ class Address(Base):
                                                self.api._request_get)
         return self.response.json()
 
-    def get_batch_geocodes(self, params):
+    def get_batch_geocodes(self, params, data):
         """
         Get Geocodes from given addresses
         :param params:
+        :param data:
         :return: response as a object
         """
         self.response = self.api._make_request(BATCH_GEOCODER,
                                                params,
-                                               [],
-                                               self.api._request_get)
+                                               data,
+                                               self.api._request_post)
         return self.response.json()
 
     def fix_geocode(self, address):
