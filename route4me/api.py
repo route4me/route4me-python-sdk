@@ -96,6 +96,10 @@ class Route4Me(object):
         :return: JSON
         """
         params = self.optimization.get_params()
+        if not self.redirects:
+            params.update({
+                'redirect': 0,
+            })
         return self._make_request(API_HOST, params,
                                   json.dumps(self.optimization.data),
                                   request_method)

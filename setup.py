@@ -19,7 +19,7 @@ setup(
     copyright='2016-2019 © Route4Me Python Team',
     author='Route4Me Python Team (SDK)',
     description='Route4Me Python SDK',
-    version="0.0.5",
+    version="0.0.6",
     author_email="juan@route4me.com",
     license="ISC",
     keywords="rout4me, python, sdk, api",
