@@ -76,7 +76,11 @@ class Address(Base):
         }
         addresses_map = {x['address'].replace('/', ' - '): x for x in addresses}
         data = {'addresses': '||'.join([x['address'] for x in addresses])}
-        json_data = self.get_batch_geocodes(params, data)
+        try:
+            json_data = self.get_batch_geocodes(params, data)
+        except json.decoder.JSONDecodeError:
+            print('Error Geocoding some of the Addresses. Please check the addresses and try again.')
+            return addresses, []
         geocoded_addresses = []
         for address in json_data:
             try:
