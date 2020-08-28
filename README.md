@@ -3,7 +3,7 @@
 
 [![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)
 
-[
+
 [![codecov](https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/route4me/route4me-python-sdk)
 
 [PYPI]: https://pypi.python.org/pypi/route4me-python
