@@ -3,14 +3,11 @@
 [![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
 [![Build status](https://ci.appveyor.com/api/projects/status/br52a8ybj49gdroh?svg=true)](https://ci.appveyor.com/project/route4me/route4me-python-sdk)
 
-[![PyPI](https://img.shields.io/pypi/v/route4me-python.svg)][pypi]
 [![PyPI](https://img.shields.io/pypi/dm/route4me-python.svg)][pypi]
 [![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?label=GitHub)](https://github.com/route4me/route4me-python-sdk)
 
 [![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)
 
-[![Build Status](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/build.png?b=master)](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/build-status/master)
-[![Code Coverage](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/route4me/route4me-python-sdk/?branch=master)
 [![codecov](https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/route4me/route4me-python-sdk)
 
 [pypi]: https://pypi.python.org/pypi/route4me-sdk
