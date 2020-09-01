@@ -22,6 +22,7 @@ from .territory import Territory
 from .file_uploading import FileUploading
 from .members import Members
 from .vehicles import Vehicle
+from .telematics import Telematics
 from .api_endpoints import API_HOST
 
 
@@ -57,6 +58,7 @@ class Route4Me(object):
         self.gps = GPS(self)
         self.route = Route(self)
         self.rapid_address = RapidAddress(self)
+        self.telematics = Telematics(self)
         self.territory = Territory(self)
         self.headers = headers
         self.redirects = redirects
