@@ -10,6 +10,8 @@ This is the history of changes of the `route4me-python` package
 ### Removed
 
 -   Python 2 support
+-   Pypy build
+-   Set Tracking Data Test
 
 ### Added
 
@@ -27,6 +29,7 @@ This is the history of changes of the `route4me-python` package
 ### Changed
 
 -   setup.py
+-   Travis config file
 
 ## [0.0.6.1] - 2019-11-11
 
