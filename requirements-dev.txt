@@ -5,3 +5,7 @@ pytest
 pytest-cov
 flake8
 mock
+sphinx
+codecov
+coverage
+

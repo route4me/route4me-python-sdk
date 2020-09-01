@@ -14,22 +14,21 @@ API_KEY = "11111111111111111111111111111111"
 
 
 def main():
-    callback_url = 'https://requestb.in/y8bybfy8'
-    route4me = Route4Me(API_KEY)
+    route4me = Route4Me(API_KEY, redirects=False)
     optimization = route4me.optimization
     address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
     optimization.share_route(0)
     optimization.store_route(0)
     optimization.route_time(0)
+    optimization.rt(1)
     optimization.route_max_duration(86400)
     optimization.vehicle_max_distance_mi(10000)
-    optimization.route_name('Optimization Example')
-    optimization.optimize(OPTIMIZE.DISTANCE)
+    optimization.route_name('Single Driver Round Trip')
+    optimization.optimize(OPTIMIZE.TIME)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
-    optimization.optimized_callback_url(callback_url)
     address.add_address(
         address='754 5th Ave New York, NY 10019',
         lat=40.7636197,
@@ -96,17 +95,11 @@ def main():
     )
 
     response = route4me.run_optimization()
-    print('Optimization Problem ID: {}'.format(response['optimization_problem_id']))
     print('Optimization Link: {}'.format(response['links']['view']))
-
     for i, route in enumerate(response['routes']):
         print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
         for address in route['addresses']:
             print('\t\t\tAddress: {0}'.format(address['address']))
-
-    print('\nPlease open this url {0}?inspect.'.format(callback_url))
-    print('Verify that there is a POST request with this {} optimization_problem_id'.format(
-        response['optimization_problem_id']))
 
 
 if __name__ == '__main__':

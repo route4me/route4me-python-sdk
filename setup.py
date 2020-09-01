@@ -2,6 +2,16 @@
 import os
 
 from setuptools import setup
+from setuptools import find_packages
+
+
+from VERSION import PROJECT
+from VERSION import COPYRIGHT
+from VERSION import AUTHOR
+from VERSION import AUTHOR_EMAIL
+from VERSION import TITLE
+from VERSION import LICENSE
+from VERSION import RELEASE_STRING
 
 
 def read(file_name):
@@ -11,35 +21,48 @@ def read(file_name):
         return f.read()
 
 
+def rewrite_version():
+    with open('VERSION.py', 'r') as inp:
+        txt = inp.read()
+    outname = os.path.join('route4me', 'version.py')
+    with open(outname, 'w') as out:
+        out.write(txt)
+
+rewrite_version()
+
+
 setup(
 
-    name='route4me-sdk',
+    name=TITLE,
     url='https://github.com/route4me/route4me-python-sdk',
     bugtrack_url='https://github.com/route4me/route4me-python-sdk/issues',
-    copyright='2016-2019 © Route4Me Python Team',
-    author='Route4Me Python Team (SDK)',
-    description='Route4Me Python SDK',
-    version="0.0.6",
-    author_email="juan@route4me.com",
-    license="ISC",
+    copyright=COPYRIGHT,
+    author=AUTHOR,
+    description=PROJECT,
+    version=RELEASE_STRING,
+    author_email=AUTHOR_EMAIL,
+    license=LICENSE,
     keywords="rout4me, python, sdk, api",
-    packages=['route4me'],
+    packages=find_packages(
+        include=['route4me', 'route4me.*'],
+        exclude=['*_test*'],
+    ),
+    zip_safe=True,
+    platforms='any',
     long_description=read('README.md'),
+    long_description_content_type='text/markdown',
     classifiers=[
         'Environment :: Other Environment',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries :: Python Modules'],
     test_suite="tests",
+    install_requires=['six', 'requests'],
 )

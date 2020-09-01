@@ -1,5 +1,2 @@
-codecov
-coverage
 requests
 six
-flake8

@@ -21,7 +21,7 @@ class Route4MeOptimizationTests(Route4MeAPITestSuite):
         Test that API key is set
         :return:
         """
-        self.assertEquals(self.route4me.key, '11111111111111111111111111111111')
+        self.assertEqual(self.route4me.key, '11111111111111111111111111111111')
 
     def test_route_name(self):
         """
@@ -31,7 +31,7 @@ class Route4MeOptimizationTests(Route4MeAPITestSuite):
         route_name = 'Single Driver Round Trip'
         self.route4me.optimization.route_name(route_name)
         data = self.route4me.optimization.data['parameters']
-        self.assertEquals(route_name, data['route_name'])
+        self.assertEqual(route_name, data['route_name'])
 
     def test_route_name_validation(self):
         """

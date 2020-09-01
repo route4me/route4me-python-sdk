@@ -10,3 +10,5 @@ Route4Me_SDK.egg-info/
 /tmp/
 /development/
 .venv
+docs/html/*
+.tox

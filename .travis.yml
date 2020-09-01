@@ -2,7 +2,7 @@
 # Access Route4Me's logistics-as-a-service API
 # using our Python SDK
 #
-# Copyright (C) 2016-2017 Route4Me
+# Copyright (C) 2016-2020 Route4Me
 # =============================================================================
 
 language: python
@@ -13,9 +13,9 @@ cache:
   pip: true
 
 python:
-  - "2.7"
-  - "3.5"
   - "3.6"
+  - "3.7"
+  - "3.8"
   - "pypy"
 
 before_install:
@@ -45,7 +45,7 @@ deploy:
   password:
     secure: RAPnjiuSq+8//cPRDMvn1H77uJUyBGrLnpsmABSZKwnaz6e2Wu6qI464hDOYfDTZNslKygVJXZfW+EcXsvQtyv12cMPnnVU8UPJzVRlyfzSQzP4NbzxWmMP12peXY8IEfv3KYuv0w8gAHlvpgn/ERcT2dt8312YSKLqs5VMZP/8=
   on:
-    tags: true                            # published only for tags
-    python: "2.7"                         # published only for one NPM version
-    repo: route4me/route4me-python-sdk    # published only from ONE repo
+    tags: true # published only for tags
+    python: "3.7" # published only for one NPM version
+    repo: route4me/route4me-python-sdk # published only from ONE repo
     distributions: sdist bdist_wheel
