@@ -12,9 +12,9 @@ environment:
   matrix:
     # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
     - PYTHON_VERSION: 36
-      USE_FLAKE8: 0
+      USE_FLAKE8: 1
     - PYTHON_VERSION: 37
-      USE_FLAKE8: 0
+      USE_FLAKE8: 1
     - PYTHON_VERSION: 38
 
 init:
@@ -32,18 +32,13 @@ install:
   - set PATH=C:\Python%PYTHON_VERSION%;%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PATH%
   - set PYTHONPATH=%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PYTHONPATH%
 
-  - "%PIP% install --upgrade pip %PIP_FLAGS%"
-
-  # because python 2 fails on HTTPS check with "InsecurePlatformWarning":
-  # https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
-  - "%PIP% install urllib3[secure] %PIP_FLAGS%"
-
   - if "%USE_FLAKE8%"=="1" %PIP% install flake8
 
   # think about caching deps:
   # - python setup.py install ?????? %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
-  - python setup.py install
+  - '%PIP% install -r requirements.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
   - '%PIP% install -r requirements-dev.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
+  - python setup.py install
 
 before_test:
   - "%PIP% --version"

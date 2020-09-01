@@ -10,7 +10,7 @@
 
 [![codecov](https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/route4me/route4me-python-sdk)
 
-[pypi]: https://pypi.python.org/pypi/route4me-sdk
+[pypi]: https://pypi.python.org/pypi/route4me
 
 ## Installing requirements
 
