@@ -113,3 +113,35 @@ class Telematics(Base):
             return self.response.json()
         else:
             raise ParamValueException('params', 'Missing Vendor ID')
+
+    def get_connection(self, api_token, connection_token):
+        params = {
+            "api_token": api_token,
+            "connection_token": connection_token
+        }
+        self.response = self.api._request_get(TELEMATICS_CONNECTIONS_V4,
+                                              params)
+        return self.response.json()
+
+    def delete_connection(self, api_token, connection_token):
+        params = {
+            "api_token": api_token,
+            "connection_token": connection_token
+        }
+        self.response = self.api._request_delete(TELEMATICS_CONNECTIONS_V4,
+                                                 params)
+        return self.response.json()
+
+    def update_connection(self, api_token, connection_token, **kwargs):
+        params = {
+            "api_token": api_token,
+            "connection_token": connection_token
+        }
+        kwargs.update({"validate_remote_credentials": "true"})
+        if self.check_required_params(kwargs, ['vendor_id']):
+            self.response = self.api._request_put(TELEMATICS_CONNECTIONS_V4,
+                                                  params,
+                                                  data=kwargs)
+            return self.response.json()
+        else:
+            raise ParamValueException('params', 'Missing Vendor ID')

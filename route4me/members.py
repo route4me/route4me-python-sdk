@@ -109,7 +109,7 @@ class Members(Base):
 
     def get_api_key_users(self, **kwargs):
         """
-        Get users taht belong to a given api_key using GET request
+        Get users that belong to a given api_key using GET request
         :return: API response
         """
         kwargs.update({'api_key': self.params['api_key'], })
