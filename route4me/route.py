@@ -4,9 +4,10 @@
 
 import json
 
-from .api_endpoints import ROUTE_HOST, EXPORTER, \
-    ADDRESS_HOST, GET_ACTIVITIES_HOST, DUPLICATE_ROUTE, SHARE_ROUTE_HOST, \
-    MERGE_ROUTES_HOST, RESEQUENCE_ROUTE
+from .api_endpoints import ROUTE_HOST, EXPORTER
+from .api_endpoints import ADDRESS_HOST, GET_ACTIVITIES_HOST, DUPLICATE_ROUTE, SHARE_ROUTE_HOST
+from .api_endpoints import MERGE_ROUTES_HOST, RESEQUENCE_ROUTE
+from .api_endpoints import EXPORTER_V5
 from .base import Base
 from .exceptions import ParamValueException
 
@@ -325,6 +326,7 @@ class Route(Base):
         :param output_format:
         :return: response as a object
         """
+        print("DEPRECATED. Please use export_route_v5")
         data = {'route_id': route_id, 'strExportFormat': output_format}
         self.response = self.api._make_request(EXPORTER, {}, data,
                                                self.api._request_post)
@@ -333,5 +335,22 @@ class Route(Base):
     def _update_route(self, params, data):
         params.update({'api_key': self.api.key})
         return self.api._request_put(ROUTE_HOST, request_params=params, json=data)
+
+    def export_route_v5(self, route_id, output_format='csv', all_custom_fields=True, columns=None):
+        """
+        Get Route from given post data
+        :param route_id:
+        :param output_format:
+        :return: response as a object
+        """
+        params = {
+            'api_key': self.params['api_key'],
+        }
+        data = {'all_custom_fields': all_custom_fields, 'format': output_format}
+        if columns is not None:
+            data["columns"] = columns
+        self.response = self.api._make_request(EXPORTER_V5.format(route_id=route_id), params, data,
+                                               self.api._request_post)
+        return self.response.content
 
 # codebeat:enable[TOO_MANY_FUNCTIONS]

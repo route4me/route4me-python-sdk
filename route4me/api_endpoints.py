@@ -44,3 +44,5 @@ VALIDATE_SESSION = '{0}/datafeed/session/validate_session.php'.format(MAIN_HOST)
 VEHICLES_HOST = '{}/api/vehicles/view_vehicles.php'.format(MAIN_HOST)
 WEBINAR_REGISTER = '{0}/actions/webinar_register.php'.format(MAIN_HOST)
 ZIPCODE_TERRITORIES = 'https://rapid.route4me.com/street_data/territories'
+
+EXPORTER_V5 = 'https://wh.route4me.com/modules/api/v5.0/route-export/{route_id}/export'
