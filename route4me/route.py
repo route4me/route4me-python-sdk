@@ -262,6 +262,25 @@ class Route(Base):
         else:
             raise ParamValueException('params', 'Params are not complete')
 
+    def resequence_multiple_stops(self, route_id, addresses_data):
+        """
+        Resequence multiple stops using PUT
+        :return: API response
+        :raises: ParamValueException if required params are not present.
+        AttributeError if there is an error deleting a route
+        """
+        if self.check_required_params(addresses_data, ['addresses']):
+            params = {
+                'api_key': self.params['api_key'],
+                'route_id': route_id,
+            }
+            response = self.api._request_put(ROUTE_HOST,
+                                             params, json=addresses_data)
+            return response.json()
+
+        else:
+            raise ParamValueException('params', 'Params are not complete')
+
     def merge_routes(self, **kwargs):
         """
         Merge routes using POST
