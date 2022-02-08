@@ -237,7 +237,7 @@ class Base(object):
         :param: algorithm_type:
         :return:
         """
-        VALID = [1, 2, 3, 4, 5, 6, 7, 100, 101, ]
+        VALID = [1, 2, 3, 4, 5, 6, 7, 9, 100, 101, ]
         if algorithm_type in VALID:
             self._copy_data({'algorithm_type': algorithm_type})
         else:
@@ -784,6 +784,14 @@ class Base(object):
                 'R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM or'
                 'TRUCKING'
             )
+
+    def advanced_constraints(self, advanced_constraints):
+        if not isinstance(advanced_constraints, list):
+            raise ParamValueException(
+                'advanced_constraints',
+                'Must be: List of Advanced Constraints',
+            )
+        self._copy_data({"advanced_constraints": advanced_constraints})
 
     def _copy_data(self, params):
         """

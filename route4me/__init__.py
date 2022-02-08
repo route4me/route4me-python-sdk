@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .api import Route4Me
+from .advanced_constraint import AdvancedConstraint
 from .exceptions import APIException, ParamValueException
 
 from .version import PROJECT
@@ -37,5 +38,6 @@ __all__ = [
     '__release__',
     '__build__',
     '__commit__',
+    'AdvancedConstraint',
 
 ]
