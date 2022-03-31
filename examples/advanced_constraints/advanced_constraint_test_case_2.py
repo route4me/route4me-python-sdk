@@ -20,7 +20,7 @@ def main():
     optimization.share_route(0)
     optimization.store_route(0)
     optimization.route_time(8 * 3600)
-    optimization.route_name('Advanced Constraints - Tags and Different Time Windows Fleets')
+    optimization.route_name('Advanced Constraints - Some addresses without Tags')
     optimization.optimize(OPTIMIZE.TIME)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
@@ -96,7 +96,6 @@ def main():
         lng=-73.9861529,
         alias='Toga Bike Shop',
         time=60,
-        tags=["TAG003"]
     )
     address.add_address(
         address='555 W 57th St New York, NY 10019',
@@ -104,7 +103,6 @@ def main():
         lng=-73.9897716,
         alias='BMW of Manhattan',
         time=60,
-        tags=["TAG001", "TAG002"],
     )
     address.add_address(
         address='57 W 57th St New York, NY 10019',
@@ -112,7 +110,6 @@ def main():
         lng=-73.9862019,
         alias='Verizon Wireless',
         time=60,
-        tags=["TAG001", "TAG002"],
     )
 
     response = route4me.run_optimization()

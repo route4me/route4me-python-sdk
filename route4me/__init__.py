@@ -3,6 +3,8 @@
 from .api import Route4Me
 from .advanced_constraint import AdvancedConstraint
 from .exceptions import APIException, ParamValueException
+from .bundling import Bundling
+from .bundling import BUNDLING_MODE, BUNDLING_FIRST_ITEM_MODE, BUNDLING_ADDITIONAL_ITEM_MODE, BUNDLING_MERGE_MODE
 
 from .version import PROJECT
 from .version import COPYRIGHT
@@ -39,5 +41,9 @@ __all__ = [
     '__build__',
     '__commit__',
     'AdvancedConstraint',
-
+    'Bundling',
+    'BUNDLING_MODE',
+    'BUNDLING_FIRST_ITEM_MODE',
+    'BUNDLING_ADDITIONAL_ITEM_MODE',
+    'BUNDLING_MERGE_MODE'
 ]

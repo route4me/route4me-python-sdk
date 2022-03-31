@@ -793,6 +793,14 @@ class Base(object):
             )
         self._copy_data({"advanced_constraints": advanced_constraints})
 
+    def bundling(self, bundling):
+        if not isinstance(bundling, dict):
+            raise ParamValueException(
+                'bundling',
+                'Must be: Bundling Object',
+            )
+        self._copy_data({"bundling": bundling})
+
     def _copy_data(self, params):
         """
         Copy params to data

@@ -1,9 +1,7 @@
 # Route4Me Route Optimization Python SDK
 
 [![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
-[![Build status](https://ci.appveyor.com/api/projects/status/br52a8ybj49gdroh?svg=true)](https://ci.appveyor.com/project/route4me/route4me-python-sdk)
 
-[![PyPI](https://img.shields.io/pypi/dm/route4me-python.svg)][pypi]
 [![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?label=GitHub)](https://github.com/route4me/route4me-python-sdk)
 
 [![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)

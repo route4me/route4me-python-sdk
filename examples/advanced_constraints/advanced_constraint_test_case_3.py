@@ -20,7 +20,7 @@ def main():
     optimization.share_route(0)
     optimization.store_route(0)
     optimization.route_time(8 * 3600)
-    optimization.route_name('Advanced Constraints - Tags and Different Time Windows Fleets')
+    optimization.route_name("Advanced Constraints - Driver's Shift")
     optimization.optimize(OPTIMIZE.TIME)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
@@ -38,7 +38,8 @@ def main():
     advanced_constraint_2 = AdvancedConstraint()
     advanced_constraint_2.members_count = 10
     advanced_constraint_2.tags = ["TAG003"]
-    advanced_constraint_2.available_time_windows.append([45200, 95000])
+    advanced_constraint_2.available_time_windows.append([45200, 55000])
+    advanced_constraint_2.available_time_windows.append([62000, 95000])
 
     optimization.advanced_constraints([advanced_constraint_1.to_dict(), advanced_constraint_2.to_dict()])
 
@@ -96,7 +97,7 @@ def main():
         lng=-73.9861529,
         alias='Toga Bike Shop',
         time=60,
-        tags=["TAG003"]
+        tags=["TAG001", "TAG002"]
     )
     address.add_address(
         address='555 W 57th St New York, NY 10019',
@@ -104,7 +105,7 @@ def main():
         lng=-73.9897716,
         alias='BMW of Manhattan',
         time=60,
-        tags=["TAG001", "TAG002"],
+        tags=["TAG001", "TAG002"]
     )
     address.add_address(
         address='57 W 57th St New York, NY 10019',
@@ -112,7 +113,7 @@ def main():
         lng=-73.9862019,
         alias='Verizon Wireless',
         time=60,
-        tags=["TAG001", "TAG002"],
+        tags=["TAG001", "TAG002"]
     )
 
     response = route4me.run_optimization()
