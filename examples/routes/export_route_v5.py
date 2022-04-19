@@ -6,10 +6,12 @@ from route4me import Route4Me
 
 def main(api_key, route_id):
     route4me = Route4Me(api_key)
+
     route = route4me.route
     exported_route = route.export_route_v5(route_id)
 
     print(exported_route)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Route Exporter API V5')

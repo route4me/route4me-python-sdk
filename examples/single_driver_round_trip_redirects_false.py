@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, LOC, ABC]
+import argparse
 
 from route4me import Route4Me
 from route4me.constants import (
@@ -10,11 +11,9 @@ from route4me.constants import (
     DISTANCE_UNIT,
 )
 
-API_KEY = "11111111111111111111111111111111"
 
-
-def main():
-    route4me = Route4Me(API_KEY, redirects=False)
+def main(api_key):
+    route4me = Route4Me(api_key, redirects=False)
     optimization = route4me.optimization
     address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -24,7 +23,7 @@ def main():
     optimization.rt(1)
     optimization.route_max_duration(86400)
     optimization.vehicle_max_distance_mi(10000)
-    optimization.route_name('Single Driver Round Trip')
+    optimization.route_name('Single Driver Round Trip - No Redirects')
     optimization.optimize(OPTIMIZE.TIME)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
@@ -103,5 +102,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Single Driver Round Trip - No Redirects')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)
+
 # codebeat:enable[SIMILARITY, LOC, ABC]

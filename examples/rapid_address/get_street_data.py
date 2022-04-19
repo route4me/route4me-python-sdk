@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import argparse
+
 from route4me import Route4Me
 
-API_KEY = "11111111111111111111111111111111"
 
+def main(api_key):
+    route4me = Route4Me(api_key)
 
-def main():
-    route4me = Route4Me(API_KEY)
     rapid_address = route4me.rapid_address
     response = rapid_address.get_street_data()
     for street in response:
@@ -16,4 +17,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    print("DEPRECATED - Service Not Available")
+    parser = argparse.ArgumentParser(description='Get Street Data')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)

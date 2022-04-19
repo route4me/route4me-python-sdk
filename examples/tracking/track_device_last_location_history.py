@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import argparse
 import datetime as dt
 
 from route4me import Route4Me
@@ -8,11 +9,10 @@ from route4me.constants import (
     DEVICE_TYPE
 )
 
-API_KEY = "11111111111111111111111111111111"
 
+def main(api_key):
+    route4me = Route4Me(api_key)
 
-def main():
-    route4me = Route4Me(API_KEY)
     gps = route4me.gps
     route = route4me.route
     response = route.get_routes(limit=1, offset=0)
@@ -54,4 +54,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Get Tracking History')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)

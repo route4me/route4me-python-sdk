@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+# codebeat:disable[LOC, ABC]
+
+import argparse
 
 from route4me import Route4Me
+
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
@@ -9,14 +13,10 @@ from route4me.constants import (
     TRAVEL_MODE,
 )
 
-API_KEY = "11111111111111111111111111111111"
 
+def main(api_key):
+    r4m = Route4Me(api_key)
 
-# codebeat:disable[LOC, ABC]
-
-
-def main():
-    r4m = Route4Me(API_KEY)
     optimization = r4m.optimization
     address = r4m.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
@@ -122,4 +122,8 @@ def main():
 # codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Insert an address to an existing route')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)

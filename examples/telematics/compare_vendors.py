@@ -6,11 +6,13 @@ from route4me import Route4Me
 
 def main(api_key):
     route4me = Route4Me(api_key)
+
     telematics = route4me.telematics
     vendors = telematics.compare_vendors('1,58,155')
     print('ID\tNAME\tFEATURES')
     for vendor in vendors.get('vendors', []):
         telematics.pp_vendor_comparison(vendor)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Telematics Vendors Comparison')

@@ -6,9 +6,11 @@ from route4me import Route4Me
 
 def main(api_key, member_id):
     route4me = Route4Me(api_key)
+
     telematics = route4me.telematics
     token = telematics.register_member(member_id)
     telematics.pp_response(token)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Register Telematics Member')

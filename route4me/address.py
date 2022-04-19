@@ -24,7 +24,7 @@ class Address(Base):
     except for depots. One depot can be part of many routes if we have a
     VRP (multi-route) solution.
     """
-    REQUIRED_FIELDS = ['address', 'lat', 'lng', ]
+    REQUIRED_FIELDS = ['lat', 'lng', ]
 
     def __init__(self, api, addresses=[]):
         """

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 # codebeat:disable[SIMILARITY]
-from route4me import Route4Me
+import argparse
 
-API_KEY = "11111111111111111111111111111111"
+from route4me import Route4Me
 
 ACTIVITY_TYPE = (
     'delete-destination',
@@ -37,8 +37,9 @@ ACTIVITY_TYPE = (
 )
 
 
-def main():
-    route4me = Route4Me(API_KEY)
+def main(api_key):
+    route4me = Route4Me(api_key)
+
     activity_feed = route4me.activity_feed
     for activity_type in ACTIVITY_TYPE:
         response = activity_feed.get_activities_feed_by_type(
@@ -62,5 +63,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Get Activities Feed by Type')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)
+
 # codebeat:enable[SIMILARITY]

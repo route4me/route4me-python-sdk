@@ -28,8 +28,9 @@ def main(args):
         print(f'Address Sequence: {address["sequence_no"]:6} - '
               f'Route Destination ID: {address["route_destination_id"]:9} - Address: {address["address"]} ')
 
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Resequence a Route')
+    parser = argparse.ArgumentParser(description='Re-sequence Multiple Stops from a Route')
     parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
                         type=str, required=True)
     parser.add_argument('--route_id', dest='route_id', help='Route ID',

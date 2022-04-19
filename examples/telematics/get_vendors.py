@@ -6,6 +6,7 @@ from route4me import Route4Me
 
 def main(api_key):
     route4me = Route4Me(api_key)
+
     telematics = route4me.telematics
     vendors = telematics.get_vendors()
     for vendor in vendors.get('vendors', []):

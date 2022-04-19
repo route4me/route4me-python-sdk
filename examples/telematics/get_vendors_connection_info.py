@@ -6,6 +6,7 @@ from route4me import Route4Me
 
 def main(api_key, member_id):
     route4me = Route4Me(api_key)
+
     telematics = route4me.telematics
     token = telematics.register_member(member_id)
 
@@ -17,6 +18,7 @@ def main(api_key, member_id):
     vendor_connections = telematics.get_vendors_info(api_token)
     for vendor_connection in vendor_connections:
         telematics.pp_response(vendor_connection)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get Telematics Vendors Connection Information')

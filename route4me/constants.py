@@ -110,4 +110,12 @@ TRUCK_HAZARDOUS_GOODS = enum(NONE='',
 
 TERRITORY_TYPE = enum(CIRCLE='circle',
                       POLY='poly',
-                      RECT='rect', )
+                      RECT='rect')
+
+ADDRESS_STOP_TYPE = enum(DELIVERY="DELIVERY",
+                         PICKUP="PICKUP",
+                         BREAK="BREAK",
+                         MEETUP="MEETUP",
+                         SERVICE="SERVICE",
+                         VISIT="VISIT",
+                         DRIVEBY="DRIVEBY")

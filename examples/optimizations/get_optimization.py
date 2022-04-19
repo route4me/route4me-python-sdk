@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import argparse
+
 from route4me import Route4Me
 
-API_KEY = "11111111111111111111111111111111"
 
+def main(api_key):
+    route4me = Route4Me(api_key)
 
-def main():
-    route4me = Route4Me(API_KEY)
     optimization = route4me.optimization
     response = optimization.get_optimizations(limit=1, offset=0)
     if isinstance(response, dict) and 'errors' in response.keys():
@@ -29,4 +30,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Get Optimization')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)

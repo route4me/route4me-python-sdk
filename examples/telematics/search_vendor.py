@@ -6,6 +6,7 @@ from route4me import Route4Me
 
 def main(api_key):
     route4me = Route4Me(api_key)
+
     telematics = route4me.telematics
     print('****************************')
     print('Searching for Global Vendors')
@@ -32,6 +33,7 @@ def main(api_key):
     vendors = telematics.search_vendor(s='fleet', per_page=3, page=1)
     for vendor in vendors.get('vendors', []):
         telematics.pp_response(vendor)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Search Telematics Vendors')

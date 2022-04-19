@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import argparse
 
-
 from route4me import Route4Me
 
 
 def main(api_key, vendor_id):
     route4me = Route4Me(api_key)
+
     telematics = route4me.telematics
     vendor = telematics.get_vendor(vendor_id)
     telematics.pp_response(vendor.get('vendor', {}))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Get Telematics Vendors')

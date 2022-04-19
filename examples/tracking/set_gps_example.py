@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import argparse
+
 from route4me import Route4Me
+
 from route4me.constants import (
     FORMAT,
     DEVICE_TYPE
 )
 
-KEY = "11111111111111111111111111111111"
 
-
-def main():
-    route4me = Route4Me(KEY)
+def main(api_key):
+    route4me = Route4Me(api_key)
     route = route4me.route
     response = route.get_routes(limit=1, offset=0)
     if isinstance(response, dict) and 'errors' in response.keys():
@@ -32,4 +33,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Set GPS Tracking Data into a Route')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)

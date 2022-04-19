@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 import json
+
 from route4me import Route4Me
 
 
@@ -17,6 +18,7 @@ def main(api_token, connection_token, filename):
     vendor_credentials = _load_credentials(filename)
     vendor_connection = telematics.update_connection(api_token, connection_token, **vendor_credentials)
     telematics.pp_response(vendor_connection)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Update Telematics Member Connection')
