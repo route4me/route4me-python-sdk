@@ -13,7 +13,7 @@ class Territory(Base):
     Territory Management
     """
 
-    def __init__(self, api, addresses=[]):
+    def __init__(self, api):
         """
         Territory Instance
         :param api:

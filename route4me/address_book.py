@@ -13,7 +13,7 @@ class AddressBook(Base):
     """
     REQUIRED_FIELDS = ('address_1', 'cached_lat', 'cached_lng',)
 
-    def __init__(self, api, addresses=[]):
+    def __init__(self, api):
         """
         AddressBook Instance
         :param api:

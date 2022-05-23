@@ -26,14 +26,14 @@ class Address(Base):
     """
     REQUIRED_FIELDS = ['lat', 'lng', ]
 
-    def __init__(self, api, addresses=[]):
+    def __init__(self, api):
         """
         Address Instance
         :param api:
         :param addresses:
         :return:
         """
-        self.addresses = addresses
+        self.addresses = []
         Base.__init__(self, api)
 
     def get_route_id(self):
