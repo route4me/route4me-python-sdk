@@ -63,7 +63,9 @@ class Address(Base):
         :param kwargs:
         :return:
         """
-        if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
+        if self.check_required_params(kwargs, self.REQUIRED_FIELDS) or \
+                self.check_required_params(kwargs, ["order_id"]) or \
+                self.check_required_params(kwargs, ["contact_id"]):
             self.addresses.append(kwargs)
             self.api.optimization.data['addresses'] = self.addresses
         else:

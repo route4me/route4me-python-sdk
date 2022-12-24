@@ -12,7 +12,7 @@ class Order(Base):
     Orders are transactional events.
     """
 
-    REQUIRED_FIELDS = ('address_1', 'cached_lat', 'cached_lng',)
+    REQUIRED_FIELDS = ('address_1', )
 
     def __init__(self, api):
         """

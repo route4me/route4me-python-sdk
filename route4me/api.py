@@ -4,10 +4,6 @@
 import requests
 import json
 
-try:
-    from urllib import urlencode
-except ImportError:
-    from urllib.parse import urlencode
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook
@@ -76,20 +72,11 @@ class Route4Me(object):
         :raise: APIException
         """
         params['api_key'] = self.key
-        request_params = self._transform_params(params)
-        response = request_method(url, request_params, data)
+        response = request_method(url, params, data)
         if not 200 <= response.status_code < 400:
             raise APIException(response.status_code, response.text,
                                response.url)
         return response
-
-    def _transform_params(self, params):
-        """
-        Convert params dict to url params
-        :param params:
-        :return:
-        """
-        return urlencode(params)
 
     def get(self, request_method):
         """
