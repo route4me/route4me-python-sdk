@@ -23,7 +23,7 @@ from .api_endpoints import API_HOST
 
 
 HEADERS = {
-    'User-Agent': 'python-sdk',
+    'User-Agent': 'Route4Me Python SDK',
     'Accept-Encoding': 'identity, deflate, compress, gzip',
     'Accept': '*/*',
 }
