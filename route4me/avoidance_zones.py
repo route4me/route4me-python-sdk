@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, ABC]
 
-import json
 
 from .api_endpoints import AVOIDANCE
 from .base import Base
@@ -60,7 +59,7 @@ class AvoindanceZones(Base):
                                                'territory']):
             self.response = self.api._request_post(AVOIDANCE,
                                                    self.params,
-                                                   data=json.dumps(kwargs))
+                                                   json=kwargs)
             return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -91,7 +90,7 @@ class AvoindanceZones(Base):
                                                'territory']):
             self.response = self.api._request_put(AVOIDANCE,
                                                   self.params,
-                                                  data=json.dumps(kwargs))
+                                                  json=kwargs)
             return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')

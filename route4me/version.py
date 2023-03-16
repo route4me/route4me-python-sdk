@@ -6,7 +6,7 @@
 # VERSION.py - MAINTAINER's. Don't edit, if you don't know what are you doing
 # ==============================================================================
 
-VERSION = (0, 1, 4, 3)
+VERSION = (0, 1, 4, 4)
 RELEASE_SUFFIX = ''
 
 VERSION_STRING = '.'.join([str(x) for x in VERSION])

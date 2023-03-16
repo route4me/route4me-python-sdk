@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # codebeat:disable[SIMILARITY, BLOCK_NESTING]
 
-import json
-
 from .api_endpoints import TERRITORY_HOST
 from .base import Base
 from .exceptions import ParamValueException
@@ -60,7 +58,7 @@ class Territory(Base):
                                                'territory']):
             self.response = self.api._request_post(TERRITORY_HOST,
                                                    self.params,
-                                                   data=json.dumps(kwargs))
+                                                   json=kwargs)
             return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -74,7 +72,7 @@ class Territory(Base):
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['territory_id']):
             self.response = self.api._request_delete(TERRITORY_HOST,
-                                                     kwargs)
+                                                     json=kwargs)
             return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -91,7 +89,7 @@ class Territory(Base):
                                                'territory']):
             self.response = self.api._request_put(TERRITORY_HOST,
                                                   self.params,
-                                                  data=json.dumps(kwargs))
+                                                  json=kwargs)
             return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')

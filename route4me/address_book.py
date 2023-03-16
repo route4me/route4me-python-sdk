@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
-
 from .api_endpoints import ADDRESSBOOK
 from .base import Base
 from .exceptions import ParamValueException
@@ -88,7 +86,7 @@ class AddressBook(Base):
         if self.check_required_params(kwargs, ['address_ids', ]):
             self.response = self.api._request_delete(ADDRESSBOOK,
                                                      self.params,
-                                                     data=json.dumps(kwargs))
+                                                     json=kwargs)
             return self.response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')

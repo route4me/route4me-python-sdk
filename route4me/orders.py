@@ -29,10 +29,9 @@ class Order(Base):
         :return: API response content
         """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
-            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(ORDERS_HOST,
                                               self.params,
-                                              data=data)
+                                              json=kwargs)
             try:
                 return response.json()
             except ValueError:
@@ -66,7 +65,7 @@ class Order(Base):
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
             response = self.api._request_put(ORDERS_HOST,
                                              self.params,
-                                             data=json.dumps(kwargs))
+                                             json=kwargs)
             try:
                 return json.loads(response.content)
             except ValueError:
@@ -83,7 +82,7 @@ class Order(Base):
         if self.check_required_params(kwargs, ['order_ids', ]):
             response = self.api._request_delete(ORDERS_HOST,
                                                 self.params,
-                                                data=json.dumps(kwargs))
+                                                jsom=kwargs)
             try:
                 return json.loads(response.content)
             except ValueError:

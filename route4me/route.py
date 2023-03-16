@@ -2,7 +2,6 @@
 
 # codebeat:disable[TOO_MANY_FUNCTIONS]
 
-import json
 
 from .api_endpoints import ROUTE_HOST, EXPORTER
 from .api_endpoints import ADDRESS_HOST, GET_ACTIVITIES_HOST, DUPLICATE_ROUTE, SHARE_ROUTE_HOST
@@ -177,10 +176,9 @@ class Route(Base):
                                                'optimal_position']):
             params = {'api_key': self.params['api_key'],
                       'route_id': kwargs.pop('route_id')}
-            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_put(ROUTE_HOST,
                                              params,
-                                             data=data)
+                                             json=kwargs)
             return response.json()
         else:
             raise ParamValueException('params', 'Params are not complete')
@@ -254,9 +252,8 @@ class Route(Base):
                 'route_id': kwargs.pop('route_id'),
                 'route_destination_id': kwargs.pop('route_destination_id'),
             }
-            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_put(ROUTE_HOST,
-                                             params, data=data)
+                                             params, json=kwargs)
             return response.json()
 
         else:
@@ -289,10 +286,9 @@ class Route(Base):
         AttributeError if there is an error deleting a route
         """
         if self.check_required_params(kwargs, ['route_ids']):
-            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(MERGE_ROUTES_HOST,
                                               self.params,
-                                              data=data)
+                                              json=kwargs)
             return response.json()
 
         else:
@@ -330,9 +326,8 @@ class Route(Base):
                 'route_id': kwargs.pop('route_id'),
                 'route_destination_id': kwargs.pop('route_destination_id'),
             }
-            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_put(ADDRESS_HOST,
-                                             params, data=data)
+                                             params, json=kwargs)
             return response.json()
 
         else:

@@ -43,10 +43,9 @@ class Members(Base):
                                                'token',
                                                'payload',
                                                'format', ]):
-            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(USER_LICENSE_HOST,
                                               self.params,
-                                              data=data)
+                                              json=kwargs)
             try:
                 return json.loads(response.content)
             except ValueError:
@@ -63,10 +62,9 @@ class Members(Base):
         if self.check_required_params(kwargs, ['device_id',
                                                'device_type',
                                                'format', ]):
-            data = json.dumps(kwargs, ensure_ascii=False)
             response = self.api._request_post(VERIFY_DEVICE_LICENSE,
                                               self.params,
-                                              data=data)
+                                              json=kwargs)
             try:
                 return json.loads(response.content)
             except ValueError:

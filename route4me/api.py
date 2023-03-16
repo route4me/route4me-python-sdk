@@ -139,7 +139,7 @@ class Route4Me(object):
                                 headers=self.headers,
                                 verify=self.verify_ssl)
 
-    def _request_delete(self, url, request_params, data=None):
+    def _request_delete(self, url, request_params, data=None, json=None):
         """
         DELETE request
         :param url:
@@ -149,6 +149,7 @@ class Route4Me(object):
         """
         return requests.request('DELETE', url, params=request_params,
                                 data=data,
+                                json=json,
                                 headers=self.headers,
                                 verify=self.verify_ssl)
 
@@ -178,10 +179,9 @@ class Route4Me(object):
         self.optimization.optimization_problem_id(optimization_id)
         self.optimization.reoptimize(1)
         data = {'parameters': data}
-        self.response = self._make_request(API_HOST,
-                                           self.optimization.get_params(),
-                                           json.dumps(data),
-                                           self._request_put)
+        self.response = self._request_put(API_HOST,
+                                          self.optimization.get_params(),
+                                          json=data)
         try:
             return self.response.json()
         except ValueError:
@@ -217,10 +217,11 @@ class Route4Me(object):
         if self.response:
             try:
                 f = open(file_name, 'w')
-                f.write(json.dumps(self.response.content,
-                                   ensure_ascii=False,
-                                   sort_keys=True,
-                                   indent=4))
+                json.dump(self.response.content,
+                          f,
+                          ensure_ascii=False,
+                          sort_keys=True,
+                          indent=4)
                 f.close()
             except Exception:
                 raise
@@ -234,10 +235,11 @@ class Route4Me(object):
         if self.optimization.data:
             try:
                 f = open(file_name, 'w')
-                f.write(json.dumps(self.optimization.data,
-                                   ensure_ascii=False,
-                                   sort_keys=True,
-                                   indent=4))
+                json.dump(self.optimization.data,
+                          f,
+                          ensure_ascii=False,
+                          sort_keys=True,
+                          indent=4)
                 f.close()
             except Exception:
                 raise

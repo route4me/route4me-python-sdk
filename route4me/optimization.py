@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
-
 from .api_endpoints import ADDRESS_HOST, API_HOST
 from .base import Base
 from .exceptions import ParamValueException
@@ -83,10 +81,9 @@ class Optimization(Base):
         """
         self.json_data = kwargs
         if self.check_required_params(kwargs, ['optimization_problem_ids', ]):
-            data = json.dumps(self.json_data, ensure_ascii=False)
             self.response = self.api._request_delete(API_HOST,
                                                      self.params,
-                                                     data=data)
+                                                     json=kwargs)
             response = self.response.json()
             return response
         else:

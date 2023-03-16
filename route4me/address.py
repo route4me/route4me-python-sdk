@@ -166,11 +166,9 @@ class Address(Base):
                   'route_destination_id': route_destination_id
                   }
         params.update({'api_key': self.api.key})
-        data = json.dumps(data)
-        response = self.api._make_request(ADDRESS_HOST,
-                                          params,
-                                          data,
-                                          self.api._request_put)
+        response = self.api._request_put(ADDRESS_HOST,
+                                         params,
+                                         json=data)
         return response.json()
 
     def delete_address_from_route(self, route_id, route_destination_id):
