@@ -20,16 +20,9 @@ def main(api_key):
         if isinstance(response, dict) and 'errors' in response.keys():
             print('. '.join(response['errors']))
         else:
-            print('Optimization Problem ID: {}'.format(
-                response['optimization_problem_id']
+            print('Optimization Problem ID: {} - Status: {}'.format(
+                response['optimization_problem_id'], response['status']
             ))
-            print('Route ID: {}'.format(response['route_id']))
-            for i, address in enumerate(response['addresses']):
-                print('Address #{}'.format(i + 1))
-                print('\tAddress: {0}'.format(address['address']))
-                print('\tRoute Destination ID: {0}'.format(
-                    address['route_destination_id']
-                ))
 
 
 if __name__ == '__main__':

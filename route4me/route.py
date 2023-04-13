@@ -288,7 +288,7 @@ class Route(Base):
         if self.check_required_params(kwargs, ['route_ids']):
             response = self.api._request_post(MERGE_ROUTES_HOST,
                                               self.params,
-                                              json=kwargs)
+                                              data=kwargs)
             return response.json()
 
         else:
