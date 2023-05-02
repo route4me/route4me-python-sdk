@@ -2,6 +2,7 @@
 # codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
 
 MAIN_HOST = 'https://api.route4me.com'
+API_V5 = 'https://wh.route4me.com/modules/api/v5.0'
 
 ACTIVITY_FEED = '{0}/api.v4/activity_feed.php'.format(MAIN_HOST)
 ADDRESSBOOK = '{0}/api.v4/address_book.php'.format(MAIN_HOST)
@@ -46,3 +47,4 @@ WEBINAR_REGISTER = '{0}/actions/webinar_register.php'.format(MAIN_HOST)
 ZIPCODE_TERRITORIES = 'https://rapid.route4me.com/street_data/territories'
 
 EXPORTER_V5 = 'https://wh.route4me.com/modules/api/v5.0/route-export/{route_id}/export'
+ROUTE_STATUS_V5 = '{}/route-status'.format(API_V5)

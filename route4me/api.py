@@ -20,6 +20,7 @@ from .members import Members
 from .vehicles import Vehicle
 from .telematics import Telematics
 from .api_endpoints import API_HOST
+from .route_status import RouteStatus
 
 
 HEADERS = {
@@ -60,6 +61,7 @@ class Route4Me(object):
         self.redirects = redirects
         self.verify_ssl = verify_ssl
         self.proxies = proxies
+        self.route_status = RouteStatus(self)
 
     def _make_request(self, url, params, data, request_method):
         """

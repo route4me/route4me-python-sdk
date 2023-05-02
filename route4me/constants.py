@@ -119,3 +119,9 @@ ADDRESS_STOP_TYPE = enum(DELIVERY="DELIVERY",
                          SERVICE="SERVICE",
                          VISIT="VISIT",
                          DRIVEBY="DRIVEBY")
+
+ROUTE_STATUS = enum(PLANNED="planned",
+                    STARTED="started",
+                    PAUSED="paused",
+                    RESUMED="resumed",
+                    COMPLETED="completed")
