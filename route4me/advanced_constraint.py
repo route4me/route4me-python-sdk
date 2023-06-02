@@ -1,19 +1,44 @@
 # -*- coding: utf-8 -*-
 
+from .utils import clean_dict
+
 
 class AdvancedConstraint(object):
 
-    max_cargo_volume = None
-    max_capacity = None
-    members_count = 10
-    available_time_windows = []
-    tags = []
-    route4me_members_id = []
-    depot_address = []
-    location_sequence_pattern = []
-
     def __init__(self):
-        pass
+        self.max_cargo_weight = None
+        self.max_cargo_volume = None
+        self.max_capacity = None
+        self.members_count = 10
+        self.vehicles_id = []
+        self.available_time_windows = []
+        self.tags = []
+        self.route4me_members_id = []
+        self.depot_address = {
+            "alias": None,
+            "address": None,
+            "lat": None,
+            "lng": None,
+        }
+        self.location_sequence_pattern = [
+            "",
+            {
+                "alias": None,
+                "address": None,
+                "lat": None,
+                "lng": None,
+            }
+        ]
+        self.location_sequence_pattern = [
+            "",
+            {
+                "alias": None,
+                "address": None,
+                "lat": None,
+                "lng": None,
+            }
+        ]
+        self.group = None
 
     def to_dict(self):
-        return self.__dict__
+        return clean_dict(self.__dict__)
