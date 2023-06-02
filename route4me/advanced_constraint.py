@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from utils import clean_dict
-
+from .utils import clean_dict
 
 class AdvancedConstraint(object):
 
@@ -15,15 +14,10 @@ class AdvancedConstraint(object):
         self.tags = []
         self.route4me_members_id = []
         self.depot_address = {
-            "store_number": None,
-            "store_name": None,
+            "alias": None,
             "address": None,
-            "home_city": None,
-            "state": None,
-            "zip": None,
-            "phone": None,
             "lat": None,
-            "lng": None
+            "lng": None,
         }
         self.location_sequence_pattern = [
             "",
