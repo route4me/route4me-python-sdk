@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+from .exceptions import APIException
 
 from .api_endpoints import (
     MEMBER_AUTHENTICATE,
@@ -43,13 +44,17 @@ class Members(Base):
                                                'token',
                                                'payload',
                                                'format', ]):
-            response = self.api._request_post(USER_LICENSE_HOST,
-                                              self.params,
-                                              json=kwargs)
             try:
-                return json.loads(response.content)
-            except ValueError:
-                return response.content
+                response = self.api._make_request(USER_LICENSE_HOST,
+                                                  self.params,
+                                                  self.api._request_post,
+                                                  json=kwargs)
+                try:
+                    return json.loads(response.content)
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')
 
@@ -62,13 +67,17 @@ class Members(Base):
         if self.check_required_params(kwargs, ['device_id',
                                                'device_type',
                                                'format', ]):
-            response = self.api._request_post(VERIFY_DEVICE_LICENSE,
-                                              self.params,
-                                              json=kwargs)
             try:
-                return json.loads(response.content)
-            except ValueError:
-                return response.content
+                response = self.api._make_request(VERIFY_DEVICE_LICENSE,
+                                                  self.params,
+                                                  self.api._request_post,
+                                                  json=kwargs)
+                try:
+                    return json.loads(response.content)
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')
 
@@ -82,13 +91,17 @@ class Members(Base):
                                                'password', ]):
             kwargs['strEmail'] = kwargs.pop('email')
             kwargs['strPassword'] = kwargs.pop('password')
-            response = self.api._request_post(MEMBER_AUTHENTICATE,
-                                              self.params,
-                                              data=kwargs)
             try:
-                return json.loads(response.content)
-            except ValueError:
-                return response.content
+                response = self.api._make_request(MEMBER_AUTHENTICATE,
+                                                  self.params,
+                                                  self.api._request_post,
+                                                  json=kwargs)
+                try:
+                    return json.loads(response.content)
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')
 
@@ -98,12 +111,16 @@ class Members(Base):
         :return: API response
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        response = self.api._request_get(GET_USERS_HOST,
-                                         kwargs)
         try:
-            return response.json()
-        except ValueError:
-            return response.content
+            response = self.api._make_request(GET_USERS_HOST,
+                                              kwargs,
+                                              self.api._request_get)
+            try:
+                return response.json()
+            except ValueError:
+                return response.content
+        except APIException as e:
+            return e.to_dict()
 
     def get_api_key_users(self, **kwargs):
         """
@@ -111,12 +128,16 @@ class Members(Base):
         :return: API response
         """
         kwargs.update({'api_key': self.params['api_key'], })
-        response = self.api._request_get(USER_URL,
-                                         kwargs)
         try:
-            return response.json()
-        except ValueError:
-            return response.content
+            response = self.api._make_request(USER_URL,
+                                              kwargs,
+                                              self.api._request_get)
+            try:
+                return response.json()
+            except ValueError:
+                return response.content
+        except APIException as e:
+            return e.to_dict()
 
     def validate_session(self, **kwargs):
         """
@@ -127,12 +148,16 @@ class Members(Base):
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['session_guid',
                                                'member_id', ]):
-            response = self.api._request_get(VALIDATE_SESSION,
-                                             kwargs)
             try:
-                return json.loads(response.content)
-            except ValueError:
-                return response.content
+                response = self.api._make_request(VALIDATE_SESSION,
+                                                  kwargs,
+                                                  self.api._request_get)
+                try:
+                    return json.loads(response.content)
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')
 
@@ -149,13 +174,17 @@ class Members(Base):
                                                "company_name",
                                                "member_id",
                                                "webiinar_date"]):
-            response = self.api._request_post(WEBINAR_REGISTER,
-                                              self.params,
-                                              data=kwargs)
             try:
-                return json.loads(response.content)
-            except ValueError:
-                return response.content
+                response = self.api._make_request(WEBINAR_REGISTER,
+                                                  self.params,
+                                                  self.api._request_post,
+                                                  data=kwargs)
+                try:
+                    return json.loads(response.content)
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')
 
@@ -184,12 +213,16 @@ class Members(Base):
             kwargs['device_type'] = kwargs.pop('device_type')
             kwargs['strPassword_1'] = kwargs.pop('password_1')
             kwargs['strPassword_2'] = kwargs.pop('password_2')
-            response = self.api._request_post(REGISTER_ACTION,
-                                              params,
-                                              data=kwargs)
             try:
-                return response.json()
-            except ValueError:
-                return response.content
+                response = self.api._make_request(REGISTER_ACTION,
+                                                  params,
+                                                  self.api._request_post,
+                                                  data=kwargs)
+                try:
+                    return response.json()
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')

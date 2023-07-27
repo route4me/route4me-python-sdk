@@ -11,10 +11,13 @@ def main(api_key):
     rapid_address = route4me.rapid_address
     response = rapid_address.get_street_data_service(housenumber=1800,
                                                      zipcode=33166)
-    for street in response:
-        print('Street Name:\t{0}\t\tZip Code:\t{1}'.format(
-            street.get('street_name'),
-            street.get('zipcode')))
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
+    else:
+        for street in response:
+            print('Street Name:\t{0}\t\tZip Code:\t{1}'.format(
+                street.get('street_name'),
+                street.get('zipcode')))
 
 
 if __name__ == '__main__':

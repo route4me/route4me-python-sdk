@@ -2,7 +2,7 @@
 
 from .api_endpoints import SET_GPS_HOST, DEVICE_LOCATION_URL
 from .base import Base
-from .exceptions import ParamValueException
+from .exceptions import ParamValueException, APIException
 
 
 class GPS(Base):
@@ -36,9 +36,13 @@ class GPS(Base):
         """
         kwargs.update(self.params)
         if self.check_required_params(kwargs, self.requirements):
-            self.response = self.api._request_get(SET_GPS_HOST,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(SET_GPS_HOST,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -56,8 +60,12 @@ class GPS(Base):
             'member_id',
             'time_period',
         ]):
-            self.response = self.api._request_get(DEVICE_LOCATION_URL,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(DEVICE_LOCATION_URL,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')

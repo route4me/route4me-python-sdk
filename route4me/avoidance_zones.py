@@ -4,7 +4,7 @@
 
 from .api_endpoints import AVOIDANCE
 from .base import Base
-from .exceptions import ParamValueException
+from .exceptions import ParamValueException, APIException
 
 
 class AvoindanceZones(Base):
@@ -28,9 +28,13 @@ class AvoindanceZones(Base):
         :raise: ParamValueException if required params are not present.
         """
         if self.check_required_params(self.params, ['api_key', ]):
-            self.response = self.api._request_get(AVOIDANCE,
-                                                  self.params)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(AVOIDANCE,
+                                                       self.params,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -42,9 +46,13 @@ class AvoindanceZones(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['api_key', 'territory_id']):
-            self.response = self.api._request_get(AVOIDANCE,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(AVOIDANCE,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -57,10 +65,14 @@ class AvoindanceZones(Base):
         if self.check_required_params(kwargs, ['territory_name',
                                                'territory_color',
                                                'territory']):
-            self.response = self.api._request_post(AVOIDANCE,
-                                                   self.params,
-                                                   json=kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(AVOIDANCE,
+                                                       self.params,
+                                                       self.api._request_post,
+                                                       json=kwargs)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -72,9 +84,13 @@ class AvoindanceZones(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['territory_id']):
-            self.response = self.api._request_delete(AVOIDANCE,
-                                                     kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(AVOIDANCE,
+                                                       kwargs,
+                                                       self.api._request_delete)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -88,10 +104,14 @@ class AvoindanceZones(Base):
         if self.check_required_params(kwargs, ['territory_name',
                                                'territory_color',
                                                'territory']):
-            self.response = self.api._request_put(AVOIDANCE,
-                                                  self.params,
-                                                  json=kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(AVOIDANCE,
+                                                       self.params,
+                                                       self.api._request_put,
+                                                       json=kwargs)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 

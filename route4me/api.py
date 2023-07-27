@@ -63,18 +63,18 @@ class Route4Me(object):
         self.proxies = proxies
         self.route_status = RouteStatus(self)
 
-    def _make_request(self, url, params, data, request_method):
+    def _make_request(self, url, params, request_method, **kwargs):
         """
         Make request to API
         :param url:
         :param params:
-        :param data:
         :param request_method:
+        :param kwargs: additional arguments
         :return: response
         :raise: APIException
         """
         params['api_key'] = self.key
-        response = request_method(url, params, data)
+        response = request_method(url, params, **kwargs)
         if not 200 <= response.status_code < 400:
             raise APIException(response.status_code, response.text,
                                response.url)
@@ -92,8 +92,8 @@ class Route4Me(object):
                 'redirect': 0,
             })
         return self._make_request(API_HOST, params,
-                                  json.dumps(self.optimization.data),
-                                  request_method)
+                                  request_method,
+                                  data=json.dumps(self.optimization.data))
 
     def _request_post(self, url, request_params, data=None, json=None, files=None):
         """

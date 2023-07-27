@@ -83,13 +83,19 @@ def main(api_key):
     )
 
     response = r4m.run_optimization()
-    data = {"driver_alias": "Juan", }
-    route_id = response['addresses'][1]['route_id']
-    print('Route ID: {}'.format(route_id))
-    print('Driver Alias: {}'.format(data['driver_alias']))
-    response = r4m.route.update_route(data, route_id)
-    print('Updating Route')
-    print('Driver Alias: {}'.format(response['driver_alias']))
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
+    else:
+        data = {"driver_alias": "Juan", }
+        route_id = response['addresses'][1]['route_id']
+        print('Route ID: {}'.format(route_id))
+        print('Driver Alias: {}'.format(data['driver_alias']))
+        response = r4m.route.update_route(data, route_id)
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
+        else:
+            print('Updating Route')
+            print('Driver Alias: {}'.format(response['driver_alias']))
 
 
 # codebeat:enable[LOC, ABC]

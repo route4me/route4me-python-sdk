@@ -83,42 +83,49 @@ def main(api_key):
 
     response = r4m.run_optimization()
 
-    print('Current Addresses')
-    for i, address in enumerate(response['addresses']):
-        print('Number {}:'.format(i))
-        print('\taddress: {}'.format(address['address']))
-        print('\t')
-    addresses = {
-        'addresses': [
-            {
-                'address': '555 W 57th St New York, NY 10019',
-                'lat': 40.7718005,
-                'lng': -73.9897716,
-                'alias': 'BMW of Manhattan',
-                'sequence_no': 2,
-                'time': 300,
-            },
-            {
-                'address': '57 W 57th St New York, NY 10019',
-                'lat': 40.7558695,
-                'lng': -73.9862019,
-                'alias': 'Verizon Wireless',
-                'sequence_no': 5,
-                'time': 300,
-            }
-        ]
-    }
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
+    else:
+        print('Current Addresses')
+        for i, address in enumerate(response['addresses']):
+            print('Number {}:'.format(i))
+            print('\taddress: {}'.format(address['address']))
+            print('\t')
+        addresses = {
+            'addresses': [
+                {
+                    'address': '555 W 57th St New York, NY 10019',
+                    'lat': 40.7718005,
+                    'lng': -73.9897716,
+                    'alias': 'BMW of Manhattan',
+                    'sequence_no': 2,
+                    'time': 300,
+                },
+                {
+                    'address': '57 W 57th St New York, NY 10019',
+                    'lat': 40.7558695,
+                    'lng': -73.9862019,
+                    'alias': 'Verizon Wireless',
+                    'sequence_no': 5,
+                    'time': 300,
+                }
+            ]
+        }
 
-    route_id = response['addresses'][1]['route_id']
+        route_id = response['addresses'][1]['route_id']
 
-    print('Inserting addresses in Route: {}'.format(route_id))
+        print('Inserting addresses in Route: {}'.format(route_id))
 
-    response = r4m.route.insert_address_into_route(addresses, route_id)
-    print('Addresses after insert')
-    for i, address in enumerate(response['addresses']):
-        print('Number {}:'.format(i))
-        print('\taddress: {}'.format(address['address']))
-        print('\t')
+        response = r4m.route.insert_address_into_route(addresses, route_id)
+
+        if isinstance(response, dict) and 'errors' in response.keys():
+            print('. '.join(response['errors']))
+        else:
+            print('Addresses after insert')
+            for i, address in enumerate(response['addresses']):
+                print('Number {}:'.format(i))
+                print('\taddress: {}'.format(address['address']))
+                print('\t')
 
 
 # codebeat:enable[LOC, ABC]
