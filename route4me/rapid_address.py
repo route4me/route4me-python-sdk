@@ -3,7 +3,7 @@
 from .api_endpoints import RAPID_ADDRESS_SERVICE, \
     RAPID_ADDRESS, RAPID_ADDRESS_ZIP
 from .base import Base
-from .exceptions import ParamValueException
+from .exceptions import ParamValueException, APIException
 
 
 class RapidAddress(Base):
@@ -34,12 +34,15 @@ class RapidAddress(Base):
                                        kwargs.pop('limit'))
         elif 'pk' in kwargs:
             url = '{0}{1}/'.format(url, kwargs.pop('pk'))
-
-        response = self.api._request_get(url, kwargs)
-        try:
-            return response.json()
-        except ValueError:
-            return response.content
+            try:
+                response = self.api._make_request(url,
+                                                  kwargs,
+                                                  self.api._request_get)
+                return response.json()
+            except APIException as e:
+                return e.to_dict()
+            except ValueError:
+                return response.content
 
     def get_street_data_zip(self, **kwargs):
         """
@@ -55,9 +58,13 @@ class RapidAddress(Base):
                 url = '{0}{1}/{2}/'.format(url,
                                            kwargs.pop('offset'),
                                            kwargs.pop('limit'))
-            response = self.api._request_get(url, kwargs)
             try:
+                response = self.api._make_request(url,
+                                                  kwargs,
+                                                  self.api._request_get)
                 return response.json()
+            except APIException as e:
+                return e.to_dict()
             except ValueError:
                 return response.content
         else:
@@ -81,9 +88,13 @@ class RapidAddress(Base):
                 url = '{0}{1}/{2}/'.format(url,
                                            kwargs.pop('offset'),
                                            kwargs.pop('limit'))
-            response = self.api._request_get(url, kwargs)
             try:
+                response = self.api._make_request(url,
+                                                  kwargs,
+                                                  self.api._request_get)
                 return response.json()
+            except APIException as e:
+                return e.to_dict()
             except ValueError:
                 return response.content
         else:

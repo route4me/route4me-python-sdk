@@ -2,7 +2,7 @@
 
 from .api_endpoints import ADDRESS_HOST, API_HOST
 from .base import Base
-from .exceptions import ParamValueException
+from .exceptions import ParamValueException, APIException
 
 
 class Optimization(Base):
@@ -31,10 +31,13 @@ class Optimization(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['limit', 'offset', ]):
-            self.response = self.api._request_get(API_HOST,
-                                                  kwargs)
-            response = self.response.json()
-            return response
+            try:
+                response = self.api._make_request(API_HOST,
+                                                  kwargs,
+                                                  self.api._request_get)
+                return response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -47,10 +50,13 @@ class Optimization(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['optimization_problem_id', ]):
-            self.response = self.api._request_get(API_HOST,
-                                                  kwargs)
-            response = self.response.json()
-            return response
+            try:
+                response = self.api._make_request(API_HOST,
+                                                  kwargs,
+                                                  self.api._request_get)
+                return response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -65,10 +71,14 @@ class Optimization(Base):
         if self.check_required_params(kwargs, ['optimization_problem_id',
                                                'addresses',
                                                'reoptimize']):
-            self.response = self.api._request_put(API_HOST,
-                                                  kwargs)
-            response = self.response.json()
-            return response
+            try:
+                response = self.api._make_request(API_HOST,
+                                                  self.params,
+                                                  self.api._request_put,
+                                                  data=kwargs)
+                return response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -81,11 +91,14 @@ class Optimization(Base):
         """
         self.json_data = kwargs
         if self.check_required_params(kwargs, ['optimization_problem_ids', ]):
-            self.response = self.api._request_delete(API_HOST,
-                                                     self.params,
-                                                     json=kwargs)
-            response = self.response.json()
-            return response
+            try:
+                response = self.api._make_request(API_HOST,
+                                                  self.params,
+                                                  self.api._request_delete,
+                                                  json=kwargs)
+                return response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -99,9 +112,12 @@ class Optimization(Base):
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['optimization_problem_id',
                                                'route_destination_id']):
-            self.response = self.api._request_delete(ADDRESS_HOST,
-                                                     kwargs)
-            response = self.response.json()
-            return response
+            try:
+                response = self.api._make_request(ADDRESS_HOST,
+                                                  kwargs,
+                                                  self.api._request_delete)
+                return response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')

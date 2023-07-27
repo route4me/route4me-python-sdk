@@ -23,10 +23,13 @@ def main(args):
         print(f'Address Sequence: {address["sequence_no"]:6} - '
               f'Route Destination ID: {address["route_destination_id"]:9}')
     print(f"After Resequence the Route {args.route_id}")
-    response_data = route.resequence_multiple_stops(args.route_id, route_data)
-    for address in response_data['addresses']:
-        print(f'Address Sequence: {address["sequence_no"]:6} - '
-              f'Route Destination ID: {address["route_destination_id"]:9} - Address: {address["address"]} ')
+    response = route.resequence_multiple_stops(args.route_id, route_data)
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
+    else:
+        for address in response['addresses']:
+            print(f'Address Sequence: {address["sequence_no"]:6} - '
+                  f'Route Destination ID: {address["route_destination_id"]:9} - Address: {address["address"]} ')
 
 
 if __name__ == '__main__':

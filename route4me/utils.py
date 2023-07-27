@@ -2,6 +2,7 @@
 
 import json
 from collections import namedtuple
+from datetime import datetime
 
 
 def _json_object_hook(d):
@@ -53,3 +54,16 @@ def clean_dict(data):
     else:
         # For non-container type, return as is
         return data
+
+
+def is_valid_datetime(s):
+    """
+    Checks if the given datetime string is in 'YYYY-MM-DD HH:MM:SS' format.
+    :param s: The datetime string to validate.
+    :return: True if the datetime string is valid, False otherwise.
+    """
+    try:
+        datetime.strptime(str(s), '%Y-%m-%d %H:%M:%S')
+        return True
+    except ValueError:
+        return False

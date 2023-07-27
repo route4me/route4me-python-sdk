@@ -3,6 +3,7 @@
 from .api_endpoints import ACTIVITY_FEED
 from .base import Base
 from .exceptions import ParamValueException
+from .exceptions import APIException
 
 
 class ActivityFeed(Base):
@@ -27,9 +28,13 @@ class ActivityFeed(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['api_key', ]):
-            self.response = self.api._request_get(ACTIVITY_FEED,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ACTIVITY_FEED,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -41,9 +46,13 @@ class ActivityFeed(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['api_key', 'activity_type']):
-            self.response = self.api._request_get(ACTIVITY_FEED,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ACTIVITY_FEED,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -56,9 +65,13 @@ class ActivityFeed(Base):
         kwargs.update({'api_key': self.params['api_key'],
                        'activity_type': 'insert-destination', })
         if self.check_required_params(kwargs, ['api_key', 'route_id']):
-            self.response = self.api._request_get(ACTIVITY_FEED,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ACTIVITY_FEED,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -71,9 +84,13 @@ class ActivityFeed(Base):
         kwargs.update({'api_key': self.params['api_key'],
                        'activity_type': 'delete-destination', })
         if self.check_required_params(kwargs, ['api_key', 'route_id']):
-            self.response = self.api._request_get(ACTIVITY_FEED,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ACTIVITY_FEED,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -86,9 +103,13 @@ class ActivityFeed(Base):
         kwargs.update({'api_key': self.params['api_key'],
                        'activity_type': 'route-owner-changed', })
         if self.check_required_params(kwargs, ['api_key', 'route_id']):
-            self.response = self.api._request_get(ACTIVITY_FEED,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ACTIVITY_FEED,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -104,8 +125,13 @@ class ActivityFeed(Base):
         if self.check_required_params(self.json_data, ['api_key',
                                                        'activity_message',
                                                        'route_id']):
-            self.response = self.api._request_post(ACTIVITY_FEED,
-                                                   self.params, json=self.json_data)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ACTIVITY_FEED,
+                                                       self.params,
+                                                       self.api._request_post,
+                                                       json=self.json_data)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
