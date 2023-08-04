@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # codebeat:disable[TOTAL_LOC, TOO_MANY_FUNCTIONS, TOTAL_COMPLEXITY]
 
-import re
+from route4me.utils import is_valid_datetime
 
 from .constants import (
     TRAVEL_MODE,
@@ -221,8 +221,7 @@ class Base(object):
         :param device_timestamp:
         :return:
         """
-        pattern = r'^(\d{4})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$'
-        if re.match(pattern, device_timestamp):
+        if is_valid_datetime(device_timestamp):
             self._copy_param({'device_timestamp': device_timestamp})
         else:
             raise ParamValueException('device_timestamp',

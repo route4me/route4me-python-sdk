@@ -3,6 +3,7 @@
 from datetime import datetime
 from .base import Base
 from .api_endpoints import ROUTE_STATUS_V5
+from .exceptions import APIException
 
 
 class RouteStatus(Base):
@@ -27,14 +28,22 @@ class RouteStatus(Base):
         Base.__init__(self, api)
 
     def get_route_status(self, route_id):
-        response = self.api._request_get("{}/{}".format(ROUTE_STATUS_V5, route_id),
-                                         self.params)
-        return response.json()
+        try:
+            response = self.api._make_request("{}/{}".format(ROUTE_STATUS_V5, route_id),
+                                              self.params,
+                                              self.api._request_get)
+            return response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def get_route_status_history(self, route_id):
-        response = self.api._request_get("{}/{}/history".format(ROUTE_STATUS_V5, route_id),
-                                         self.params)
-        return response.json()
+        try:
+            response = self.api._make_request("{}/{}/history".format(ROUTE_STATUS_V5, route_id),
+                                              self.params,
+                                              self.api._request_get)
+            return response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def set_route_status(self, route_id, status, lat, lng, event_timestamp=None):
         if event_timestamp is None:
@@ -45,12 +54,20 @@ class RouteStatus(Base):
             'lng': lng,
             'event_timestamp': event_timestamp,
         }
-        response = self.api._request_post("{}/{}".format(ROUTE_STATUS_V5, route_id),
-                                          self.params,
-                                          json=data)
-        return response.json()
+        try:
+            response = self.api._make_request("{}/{}".format(ROUTE_STATUS_V5, route_id),
+                                              self.params,
+                                              self.api._request_post,
+                                              json=data)
+            return response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def rollback_route_status(self, route_id):
-        response = self.api._request_get("{}/{}/rollback".format(ROUTE_STATUS_V5, route_id),
-                                         self.params)
-        return response.json()
+        try:
+            response = self.api._make_request("{}/{}/rollback".format(ROUTE_STATUS_V5, route_id),
+                                              self.params,
+                                              self.api._request_get)
+            return response.json()
+        except APIException as e:
+            return e.to_dict()

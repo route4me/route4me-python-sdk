@@ -4,7 +4,7 @@ import json
 
 from .api_endpoints import ORDERS_HOST
 from .base import Base
-from .exceptions import ParamValueException
+from .exceptions import ParamValueException, APIException
 
 
 class Order(Base):
@@ -29,13 +29,17 @@ class Order(Base):
         :return: API response content
         """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
-            response = self.api._request_post(ORDERS_HOST,
-                                              self.params,
-                                              json=kwargs)
             try:
-                return response.json()
-            except ValueError:
-                return response.content
+                response = self.api._make_request(ORDERS_HOST,
+                                                  self.params,
+                                                  self.api._request_post,
+                                                  json=kwargs)
+                try:
+                    return response.json()
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')
 
@@ -47,12 +51,16 @@ class Order(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['order_id', 'api_key', ]):
-            response = self.api._request_get(ORDERS_HOST,
-                                             kwargs)
             try:
-                return json.loads(response.content)
-            except ValueError:
-                return response.content
+                response = self.api._make_request(ORDERS_HOST,
+                                                  kwargs,
+                                                  self.api._request_get)
+                try:
+                    return json.loads(response.content)
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')
 
@@ -63,13 +71,17 @@ class Order(Base):
         :return: API response content
         """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
-            response = self.api._request_put(ORDERS_HOST,
-                                             self.params,
-                                             json=kwargs)
             try:
-                return json.loads(response.content)
-            except ValueError:
-                return response.content
+                response = self.api._make_request(ORDERS_HOST,
+                                                  self.params,
+                                                  self.api._request_put,
+                                                  json=kwargs)
+                try:
+                    return json.loads(response.content)
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')
 
@@ -80,12 +92,16 @@ class Order(Base):
         :return: API response content
         """
         if self.check_required_params(kwargs, ['order_ids', ]):
-            response = self.api._request_delete(ORDERS_HOST,
-                                                self.params,
-                                                jsom=kwargs)
             try:
-                return json.loads(response.content)
-            except ValueError:
-                return response.content
+                response = self.api._make_request(ORDERS_HOST,
+                                                  self.params,
+                                                  self.api._request_delete,
+                                                  json=kwargs)
+                try:
+                    return json.loads(response.content)
+                except ValueError:
+                    return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('order', 'Missing required params')

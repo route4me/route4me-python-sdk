@@ -127,12 +127,15 @@ def main(api_key):
     response = r4m.route.move_addresses_from_route(addresses, route_id)
     print('Addresses after move')
 
-    for i, address in enumerate(response['addresses']):
-        print('Number {}:'.format(i))
-        if address['is_depot']:
-            print('\t This is a Depot')
-        print('\taddress: {}'.format(address['address']))
-        print('\t')
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
+    else:
+        for i, address in enumerate(response['addresses']):
+            print('Number {}:'.format(i))
+            if address['is_depot']:
+                print('\t This is a Depot')
+            print('\taddress: {}'.format(address['address']))
+            print('\t')
 
 
 # codebeat:enable[LOC, ABC]
