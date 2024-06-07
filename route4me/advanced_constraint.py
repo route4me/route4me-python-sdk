@@ -20,24 +20,7 @@ class AdvancedConstraint(object):
             "lat": None,
             "lng": None,
         }
-        self.location_sequence_pattern = [
-            "",
-            {
-                "alias": None,
-                "address": None,
-                "lat": None,
-                "lng": None,
-            }
-        ]
-        self.location_sequence_pattern = [
-            "",
-            {
-                "alias": None,
-                "address": None,
-                "lat": None,
-                "lng": None,
-            }
-        ]
+        self.location_sequence_pattern = []
         self.group = None
 
     def to_dict(self):

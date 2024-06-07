@@ -27,15 +27,13 @@ class Vehicle(Base):
         :raise: ParamValueException if required params are not present.
         """
         if self.check_required_params(self.params, ['api_key', ]):
-            self.response = self.api._request_get(VEHICLES_HOST,
-                                                  self.params)
             try:
-                self.json_data = self.response.json()
-                return self.json_data
-            except ValueError:
-                raise APIException(self.response.status_code,
-                                   self.response.content,
-                                   self.response.url)
+                self.response = self.api._make_request(VEHICLES_HOST,
+                                                       self.params,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 

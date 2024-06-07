@@ -5,6 +5,7 @@ import json
 import random
 import time
 import requests
+from .exceptions import APIException
 
 from .api_endpoints import (
     ADD_ROUTE_NOTES_HOST,
@@ -102,11 +103,14 @@ class Address(Base):
         :param params:
         :return: response as a object
         """
-        self.response = self.api._make_request(SINGLE_GEOCODER,
-                                               params,
-                                               [],
-                                               self.api._request_get)
-        return self.response.json()
+        try:
+            self.response = self.api._make_request(SINGLE_GEOCODER,
+                                                   params,
+                                                   self.api._request_get,
+                                                   data=[])
+            return self.response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def get_batch_geocodes(self, params, data):
         """
@@ -115,11 +119,14 @@ class Address(Base):
         :param data:
         :return: response as a object
         """
-        self.response = self.api._make_request(BATCH_GEOCODER,
-                                               params,
-                                               data,
-                                               self.api._request_post)
-        return self.response.json()
+        try:
+            self.response = self.api._make_request(BATCH_GEOCODER,
+                                                   params,
+                                                   self.api._request_post,
+                                                   data=data)
+            return self.response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def fix_geocode(self, address):
         geocoding_error = None
@@ -141,10 +148,13 @@ class Address(Base):
 
     def request_address(self, params):
         params.update({'api_key': self.api.key})
-        return self.api._make_request(ADDRESS_HOST,
-                                      params,
-                                      None,
-                                      self.api._request_get)
+        try:
+            response = self.api._make_request(ADDRESS_HOST,
+                                              params,
+                                              self.api._request_get)
+            return response
+        except APIException as e:
+            return e.to_dict()
 
     def get_address(self, route_id, route_destination_id):
         params = {'route_id': route_id,
@@ -166,21 +176,27 @@ class Address(Base):
                   'route_destination_id': route_destination_id
                   }
         params.update({'api_key': self.api.key})
-        response = self.api._request_put(ADDRESS_HOST,
-                                         params,
-                                         json=data)
-        return response.json()
+        try:
+            response = self.api._make_request(ADDRESS_HOST,
+                                              params,
+                                              self.api._request_put,
+                                              json=data)
+            return response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def delete_address_from_route(self, route_id, route_destination_id):
         params = {'route_id': route_id,
                   'route_destination_id': route_destination_id
                   }
         params.update({'api_key': self.api.key})
-        response = self.api._make_request(ADDRESS_HOST,
-                                          params,
-                                          None,
-                                          self.api._request_delete)
-        return response.json()
+        try:
+            response = self.api._make_request(ADDRESS_HOST,
+                                              params,
+                                              self.api._request_delete)
+            return response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def add_address_notes(self, note, **kwargs):
         """
@@ -192,9 +208,14 @@ class Address(Base):
             data = {'strUpdateType': kwargs.pop('activity_type'),
                     'strNoteContents': note}
             kwargs.update({'api_key': self.params['api_key'], })
-            self.response = self.api._request_post(ADD_ROUTE_NOTES_HOST,
-                                                   kwargs, data)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ADD_ROUTE_NOTES_HOST,
+                                                       kwargs,
+                                                       self.api._request_post,
+                                                       data=data)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -208,10 +229,13 @@ class Address(Base):
             kwargs.update({'format': 'csv'})
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['addresses', ]):
-            response = self.api._request_post(BATCH_GEOCODER,
-                                              kwargs)
-            return response.content
-
+            try:
+                response = self.api._make_request(BATCH_GEOCODER,
+                                                  kwargs,
+                                                  self.api._request_post)
+                return response.content
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 

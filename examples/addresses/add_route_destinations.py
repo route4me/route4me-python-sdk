@@ -112,11 +112,15 @@ def main(api_key):
     print('Inserting addresses in Route: {}'.format(route_id))
 
     response = r4m.route.insert_address_into_route(addresses, route_id)
-    print('Addresses after insert')
-    for i, address in enumerate(response['addresses']):
-        print('Number {}:'.format(i))
-        print('\taddress: {}'.format(address['address']))
-        print('\t')
+
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
+    else:
+        print('Addresses after insert')
+        for i, address in enumerate(response['addresses']):
+            print('Number {}:'.format(i))
+            print('\taddress: {}'.format(address['address']))
+            print('\t')
 
 
 # codebeat:enable[LOC, ABC]

@@ -3,7 +3,7 @@
 from .api_endpoints import TELEMATICS_VENDORS_V4, TELEMATICS_REGISTER_V4
 from .api_endpoints import TELEMATICS_CONNECTIONS_V4, TELEMATICS_VENDORS_INFO_V4
 from .base import Base
-from .exceptions import ParamValueException
+from .exceptions import ParamValueException, APIException
 
 
 class Telematics(Base):
@@ -34,9 +34,13 @@ class Telematics(Base):
 
     def get_vendors(self):
         if self.check_required_params(self.params, ['api_key', ]):
-            self.response = self.api._request_get(TELEMATICS_VENDORS_V4,
-                                                  self.params)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_VENDORS_V4,
+                                                       self.params,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing API KEY')
 
@@ -45,9 +49,13 @@ class Telematics(Base):
         self.params.update({'vendor_id': vendor_id})
 
         if self.check_required_params(self.params, ['api_key']):
-            self.response = self.api._request_get(TELEMATICS_VENDORS_V4,
-                                                  self.params)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_VENDORS_V4,
+                                                       self.params,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing API KEY')
 
@@ -56,9 +64,13 @@ class Telematics(Base):
         kwargs.update({'api_key': self.params['api_key'], })
 
         if self.check_required_params(kwargs, ['api_key']):
-            self.response = self.api._request_get(TELEMATICS_VENDORS_V4,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_VENDORS_V4,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing API KEY')
 
@@ -67,9 +79,13 @@ class Telematics(Base):
         self.params.update({'vendors': vendors_id})
 
         if self.check_required_params(self.params, ['api_key']):
-            self.response = self.api._request_get(TELEMATICS_VENDORS_V4,
-                                                  self.params)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_VENDORS_V4,
+                                                       self.params,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing API KEY')
 
@@ -77,9 +93,13 @@ class Telematics(Base):
         self.params.update({'member_id': member_id})
 
         if self.check_required_params(self.params, ['api_key']):
-            self.response = self.api._request_get(TELEMATICS_REGISTER_V4,
-                                                  self.params)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_REGISTER_V4,
+                                                       self.params,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing API KEY')
 
@@ -87,9 +107,13 @@ class Telematics(Base):
         kwargs.update({"api_token": api_token})
 
         if self.check_required_params(kwargs, ['api_token']):
-            self.response = self.api._request_get(TELEMATICS_CONNECTIONS_V4,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing API Token')
 
@@ -97,9 +121,13 @@ class Telematics(Base):
         kwargs.update({"api_token": api_token})
 
         if self.check_required_params(kwargs, ['api_token']):
-            self.response = self.api._request_get(TELEMATICS_VENDORS_INFO_V4,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_VENDORS_INFO_V4,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing API Token')
 
@@ -107,10 +135,14 @@ class Telematics(Base):
         params = {"api_token": api_token}
         kwargs.update({"validate_remote_credentials": "true"})
         if self.check_required_params(kwargs, ['vendor_id']):
-            self.response = self.api._request_post(TELEMATICS_CONNECTIONS_V4,
-                                                   params,
-                                                   data=kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4,
+                                                       params,
+                                                       self.api._request_post,
+                                                       json=kwargs)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing Vendor ID')
 
@@ -119,18 +151,26 @@ class Telematics(Base):
             "api_token": api_token,
             "connection_token": connection_token
         }
-        self.response = self.api._request_get(TELEMATICS_CONNECTIONS_V4,
-                                              params)
-        return self.response.json()
+        try:
+            self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4,
+                                                   params,
+                                                   self.api._request_get)
+            return self.response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def delete_connection(self, api_token, connection_token):
         params = {
             "api_token": api_token,
             "connection_token": connection_token
         }
-        self.response = self.api._request_delete(TELEMATICS_CONNECTIONS_V4,
-                                                 params)
-        return self.response.json()
+        try:
+            self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4,
+                                                   params,
+                                                   self.api._request_delete)
+            return self.response.json()
+        except APIException as e:
+            e.to_dict()
 
     def update_connection(self, api_token, connection_token, **kwargs):
         params = {
@@ -139,9 +179,13 @@ class Telematics(Base):
         }
         kwargs.update({"validate_remote_credentials": "true"})
         if self.check_required_params(kwargs, ['vendor_id']):
-            self.response = self.api._request_put(TELEMATICS_CONNECTIONS_V4,
-                                                  params,
-                                                  data=kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4,
+                                                       params,
+                                                       self.api._request_put,
+                                                       json=kwargs)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Missing Vendor ID')

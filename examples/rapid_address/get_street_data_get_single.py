@@ -9,9 +9,12 @@ def main(api_key):
 
     rapid_address = route4me.rapid_address
     response = rapid_address.get_street_data(pk=33)
-    print('Street Name:\t{0}\t\tZip Code:\t{1}'.format(
-        response.get('street_name'),
-        response.get('zipcode')))
+    if isinstance(response, dict) and 'errors' in response.keys():
+        print('. '.join(response['errors']))
+    else:
+        print('Street Name:\t{0}\t\tZip Code:\t{1}'.format(
+            response.get('street_name'),
+            response.get('zipcode')))
 
 
 if __name__ == '__main__':
