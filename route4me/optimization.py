@@ -3,6 +3,7 @@
 from .api_endpoints import ADDRESS_HOST, API_HOST
 from .base import Base
 from .exceptions import ParamValueException, APIException
+from .slowdowns import Slowdowns
 
 
 class Optimization(Base):
@@ -121,3 +122,13 @@ class Optimization(Base):
                 return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
+
+    def set_slowdowns(self, service_time, travel_time):
+        """
+        Set slowdowns param
+        :param service_time:
+        :param travel_time:
+        :return:
+        """
+        slowdowns = Slowdowns(service_time, travel_time)
+        self._copy_data({"slowdowns": slowdowns.to_dict()})
