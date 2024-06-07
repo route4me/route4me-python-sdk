@@ -16,15 +16,20 @@ def main(api_key):
         route_id = response[0]['route_id']
         print('Route ID: {}'.format(route_id))
         response = route.duplicate_route(route_id=route_id)
+
+        route_id = response.get('route_id')
+        opt = response.get('optimization_problem_id')
+        addresses = response.get('addresses', [])
+
         if isinstance(response, dict) and 'errors' in response.keys():
             print('. '.join(response['errors']))
-        else:
-            print('Optimization Problem ID: {}'.format(
-                response['optimization_problem_id']
-            ))
-            print('Route ID: {}'.format(response['route_id']))
-            for address in response['addresses']:
+        elif opt and route_id and addresses:
+            print('Optimization Problem ID: {}'.format(opt))
+            print('Route ID: {}'.format(route_id))
+            for address in addresses:
                 print('\t\t\tAddress: {0}'.format(address['address']))
+        else:
+            print('Duplicate Route failed...')
 
 
 if __name__ == '__main__':

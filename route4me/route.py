@@ -8,7 +8,7 @@ from .api_endpoints import ADDRESS_HOST, GET_ACTIVITIES_HOST, DUPLICATE_ROUTE, S
 from .api_endpoints import MERGE_ROUTES_HOST, RESEQUENCE_ROUTE
 from .api_endpoints import EXPORTER_V5
 from .base import Base
-from .exceptions import ParamValueException
+from .exceptions import ParamValueException, APIException
 
 
 class Route(Base):
@@ -40,10 +40,13 @@ class Route(Base):
         if self.validate_params(**kwargs):
             self.params.update(kwargs)
         if self.check_required_params(self.params, self.requirements):
-            self.response = self.api._request_get(ROUTE_HOST,
-                                                  self.params)
-            return self.response.json()
-
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       self.params,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -57,9 +60,13 @@ class Route(Base):
             self.params.update(kwargs)
         self.params.update({'device_tracking_history': 1})
         if self.check_required_params(self.params, self.requirements):
-            self.response = self.api._request_get(ROUTE_HOST,
-                                                  self.params)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       self.params,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -68,13 +75,16 @@ class Route(Base):
         Get routes using GET request
         :return: API response
         :raise: ParamValueException if required params are not present.
-
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['limit', 'offset', ]):
-            self.response = self.api._request_get(ROUTE_HOST,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -83,15 +93,18 @@ class Route(Base):
         Get routes activities using GET request
         :return: API response
         :raise: ParamValueException if required params are not present.
-
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['route_id',
                                                'limit',
                                                'offset', ]):
-            self.response = self.api._request_get(GET_ACTIVITIES_HOST,
-                                                  kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(GET_ACTIVITIES_HOST,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -103,10 +116,13 @@ class Route(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['route_id', ]):
-            self.response = self.api._request_get(DUPLICATE_ROUTE,
-                                                  kwargs)
-            print(self.response.content)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(DUPLICATE_ROUTE,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -119,9 +135,13 @@ class Route(Base):
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['route_id', ]):
             kwargs['route_id'] = ','.join(kwargs['route_id'])
-            self.response = self.api._request_delete(ROUTE_HOST,
-                                                     kwargs)
-            return self.response.json()
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       kwargs,
+                                                       self.api._request_delete)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -134,35 +154,36 @@ class Route(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['route_id', ]):
-            self.response = self.api._request_delete(ROUTE_HOST, kwargs)
-            response = self.response.json()
             try:
-                response = response.get('deleted')
-                return response
-            except AttributeError:
-                return response.errors
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       kwargs,
+                                                       self.api._request_delete)
+                response = self.response.json()
+                try:
+                    response = response.get('deleted')
+                    return response
+                except AttributeError:
+                    return response.errors
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
     def insert_address_into_route(self, addresses, route_id):
         params = {'route_id': route_id}
-        response = self._update_route(params, addresses)
-        return response.json()
+        return self._update_route(params, addresses)
 
     def move_addresses_from_route(self, addresses, route_id):
         params = {'route_id': route_id}
-        response = self._update_route(params, addresses)
-        return response.json()
+        return self._update_route(params, addresses)
 
     def update_route_parameters(self, data, route_id):
         params = {'route_id': route_id}
-        response = self._update_route(params, data)
-        return response.json()
+        return self._update_route(params, data)
 
     def update_route(self, data, route_id):
         params = {'route_id': route_id}
-        response = self._update_route(params, data)
-        return response.json()
+        return self._update_route(params, data)
 
     def insert_address_into_route_optimal_position(self, **kwargs):
         """
@@ -176,10 +197,14 @@ class Route(Base):
                                                'optimal_position']):
             params = {'api_key': self.params['api_key'],
                       'route_id': kwargs.pop('route_id')}
-            response = self.api._request_put(ROUTE_HOST,
-                                             params,
-                                             json=kwargs)
-            return response.json()
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       params,
+                                                       self.api._request_put,
+                                                       json=kwargs)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -193,10 +218,13 @@ class Route(Base):
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['route_path_output',
                                                'route_id', ]):
-            response = self.api._request_get(ROUTE_HOST,
-                                             kwargs)
-            return response.json()
-
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -209,10 +237,13 @@ class Route(Base):
         """
         kwargs.update({'api_key': self.params['api_key'], })
         if self.check_required_params(kwargs, ['directions', 'route_id', ]):
-            response = self.api._request_get(ROUTE_HOST,
-                                             kwargs)
-            return response.json()
-
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -229,11 +260,14 @@ class Route(Base):
             params = {'api_key': self.params['api_key'],
                       'route_id': kwargs.pop('route_id'),
                       'response_format': kwargs.pop('response_format')}
-            response = self.api._request_post(SHARE_ROUTE_HOST,
-                                              params,
-                                              json=kwargs)
-            return response.json()
-
+            try:
+                self.response = self.api._make_request(SHARE_ROUTE_HOST,
+                                                       params,
+                                                       self.api._request_post,
+                                                       json=kwargs)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -252,10 +286,14 @@ class Route(Base):
                 'route_id': kwargs.pop('route_id'),
                 'route_destination_id': kwargs.pop('route_destination_id'),
             }
-            response = self.api._request_put(ROUTE_HOST,
-                                             params, json=kwargs)
-            return response.json()
-
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       params,
+                                                       self.api._request_put,
+                                                       json=kwargs,)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -271,10 +309,14 @@ class Route(Base):
                 'api_key': self.params['api_key'],
                 'route_id': route_id,
             }
-            response = self.api._request_put(ROUTE_HOST,
-                                             params, json=addresses_data)
-            return response.json()
-
+            try:
+                self.response = self.api._make_request(ROUTE_HOST,
+                                                       params,
+                                                       self.api._request_put,
+                                                       json=addresses_data)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -286,11 +328,14 @@ class Route(Base):
         AttributeError if there is an error deleting a route
         """
         if self.check_required_params(kwargs, ['route_ids']):
-            response = self.api._request_post(MERGE_ROUTES_HOST,
-                                              self.params,
-                                              data=kwargs)
-            return response.json()
-
+            try:
+                self.response = self.api._make_request(MERGE_ROUTES_HOST,
+                                                       self.params,
+                                                       self.api._request_post,
+                                                       data=kwargs)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -305,10 +350,13 @@ class Route(Base):
         if self.check_required_params(kwargs, ['disable_optimization',
                                                'route_id',
                                                'optimize', ]):
-            response = self.api._request_get(RESEQUENCE_ROUTE,
-                                             kwargs)
-            return response.json()
-
+            try:
+                self.response = self.api._make_request(RESEQUENCE_ROUTE,
+                                                       kwargs,
+                                                       self.api._request_get)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -326,10 +374,14 @@ class Route(Base):
                 'route_id': kwargs.pop('route_id'),
                 'route_destination_id': kwargs.pop('route_destination_id'),
             }
-            response = self.api._request_put(ADDRESS_HOST,
-                                             params, json=kwargs)
-            return response.json()
-
+            try:
+                self.response = self.api._make_request(ADDRESS_HOST,
+                                                       params,
+                                                       self.api._request_put,
+                                                       json=kwargs)
+                return self.response.json()
+            except APIException as e:
+                return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
 
@@ -342,13 +394,22 @@ class Route(Base):
         """
         print("DEPRECATED. Please use export_route_v5")
         data = {'route_id': route_id, 'strExportFormat': output_format}
-        self.response = self.api._make_request(EXPORTER, {}, data,
-                                               self.api._request_post)
+        self.response = self.api._make_request(EXPORTER,
+                                               {},
+                                               self.api._request_post,
+                                               data=data)
         return self.response.content
 
     def _update_route(self, params, data):
         params.update({'api_key': self.api.key})
-        return self.api._request_put(ROUTE_HOST, request_params=params, json=data)
+        try:
+            response = self.api._make_request(ROUTE_HOST,
+                                              params,
+                                              self.api._request_put,
+                                              data=data)
+            return response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def export_route_v5(self, route_id, output_format='csv', all_custom_fields=True, columns=None):
         """
@@ -363,8 +424,14 @@ class Route(Base):
         data = {'all_custom_fields': all_custom_fields, 'format': output_format}
         if columns is not None:
             data["columns"] = columns
-        self.response = self.api._make_request(EXPORTER_V5.format(route_id=route_id), params, data,
-                                               self.api._request_post)
-        return self.response.content
+        try:
+            self.response = self.api._make_request(EXPORTER_V5.format(route_id=route_id),
+                                                   params,
+                                                   self.api._request_post,
+                                                   data=data)
+            return self.response.content
+        except APIException as e:
+            return e.to_dict()
+
 
 # codebeat:enable[TOO_MANY_FUNCTIONS]

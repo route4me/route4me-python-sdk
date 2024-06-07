@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 DRIVER_VERSION = 'route4me-python-driver-0.0.1'
 
 
@@ -31,6 +33,16 @@ class APIException(Exception):
         :return:
         """
         return self.response
+
+    def to_dict(self):
+        """
+        Return a dictionary representation of the exception
+        """
+        try:
+            response_dict = json.loads(self.response)
+            return {'errors': response_dict.get('errors')}
+        except json.JSONDecodeError:
+            return {'errors': 'Unexpected server response'}
 
 
 class ParamValueException(Exception):
