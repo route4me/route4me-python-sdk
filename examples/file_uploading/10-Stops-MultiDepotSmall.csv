@@ -1,0 +1,11 @@
+address,dst_lat,dst_lng,is_depot
+"128 Woodland Dr, Stafford, VA 22556",38.5017547607,-77.5400848389,1
+"2232 Aquia Dr, Stafford, VA 22554",38.4633636475,-77.3740234375,
+"94 The Vance Way, Fredericksburg, VA 22405",38.3437728882,-77.358215332,
+"3 Edgewood Circle, Fredericksburg, VA 22405",38.3560218811,-77.4427642822,
+"10700 Heatherwood Dr, Spotsylvania, VA 22553",38.2465057373,-77.5649108887,1
+"10416 Rolling Ridge Dr, Spotsylvania, VA 22553",38.2465667725,-77.5721282959,
+"10609 Mystic Pointe Dr, Fredericksburg, VA 22407",38.2513427734,-77.5993652344,
+"10705 Mystic Pointe Dr, Fredericksburg, VA 22407",38.2538375854,-77.6008377075,
+"11121 Cloverdale St, Fredericksburg, VA 22407",38.2617340088,-77.6054992676,
+"11123 Cloverdale St, Fredericksburg, VA 22407",38.2617645264,-77.6055297852,

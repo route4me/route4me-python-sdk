@@ -1,0 +1,57 @@
+# Maximum number of concurrent jobs for the project
+max_jobs: 3
+
+version: win.{build}-{branch}
+
+# Test against the latest version of this Node.js version
+environment:
+  global:
+    # don't forget: this path should match with CACHE section
+    REQUIREMENTS_SUBPATH: libs\
+    USE_FLAKE8: 1
+  matrix:
+    # PYTHON VERSION are taken from https://www.appveyor.com/docs/build-environment/#python
+    - PYTHON_VERSION: 36
+      USE_FLAKE8: 1
+    - PYTHON_VERSION: 37
+      USE_FLAKE8: 1
+    - PYTHON_VERSION: 38
+
+init:
+  - git config --global core.autocrlf true
+
+cache:
+  - libs\ -> requirements.txt # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+pull_requests:
+  do_not_increment_build_number: true
+
+# Install scripts. (runs after repo cloning)
+install:
+  - set PIP=C:\Python%PYTHON_VERSION%\Scripts\pip.exe
+  - set PATH=C:\Python%PYTHON_VERSION%;%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PATH%
+  - set PYTHONPATH=%APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%;%PYTHONPATH%
+
+  - if "%USE_FLAKE8%"=="1" %PIP% install flake8
+
+  # think about caching deps:
+  # - python setup.py install ?????? %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
+  - '%PIP% install -r requirements.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
+  - '%PIP% install -r requirements-dev.txt %PIP_FLAGS% -t %APPVEYOR_BUILD_FOLDER%\%REQUIREMENTS_SUBPATH%'
+  - python setup.py install
+
+before_test:
+  - "%PIP% --version"
+  - python --version
+  - if "%USE_FLAKE8%"=="1" python -m flake8 --version
+  - python -m pytest --version
+
+test_script:
+  # - python setup.py install
+
+  # flake8 doesn't support python2.6
+  - if "%USE_FLAKE8%"=="1" python -m flake8
+  - python -m pytest
+
+# Don't actually build.
+build: off

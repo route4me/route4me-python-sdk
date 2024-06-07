@@ -1,13 +1,23 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import argparse
 
 from route4me import Route4Me
-from route4me.constants import *
 
-KEY = "11111111111111111111111111111111"
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DISTANCE_UNIT,
+    DEVICE_TYPE,
+)
 
 
-def main():
-    route4me = Route4Me(KEY)
+# codebeat:disable[LOC, ABC]
+
+
+def main(api_key):
+    route4me = Route4Me(api_key)
+
     optimization = route4me.optimization
     address = route4me.address
     optimization.add({
@@ -80,16 +90,20 @@ def main():
         time=0
     )
 
-    print optimization.data
-
     response = route4me.run_optimization()
-    print 'Optimization Link: %s' % response.links.view
-    for address in response.addresses:
-        print 'Route %s link: %sroute_id=%s' % (address.address,
-                                                route4me.route_url(),
-                                                address.route_id)
-    route4me.export_result_to_json('single_driver_route_10_stops.json')
+    print('Optimization Link: {}'.format(response['links']['view']))
+    for i, route in enumerate(response['routes']):
+        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
+        for address in route['addresses']:
+            print('\t\t\tAddress: {0}'.format(address['address']))
+
+
+# codebeat:enable[LOC, ABC]
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Single Driver Route 10 Stops')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)

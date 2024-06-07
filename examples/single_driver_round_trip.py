@@ -1,24 +1,33 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# codebeat:disable[SIMILARITY, LOC, ABC]
+
+import argparse
 
 from route4me import Route4Me
-from route4me.constants import *
 
-KEY = "11111111111111111111111111111111"
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DEVICE_TYPE,
+    TRAVEL_MODE,
+    DISTANCE_UNIT,
+)
 
 
-def main():
-    route4me = Route4Me(KEY)
+def main(api_key):
+    route4me = Route4Me(api_key)
+
     optimization = route4me.optimization
     address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
     optimization.share_route(0)
     optimization.store_route(0)
     optimization.route_time(0)
+    optimization.rt(1)
     optimization.route_max_duration(86400)
-    optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Single Driver Round Trip')
-    optimization.optimize(OPTIMIZE.DISTANCE)
+    optimization.optimize(OPTIMIZE.TIME)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
@@ -58,7 +67,7 @@ def main():
         alias='Frank Stella Clothier',
         time=0
     )
-    address.add_address( 
+    address.add_address(
         address='324 Columbus Ave #1 New York, NY 10023',
         lat=40.7803123,
         lng=-73.9793079,
@@ -87,16 +96,19 @@ def main():
         time=0
     )
 
-    print optimization.data
-
     response = route4me.run_optimization()
-    print 'Optimization Link: %s' % response.links.view
-    for address in response.addresses:
-        print 'Route %s link: %sroute_id=%s' % (address.address,
-                                                route4me.route_url(),
-                                                address.route_id)
-    route4me.export_result_to_json('single_driver_round_trip.json')
+    print('Optimization Link: {}'.format(response['links']['view']))
+    for i, route in enumerate(response['routes']):
+        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
+        for address in route['addresses']:
+            print('\t\t\tAddress: {0}'.format(address['address']))
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Single Driver Round Trip')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)
+
+# codebeat:enable[SIMILARITY, LOC, ABC]

@@ -1,10 +1,13 @@
-from api_endpoints import DRIVER_VERSION
+# -*- coding: utf-8 -*-
+
+DRIVER_VERSION = 'route4me-python-driver-0.0.1'
 
 
 class APIException(Exception):
     """
     Handle API Exceptions
     """
+
     def __init__(self, status_code, response, url):
         self.status_code = status_code
         self.response = response
@@ -34,6 +37,7 @@ class ParamValueException(Exception):
     """
     Handle Params exceptions
     """
+
     def __init__(self, param, msg):
         self.param = param
         self.msg = msg
@@ -47,4 +51,3 @@ class ParamValueException(Exception):
         :return:
         """
         return self.msg
-

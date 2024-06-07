@@ -1,16 +1,27 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import argparse
 
 from route4me import Route4Me
-from route4me.constants import *
 
-KEY = "11111111111111111111111111111111"
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DISTANCE_UNIT,
+    DEVICE_TYPE,
+    TRAVEL_MODE,
+    OPTIMIZATION_STATE,
+)
 
 
-def main():
-    route4me = Route4Me(KEY)
-    api = route4me
-    optimization = api.optimization
-    address = api.address
+# codebeat:disable[LOC, ABC]
+
+
+def main(api_key):
+    route4me = Route4Me(api_key)
+
+    optimization = route4me.optimization
+    address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.TSP)
     optimization.share_route(0)
     optimization.store_route(0)
@@ -18,7 +29,7 @@ def main():
     optimization.route_max_duration(86400)
     optimization.vehicle_capacity(1)
     optimization.vehicle_max_distance_mi(10000)
-    optimization.route_name('Single Driver Round Trip')
+    optimization.route_name('Single Driver Round Trip - Re-Optimization')
     optimization.optimize(OPTIMIZE.DISTANCE)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
@@ -88,24 +99,29 @@ def main():
         time=0
     )
 
-    print optimization.data
-
     response = route4me.run_optimization()
-    print 'Optimization status: %s' % \
-          OPTIMIZATION_STATE.reverse_mapping.get(response.state)
-    print 'Optimization Link: %s' % response.links.view
-    for address in response.addresses:
-        print 'Route %s link: %sroute_id=%s' % (address.address,
-                                                route4me.route_url(),
-                                                address.route_id)
-    api.export_result_to_json('single_driver_round_trip_reoptimization.json')
+    print('Optimization status: {}'.format(
+        OPTIMIZATION_STATE.reverse_mapping.get(response['state'])
+    ))
+    print('Optimization Link: {}'.format(response['links']['view']))
 
-    print 'Reoptimization...'
+    for address in response['addresses']:
+        print('\t\t\tAddress: {0}'.format(address['address']))
 
-    optimization_problem_id = response.optimization_problem_id
-    response = api.reoptimization(optimization_problem_id)
-    print 'Reoptimization status: %s' % \
-          OPTIMIZATION_STATE.reverse_mapping.get(response.state)
+    print('Re-optimization...')
+    optimization_problem_id = response['optimization_problem_id']
+    response = route4me.re_optimization(optimization_problem_id)
+    print('Re-optimization status: {}'.format(
+        OPTIMIZATION_STATE.reverse_mapping.get(response['state'])
+    ))
+
+
+# codebeat:enable[LOC, ABC]
+
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Single Driver Round Trip - Re-Optimization')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)

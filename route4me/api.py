@@ -1,76 +1,67 @@
+# -*- coding: utf-8 -*-
+# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
+
 import requests
-from urllib import urlencode
-from address import Address
-from gps import SetGPS
-from route import Route
-from optimization import Optimization
-from utils import *
-from exceptions import APIException
-from api_endpoints import API_HOST, SHOW_ROUTE_HOST, BATCH_GEOCODER,\
-    EXPORTER, SINGLE_GEOCODER, ADDRESS_HOST, ROUTE_HOST
+import json
+
+from .activity_feed import ActivityFeed
+from .address import Address
+from .address_book import AddressBook
+from .avoidance_zones import AvoindanceZones
+from .exceptions import APIException
+from .gps import GPS
+from .optimization import Optimization
+from .orders import Order
+from .rapid_address import RapidAddress
+from .route import Route
+from .territory import Territory
+from .file_uploading import FileUploading
+from .members import Members
+from .vehicles import Vehicle
+from .telematics import Telematics
+from .api_endpoints import API_HOST
+from .route_status import RouteStatus
+
+
+HEADERS = {
+    'User-Agent': 'Route4Me Python SDK',
+    'Accept-Encoding': 'identity, deflate, compress, gzip',
+    'Accept': '*/*',
+}
 
 
 class Route4Me(object):
     """
     Route4Me Python SDK
     """
-    def __init__(self, key, headers={'User-Agent': 'python-sdk'}):
+
+    def __init__(self,
+                 key,
+                 headers=HEADERS,
+                 redirects=True,
+                 verify_ssl=True,
+                 proxies={}):
         self.key = key
         self.response = None
+        self.activity_feed = ActivityFeed(self)
         self.address = Address(self)
+        self.address_book = AddressBook(self)
+        self.avoidance_zones = AvoindanceZones(self)
+        self.file_uploading = FileUploading(self)
         self.optimization = Optimization(self)
-        self.setGPS = SetGPS(self)
+        self.members = Members(self)
+        self.vehicles = Vehicle(self)
+        self.order = Order(self)
+        self.gps = GPS(self)
         self.route = Route(self)
+        self.rapid_address = RapidAddress(self)
+        self.telematics = Telematics(self)
+        self.territory = Territory(self)
         self.headers = headers
-
-    def _build_base_url(self):
-        """
-        Return API HOST
-        :return:
-        """
-        return '{0}?'.format(API_HOST)
-
-    def show_route_url(self):
-        """
-        Return GENERATE ROUTE HOST
-        :return:
-        """
-        return '{0}?'.format(SHOW_ROUTE_HOST)
-
-    def route_url(self):
-        """
-        Return GENERATE ROUTE API HOST
-        :return:
-        """
-        return '{0}?'.format(ROUTE_HOST)
-
-    def address_url(self):
-        """
-        Return GENERATE ADDRESS HOST
-        :return:
-        """
-        return '{0}?'.format(ADDRESS_HOST)
-
-    def single_geocoder_url(self):
-        """
-        Return GENERATE GEOCODE HOST
-        :return:
-        """
-        return '{0}?'.format(SINGLE_GEOCODER)
-
-    def batch_geocoder_url(self):
-        """
-        Return GENERATE GEOCODE HOST
-        :return:
-        """
-        return '{0}?'.format(BATCH_GEOCODER)
-
-    def export_url(self):
-        """
-        Return GENERATE EXPORT HOST
-        :return:
-        """
-        return EXPORTER
+        self.redirects = redirects
+        self.verify_ssl = verify_ssl
+        self.proxies = proxies
+        self.route_status = RouteStatus(self)
 
     def _make_request(self, url, params, data, request_method):
         """
@@ -82,20 +73,12 @@ class Route4Me(object):
         :return: response
         :raise: APIException
         """
-        request_params = self._transform_params(params)
-        response = request_method(url, request_params, data)
+        params['api_key'] = self.key
+        response = request_method(url, params, data)
         if not 200 <= response.status_code < 400:
             raise APIException(response.status_code, response.text,
                                response.url)
         return response
-
-    def _transform_params(self, params):
-        """
-        Convert params dict to url params
-        :param params:
-        :return:
-        """
-        return urlencode(params)
 
     def get(self, request_method):
         """
@@ -104,23 +87,31 @@ class Route4Me(object):
         :return: JSON
         """
         params = self.optimization.get_params()
-        return self._make_request(self._build_base_url(), params,
+        if not self.redirects:
+            params.update({
+                'redirect': 0,
+            })
+        return self._make_request(API_HOST, params,
                                   json.dumps(self.optimization.data),
                                   request_method)
 
-    def _request_post(self, url, request_params, data=None, redirects=True):
+    def _request_post(self, url, request_params, data=None, json=None, files=None):
         """
         POST request
         :param url:
         :param request_params:
         :param data:
+        :param files:
         :return:
         """
         return requests.post(url, params=request_params,
-                             allow_redirects=redirects,
-                             data=data, headers=self.headers, verify=False)
+                             allow_redirects=self.redirects,
+                             proxies=self.proxies, files=files,
+                             data=data, headers=self.headers,
+                             json=json,
+                             verify=self.verify_ssl)
 
-    def _request_get(self, url, request_params, data=None, redirects=True):
+    def _request_get(self, url, request_params, data=None):
         """
         GET request
         :param url:
@@ -129,10 +120,13 @@ class Route4Me(object):
         :return:
         """
         return requests.get(url, params=request_params,
-                            allow_redirects=redirects,
-                            data=data, headers=self.headers, verify=False)
+                            allow_redirects=self.redirects,
+                            proxies=self.proxies,
+                            data=data,
+                            headers=self.headers,
+                            verify=self.verify_ssl)
 
-    def _request_put(self, url, request_params, data=None):
+    def _request_put(self, url, request_params, json=None, data=None):
         """
         PUT request
         :param url:
@@ -141,9 +135,13 @@ class Route4Me(object):
         :return:
         """
         return requests.request('PUT', url, params=request_params,
-                                data=data, headers=self.headers, verify=False)
+                                proxies=self.proxies,
+                                data=data,
+                                json=json,
+                                headers=self.headers,
+                                verify=self.verify_ssl)
 
-    def _request_delete(self, url, request_params, data=None):
+    def _request_delete(self, url, request_params, data=None, json=None):
         """
         DELETE request
         :param url:
@@ -152,7 +150,10 @@ class Route4Me(object):
         :return:
         """
         return requests.request('DELETE', url, params=request_params,
-                                data=data, headers=self.headers, verify=False)
+                                data=data,
+                                json=json,
+                                headers=self.headers,
+                                verify=self.verify_ssl)
 
     def run_optimization(self):
         """
@@ -160,21 +161,35 @@ class Route4Me(object):
         :return: response as an object
         """
         self.response = self.get(self._request_post)
-        return json2obj(self.response.content)
+        try:
+            response = self.response.json()
+            return response
+        except AttributeError:
+            raise
+        except ValueError:
+            raise
+        except Exception:
+            raise
 
-    def reoptimization(self, optimization_id):
+    def re_optimization(self, optimization_id, data={}):
         """
         Execute reoptimization
         :param optimization_id:
+        :param data:
         :return: response as a object
         """
-        request_method = self._request_put
         self.optimization.optimization_problem_id(optimization_id)
         self.optimization.reoptimize(1)
-        params = self.optimization.get_params()
-        self.response = self._make_request(self._build_base_url(), params, [],
-                                           request_method)
-        return json2obj(self.response.content)
+        data = {'parameters': data}
+        self.response = self._request_put(API_HOST,
+                                          self.optimization.get_params(),
+                                          json=data)
+        try:
+            return self.response.json()
+        except ValueError:
+            raise
+        except Exception:
+            raise
 
     def get_optimization(self, optimization_problem_id):
         """
@@ -191,7 +206,7 @@ class Route4Me(object):
         Parse response and set it to Route4me instance
         :return:
         """
-        response = json.loads(self.response.content)
+        response = self.response.json()
         if 'addresses' in response:
             self.address.addresses = self.response['addresses']
 
@@ -204,13 +219,14 @@ class Route4Me(object):
         if self.response:
             try:
                 f = open(file_name, 'w')
-                f.write(json.dumps(self.response.content,
-                                   ensure_ascii=False,
-                                   sort_keys=True,
-                                   indent=4))
+                json.dump(self.response.content,
+                          f,
+                          ensure_ascii=False,
+                          sort_keys=True,
+                          indent=4)
                 f.close()
-            except Exception as e:
-                print e
+            except Exception:
+                raise
 
     def export_request_to_json(self, file_name):
         """
@@ -221,63 +237,14 @@ class Route4Me(object):
         if self.optimization.data:
             try:
                 f = open(file_name, 'w')
-                f.write(json.dumps(self.optimization.data,
-                                   ensure_ascii=False,
-                                   sort_keys=True,
-                                   indent=4))
+                json.dump(self.optimization.data,
+                          f,
+                          ensure_ascii=False,
+                          sort_keys=True,
+                          indent=4)
                 f.close()
-            except Exception as e:
-                print e
+            except Exception:
+                raise
 
-    def get_batch_geocodes(self, params):
-        """
-        Get Geocodes from given addresses
-        :param params:
-        :return: response as a object
-        """
-        request_method = self._request_get
-        self.response = self._make_request(self.batch_geocoder_url(), params,
-                                           [], request_method)
-        return self.response.content
 
-    def get_geocode(self, params):
-        """
-        Get Geocodes from given address
-        :param params:
-        :return: response as a object
-        """
-        request_method = self._request_get
-        self.response = self._make_request(self.single_geocoder_url(), params,
-                                           [], request_method)
-        return self.response.content
-
-    def export_route(self, route_id, output_format='csv'):
-        """
-        Get Route from given post data
-        :param route_id:
-        :param output_format:
-        :return: response as a object
-        """
-        data = {'route_id': route_id, 'strExportFormat': output_format}
-        request_method = self._request_post
-        self.response = self._make_request(self.export_url(), {}, data,
-                                           request_method)
-        return self.response.content
-
-    def request_address(self, params):
-        params.update({'api_key': self.key})
-        return self._make_request(self.address_url(), params, None, self._request_get)
-
-    def delete_address(self, params):
-        params.update({'api_key': self.key})
-        return self._make_request(self.address_url(), params, None, self._request_delete)
-
-    def update_address(self, params, data):
-        params.update({'api_key': self.key})
-        data = json.dumps(data)
-        return self._make_request(self.address_url(), params, data, self._request_put)
-
-    def update_route(self, params, data):
-        params.update({'api_key': self.key})
-        data = json.dumps(data)
-        return self._make_request(self.route_url(), params, data, self._request_put)
+# codebeat:enable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]

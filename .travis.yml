@@ -1,7 +1,39 @@
+# =============================================================================
+# Access Route4Me's logistics-as-a-service API
+# using our Python SDK
+#
+# Copyright (C) 2016-2020 Route4Me
+# =============================================================================
+
 language: python
+
+sudo: false
+
+cache:
+  pip: true
+
 python:
-  - "2.7"
+  - "3.6"
+  - "3.7"
+  - "3.8"
+
 before_install:
-        - python setup.py install
-install: pip install -r requirements.txt
-script:  python setup.py test
+  - pip install --upgrade pip
+  - python setup.py install
+
+install:
+  - pip install -r requirements-dev.txt -q
+  - pip install -r requirements.txt -q
+
+  # we are going to send coverage only from Travis. So this package
+  # is Travis-specific. We don't list this package in `requirements-dev.txt`
+  - pip install codecov -q
+
+  - pip --version
+  - flake8 --version
+  - pytest --version
+
+script:
+  - flake8
+  - pytest
+  - codecov

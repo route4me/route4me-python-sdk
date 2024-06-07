@@ -1,29 +1,40 @@
-#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import argparse
 
 from route4me import Route4Me
-from route4me.constants import *
 
-KEY = '11111111111111111111111111111111'
+from route4me.constants import (
+    ALGORITHM_TYPE,
+    OPTIMIZE,
+    DEVICE_TYPE,
+    TRAVEL_MODE,
+    DISTANCE_UNIT,
+)
 
 
-def main():
-    route4me = Route4Me(KEY)
+# codebeat:disable[LOC, ABC]
+
+
+def main(api_key):
+    route4me = Route4Me(api_key)
+
     optimization = route4me.optimization
     address = route4me.address
     optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_MD)
     optimization.share_route(0)
     optimization.store_route(0)
-    optimization.route_time(0)
-    optimization.route_max_duration(86400)
+    optimization.route_time(7 * 3600)
+    optimization.route_max_duration(24 * 3600)
     optimization.vehicle_capacity(999)
-    optimization.parts(20)
+    optimization.parts(5)
     optimization.vehicle_max_distance_mi(10000)
     optimization.route_name('Multiple Depot, Multiple Driver')
     optimization.optimize(OPTIMIZE.DISTANCE)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
-    optimization.metric(METRIC.ROUTE4ME_METRIC_GEODESIC)
+
     address.add_address(
         address='3634 W Market St, Fairlawn, OH 44333',
         lat=41.135762259364,
@@ -37,6 +48,7 @@ def main():
         address='1218 Ruth Ave, Cuyahoga Falls, OH 44221',
         lat=41.143505096435,
         lng=-81.46549987793,
+        is_depot=1,
         time=300,
         time_window_start=29465,
         time_window_end=30529
@@ -55,7 +67,7 @@ def main():
         lng=-81.598461046815,
         time=300,
         time_window_start=33779,
-        time_window_end=33944
+        time_window_end=36944
     )
     address.add_address(
         address='3495 Purdue St, Cuyahoga Falls, OH 44221',
@@ -118,7 +130,7 @@ def main():
         lat=41.315116882324,
         lng=-81.558746337891,
         time=300,
-        time_window_start=48389,
+        time_window_start=45389,
         time_window_end=48449
     )
     address.add_address(
@@ -143,7 +155,7 @@ def main():
         lng=-81.42293548584,
         time=300,
         time_window_start=51982,
-        time_window_end=52180
+        time_window_end=53180
     )
     address.add_address(
         address='3731 Osage St, Stow, OH 44224',
@@ -175,7 +187,7 @@ def main():
         lng=-81.407363891602,
         time=300,
         time_window_start=56913,
-        time_window_end=57052
+        time_window_end=57652
     )
     address.add_address(
         address='5169 Brockton Dr, Stow, OH 44224',
@@ -199,7 +211,7 @@ def main():
         lng=-81.445808410645,
         time=300,
         time_window_start=60227,
-        time_window_end=60375
+        time_window_end=61375
     )
     address.add_address(
         address='512 Florida Pl, Barberton, OH 44203',
@@ -225,16 +237,21 @@ def main():
         time_window_start=65277,
         time_window_end=68545
     )
-    print optimization.data
 
     response = route4me.run_optimization()
-    print 'Optimization Link: %s' % response.links.view
-    for address in response.addresses:
-        print 'Route %s link: %sroute_id=%s' % (address.address,
-                                                route4me.route_url(),
-                                                address.route_id)
-    route4me.export_result_to_json('multiple_depot_multiple_driver.json')
+    print('Optimization Link: {}'.format(response['links']['view']))
+    for i, route in enumerate(response['routes']):
+        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
+        for address in route['addresses']:
+            print('\t\t\tAddress: {0}'.format(address['address']))
+
+
+# codebeat:enable[LOC, ABC]
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Multiple Depot, Multiple Driver')
+    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
+                        type=str, required=True)
+    args = parser.parse_args()
+    main(args.api_key)
