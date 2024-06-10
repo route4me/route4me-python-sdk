@@ -12,3 +12,4 @@ Route4Me_SDK.egg-info/
 .venv
 docs/html/*
 .tox
+.DS_Store
