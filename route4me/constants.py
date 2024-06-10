@@ -10,8 +10,8 @@ def enum(**enums):
     :return:
     """
     reverse = dict((value, key) for key, value in iteritems(enums))
-    enums['reverse_mapping'] = reverse
-    return type('Enum', (), enums)
+    enums["reverse_mapping"] = reverse
+    return type("Enum", (), enums)
 
 
 def auto_enum(*sequential, **named):
@@ -25,103 +25,125 @@ def auto_enum(*sequential, **named):
     return enum(**enums)
 
 
-TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1,
-                      R4M_TRAFFIC_ENGINE=3,
-                      TRUCKING=6)
+TYPE_OF_MATRIX = enum(R4M_PROPRIETARY_ROUTING=1, R4M_TRAFFIC_ENGINE=3, TRUCKING=6)
 
-DIRECTIONS_METHOD = enum(R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM=1,
-                         TRUCKING=3)
+DIRECTIONS_METHOD = enum(R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM=1, TRUCKING=3)
 
-ALGORITHM_TYPE = enum(TSP=1,
-                      VRP=2,
-                      CVRP_TW_SD=3,
-                      CVRP_TW_MD=4,
-                      TSP_TW=5,
-                      TSP_TW_CR=6,
-                      BBCVRP=7,
-                      ADVANCED_CVRP_TW=9,
-                      ALG_LEGACY_DISTRIBUTED=101,
-                      ALG_NONE=100)
+ALGORITHM_TYPE = enum(
+    TSP=1,
+    VRP=2,
+    CVRP_TW_SD=3,
+    CVRP_TW_MD=4,
+    TSP_TW=5,
+    TSP_TW_CR=6,
+    BBCVRP=7,
+    ADVANCED_CVRP_TW=9,
+    ALG_LEGACY_DISTRIBUTED=101,
+    ALG_NONE=100,
+)
 
-TRAVEL_MODE = enum(DRIVING='Driving',
-                   WALKING='Walking',
-                   TRUCKING='Trucking')
+TRAVEL_MODE = enum(DRIVING="Driving", WALKING="Walking", TRUCKING="Trucking")
 
-DISTANCE_UNIT = enum(MI='mi',
-                     KM='km')
+DISTANCE_UNIT = enum(MI="mi", KM="km")
 
-AVOID = enum(HIGHWAYS='Highways',
-             TOLLS='Tolls',
-             MINIMIZE_HIGHWAYS='minimizeHighways',
-             MINIMIZE_TOLLS='minimizeTolls',
-             NONE='')
+AVOID = enum(
+    HIGHWAYS="Highways",
+    TOLLS="Tolls",
+    MINIMIZE_HIGHWAYS="minimizeHighways",
+    MINIMIZE_TOLLS="minimizeTolls",
+    NONE="",
+)
 
-OPTIMIZE = enum(DISTANCE='Distance',
-                TIME='Time',
-                TIME_WITH_TRAFFIC='timeWithTraffic')
+OPTIMIZE = enum(DISTANCE="Distance", TIME="Time", TIME_WITH_TRAFFIC="timeWithTraffic")
 
-METRIC = auto_enum('ROUTE4ME_METRIC_EUCLIDEAN',
-                   'ROUTE4ME_METRIC_MANHATTAN',
-                   'ROUTE4ME_METRIC_GEODESIC',
-                   'ROUTE4ME_METRIC_MATRIX',
-                   'ROUTE4ME_METRIC_EXACT_2D', )
+METRIC = auto_enum(
+    "ROUTE4ME_METRIC_EUCLIDEAN",
+    "ROUTE4ME_METRIC_MANHATTAN",
+    "ROUTE4ME_METRIC_GEODESIC",
+    "ROUTE4ME_METRIC_MATRIX",
+    "ROUTE4ME_METRIC_EXACT_2D",
+)
 
-DEVICE_TYPE = enum(WEB="web",
-                   IPHONE="iphone",
-                   IPAD="ipad",
-                   ANDROID_PHONE="android_phone",
-                   ANDROID_TABLET="android_tablet")
+DEVICE_TYPE = enum(
+    WEB="web",
+    IPHONE="iphone",
+    IPAD="ipad",
+    ANDROID_PHONE="android_phone",
+    ANDROID_TABLET="android_tablet",
+)
 
-FORMAT = enum(CSV='csv',
-              SERIALIZED='serialized',
-              XML='xml',
-              JSON='json')
+FORMAT = enum(CSV="csv", SERIALIZED="serialized", XML="xml", JSON="json")
 
-OPTIMIZATION_STATE = auto_enum('OPTIMIZATION_STATE_INITIAL',
-                               'OPTIMIZATION_STATE_MATRIX_PROCESSING',
-                               'OPTIMIZATION_STATE_OPTIMIZING',
-                               'OPTIMIZATION_STATE_OPTIMIZED',
-                               'OPTIMIZATION_STATE_ERROR',
-                               'OPTIMIZATION_STATE_COMPUTING_DIRECTIONS', )
+OPTIMIZATION_STATE = auto_enum(
+    "OPTIMIZATION_STATE_INITIAL",
+    "OPTIMIZATION_STATE_MATRIX_PROCESSING",
+    "OPTIMIZATION_STATE_OPTIMIZING",
+    "OPTIMIZATION_STATE_OPTIMIZED",
+    "OPTIMIZATION_STATE_ERROR",
+    "OPTIMIZATION_STATE_COMPUTING_DIRECTIONS",
+)
 
-ROUTE_PATH_OUTPUT = enum(NONE='None',
-                         POINTS='Points')
+ROUTE_PATH_OUTPUT = enum(NONE="None", POINTS="Points")
 
-UTURN = auto_enum('UTURN_DEPART_SHORTEST',
-                  'UTURN_DEPART_TO_RIGHT')
+UTURN = auto_enum("UTURN_DEPART_SHORTEST", "UTURN_DEPART_TO_RIGHT")
 
-LEFT_TURN = auto_enum('LEFTTURN_ALLOW',
-                      'LEFTTURN_FORBID',
-                      'LEFTTURN_MULTIAPPROACH')
+LEFT_TURN = auto_enum("LEFTTURN_ALLOW", "LEFTTURN_FORBID", "LEFTTURN_MULTIAPPROACH")
 
-TRUCK_HAZARDOUS_GOODS = enum(NONE='',
-                             EXPLOSIVE='explosive',
-                             GAS='gas',
-                             FLAMMABLE='flammable',
-                             COMBUSTIBLE='combustible',
-                             ORGANIC='organic',
-                             POISON='poison',
-                             RADIOACTIVE='radioActive',
-                             CORROSIVE='corrosive',
-                             POISONOUSINHALATION='poisonousInhalation',
-                             HARMFULTOWATER='harmfulToWater',
-                             OTHER='other',
-                             ALLHAZARDOUSGOODS='allHazardousGoods')
+TRUCK_HAZARDOUS_GOODS = enum(
+    NONE="",
+    EXPLOSIVE="explosive",
+    GAS="gas",
+    FLAMMABLE="flammable",
+    COMBUSTIBLE="combustible",
+    ORGANIC="organic",
+    POISON="poison",
+    RADIOACTIVE="radioActive",
+    CORROSIVE="corrosive",
+    POISONOUSINHALATION="poisonousInhalation",
+    HARMFULTOWATER="harmfulToWater",
+    OTHER="other",
+    ALLHAZARDOUSGOODS="allHazardousGoods",
+)
 
-TERRITORY_TYPE = enum(CIRCLE='circle',
-                      POLY='poly',
-                      RECT='rect')
+TERRITORY_TYPE = enum(CIRCLE="circle", POLY="poly", RECT="rect")
 
-ADDRESS_STOP_TYPE = enum(DELIVERY="DELIVERY",
-                         PICKUP="PICKUP",
-                         BREAK="BREAK",
-                         MEETUP="MEETUP",
-                         SERVICE="SERVICE",
-                         VISIT="VISIT",
-                         DRIVEBY="DRIVEBY")
+ADDRESS_STOP_TYPE = enum(
+    DELIVERY="DELIVERY",
+    PICKUP="PICKUP",
+    BREAK="BREAK",
+    MEETUP="MEETUP",
+    SERVICE="SERVICE",
+    VISIT="VISIT",
+    DRIVEBY="DRIVEBY",
+)
 
-ROUTE_STATUS = enum(PLANNED="planned",
-                    STARTED="started",
-                    PAUSED="paused",
-                    RESUMED="resumed",
-                    COMPLETED="completed")
+ROUTE_STATUS = enum(
+    PLANNED="planned",
+    STARTED="started",
+    PAUSED="paused",
+    RESUMED="resumed",
+    COMPLETED="completed",
+)
+
+
+ORDER_STATUS = enum(
+    NEW=0,
+    POSSESSION_SCAN=1,
+    SORTED=2,
+    LOADED=3,
+    MISSING=4,
+    DAMAGED=5,
+    MANUALLY_LOADED=6,
+    ROUTED=7,
+    UNROUTED=8,
+    SORTED_BY_ROUTE=9,
+    ROUTE_STARTED=10,
+    FAILED=11,
+    SKIPPED=12,
+    DONE=13,
+    CANCELED=14,
+    SCHEDULED=15,
+    PICK_UP_SCAN=16,
+    UNABLE_TO_DELIVER=17,
+    HOLD_FOR_PICKUP=18,
+)

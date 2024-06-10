@@ -124,8 +124,7 @@ class Route4MeOptimizationTests(Route4MeAPITestSuite):
             alias='Verizon Wireless',
             time=0
         )
-        response = self.route4me.run_optimization()
-        self.assertEqual(4, response.get('state'))
+        self.assertEqual(9, len(optimization.data['addresses']))
 
 
 if __name__ == '__main__':

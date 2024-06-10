@@ -21,12 +21,14 @@ from .vehicles import Vehicle
 from .telematics import Telematics
 from .api_endpoints import API_HOST
 from .route_status import RouteStatus
+from .orders_group import OrdersGroup
+from .optimization_profiles import OptimizationProfiles
 
 
 HEADERS = {
-    'User-Agent': 'Route4Me Python SDK',
-    'Accept-Encoding': 'identity, deflate, compress, gzip',
-    'Accept': '*/*',
+    "User-Agent": "Route4Me Python SDK",
+    "Accept-Encoding": "identity, deflate, compress, gzip",
+    "Accept": "*/*",
 }
 
 
@@ -35,12 +37,9 @@ class Route4Me(object):
     Route4Me Python SDK
     """
 
-    def __init__(self,
-                 key,
-                 headers=HEADERS,
-                 redirects=True,
-                 verify_ssl=True,
-                 proxies={}):
+    def __init__(
+        self, key, headers=HEADERS, redirects=True, verify_ssl=True, proxies={}
+    ):
         self.key = key
         self.response = None
         self.activity_feed = ActivityFeed(self)
@@ -62,22 +61,23 @@ class Route4Me(object):
         self.verify_ssl = verify_ssl
         self.proxies = proxies
         self.route_status = RouteStatus(self)
+        self.orders_group = OrdersGroup(self)
+        self.optimization_profiles = OptimizationProfiles(self)
 
-    def _make_request(self, url, params, data, request_method):
+    def _make_request(self, url, params, request_method, **kwargs):
         """
         Make request to API
         :param url:
         :param params:
-        :param data:
         :param request_method:
+        :param kwargs: additional arguments
         :return: response
         :raise: APIException
         """
-        params['api_key'] = self.key
-        response = request_method(url, params, data)
+        params["api_key"] = self.key
+        response = request_method(url, params, **kwargs)
         if not 200 <= response.status_code < 400:
-            raise APIException(response.status_code, response.text,
-                               response.url)
+            raise APIException(response.status_code, response.text, response.url)
         return response
 
     def get(self, request_method):
@@ -88,12 +88,14 @@ class Route4Me(object):
         """
         params = self.optimization.get_params()
         if not self.redirects:
-            params.update({
-                'redirect': 0,
-            })
-        return self._make_request(API_HOST, params,
-                                  json.dumps(self.optimization.data),
-                                  request_method)
+            params.update(
+                {
+                    "redirect": 0,
+                }
+            )
+        return self._make_request(
+            API_HOST, params, request_method, data=json.dumps(self.optimization.data)
+        )
 
     def _request_post(self, url, request_params, data=None, json=None, files=None):
         """
@@ -104,12 +106,17 @@ class Route4Me(object):
         :param files:
         :return:
         """
-        return requests.post(url, params=request_params,
-                             allow_redirects=self.redirects,
-                             proxies=self.proxies, files=files,
-                             data=data, headers=self.headers,
-                             json=json,
-                             verify=self.verify_ssl)
+        return requests.post(
+            url,
+            params=request_params,
+            allow_redirects=self.redirects,
+            proxies=self.proxies,
+            files=files,
+            data=data,
+            headers=self.headers,
+            json=json,
+            verify=self.verify_ssl,
+        )
 
     def _request_get(self, url, request_params, data=None):
         """
@@ -119,12 +126,15 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.get(url, params=request_params,
-                            allow_redirects=self.redirects,
-                            proxies=self.proxies,
-                            data=data,
-                            headers=self.headers,
-                            verify=self.verify_ssl)
+        return requests.get(
+            url,
+            params=request_params,
+            allow_redirects=self.redirects,
+            proxies=self.proxies,
+            data=data,
+            headers=self.headers,
+            verify=self.verify_ssl,
+        )
 
     def _request_put(self, url, request_params, json=None, data=None):
         """
@@ -134,12 +144,16 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.request('PUT', url, params=request_params,
-                                proxies=self.proxies,
-                                data=data,
-                                json=json,
-                                headers=self.headers,
-                                verify=self.verify_ssl)
+        return requests.request(
+            "PUT",
+            url,
+            params=request_params,
+            proxies=self.proxies,
+            data=data,
+            json=json,
+            headers=self.headers,
+            verify=self.verify_ssl,
+        )
 
     def _request_delete(self, url, request_params, data=None, json=None):
         """
@@ -149,11 +163,15 @@ class Route4Me(object):
         :param data:
         :return:
         """
-        return requests.request('DELETE', url, params=request_params,
-                                data=data,
-                                json=json,
-                                headers=self.headers,
-                                verify=self.verify_ssl)
+        return requests.request(
+            "DELETE",
+            url,
+            params=request_params,
+            data=data,
+            json=json,
+            headers=self.headers,
+            verify=self.verify_ssl,
+        )
 
     def run_optimization(self):
         """
@@ -180,10 +198,10 @@ class Route4Me(object):
         """
         self.optimization.optimization_problem_id(optimization_id)
         self.optimization.reoptimize(1)
-        data = {'parameters': data}
-        self.response = self._request_put(API_HOST,
-                                          self.optimization.get_params(),
-                                          json=data)
+        data = {"parameters": data}
+        self.response = self._request_put(
+            API_HOST, self.optimization.get_params(), json=data
+        )
         try:
             return self.response.json()
         except ValueError:
@@ -207,8 +225,8 @@ class Route4Me(object):
         :return:
         """
         response = self.response.json()
-        if 'addresses' in response:
-            self.address.addresses = self.response['addresses']
+        if "addresses" in response:
+            self.address.addresses = self.response["addresses"]
 
     def export_result_to_json(self, file_name):
         """
@@ -218,12 +236,14 @@ class Route4Me(object):
         """
         if self.response:
             try:
-                f = open(file_name, 'w')
-                json.dump(self.response.content,
-                          f,
-                          ensure_ascii=False,
-                          sort_keys=True,
-                          indent=4)
+                f = open(file_name, "w")
+                json.dump(
+                    self.response.content,
+                    f,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    indent=4,
+                )
                 f.close()
             except Exception:
                 raise
@@ -236,12 +256,14 @@ class Route4Me(object):
         """
         if self.optimization.data:
             try:
-                f = open(file_name, 'w')
-                json.dump(self.optimization.data,
-                          f,
-                          ensure_ascii=False,
-                          sort_keys=True,
-                          indent=4)
+                f = open(file_name, "w")
+                json.dump(
+                    self.optimization.data,
+                    f,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    indent=4,
+                )
                 f.close()
             except Exception:
                 raise

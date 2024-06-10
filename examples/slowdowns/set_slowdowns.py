@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
+# codebeat:disable[SIMILARITY, LOC, ABC]
 
 import argparse
-
 from route4me import Route4Me
 
 from route4me.constants import (
     ALGORITHM_TYPE,
     OPTIMIZE,
     DEVICE_TYPE,
-    DISTANCE_UNIT,
     TRAVEL_MODE,
+    DISTANCE_UNIT
 )
-
-
-# codebeat:disable[LOC, ABC]
 
 
 def main(api_key):
@@ -25,19 +22,27 @@ def main(api_key):
     optimization.share_route(0)
     optimization.store_route(0)
     optimization.route_time(0)
+    optimization.rt(1)
     optimization.route_max_duration(86400)
     optimization.vehicle_max_distance_mi(10000)
-    optimization.route_name('Single Driver Round Trip')
-    optimization.optimize(OPTIMIZE.DISTANCE)
+    optimization.route_name('Single Driver Round Trip With Slowdowns - Large Slowdowns')
+    optimization.optimize(OPTIMIZE.TIME)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
+
+    # Set Slowdowns
+    service_time = 20
+    travel_time = 30
+    optimization.set_slowdowns(service_time, travel_time)
+
     address.add_address(
         address='754 5th Ave New York, NY 10019',
         lat=40.7636197,
         lng=-73.9744388,
         alias='Bergdorf Goodman',
         is_depot=1,
+        time=0
     )
     address.add_address(
         address='717 5th Ave New York, NY 10022',
@@ -81,28 +86,33 @@ def main(api_key):
         alias='Toga Bike Shop',
         time=0
     )
+    address.add_address(
+        address='555 W 57th St New York, NY 10019',
+        lat=40.7718005,
+        lng=-73.9897716,
+        alias='BMW of Manhattan',
+        time=0
+    )
+    address.add_address(
+        address='57 W 57th St New York, NY 10019',
+        lat=40.7558695,
+        lng=-73.9862019,
+        alias='Verizon Wireless',
+        time=0
+    )
 
     response = r4m.run_optimization()
-    if isinstance(response, dict) and 'errors' in response.keys():
-        print('. '.join(response['errors']))
-    else:
-        data = {"driver_alias": "Juan", }
-        route_id = response['addresses'][1]['route_id']
-        print('Route ID: {}'.format(route_id))
-        print('Driver Alias: {}'.format(data['driver_alias']))
-        response = r4m.route.update_route(data, route_id)
-        if isinstance(response, dict) and 'errors' in response.keys():
-            print('. '.join(response['errors']))
-        else:
-            print('Updating Route')
-            print('Driver Alias: {}'.format(response['driver_alias']))
 
+    print("Optimized route:")
+    for route in response["routes"]:
+        print(route["addresses"])
 
-# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Update a Route')
+    parser = argparse.ArgumentParser(description='Single Driver Round Trip With Slowdowns - 20,30')
     parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
                         type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)
+
+# codebeat:enable[SIMILARITY, LOC, ABC]
