@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import json
+from .version import VERSION_STRING
 
-DRIVER_VERSION = 'route4me-python-driver-0.0.1'
+DRIVER_VERSION = f"route4me-python-sdk-{VERSION_STRING}"
 
 
 class APIException(Exception):
@@ -14,10 +15,12 @@ class APIException(Exception):
         self.status_code = status_code
         self.response = response
         self.url = url
-        exception = {'http_status_code': status_code,
-                     'response': response,
-                     'url': url,
-                     'driver_version': DRIVER_VERSION}
+        exception = {
+            "http_status_code": status_code,
+            "response": response,
+            "url": url,
+            "driver_version": DRIVER_VERSION,
+        }
         Exception.__init__(self, exception)
 
     def get_status_code(self):
@@ -40,9 +43,9 @@ class APIException(Exception):
         """
         try:
             response_dict = json.loads(self.response)
-            return {'errors': response_dict.get('errors')}
+            return {"errors": response_dict.get("errors")}
         except json.JSONDecodeError:
-            return {'errors': 'Unexpected server response'}
+            return {"errors": "Unexpected server response"}
 
 
 class ParamValueException(Exception):
@@ -53,8 +56,10 @@ class ParamValueException(Exception):
     def __init__(self, param, msg):
         self.param = param
         self.msg = msg
-        exception = {'param': param,
-                     'msg': msg, }
+        exception = {
+            "param": param,
+            "msg": msg,
+        }
         Exception.__init__(self, exception)
 
     def get_msg(self):

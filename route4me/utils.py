@@ -14,10 +14,10 @@ def _json_object_hook(d):
     keys = []
     for k in d.keys():
         if k[0].isdigit():
-            k = 'd_{}'.format(k)
+            k = "d_{}".format(k)
         keys.append(k)
 
-    return namedtuple('X', keys)(*d.values())
+    return namedtuple("X", keys)(*d.values())
 
 
 def json2obj(data):
@@ -56,14 +56,15 @@ def clean_dict(data):
         return data
 
 
-def is_valid_datetime(s):
+def is_valid_datetime(s, date_format="%Y-%m-%d %H:%M:%S"):
     """
-    Checks if the given datetime string is in 'YYYY-MM-DD HH:MM:SS' format.
+    Checks if the given datetime string is valid.
+    Default format is 'YYYY-MM-DD HH:MM:SS'.
     :param s: The datetime string to validate.
     :return: True if the datetime string is valid, False otherwise.
     """
     try:
-        datetime.strptime(str(s), '%Y-%m-%d %H:%M:%S')
+        datetime.strptime(str(s), date_format)
         return True
     except ValueError:
         return False
