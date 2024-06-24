@@ -1,15 +1,10 @@
-# Route4Me Python SDK
+# Route4Me Route Optimization Python SDK
 
 [![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
-
 [![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?label=GitHub)](https://github.com/route4me/route4me-python-sdk)
-
 [![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)
-
 [![codecov](https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/route4me/route4me-python-sdk)
-
 [pypi]: https://pypi.python.org/pypi/route4me
-
 
 ### What does Route4Me do?
 In layman's terms Route4Me solves complex variations of the [traveling salesman problem](https://blog.route4me.com/traveling-salesman-problem/) and the [vehicle routing problem](https://blog.route4me.com/vehicle-routing-problems-real-life-solutions/). In more technical terms, Route4Me solves HP-hard logistics problems that span several mathematical and scientific disciplines such as industrial engineering, operations research, algorithmic graph theory, computational geometry, combinatorial optimization, fleet management, field service management, [telematics](https://telematics.route4me.com/).
