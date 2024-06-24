@@ -4,6 +4,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?label=GitHub)](https://github.com/route4me/route4me-python-sdk)
 [![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)
 [![codecov](https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/route4me/route4me-python-sdk)
+
 [pypi]: https://pypi.python.org/pypi/route4me
 
 ### What does Route4Me do?
