@@ -51,5 +51,5 @@ ZIPCODE_TERRITORIES = "https://rapid.route4me.com/street_data/territories"
 EXPORTER_V5 = "https://wh.route4me.com/modules/api/v5.0/route-export/{route_id}/export"
 ROUTE_STATUS_V5 = "{}/route-status".format(API_V5)
 ORDERS_GROUP_V5 = "{}/orders/aggregation/combined".format(API_V5)
-OPTIMIZATION_PROFILES_V5 = "{}/optimization-profiles/list".format(API_V5)
+OPTIMIZATION_PROFILES_V5 = "{}/optimization-profiles/data-list".format(API_V5)
 ASSIGN_PROFILES_V5 = "{}/orders/aggregation/assign-optimization-profile".format(API_V5)
