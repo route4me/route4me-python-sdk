@@ -15,7 +15,7 @@ from .constants import (
 from .exceptions import ParamValueException
 
 
-class Base(object):
+class Base:
     """
     Base Class, with common methods.
     """
@@ -42,10 +42,7 @@ class Base(object):
         :param obj:
         :return:
         """
-        try:
-            return isinstance(obj, basestring)
-        except NameError:
-            return isinstance(obj, str)
+        return isinstance(obj, str)
 
     def format(self, set_format):
         """

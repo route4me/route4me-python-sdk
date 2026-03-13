@@ -32,7 +32,7 @@ class ServiceTimeRules(dict):
         return self.__dict__
 
 
-class Bundling(object):
+class Bundling:
 
     def __init__(self):
         self.service_time_rules = ServiceTimeRules()

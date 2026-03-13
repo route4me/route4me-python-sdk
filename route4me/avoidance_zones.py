@@ -7,7 +7,7 @@ from .base import Base
 from .exceptions import ParamValueException, APIException
 
 
-class AvoindanceZones(Base):
+class AvoidanceZones(Base):
     """
     Avoidance Zones Management
     """
@@ -114,5 +114,9 @@ class AvoindanceZones(Base):
                 return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
+
+
+# Backward-compatible alias for the old misspelled name
+AvoindanceZones = AvoidanceZones
 
 # codebeat:enable[SIMILARITY, ABC]

@@ -3,7 +3,7 @@
 from .utils import clean_dict
 
 
-class AdvancedConstraint(object):
+class AdvancedConstraint:
 
     def __init__(self):
         self.max_cargo_weight = None

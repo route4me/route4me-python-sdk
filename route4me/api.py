@@ -7,7 +7,7 @@ import json
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook
-from .avoidance_zones import AvoindanceZones
+from .avoidance_zones import AvoidanceZones
 from .exceptions import APIException
 from .gps import GPS
 from .optimization import Optimization
@@ -32,7 +32,7 @@ HEADERS = {
 }
 
 
-class Route4Me(object):
+class Route4Me:
     """
     Route4Me Python SDK
     """
@@ -45,7 +45,7 @@ class Route4Me(object):
         self.activity_feed = ActivityFeed(self)
         self.address = Address(self)
         self.address_book = AddressBook(self)
-        self.avoidance_zones = AvoindanceZones(self)
+        self.avoidance_zones = AvoidanceZones(self)
         self.file_uploading = FileUploading(self)
         self.optimization = Optimization(self)
         self.members = Members(self)
