@@ -23,7 +23,6 @@ class OptimizationProfiles(Base):
             data = response.json()
             return data
         except APIException as e:
-            print(response.content)
             return e.to_dict()
         except ValueError:
             return response.content

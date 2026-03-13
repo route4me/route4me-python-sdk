@@ -38,7 +38,7 @@ class Route4Me(object):
     """
 
     def __init__(
-        self, key, headers=HEADERS, redirects=True, verify_ssl=True, proxies={}
+        self, key, headers=HEADERS, redirects=True, verify_ssl=True, proxies=None
     ):
         self.key = key
         self.response = None
@@ -59,7 +59,7 @@ class Route4Me(object):
         self.headers = headers
         self.redirects = redirects
         self.verify_ssl = verify_ssl
-        self.proxies = proxies
+        self.proxies = proxies if proxies is not None else {}
         self.route_status = RouteStatus(self)
         self.orders_group = OrdersGroup(self)
         self.optimization_profiles = OptimizationProfiles(self)
@@ -179,35 +179,24 @@ class Route4Me(object):
         :return: response as an object
         """
         self.response = self.get(self._request_post)
-        try:
-            response = self.response.json()
-            return response
-        except AttributeError:
-            raise
-        except ValueError:
-            raise
-        except Exception:
-            raise
+        return self.response.json()
 
-    def re_optimization(self, optimization_id, data={}):
+    def re_optimization(self, optimization_id, data=None):
         """
         Execute reoptimization
         :param optimization_id:
         :param data:
         :return: response as a object
         """
+        if data is None:
+            data = {}
         self.optimization.optimization_problem_id(optimization_id)
         self.optimization.reoptimize(1)
         data = {"parameters": data}
         self.response = self._request_put(
             API_HOST, self.optimization.get_params(), json=data
         )
-        try:
-            return self.response.json()
-        except ValueError:
-            raise
-        except Exception:
-            raise
+        return self.response.json()
 
     def get_optimization(self, optimization_problem_id):
         """
@@ -235,8 +224,7 @@ class Route4Me(object):
         :return:
         """
         if self.response:
-            try:
-                f = open(file_name, "w")
+            with open(file_name, "w") as f:
                 json.dump(
                     self.response.content,
                     f,
@@ -244,9 +232,6 @@ class Route4Me(object):
                     sort_keys=True,
                     indent=4,
                 )
-                f.close()
-            except Exception:
-                raise
 
     def export_request_to_json(self, file_name):
         """
@@ -255,8 +240,7 @@ class Route4Me(object):
         :return:
         """
         if self.optimization.data:
-            try:
-                f = open(file_name, "w")
+            with open(file_name, "w") as f:
                 json.dump(
                     self.optimization.data,
                     f,
@@ -264,9 +248,6 @@ class Route4Me(object):
                     sort_keys=True,
                     indent=4,
                 )
-                f.close()
-            except Exception:
-                raise
 
 
 # codebeat:enable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]

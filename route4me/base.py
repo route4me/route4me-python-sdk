@@ -819,21 +819,25 @@ class Base(object):
         """
         return self.params
 
-    def required_params(self, requirements=[]):
+    def required_params(self, requirements=None):
         """
         Check if required params are set
         :param requirements:
         :return:
         """
+        if requirements is None:
+            requirements = []
         return set(requirements).issubset(set(self.params.keys()))
 
     @staticmethod
-    def check_required_params(params, requirements=[]):
+    def check_required_params(params, requirements=None):
         """
         Check if required params are set
         :param requirements:
         :return:
         """
+        if requirements is None:
+            requirements = []
         return set(requirements).issubset(set(params.keys()))
 
     def validate_params(self, **kwargs):
@@ -851,13 +855,17 @@ class Base(object):
                 raise ParamValueException(k, "Not supported")
         return True
 
-    def add(self, params={}, data={}):
+    def add(self, params=None, data=None):
         """
         Add params and data
         :param params:
         :param data:
         :return:
         """
+        if params is None:
+            params = {}
+        if data is None:
+            data = {}
         self.validate_params(**params)
         self.validate_params(**data)
         self.data.update(data)

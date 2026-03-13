@@ -170,7 +170,7 @@ class Telematics(Base):
                                                    self.api._request_delete)
             return self.response.json()
         except APIException as e:
-            e.to_dict()
+            return e.to_dict()
 
     def update_connection(self, api_token, connection_token, **kwargs):
         params = {

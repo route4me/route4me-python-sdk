@@ -189,7 +189,7 @@ class Optimization(Base):
 
     def route_start_date_local(self, route_start_date_local):
         if not is_valid_datetime(route_start_date_local, "%Y-%m-%d"):
-            ParamValueException(
+            raise ParamValueException(
                 "params",
                 "Route Start Date Local is invalid, must be YYYY-MM-DD date format",
             )
