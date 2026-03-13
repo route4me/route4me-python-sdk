@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from dataclasses import dataclass, field
+
 from .constants import enum
 
 BUNDLING_MODE = enum(BY_ADDRESS=1,
@@ -32,13 +34,13 @@ class ServiceTimeRules(dict):
         return self.__dict__
 
 
+@dataclass
 class Bundling:
 
-    def __init__(self):
-        self.service_time_rules = ServiceTimeRules()
-        self.mode = BUNDLING_MODE.BY_ADDRESS
-        self.merge_mode = BUNDLING_MERGE_MODE.KEEP_SEPARATED
-        self.mode_params = []
+    mode: int = BUNDLING_MODE.BY_ADDRESS
+    merge_mode: int = BUNDLING_MERGE_MODE.KEEP_SEPARATED
+    mode_params: list = field(default_factory=list)
+    service_time_rules: ServiceTimeRules = field(default_factory=ServiceTimeRules)
 
     def to_dict(self):
         return self.__dict__
