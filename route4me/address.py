@@ -2,10 +2,13 @@
 # codebeat:disable[ABC]
 
 import json
+import logging
 import random
 import time
 import requests
 from .exceptions import APIException
+
+logger = logging.getLogger(__name__)
 
 from .api_endpoints import (
     ADD_ROUTE_NOTES_HOST,
@@ -82,7 +85,7 @@ class Address(Base):
         try:
             json_data = self.get_batch_geocodes(params, data)
         except json.decoder.JSONDecodeError:
-            print('Error Geocoding some of the Addresses. Please check the addresses and try again.')
+            logger.warning('Error Geocoding some of the Addresses. Please check the addresses and try again.')
             return addresses, []
         geocoded_addresses = []
         for address in json_data:

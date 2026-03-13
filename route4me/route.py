@@ -2,6 +2,7 @@
 
 # codebeat:disable[TOO_MANY_FUNCTIONS]
 
+import warnings
 
 from .api_endpoints import ROUTE_HOST, EXPORTER
 from .api_endpoints import ADDRESS_HOST, GET_ACTIVITIES_HOST, DUPLICATE_ROUTE, SHARE_ROUTE_HOST
@@ -392,7 +393,7 @@ class Route(Base):
         :param output_format:
         :return: response as a object
         """
-        print("DEPRECATED. Please use export_route_v5")
+        warnings.warn("export_route is deprecated. Please use export_route_v5", DeprecationWarning, stacklevel=2)
         data = {'route_id': route_id, 'strExportFormat': output_format}
         self.response = self.api._make_request(EXPORTER,
                                                {},
