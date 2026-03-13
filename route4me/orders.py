@@ -2,6 +2,7 @@
 
 import json
 
+from ._api_method import make_request
 from .api_endpoints import ORDERS_HOST
 from .base import Base
 from .exceptions import ParamValueException, APIException
@@ -15,19 +16,9 @@ class Order(Base):
     REQUIRED_FIELDS = ('address_1', )
 
     def __init__(self, api):
-        """
-        Order Instance
-        :param api:
-        :return:
-        """
         Base.__init__(self, api)
 
     def create_order(self, **kwargs):
-        """
-        Create an Order
-        :param kwargs:
-        :return: API response content
-        """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
             try:
                 response = self.api._make_request(ORDERS_HOST,
@@ -49,8 +40,8 @@ class Order(Base):
         :param kwargs:
         :return: API response content
         """
-        kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['order_id', 'api_key', ]):
+        kwargs.update({'api_key': self.params['api_key']})
+        if self.check_required_params(kwargs, ['order_id', 'api_key']):
             try:
                 response = self.api._make_request(ORDERS_HOST,
                                                   kwargs,
@@ -91,7 +82,7 @@ class Order(Base):
         :param kwargs:
         :return: API response content
         """
-        if self.check_required_params(kwargs, ['order_ids', ]):
+        if self.check_required_params(kwargs, ['order_ids']):
             try:
                 response = self.api._make_request(ORDERS_HOST,
                                                   self.params,
