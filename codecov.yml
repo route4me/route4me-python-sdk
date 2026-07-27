@@ -12,14 +12,14 @@ codecov:
 coverage:
   precision: 2
   round: down
-  range: "45...85"
+  range: "50...85"
 
   status:
     project:
       default:
         # Raised phase by phase alongside --cov-fail-under in ci.yml:
-        # 45 -> 50 -> 55 -> 65 -> 80 -> 85.
-        target: 45%
+        # 50 -> 55 -> 65 -> 80 -> 85.
+        target: 50%
         # Small dips are noise; a real regression is bigger than this.
         threshold: 1%
         if_ci_failed: error

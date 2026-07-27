@@ -164,6 +164,11 @@ addopts = [
     "--strict-markers",
     "--strict-config",
     "-m", "not live",
+    # Offline by design. Any test that reaches a real socket fails loudly
+    # instead of silently depending on the network, a live key, or Route4Me's
+    # uptime. Tests under tests/live/ opt back in with @pytest.mark.enable_socket.
+    "--disable-socket",
+    "--allow-unix-socket",
 ]
 markers = [
     "live: hits the real Route4Me API; requires ROUTE4ME_API_KEY. Deselected by default.",

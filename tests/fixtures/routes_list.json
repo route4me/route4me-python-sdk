@@ -1,0 +1,50 @@
+[
+  {
+    "route_id": "5B1E0EFBB8FF6D3A2F6F0BD2C0E60E1E",
+    "optimization_problem_id": "07372F2CF3814EC6E2E4C4B0DCF20B9C",
+    "member_id": "1",
+    "route_destination_id": 501,
+    "vehicle_alias": null,
+    "driver_alias": null,
+    "trip_distance": 12.34,
+    "mpg": "0",
+    "gas_price": "0",
+    "route_duration_sec": 3120,
+    "parameters": {
+      "route_name": "Single Driver Round Trip",
+      "route_date": 1600214400,
+      "route_time": 0,
+      "distance_unit": "mi",
+      "travel_mode": "Driving",
+      "optimize": "Distance",
+      "vehicle_capacity": 1,
+      "vehicle_max_distance_mi": 10000,
+      "route_max_duration": 86400,
+      "algorithm_type": 1,
+      "store_route": 0,
+      "shared_publicly": 0
+    },
+    "addresses": [
+      {
+        "route_destination_id": 501,
+        "alias": "Bergdorf Goodman",
+        "address": "754 5th Ave New York, NY 10019",
+        "is_depot": true,
+        "lat": 40.7636197,
+        "lng": -73.9744388,
+        "sequence_no": 0,
+        "time": 0
+      },
+      {
+        "route_destination_id": 502,
+        "alias": "Giorgio Armani",
+        "address": "717 5th Ave New York, NY 10022",
+        "is_depot": false,
+        "lat": 40.7669692,
+        "lng": -73.9693864,
+        "sequence_no": 1,
+        "time": 0
+      }
+    ]
+  }
+]

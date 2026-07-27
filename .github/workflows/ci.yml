@@ -122,7 +122,7 @@ jobs:
 
       # Project-wide floor. Raised phase by phase: 50 -> 55 -> 65 -> 80 -> 85.
       - name: Project coverage floor
-        run: pytest --cov=route4me --cov-report=xml --cov-fail-under=45
+        run: pytest --cov=route4me --cov-report=xml --cov-fail-under=50
 
       # New and changed lines are held to a much higher bar than the backlog,
       # so the V5 managers cannot land untested while the backfill continues.

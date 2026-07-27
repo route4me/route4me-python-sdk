@@ -1,0 +1,14 @@
+{
+  "territory_id": "0F3B8C2D5E7A419B6C8D0E2F4A6B8C1D",
+  "territory_name": "Manhattan Midtown",
+  "territory_color": "ff0000",
+  "member_id": "1",
+  "addresses": [],
+  "territory": {
+    "type": "circle",
+    "data": [
+      "40.7636197,-73.9744388",
+      "5000"
+    ]
+  }
+}

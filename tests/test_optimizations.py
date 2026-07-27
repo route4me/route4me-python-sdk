@@ -16,12 +16,10 @@ class Route4MeOptimizationTests(Route4MeAPITestSuite):
     Route4Me Optimization Tests
     """
 
-    def test_api_key(self):
-        """
-        Test that API key is set
-        :return:
-        """
-        self.assertEqual(self.route4me.key, "11111111111111111111111111111111")
+    # `test_api_key` was removed here: it asserted that the constant the client
+    # was constructed with equalled itself. The invariant worth testing is that
+    # the key actually reaches the wire, which `tests/test_http_layer.py`
+    # covers against a mocked transport.
 
     def test_route_name(self):
         """
