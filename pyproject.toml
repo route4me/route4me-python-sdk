@@ -1,0 +1,218 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+# ---------------------------------------------------------------- metadata --
+
+[project]
+name = "route4me"
+version = "0.2.0.0.dev0"
+description = "Route4Me Python SDK"
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.9"
+license = "ISC"
+license-files = ["LICENSE.md"]
+authors = [{ name = "Route4Me Python Team (SDK)", email = "juan@route4me.com" }]
+maintainers = [{ name = "Route4Me Python Team (SDK)", email = "juan@route4me.com" }]
+keywords = ["route4me", "routing", "optimization", "vrp", "tsp", "sdk", "api"]
+
+# NOTE: no "License :: OSI Approved :: ..." classifier. PEP 639 forbids pairing
+# a license classifier with an SPDX `license` expression, and PyPI rejects
+# uploads that carry both.
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Other Environment",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+# 2.25.0 is the floor for modern urllib3 interop and predates none of the
+# security fixes we rely on; 2.31.0 carries the CVE-2023-32681 fix for the
+# proxy-Authorization leak, which matters because this SDK accepts `proxies`.
+dependencies = ["requests>=2.31.0"]
+
+[project.urls]
+Homepage = "https://github.com/route4me/route4me-python-sdk"
+Repository = "https://github.com/route4me/route4me-python-sdk"
+Changelog = "https://github.com/route4me/route4me-python-sdk/blob/master/CHANGELOG.md"
+Documentation = "https://route4me.io/docs"
+Issues = "https://github.com/route4me/route4me-python-sdk/issues"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "responses>=0.23",
+    "pytest-socket>=0.6",
+]
+lint = [
+    "ruff>=0.6",
+    "mypy>=1.8",
+    "types-requests",
+]
+security = [
+    "bandit>=1.7",
+    "pip-audit>=2.7",
+]
+docs = [
+    "sphinx>=7.0",
+    "sphinx-rtd-theme>=2.0",
+    "myst-parser>=2.0",
+]
+dev = [
+    "route4me[test,lint,security,docs]",
+    "build>=1.0",
+    "twine>=5.0",
+    "diff-cover>=9.0",
+    "pre-commit>=3.5",
+]
+
+# ------------------------------------------------------------------- build --
+
+[tool.hatch.build.targets.wheel]
+packages = ["route4me"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/route4me",
+    "/tests",
+    "/examples",
+    "/docs",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/LICENSE.md",
+    "/pyproject.toml",
+]
+
+# -------------------------------------------------------------------- ruff --
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+extend-exclude = ["docs", "build", "dist", ".tox"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "S",    # flake8-bandit
+    "RUF",  # ruff-specific
+]
+ignore = [
+    "E501",   # line length is handled by the formatter
+    "B008",   # function call in default arg -- used deliberately in places
+    "RUF012", # mutable class attrs need ClassVar -- too noisy for this codebase
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Examples are teaching material: they print, they hardcode sample data, and
+# they are not imported by the package.
+"examples/**" = ["T201", "S101", "E402"]
+# Tests assert, use fixtures, and legitimately poke at private attributes.
+"tests/**" = ["S101", "S105", "S106", "ARG", "SLF001"]
+# Re-exports.
+"route4me/__init__.py" = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["route4me"]
+
+# ------------------------------------------------------------------ pytest --
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+# `-m "not live"` keeps the network-hitting smoke tests out of the default run;
+# CI runs them nightly with a real key. No --cov-report=html here: forcing it
+# regenerated cover-html/ on every local run, which is how an 86 KB .coverage
+# and a 40-file cover-html/ ended up committed to the working tree. Opt in with
+# `pytest --cov-report=html` when you actually want it.
+addopts = [
+    "-v",
+    "-rfesxX",
+    "--strict-markers",
+    "--strict-config",
+    "-m", "not live",
+]
+markers = [
+    "live: hits the real Route4Me API; requires ROUTE4ME_API_KEY. Deselected by default.",
+]
+
+# ---------------------------------------------------------------- coverage --
+
+[tool.coverage.run]
+branch = true
+source = ["route4me"]
+omit = ["route4me/version.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "@overload",
+]
+
+[tool.coverage.html]
+directory = "cover-html"
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+# -------------------------------------------------------------------- mypy --
+
+[tool.mypy]
+python_version = "3.9"
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+show_error_codes = true
+# Deliberately NOT strict globally. This is **kwargs-heavy passthrough code;
+# strict mode would emit hundreds of errors on day one and the ratchet below
+# would never get started. Strictness is opted into module-by-module as each
+# typing tier lands.
+
+# --- Tier A: pure helpers, no dependencies. Fully strict from day one. ------
+[[tool.mypy.overrides]]
+module = [
+    "route4me.utils",
+    "route4me.constants",
+    "route4me.version",
+]
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+warn_return_any = true
+
+# --- Tiers B-D: flip these on as each tier lands. ---------------------------
+# [[tool.mypy.overrides]]
+# module = ["route4me._fields", "route4me._api_method", "route4me.base"]
+# disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*", "examples.*"]
+ignore_errors = true
+
+# ------------------------------------------------------------------ bandit --
+
+[tool.bandit]
+exclude_dirs = ["tests", "examples", "docs", "build", "dist"]
