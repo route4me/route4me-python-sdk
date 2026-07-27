@@ -1,0 +1,22 @@
+name: Commit validation
+
+# Mirrors the Java and C# SDK repositories, which both enforce conventional
+# commits via Commitsar. Keeping the three SDKs consistent matters because
+# their changelogs and releases are generated the same way.
+
+on: [pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  commitsar:
+    name: Conventional commits
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Commitsar
+        uses: aevea/commitsar@v0.20.2

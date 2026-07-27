@@ -1,0 +1,187 @@
+name: CI
+
+on:
+  push:
+    branches: [master, development, improvements]
+  pull_request:
+    branches: [master, development]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  lint:
+    name: Lint and format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: python -m pip install -e ".[lint]"
+
+      - name: ruff check
+        run: ruff check route4me/ tests/ examples/ --output-format=github
+
+      - name: ruff format --check
+        run: ruff format --check route4me/ tests/ examples/
+
+  typecheck:
+    name: Type check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: python -m pip install -e ".[lint]"
+
+      # Typing lands tier by tier (see the mypy overrides in pyproject.toml).
+      # Non-blocking until tier C is complete; flip `continue-on-error` off then.
+      - name: mypy
+        run: mypy route4me/
+        continue-on-error: true
+
+  test:
+    name: Test py${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        include:
+          # Spot-check the other platforms on one interpreter rather than
+          # multiplying the whole matrix by three.
+          - os: macos-latest
+            python-version: "3.12"
+          - os: windows-latest
+            python-version: "3.12"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: python -m pip install -e ".[test]"
+
+      # The suite is offline by design: `-m "not live"` (set in pyproject.toml)
+      # deselects the nightly smoke tests, and from Phase 3 onward pytest-socket
+      # turns any stray real connection into a hard failure.
+      - name: pytest
+        run: >-
+          pytest
+          --cov=route4me
+          --cov-report=xml
+          --cov-report=term-missing
+
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  coverage-gate:
+    name: Coverage gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: python -m pip install -e ".[test]" diff-cover
+
+      # Project-wide floor. Raised phase by phase: 50 -> 55 -> 65 -> 80 -> 85.
+      - name: Project coverage floor
+        run: pytest --cov=route4me --cov-report=xml --cov-fail-under=45
+
+      # New and changed lines are held to a much higher bar than the backlog,
+      # so the V5 managers cannot land untested while the backfill continues.
+      - name: Patch coverage
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
+          diff-cover coverage.xml \
+            --compare-branch=origin/${{ github.base_ref }} \
+            --fail-under=90
+
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tooling
+        run: python -m pip install build twine
+
+      - name: Build
+        run: python -m build
+
+      - name: Check metadata
+        run: twine check --strict dist/*
+
+      - name: Verify the wheel imports and keeps its public surface
+        run: |
+          python -m venv /tmp/verify
+          /tmp/verify/bin/python -m pip install --quiet dist/*.whl
+          /tmp/verify/bin/python - <<'PY'
+          import pathlib
+          import route4me
+          from route4me import Route4Me
+          from route4me.avoidance_zones import AvoidanceZones, AvoindanceZones
+
+          assert AvoindanceZones is AvoidanceZones, "backwards-compat alias broken"
+
+          client = Route4Me("k" * 32)
+          expected = [
+              "activity_feed", "address", "address_book", "avoidance_zones",
+              "file_uploading", "optimization", "members", "vehicles", "order",
+              "gps", "route", "rapid_address", "telematics", "territory",
+              "route_status", "orders_group", "optimization_profiles",
+          ]
+          missing = [name for name in expected if not hasattr(client, name)]
+          assert not missing, f"missing resource attributes: {missing}"
+
+          marker = pathlib.Path(route4me.__file__).parent / "py.typed"
+          assert marker.exists(), "py.typed missing from the wheel"
+
+          print("OK", route4me.__version__, f"({len(expected)} resources)")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: distributions
+          path: dist/
