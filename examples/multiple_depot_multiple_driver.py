@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-
 import argparse
 
 from route4me import Route4Me
-
 from route4me.constants import (
     ALGORITHM_TYPE,
-    OPTIMIZE,
     DEVICE_TYPE,
-    TRAVEL_MODE,
     DISTANCE_UNIT,
+    OPTIMIZE,
+    TRAVEL_MODE,
 )
 
 
@@ -24,7 +21,7 @@ def main(api_key):
     optimization.route_time(7 * 3600)  # 7:00am UTC
     optimization.parts(3)  # 3 Drivers
     optimization.route_max_duration(86400)
-    optimization.route_name('Multiple Depot, Multiple Driver')
+    optimization.route_name("Multiple Depot, Multiple Driver")
     optimization.optimize(OPTIMIZE.DISTANCE)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.device_type(DEVICE_TYPE.WEB)
@@ -303,7 +300,7 @@ def main(api_key):
         is_depot=0,
         time=300,
         time_window_start=51600,
-        time_window_end=52200
+        time_window_end=52200,
     )
     address.add_address(
         address="612 N 39TH ST, Louisville, KY, 40212",
@@ -383,16 +380,15 @@ def main(api_key):
         time=300,
     )
     response = route4me.run_optimization()
-    print('Optimization Link: {}'.format(response['links']['view']))
-    for i, route in enumerate(response['routes']):
-        print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
-        for address in route['addresses']:
-            print('\t\t\tAddress: {0}'.format(address['address']))
+    print("Optimization Link: {}".format(response["links"]["view"]))
+    for i, route in enumerate(response["routes"]):
+        print("\t{}\tRoute Link: {}".format(i + 1, route["links"]["route"]))
+        for address in route["addresses"]:
+            print("\t\t\tAddress: {}".format(address["address"]))
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Multiple Depot, Multiple Driver')
-    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
-                        type=str, required=True)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Multiple Depot, Multiple Driver")
+    parser.add_argument("--api_key", dest="api_key", help="Route4Me API KEY", type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)

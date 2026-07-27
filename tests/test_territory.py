@@ -11,10 +11,10 @@ class Route4MeTerritoryTests(Route4MeAPITestSuite):
     """
 
     def test_get_vehicles(self):
-        json_data = json.dumps({'variable1': 'test_value'})
+        json_data = json.dumps({"variable1": "test_value"})
         json_obj = json2obj(json_data)
-        self.assertTrue(hasattr(json_obj, 'variable1'))
+        self.assertTrue(hasattr(json_obj, "variable1"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

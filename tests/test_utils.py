@@ -1,8 +1,7 @@
 import json
 import unittest
 
-from route4me.utils import json2obj
-from route4me.utils import clean_dict
+from route4me.utils import clean_dict, json2obj
 from tests.base import Route4MeAPITestSuite
 
 
@@ -12,9 +11,9 @@ class Route4MeUtilsTests(Route4MeAPITestSuite):
     """
 
     def test_json2obj(self):
-        json_data = json.dumps({'variable1': 'test_value'})
+        json_data = json.dumps({"variable1": "test_value"})
         json_obj = json2obj(json_data)
-        self.assertTrue(hasattr(json_obj, 'variable1'))
+        self.assertTrue(hasattr(json_obj, "variable1"))
 
     def test_clean_dict(self):
         # None and "" values
@@ -42,5 +41,5 @@ class Route4MeUtilsTests(Route4MeAPITestSuite):
         self.assertEqual(cleaned_list, expected_list)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

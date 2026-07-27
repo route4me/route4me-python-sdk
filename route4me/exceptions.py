@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import json
+
 from .version import VERSION_STRING
 
 DRIVER_VERSION = f"route4me-python-sdk-{VERSION_STRING}"

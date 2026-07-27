@@ -11,10 +11,8 @@ class Route4MeAddressesTests(Route4MeAPITestSuite):
 
     def test_addresses_params(self):
         addresses = self.route4me.address
-        self.assertRaises(ParamValueException,
-                          addresses.add_address,
-                          address='754 5th Ave New York, NY 10019')
+        self.assertRaises(ParamValueException, addresses.add_address, address="754 5th Ave New York, NY 10019")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

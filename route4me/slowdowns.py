@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-class Slowdowns():
+class Slowdowns:
     """
     Slowdowns Management
     """
@@ -18,7 +16,4 @@ class Slowdowns():
             raise ValueError("Travel time must be an integer between 0 and 50")
 
     def to_dict(self):
-        return {
-            'service_time': self.service_time,
-            'travel_time': self.travel_time
-        }
+        return {"service_time": self.service_time, "travel_time": self.travel_time}

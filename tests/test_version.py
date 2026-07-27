@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Guards on the package version.
 
 ``route4me/version.py`` and ``pyproject.toml`` each carry the version string:
@@ -25,7 +24,7 @@ def _pyproject_version():
     """Read ``project.version`` without needing a TOML parser on Python 3.9."""
     text = PYPROJECT.read_text(encoding="utf-8")
     match = re.search(r'^version\s*=\s*"([^"]+)"', text, re.MULTILINE)
-    assert match, "no `version = \"...\"` line found in pyproject.toml"
+    assert match, 'no `version = "..."` line found in pyproject.toml'
     return match.group(1)
 
 
@@ -37,8 +36,7 @@ class VersionTests(unittest.TestCase):
         self.assertEqual(
             _pyproject_version(),
             version.__version__,
-            "pyproject.toml `version` and route4me/version.py `__version__` "
-            "have drifted; bump both together",
+            "pyproject.toml `version` and route4me/version.py `__version__` have drifted; bump both together",
         )
 
     def test_package_exports_version(self):

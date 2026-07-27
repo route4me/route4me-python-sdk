@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
-from .api_endpoints import RAPID_ADDRESS_SERVICE, \
-    RAPID_ADDRESS, RAPID_ADDRESS_ZIP
+from .api_endpoints import RAPID_ADDRESS, RAPID_ADDRESS_SERVICE, RAPID_ADDRESS_ZIP
 from .base import Base
-from .exceptions import ParamValueException, APIException
+from .exceptions import APIException, ParamValueException
 
 
 class RapidAddress(Base):
@@ -27,17 +24,17 @@ class RapidAddress(Base):
         :return: API response content
         """
         url = RAPID_ADDRESS
-        kwargs.update({'api_key': self.params['api_key'], })
-        if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
-            url = '{0}{1}/{2}/'.format(url,
-                                       kwargs.pop('offset'),
-                                       kwargs.pop('limit'))
-        elif 'pk' in kwargs:
-            url = '{0}{1}/'.format(url, kwargs.pop('pk'))
+        kwargs.update(
+            {
+                "api_key": self.params["api_key"],
+            }
+        )
+        if "offset" in kwargs.keys() and "limit" in kwargs.keys():
+            url = "{}{}/{}/".format(url, kwargs.pop("offset"), kwargs.pop("limit"))
+        elif "pk" in kwargs:
+            url = "{}{}/".format(url, kwargs.pop("pk"))
             try:
-                response = self.api._make_request(url,
-                                                  kwargs,
-                                                  self.api._request_get)
+                response = self.api._make_request(url, kwargs, self.api._request_get)
                 return response.json()
             except APIException as e:
                 return e.to_dict()
@@ -50,25 +47,31 @@ class RapidAddress(Base):
         :param kwargs:
         :return: API response content
         """
-        kwargs.update({'api_key': self.params['api_key'], })
+        kwargs.update(
+            {
+                "api_key": self.params["api_key"],
+            }
+        )
         url = RAPID_ADDRESS_ZIP
-        if self.check_required_params(kwargs, ['zipcode', 'api_key', ]):
-            url = '{0}{1}/'.format(url, kwargs.pop('zipcode'))
-            if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
-                url = '{0}{1}/{2}/'.format(url,
-                                           kwargs.pop('offset'),
-                                           kwargs.pop('limit'))
+        if self.check_required_params(
+            kwargs,
+            [
+                "zipcode",
+                "api_key",
+            ],
+        ):
+            url = "{}{}/".format(url, kwargs.pop("zipcode"))
+            if "offset" in kwargs.keys() and "limit" in kwargs.keys():
+                url = "{}{}/{}/".format(url, kwargs.pop("offset"), kwargs.pop("limit"))
             try:
-                response = self.api._make_request(url,
-                                                  kwargs,
-                                                  self.api._request_get)
+                response = self.api._make_request(url, kwargs, self.api._request_get)
                 return response.json()
             except APIException as e:
                 return e.to_dict()
             except ValueError:
                 return response.content
         else:
-            raise ParamValueException('params', 'Params are not complete')
+            raise ParamValueException("params", "Params are not complete")
 
     def get_street_data_service(self, **kwargs):
         """
@@ -76,26 +79,29 @@ class RapidAddress(Base):
         :param kwargs:
         :return: API response content
         """
-        kwargs.update({'api_key': self.params['api_key'], })
+        kwargs.update(
+            {
+                "api_key": self.params["api_key"],
+            }
+        )
         url = RAPID_ADDRESS_SERVICE
-        if self.check_required_params(kwargs, ['zipcode',
-                                               'api_key',
-                                               'housenumber', ]):
-            url = '{0}{1}/{2}/'.format(url,
-                                       kwargs.pop('zipcode'),
-                                       kwargs.pop('housenumber'))
-            if 'offset' in kwargs.keys() and 'limit' in kwargs.keys():
-                url = '{0}{1}/{2}/'.format(url,
-                                           kwargs.pop('offset'),
-                                           kwargs.pop('limit'))
+        if self.check_required_params(
+            kwargs,
+            [
+                "zipcode",
+                "api_key",
+                "housenumber",
+            ],
+        ):
+            url = "{}{}/{}/".format(url, kwargs.pop("zipcode"), kwargs.pop("housenumber"))
+            if "offset" in kwargs.keys() and "limit" in kwargs.keys():
+                url = "{}{}/{}/".format(url, kwargs.pop("offset"), kwargs.pop("limit"))
             try:
-                response = self.api._make_request(url,
-                                                  kwargs,
-                                                  self.api._request_get)
+                response = self.api._make_request(url, kwargs, self.api._request_get)
                 return response.json()
             except APIException as e:
                 return e.to_dict()
             except ValueError:
                 return response.content
         else:
-            raise ParamValueException('params', 'Params are not complete')
+            raise ParamValueException("params", "Params are not complete")

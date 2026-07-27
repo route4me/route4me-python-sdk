@@ -130,6 +130,21 @@ ignore = [
 # Re-exports.
 "route4me/__init__.py" = ["F401"]
 
+# --- Known defects, scoped to the file and dated to the phase that fixes them.
+# Each entry below is a real finding, not a false positive. Delete the entry in
+# the phase named; `ruff check` then fails if the fix regressed.
+#
+# S113: no `timeout=` on any requests call -- removed in Phase 4 (security).
+"route4me/api.py" = ["S113"]
+# S311: `random` used for retry jitter (not crypto, but the hand-rolled retry
+#       loop moves to `route4me/_resilience.py`) -- removed in Phase 6.
+# E402: module-level imports after code -- removed in Phase 6.
+"route4me/address.py" = ["S311", "E402"]
+# B904: `raise e` inside `except` without `from` -- removed in Phase 6.
+"route4me/base.py" = ["B904"]
+# RUF034: no-op ternary `params if body is None else params` -- removed in Phase 6.
+"route4me/_api_method.py" = ["RUF034"]
+
 [tool.ruff.lint.isort]
 known-first-party = ["route4me"]
 

@@ -1,28 +1,26 @@
-# -*- coding: utf-8 -*-
+import json
 
 import requests
-import json
 
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook
+from .api_endpoints import API_HOST
 from .avoidance_zones import AvoidanceZones
 from .exceptions import APIException
+from .file_uploading import FileUploading
 from .gps import GPS
+from .members import Members
 from .optimization import Optimization
+from .optimization_profiles import OptimizationProfiles
 from .orders import Order
+from .orders_group import OrdersGroup
 from .rapid_address import RapidAddress
 from .route import Route
-from .territory import Territory
-from .file_uploading import FileUploading
-from .members import Members
-from .vehicles import Vehicle
-from .telematics import Telematics
-from .api_endpoints import API_HOST
 from .route_status import RouteStatus
-from .orders_group import OrdersGroup
-from .optimization_profiles import OptimizationProfiles
-
+from .telematics import Telematics
+from .territory import Territory
+from .vehicles import Vehicle
 
 HEADERS = {
     "User-Agent": "Route4Me Python SDK",
@@ -36,9 +34,7 @@ class Route4Me:
     Route4Me Python SDK
     """
 
-    def __init__(
-        self, key, headers=HEADERS, redirects=True, verify_ssl=True, proxies=None
-    ):
+    def __init__(self, key, headers=HEADERS, redirects=True, verify_ssl=True, proxies=None):
         self.key = key
         self.response = None
         self.activity_feed = ActivityFeed(self)
@@ -92,9 +88,7 @@ class Route4Me:
                     "redirect": 0,
                 }
             )
-        return self._make_request(
-            API_HOST, params, request_method, data=json.dumps(self.optimization.data)
-        )
+        return self._make_request(API_HOST, params, request_method, data=json.dumps(self.optimization.data))
 
     def _request_post(self, url, request_params, data=None, json=None, files=None):
         """
@@ -192,9 +186,7 @@ class Route4Me:
         self.optimization.optimization_problem_id(optimization_id)
         self.optimization.reoptimize(1)
         data = {"parameters": data}
-        self.response = self._request_put(
-            API_HOST, self.optimization.get_params(), json=data
-        )
+        self.response = self._request_put(API_HOST, self.optimization.get_params(), json=data)
         return self.response.json()
 
     def get_optimization(self, optimization_problem_id):

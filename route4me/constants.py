@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-
 def enum(**enums):
     """
     Create enums with custom values to help user set their params
     :param enums:
     :return:
     """
-    reverse = dict((value, key) for key, value in enums.items())
+    reverse = {value: key for key, value in enums.items()}
     enums["reverse_mapping"] = reverse
     return type("Enum", (), enums)
 

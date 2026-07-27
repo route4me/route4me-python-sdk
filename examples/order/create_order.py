@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import argparse
 
 from route4me import Route4Me
@@ -23,22 +21,20 @@ def main(api_key):
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
-        print("Member ID:\t{0}".format(response.get("member_id")))
-        print("Order ID:\t{0}".format(response.get("order_id")))
-        print("Order Status ID:\t{0}".format(response.get("order_status_id")))
-        print("In Route Count:\t{0}".format(response.get("in_route_count")))
-        print("Day Added:\t{0}".format(response.get("day_added_YYMMDD")))
-        print("Is Pending:\t{0}".format(response.get("is_pending")))
-        print("Is Accepted:\t{0}".format(response.get("is_accepted")))
-        print("Is Started:\t{0}".format(response.get("is_started")))
-        print("Is Validated:\t{0}".format(response.get("is_validated")))
-        print("Is Completed:\t{0}".format(response.get("is_completed")))
+        print("Member ID:\t{}".format(response.get("member_id")))
+        print("Order ID:\t{}".format(response.get("order_id")))
+        print("Order Status ID:\t{}".format(response.get("order_status_id")))
+        print("In Route Count:\t{}".format(response.get("in_route_count")))
+        print("Day Added:\t{}".format(response.get("day_added_YYMMDD")))
+        print("Is Pending:\t{}".format(response.get("is_pending")))
+        print("Is Accepted:\t{}".format(response.get("is_accepted")))
+        print("Is Started:\t{}".format(response.get("is_started")))
+        print("Is Validated:\t{}".format(response.get("is_validated")))
+        print("Is Completed:\t{}".format(response.get("is_completed")))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Create an Order")
-    parser.add_argument(
-        "--api_key", dest="api_key", help="Route4Me API KEY", type=str, required=True
-    )
+    parser.add_argument("--api_key", dest="api_key", help="Route4Me API KEY", type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)

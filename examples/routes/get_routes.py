@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-
 import argparse
+
 from route4me import Route4Me
 
 
@@ -9,18 +8,20 @@ def main(api_key):
 
     route = route4me.route
     response = route.get_routes(limit=10, offset=0)
-    if isinstance(response, dict) and 'errors' in response.keys():
-        print('. '.join(response['errors']))
+    if isinstance(response, dict) and "errors" in response.keys():
+        print(". ".join(response["errors"]))
     else:
         for i, route in enumerate(response):
-            print('Route #{}'.format(i + 1))
-            print('\tOptimization Problem ID: {}\tRoute ID: {}'.format(
-                route['optimization_problem_id'], route['route_id']))
+            print(f"Route #{i + 1}")
+            print(
+                "\tOptimization Problem ID: {}\tRoute ID: {}".format(
+                    route["optimization_problem_id"], route["route_id"]
+                )
+            )
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Get Multiple Routes')
-    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
-                        type=str, required=True)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Get Multiple Routes")
+    parser.add_argument("--api_key", dest="api_key", help="Route4Me API KEY", type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)

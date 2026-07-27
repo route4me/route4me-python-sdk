@@ -1,20 +1,14 @@
-# -*- coding: utf-8 -*-
-
-from .api import Route4Me
 from .advanced_constraint import AdvancedConstraint
+from .api import Route4Me
+from .bundling import (
+    BUNDLING_ADDITIONAL_ITEM_MODE,
+    BUNDLING_FIRST_ITEM_MODE,
+    BUNDLING_MERGE_MODE,
+    BUNDLING_MODE,
+    Bundling,
+)
 from .exceptions import APIException, ParamValueException
-from .bundling import Bundling
-from .bundling import BUNDLING_MODE, BUNDLING_FIRST_ITEM_MODE, BUNDLING_ADDITIONAL_ITEM_MODE, BUNDLING_MERGE_MODE
-
-from .version import PROJECT
-from .version import COPYRIGHT
-from .version import AUTHOR
-from .version import TITLE
-from .version import LICENSE
-from .version import VERSION_STRING
-from .version import RELEASE_STRING
-from .version import BUILD
-from .version import COMMIT
+from .version import AUTHOR, BUILD, COMMIT, COPYRIGHT, LICENSE, PROJECT, RELEASE_STRING, TITLE, VERSION_STRING
 
 __project__ = PROJECT
 __copyright__ = COPYRIGHT
@@ -28,22 +22,22 @@ __commit__ = COMMIT
 
 
 __all__ = [
-    'Route4Me',
-    'APIException',
-    'ParamValueException',
-    '__project__',
-    '__copyright__',
-    '__author__',
-    '__title__',
-    '__license__',
-    '__version__',
-    '__release__',
-    '__build__',
-    '__commit__',
-    'AdvancedConstraint',
-    'Bundling',
-    'BUNDLING_MODE',
-    'BUNDLING_FIRST_ITEM_MODE',
-    'BUNDLING_ADDITIONAL_ITEM_MODE',
-    'BUNDLING_MERGE_MODE'
+    "BUNDLING_ADDITIONAL_ITEM_MODE",
+    "BUNDLING_FIRST_ITEM_MODE",
+    "BUNDLING_MERGE_MODE",
+    "BUNDLING_MODE",
+    "APIException",
+    "AdvancedConstraint",
+    "Bundling",
+    "ParamValueException",
+    "Route4Me",
+    "__author__",
+    "__build__",
+    "__commit__",
+    "__copyright__",
+    "__license__",
+    "__project__",
+    "__release__",
+    "__title__",
+    "__version__",
 ]

@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
-from .api_endpoints import FILE_UPLOAD_HOST, \
-    FILE_UPLOAD_PREVIEW_HOST, FILE_UPLOAD_GEOCODE_HOST
+from .api_endpoints import FILE_UPLOAD_GEOCODE_HOST, FILE_UPLOAD_HOST, FILE_UPLOAD_PREVIEW_HOST
 from .base import Base
-from .exceptions import ParamValueException, APIException
+from .exceptions import APIException, ParamValueException
 
 
 class FileUploading(Base):
@@ -26,17 +23,19 @@ class FileUploading(Base):
         :raise: ParamValueException if required params are not present.
 
         """
-        kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['strUploadID', 'format']):
+        kwargs.update(
+            {
+                "api_key": self.params["api_key"],
+            }
+        )
+        if self.check_required_params(kwargs, ["strUploadID", "format"]):
             try:
-                self.response = self.api._make_request(FILE_UPLOAD_PREVIEW_HOST,
-                                                       kwargs,
-                                                       self.api._request_get)
+                self.response = self.api._make_request(FILE_UPLOAD_PREVIEW_HOST, kwargs, self.api._request_get)
                 return self.response.content
             except APIException as e:
                 return e.to_dict()
         else:
-            raise ParamValueException('params', 'Params are not complete')
+            raise ParamValueException("params", "Params are not complete")
 
     def upload_file(self, **kwargs):
         """
@@ -45,19 +44,27 @@ class FileUploading(Base):
         :raise: ParamValueException if required params are not present.
 
         """
-        kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['files',
-                                               'format', ]):
+        kwargs.update(
+            {
+                "api_key": self.params["api_key"],
+            }
+        )
+        if self.check_required_params(
+            kwargs,
+            [
+                "files",
+                "format",
+            ],
+        ):
             try:
-                self.response = self.api._make_request(FILE_UPLOAD_HOST,
-                                                       kwargs,
-                                                       self.api._request_post,
-                                                       files=kwargs.pop('files'))
+                self.response = self.api._make_request(
+                    FILE_UPLOAD_HOST, kwargs, self.api._request_post, files=kwargs.pop("files")
+                )
                 return self.response.content
             except APIException as e:
                 return e.to_dict()
         else:
-            raise ParamValueException('params', 'Params are not complete')
+            raise ParamValueException("params", "Params are not complete")
 
     def upload_file_geocode(self, **kwargs):
         """
@@ -66,15 +73,24 @@ class FileUploading(Base):
         :raise: ParamValueException if required params are not present.
 
         """
-        kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['strUploadID', 'files', ]):
+        kwargs.update(
+            {
+                "api_key": self.params["api_key"],
+            }
+        )
+        if self.check_required_params(
+            kwargs,
+            [
+                "strUploadID",
+                "files",
+            ],
+        ):
             try:
-                self.response = self.api._make_request(FILE_UPLOAD_GEOCODE_HOST,
-                                                       kwargs,
-                                                       self.api._request_post,
-                                                       files=kwargs.pop('files'))
+                self.response = self.api._make_request(
+                    FILE_UPLOAD_GEOCODE_HOST, kwargs, self.api._request_post, files=kwargs.pop("files")
+                )
                 return self.response.content
             except APIException as e:
                 return e.to_dict()
         else:
-            raise ParamValueException('params', 'Params are not complete')
+            raise ParamValueException("params", "Params are not complete")
