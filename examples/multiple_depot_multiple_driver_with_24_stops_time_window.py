@@ -13,9 +13,6 @@ from route4me.constants import (
 )
 
 
-# codebeat:disable[LOC, ABC]
-
-
 def main(api_key):
     route4me = Route4Me(api_key)
 
@@ -244,9 +241,6 @@ def main(api_key):
         print('\t{0}\tRoute Link: {1}'.format(i + 1, route['links']['route']))
         for address in route['addresses']:
             print('\t\t\tAddress: {0}'.format(address['address']))
-
-
-# codebeat:enable[LOC, ABC]
 
 
 if __name__ == '__main__':

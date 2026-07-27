@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
 
 MAIN_HOST = "https://api.route4me.com"
 API_V5 = "https://wh.route4me.com/modules/api/v5.0"

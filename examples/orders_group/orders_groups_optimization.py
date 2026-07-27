@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[ABC]
 
 import argparse
 
@@ -80,5 +79,3 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(args.api_key)
-
-# codebeat:enable[ABC]

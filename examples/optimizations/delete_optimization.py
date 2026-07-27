@@ -13,9 +13,6 @@ from route4me.constants import (
 )
 
 
-# codebeat:disable[LOC, ABC]
-
-
 def main(api_key):
     route4me = Route4Me(api_key)
 
@@ -105,8 +102,6 @@ def main(api_key):
     print('Status: {}'.format(response['status']))
     print('Removed: {}'.format(response['removed']))
 
-
-# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Delete Optimization')

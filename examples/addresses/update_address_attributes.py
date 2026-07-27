@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[LOC, ABC]
 
 import argparse
 
@@ -120,8 +119,6 @@ def main(api_key):
             print('\taddress: {}'.format(response['address']))
             print('\talias: {}'.format(response['alias']))
 
-
-# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Update Address Attributes of a Route')

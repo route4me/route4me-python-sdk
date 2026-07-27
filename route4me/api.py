@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]
 
 import requests
 import json
@@ -248,6 +247,3 @@ class Route4Me:
                     sort_keys=True,
                     indent=4,
                 )
-
-
-# codebeat:enable[TOO_MANY_FUNCTIONS, LOC, ABC, ARITY, TOTAL_LOC]

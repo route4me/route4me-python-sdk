@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# codebeat:disable[TOO_MANY_FUNCTIONS]
 
 import warnings
 
@@ -262,6 +261,3 @@ class Route(Base):
             return self.response.content
         except APIException as e:
             return e.to_dict()
-
-
-# codebeat:enable[TOO_MANY_FUNCTIONS]

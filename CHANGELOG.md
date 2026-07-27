@@ -5,6 +5,157 @@ This is the history of changes of the `route4me-python` package
 > This file should be filled by maintainers, using pull requests
 > Please, follow this [guide](https://keepachangelog.com/en/1.0.0/)
 
+## [Unreleased]
+
+### Removed
+
+-   Python 2 compatibility shims and the `six` dependency
+-   Dead service configuration: `.scrutinizer.yml`, `.codebeatignore`, and all
+    115 `# codebeat:disable/enable[...]` pragmas across the package and examples
+
+### Added
+
+-   `AvoidanceZones` — correctly spelled class name. `AvoindanceZones` is kept
+    as a permanent backwards-compatible alias
+-   `clean_dict()`-backed `to_dict()` on `AdvancedConstraint` and `Bundling`
+-   Shared `make_request()` CRUD helper (`route4me/_api_method.py`)
+-   `ValidatedField` descriptor system (`route4me/_fields.py`), replacing 46
+    boilerplate setter methods on `Base`
+
+### Changed
+
+-   `print()` calls in library code replaced with the `logging` and `warnings`
+    modules
+-   `AdvancedConstraint` and `Bundling` converted to dataclasses
+
+### Fixed
+
+-   Missing `raise`, an undefined variable, a missing `return`, mutable default
+    arguments, resource leaks, and pointless re-raises
+
+## [0.1.7.0] - 2024-06-24
+
+### Changed
+
+-   Optimization Profiles endpoint
+-   README
+
+## [0.1.6.0] - 2024-06-10
+
+### Added
+
+-   Optimization based on Orders Group
+-   Slowdowns support, with example
+
+### Changed
+
+-   `make_request` behaviour
+-   `clean_dict` — expanded test coverage and adjusted behaviour
+
+### Fixed
+
+-   Assorted bugs
+
+## [0.1.5.1] - 2023-06-02
+
+### Added
+
+-   `clean_dict` utility function
+
+### Fixed
+
+-   Bug in `advanced_constraint.py`
+
+## [0.1.5.0] - 2023-05-01
+
+### Added
+
+-   Route Status: set, get and rollback
+
+## [0.1.4.5] - 2023-04-13
+
+### Fixed
+
+-   Bug in the merge-routes method
+
+## [0.1.4.4] - 2023-03-16
+
+### Fixed
+
+-   Double JSON dump in request bodies
+
+## [0.1.4.3] - 2023-01-20
+
+### Added
+
+-   Custom User-Agent header
+
+## [0.1.4.2] - 2022-12-24
+
+### Added
+
+-   Order creation without geo-coordinates
+-   Route creation with `order_id` or `contact_id`
+
+## [0.1.4.1] - 2022-05-23
+
+### Fixed
+
+-   Issue #18 — empty list (mutable value) used as a default argument in
+    multiple functions
+
+## [0.1.4.0] - 2022-04-18
+
+### Added
+
+-   Pickup/Dropoff examples
+-   Insert Locations examples
+
+### Removed
+
+-   Hardcoded `API_KEY` values from all examples
+
+## [0.1.3.0] - 2022-03-31
+
+### Added
+
+-   Stop Bundling, with examples
+-   Further Advanced Constraints examples
+
+## [0.1.2.1] - 2022-02-08
+
+### Added
+
+-   Advanced Constraints feature
+
+## [0.1.2.0] - 2021-08-13
+
+### Added
+
+-   Route multiple-stops re-sequence
+
+## [0.1.1.0] - 2021-08-02
+
+### Added
+
+-   Route Exporter (API V5)
+
+## [0.1.0.1] - 2021-03-23
+
+### Added
+
+-   Get, Update and Delete Telematics Connection
+
+### Fixed
+
+-   AppVeyor build script and version number
+
+## [0.1.0.0] - 2020-08-31
+
+### Added
+
+-   Telematics Gateway
+
 ## [0.0.7.0] - 2020-09-01
 
 ### Removed

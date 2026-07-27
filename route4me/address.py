@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[ABC]
 
 import json
 import logging
@@ -241,5 +240,3 @@ class Address(Base):
                 return e.to_dict()
         else:
             raise ParamValueException('params', 'Params are not complete')
-
-# codebeat:enable[ABC]

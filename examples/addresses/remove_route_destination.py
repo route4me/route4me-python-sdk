@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[LOC, ABC]
 
 import argparse
 
@@ -99,8 +98,6 @@ def main(api_key):
     print('Address id: {1} deleted: {0}'.format(response['deleted'],
                                                 response['route_destination_id']))
 
-
-# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Remove Destination From a Route')

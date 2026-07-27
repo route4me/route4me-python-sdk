@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[SIMILARITY, BLOCK_NESTING]
 
 import argparse
 
@@ -33,5 +32,3 @@ if __name__ == '__main__':
                         type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)
-
-# codebeat:enable[SIMILARITY, BLOCK_NESTING]

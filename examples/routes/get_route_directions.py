@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[BLOCK_NESTING, ABC]
 import argparse
 from route4me import Route4Me
 
@@ -59,5 +58,3 @@ if __name__ == '__main__':
                         type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)
-
-# codebeat:enable[BLOCK_NESTING, ABC]

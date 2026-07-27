@@ -13,9 +13,6 @@ from route4me.constants import (
 )
 
 
-# codebeat:disable[LOC, ABC]
-
-
 def main(api_key):
     r4m = Route4Me(api_key)
 
@@ -97,8 +94,6 @@ def main(api_key):
             print('Updating Route')
             print('Driver Alias: {}'.format(response['driver_alias']))
 
-
-# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Update a Route')

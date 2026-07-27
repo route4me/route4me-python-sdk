@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# codebeat:disable[LOC, ABC]
 
 import argparse
 
@@ -127,8 +126,6 @@ def main(api_key):
                 print('\taddress: {}'.format(address['address']))
                 print('\t')
 
-
-# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Insert an address to an existing route into specific position')

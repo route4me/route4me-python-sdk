@@ -13,9 +13,6 @@ from route4me.constants import (
 )
 
 
-# codebeat:disable[LOC, ABC]
-
-
 def main(api_key):
     r4m = Route4Me(api_key)
 
@@ -137,8 +134,6 @@ def main(api_key):
             print('\taddress: {}'.format(address['address']))
             print('\t')
 
-
-# codebeat:enable[LOC, ABC]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Move a Destination to other Route')

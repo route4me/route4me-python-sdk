@@ -14,9 +14,6 @@ from route4me.constants import (
 )
 
 
-# codebeat:disable[LOC, ABC]
-
-
 def main(api_key):
     route4me = Route4Me(api_key)
 
@@ -114,9 +111,6 @@ def main(api_key):
     print('Re-optimization status: {}'.format(
         OPTIMIZATION_STATE.reverse_mapping.get(response['state'])
     ))
-
-
-# codebeat:enable[LOC, ABC]
 
 
 if __name__ == '__main__':
