@@ -1,0 +1,11 @@
+# Revisions listed here are excluded from `git blame` output.
+#
+# Enable locally with:
+#     git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# GitHub honours this file automatically.
+#
+# Only whitespace/formatting-only commits belong here.
+
+# style: apply ruff autofix and formatter across the codebase
+674ef6987c76412d9a0836ae672e5cbd5f5d67ec
