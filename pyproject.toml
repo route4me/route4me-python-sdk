@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "route4me"
-version = "0.2.0.0"
+version = "0.3.0.0"
 description = "Route4Me Python SDK"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
@@ -126,7 +126,9 @@ ignore = [
 # they are not imported by the package.
 "examples/**" = ["T201", "S101", "E402"]
 # Tests assert, use fixtures, and legitimately poke at private attributes.
-"tests/**" = ["S101", "S105", "S106", "ARG", "SLF001"]
+# S311: seeded `random.Random` is used to make backoff jitter deterministic
+#       in tests -- not a cryptographic use.
+"tests/**" = ["S101", "S105", "S106", "S311", "ARG", "SLF001"]
 # Re-exports.
 "route4me/__init__.py" = ["F401"]
 

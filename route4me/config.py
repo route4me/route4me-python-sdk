@@ -49,6 +49,26 @@ UNSET = _Unset()
 DEFAULT_TIMEOUT = (6.05, 30.0)
 
 
+#: Retries *after* the first attempt. 0 disables retrying, matching the C#
+#: ``Route4MeConfig.RetryCount`` default -- retrying is opt-in in both SDKs so
+#: that upgrading cannot silently change how many requests a service emits.
+DEFAULT_RETRY_COUNT = 0
+
+#: Exponential-backoff base, in seconds. Matches C# ``RetryInitialDelay``.
+#: Yields 0.2s, 0.4s, 0.8s, 1.6s before jitter.
+DEFAULT_RETRY_INITIAL_DELAY = 0.2
+
+#: Consecutive failures before the breaker opens. Matches C#
+#: ``CircuitBreakerFailureThreshold``.
+DEFAULT_CIRCUIT_BREAKER_THRESHOLD = 5
+
+#: How long the breaker stays open. Matches C# ``CircuitBreakerDuration``.
+DEFAULT_CIRCUIT_BREAKER_DURATION = 30.0
+
+#: Connection-pool size per host, passed to ``requests``' ``HTTPAdapter``.
+DEFAULT_POOL_MAXSIZE = 10
+
+
 class Route4MeConfig:
     """Global defaults. Assign to the class attributes to change them."""
 
@@ -66,6 +86,51 @@ class Route4MeConfig:
     #:    attributes by default. Turn it on deliberately, for local debugging,
     #:    and turn it back off.
     redact_urls = True
+
+    #: Retries after the first attempt. 0 (the default) disables retrying.
+    #: Only idempotent verbs are ever retried -- see
+    #: :data:`route4me._resilience.RETRYABLE_METHODS`.
+    retry_count = DEFAULT_RETRY_COUNT
+
+    #: Exponential-backoff base delay, in seconds.
+    retry_initial_delay = DEFAULT_RETRY_INITIAL_DELAY
+
+    #: Enable the circuit breaker. Off by default.
+    enable_circuit_breaker = False
+
+    #: Consecutive failures before the breaker opens.
+    circuit_breaker_failure_threshold = DEFAULT_CIRCUIT_BREAKER_THRESHOLD
+
+    #: How long the breaker stays open, in seconds.
+    circuit_breaker_duration = DEFAULT_CIRCUIT_BREAKER_DURATION
+
+    #: ``callback(exc_or_response, delay, attempt)``, called before each retry
+    #: sleep. Exceptions raised by it are logged and swallowed.
+    on_retry = None
+
+    #: ``callback(exc, reset_timeout)``, called when the breaker opens.
+    on_circuit_breaker_open = None
+
+    #: Reuse one ``requests.Session`` per client for connection pooling. This
+    #: is the single biggest latency win available here: without it every call
+    #: pays a fresh TCP and TLS handshake.
+    use_session = True
+
+    #: Connection-pool size per host.
+    pool_maxsize = DEFAULT_POOL_MAXSIZE
+
+
+def resolve(per_call, per_client, config_attr):
+    """Resolve one layered setting.
+
+    Order is per-call > per-client > :class:`Route4MeConfig`. ``UNSET`` means
+    "not supplied at this layer", which is why an explicit ``None`` can still
+    carry its own meaning.
+    """
+    for candidate in (per_call, per_client):
+        if candidate is not UNSET:
+            return candidate
+    return getattr(Route4MeConfig, config_attr)
 
 
 def normalize_timeout(value):

@@ -5,6 +5,51 @@ This is the history of changes of the `route4me-python` package
 > This file should be filled by maintainers, using pull requests
 > Please, follow this [guide](https://keepachangelog.com/en/1.0.0/)
 
+## [0.3.0.0] - 2026-07-28
+
+Resilience release. Brings the transport to parity with the C# SDK's Polly
+policy, and makes connection reuse the default.
+
+### Added
+
+-   **Connection pooling.** Each client now reuses one `requests.Session`, so
+    calls no longer pay a fresh TCP and TLS handshake each time. This is the
+    largest latency improvement available here. Disable with
+    `Route4Me(key, use_session=False)`, or inject your own with
+    `session=...`.
+-   **Retry with exponential backoff**, mirroring the C# `RetryCount` /
+    `RetryInitialDelay`. Off by default (`retry_count=0`), matching the C#
+    default so upgrading cannot silently multiply the requests a service
+    emits. Backoff is `initial_delay * 2 ** (attempt - 1)` with ±20% jitter;
+    retryable statuses are 408, 429 and 5xx.
+    -   **Only idempotent verbs are retried** (GET, HEAD, OPTIONS, PUT,
+        DELETE). POST is deliberately excluded: replaying
+        `POST /orders-platform/batch-create` after a 503 can create the orders
+        twice, since the server may have processed the first request and failed
+        only while responding. The C# Polly policy does retry POST; this SDK
+        does not reproduce that hazard.
+    -   `Retry-After` is honoured on 429 and clamped to 120s. The C# SDK
+        ignores the header.
+-   **Circuit breaker**, mirroring the C# `CircuitBreakerFailureThreshold` (5)
+    and `CircuitBreakerDuration` (30s). Off by default; enable with
+    `enable_circuit_breaker=True`. Opens after a run of consecutive failures,
+    then half-opens and admits a single probe. `CircuitBreakerOpen` subclasses
+    `requests.RequestException` so existing transport-error handling catches
+    it. A 4xx does not count as a failure — that is the server working.
+-   `Route4Me.close()` and context-manager support
+    (`with Route4Me(key) as client:`) to release pooled connections.
+-   `on_retry` and `on_circuit_breaker_open` callbacks. An exception raised
+    inside either is logged and swallowed — a user callback cannot turn a
+    recoverable failure into a crash.
+-   Config resolution is now layered end to end: per-call > constructor >
+    `Route4MeConfig` > shipped default.
+
+### Fixed
+
+-   `_make_request` no longer mutates the `params` dict it is given. Every
+    resource passes its own long-lived `self.params`, so query parameters
+    accumulated on that dict across calls and leaked between them.
+
 ## [0.2.0.0] - 2026-07-28
 
 Security and infrastructure release. Two defects here are urgent for anyone

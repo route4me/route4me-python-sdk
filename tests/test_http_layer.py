@@ -223,33 +223,39 @@ class TestTimeouts:
     """
 
     @staticmethod
-    def _capture_timeout(monkeypatch, module_attr):
-        """Record the ``timeout`` kwarg that reaches ``requests``."""
+    def _capture_timeout(monkeypatch):
+        """Record the ``timeout`` kwarg that reaches the transport.
+
+        Patches ``requests.Session.request`` -- since 0.3.0 every call is
+        issued through a pooled session, not the module-level helpers.
+        """
         captured = {}
 
-        def spy(*args, **kwargs):
+        def spy(self, method, url, **kwargs):
             captured["timeout"] = kwargs.get("timeout", "NOT PASSED")
+            captured["method"] = method
             raise _StopSend
 
-        monkeypatch.setattr(f"requests.{module_attr}", spy)
+        monkeypatch.setattr("requests.sessions.Session.request", spy)
         return captured
 
     @pytest.mark.parametrize(
-        ("helper", "entry_point"),
+        ("helper", "verb"),
         [
-            ("_request_get", "get"),
-            ("_request_post", "post"),
-            ("_request_put", "request"),
-            ("_request_delete", "request"),
+            ("_request_get", "GET"),
+            ("_request_post", "POST"),
+            ("_request_put", "PUT"),
+            ("_request_delete", "DELETE"),
         ],
     )
-    def test_every_verb_passes_a_timeout(self, client, monkeypatch, helper, entry_point):
-        captured = self._capture_timeout(monkeypatch, entry_point)
+    def test_every_verb_passes_a_timeout(self, client, monkeypatch, helper, verb):
+        captured = self._capture_timeout(monkeypatch)
 
         with pytest.raises(_StopSend):
             getattr(client, helper)(ANY_URL, {})
 
         assert captured["timeout"] == DEFAULT_TIMEOUT
+        assert captured["method"] == verb
 
     def test_the_default_is_a_connect_read_pair(self):
         """A scalar would make a blackholed SYN cost the full read timeout."""
@@ -257,7 +263,7 @@ class TestTimeouts:
 
     def test_a_constructor_timeout_overrides_the_default(self, monkeypatch):
         client = Route4Me("k" * 32, timeout=5)
-        captured = self._capture_timeout(monkeypatch, "get")
+        captured = self._capture_timeout(monkeypatch)
 
         with pytest.raises(_StopSend):
             client._request_get(ANY_URL, {})
@@ -266,7 +272,7 @@ class TestTimeouts:
 
     def test_a_per_call_timeout_wins_over_the_constructor(self, monkeypatch):
         client = Route4Me("k" * 32, timeout=5)
-        captured = self._capture_timeout(monkeypatch, "get")
+        captured = self._capture_timeout(monkeypatch)
 
         with pytest.raises(_StopSend):
             client._request_get(ANY_URL, {}, timeout=(1, 2))
@@ -276,7 +282,7 @@ class TestTimeouts:
     def test_none_restores_the_pre_0_2_0_unbounded_behaviour(self, monkeypatch):
         """An explicit, greppable opt-out."""
         client = Route4Me("k" * 32, timeout=None)
-        captured = self._capture_timeout(monkeypatch, "get")
+        captured = self._capture_timeout(monkeypatch)
 
         with pytest.raises(_StopSend):
             client._request_get(ANY_URL, {})
@@ -285,7 +291,7 @@ class TestTimeouts:
 
     def test_the_global_config_is_the_last_fallback(self, client, monkeypatch):
         monkeypatch.setattr(Route4MeConfig, "timeout", 12)
-        captured = self._capture_timeout(monkeypatch, "get")
+        captured = self._capture_timeout(monkeypatch)
 
         with pytest.raises(_StopSend):
             client._request_get(ANY_URL, {})
@@ -300,12 +306,6 @@ class TestTimeouts:
 
 
 class TestParamsMutation:
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 5: _make_request mutates the caller's params dict. Every "
-        "resource passes its long-lived self.params, so query params accumulate "
-        "across calls. Remove this marker once the dict is copied.",
-    )
     def test_make_request_does_not_mutate_the_callers_params(self, client, mocked):
         mocked.add(responses.GET, ANY_URL, json={}, status=200)
         params = {"limit": 1}

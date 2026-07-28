@@ -10,7 +10,7 @@
 # pyproject.toml. ``tests/test_version.py`` fails the build if they drift.
 # ==============================================================================
 
-__version__ = "0.2.0.0"
+__version__ = "0.3.0.0"
 
 #: Numeric release components, derived from :data:`__version__`.
 #: ``"0.2.0.0.dev0"`` -> ``(0, 2, 0, 0)``.

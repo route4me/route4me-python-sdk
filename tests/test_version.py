@@ -46,7 +46,7 @@ class VersionTests(unittest.TestCase):
         self.assertRegex(version.__version__, PEP440)
 
     def test_numeric_tuple_is_derived_from_the_string(self):
-        self.assertEqual(version.VERSION, (0, 2, 0, 0))
+        self.assertEqual(version.VERSION, (0, 3, 0, 0))
         self.assertTrue(all(isinstance(part, int) for part in version.VERSION))
 
     def test_suffix_completes_the_string(self):

@@ -1,14 +1,17 @@
 import json
+import threading
 
 import requests
+from requests.adapters import HTTPAdapter
 
 from ._redact import redact_text
+from ._resilience import CircuitBreaker, execute_with_retry
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook
 from .api_endpoints import API_HOST
 from .avoidance_zones import AvoidanceZones
-from .config import UNSET, normalize_timeout, resolve_timeout
+from .config import UNSET, normalize_timeout, resolve, resolve_timeout
 from .exceptions import APIException
 from .file_uploading import FileUploading
 from .gps import GPS
@@ -36,7 +39,24 @@ class Route4Me:
     Route4Me Python SDK
     """
 
-    def __init__(self, key, headers=HEADERS, redirects=True, verify_ssl=True, proxies=None, timeout=UNSET):
+    def __init__(
+        self,
+        key,
+        headers=HEADERS,
+        redirects=True,
+        verify_ssl=True,
+        proxies=None,
+        timeout=UNSET,
+        retry_count=UNSET,
+        retry_initial_delay=UNSET,
+        enable_circuit_breaker=UNSET,
+        circuit_breaker_failure_threshold=UNSET,
+        circuit_breaker_duration=UNSET,
+        on_retry=UNSET,
+        on_circuit_breaker_open=UNSET,
+        use_session=UNSET,
+        session=None,
+    ):
         """
         :param key: Route4Me API key.
         :param headers: request headers; copied, never shared between clients.
@@ -48,17 +68,52 @@ class Route4Me:
             forever -- the pre-0.2.0 behaviour), a number, or a
             ``(connect, read)`` pair. Defaults to
             :data:`route4me.config.DEFAULT_TIMEOUT`, i.e. ``(6.05, 30.0)``.
+        :param retry_count: retries after the first attempt. 0 (the default)
+            disables retrying. Only idempotent verbs are ever retried -- POST is
+            excluded because replaying a create can duplicate server-side work.
+        :param retry_initial_delay: exponential-backoff base, in seconds.
+        :param enable_circuit_breaker: fail fast after a run of failures.
+        :param circuit_breaker_failure_threshold: consecutive failures to open.
+        :param circuit_breaker_duration: seconds to stay open.
+        :param on_retry: ``callback(exc_or_response, delay, attempt)``.
+        :param on_circuit_breaker_open: ``callback(exc, reset_timeout)``.
+        :param use_session: reuse one :class:`requests.Session` for connection
+            pooling. On by default; without it every call pays a fresh TCP and
+            TLS handshake.
+        :param session: inject a pre-built session (mainly for testing).
+
+        Any option left unset falls back to
+        :class:`route4me.config.Route4MeConfig`, so a whole process can be tuned
+        in one place.
 
         .. versionchanged:: 0.2.0
            Requests now time out after 30s by default; previously there was no
            timeout at all and a stalled socket blocked the calling thread
            indefinitely. Pass ``timeout=None`` to restore the old behaviour.
+
+        .. versionadded:: 0.3.0
+           Connection pooling, opt-in retry with exponential backoff, and an
+           opt-in circuit breaker.
         """
         self.key = key
         self.response = None
         # Validate eagerly so a bad timeout is a construction-time error rather
         # than a confusing failure on the first request.
         self.timeout = timeout if timeout is UNSET else normalize_timeout(timeout)
+        self._retry_count = retry_count
+        self._retry_initial_delay = retry_initial_delay
+        self._on_retry = on_retry
+        self._use_session = use_session
+        self._enable_circuit_breaker = enable_circuit_breaker
+        self._circuit_breaker_failure_threshold = circuit_breaker_failure_threshold
+        self._circuit_breaker_duration = circuit_breaker_duration
+        self._on_circuit_breaker_open = on_circuit_breaker_open
+        self._session = session
+        # requests.Session is not fully thread-safe; serialise the lazy creation
+        # so two threads cannot build and pool two different sessions.
+        self._session_lock = threading.Lock()
+        self._circuit_breaker = None
+        self._breaker_lock = threading.Lock()
         self.activity_feed = ActivityFeed(self)
         self.address = Address(self)
         self.address_book = AddressBook(self)
@@ -95,6 +150,10 @@ class Route4Me:
         :return: response
         :raise: APIException
         """
+        # Copy rather than mutate. Every resource passes its own long-lived
+        # `self.params`, so writing api_key in place meant query parameters
+        # accumulated on that dict across calls and leaked between them.
+        params = dict(params) if params else {}
         params["api_key"] = self.key
         response = request_method(url, params, **kwargs)
         if not 200 <= response.status_code < 400:
@@ -109,9 +168,105 @@ class Route4Me:
             )
         return response
 
+    # ------------------------------------------------------------- transport
+
     def _timeout(self, per_call=UNSET):
         """Resolve the effective timeout: per-call > constructor > global."""
         return resolve_timeout(per_call, self.timeout)
+
+    def _setting(self, per_call, per_client, name):
+        return resolve(per_call, per_client, name)
+
+    @property
+    def session(self):
+        """The pooled :class:`requests.Session`, or ``None`` when disabled.
+
+        Created on first use under a lock: ``requests.Session`` is not fully
+        thread-safe, and two threads racing here would build two sessions and
+        silently halve the benefit of pooling.
+        """
+        if not self._setting(UNSET, self._use_session, "use_session"):
+            return None
+        if self._session is None:
+            with self._session_lock:
+                if self._session is None:
+                    self._session = self._build_session()
+        return self._session
+
+    def _build_session(self):
+        session = requests.Session()
+        pool = self._setting(UNSET, UNSET, "pool_maxsize")
+        # Retries are handled in `_resilience`, not by urllib3 -- see that
+        # module's docstring for why. The adapter is mounted purely for pooling.
+        adapter = HTTPAdapter(pool_connections=pool, pool_maxsize=pool, max_retries=0)
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+        return session
+
+    @property
+    def circuit_breaker(self):
+        """The shared :class:`CircuitBreaker`, or ``None`` when disabled."""
+        if not self._setting(UNSET, self._enable_circuit_breaker, "enable_circuit_breaker"):
+            return None
+        if self._circuit_breaker is None:
+            with self._breaker_lock:
+                if self._circuit_breaker is None:
+                    self._circuit_breaker = CircuitBreaker(
+                        failure_threshold=self._setting(
+                            UNSET,
+                            self._circuit_breaker_failure_threshold,
+                            "circuit_breaker_failure_threshold",
+                        ),
+                        reset_timeout=self._setting(UNSET, self._circuit_breaker_duration, "circuit_breaker_duration"),
+                        on_open=self._setting(UNSET, self._on_circuit_breaker_open, "on_circuit_breaker_open"),
+                    )
+        return self._circuit_breaker
+
+    def _send(self, method, url, **kwargs):
+        """Issue one HTTP request through the session, with retry and breaker.
+
+        All four ``_request_*`` helpers funnel through here, so pooling, retry,
+        the breaker and the timeout apply uniformly -- including to every API V5
+        manager added later, which need not know any of this exists.
+        """
+        kwargs.setdefault("verify", self.verify_ssl)
+        proxies = self.proxies or None
+        if proxies is not None:
+            kwargs.setdefault("proxies", proxies)
+
+        session = self.session
+        caller = session.request if session is not None else requests.request
+
+        def send():
+            return caller(method, url, **kwargs)
+
+        return execute_with_retry(
+            send,
+            method,
+            retry_count=self._setting(UNSET, self._retry_count, "retry_count"),
+            initial_delay=self._setting(UNSET, self._retry_initial_delay, "retry_initial_delay"),
+            circuit_breaker=self.circuit_breaker,
+            on_retry=self._setting(UNSET, self._on_retry, "on_retry"),
+        )
+
+    # -------------------------------------------------------------- lifecycle
+
+    def close(self):
+        """Close the pooled session and release its connections.
+
+        Safe to call more than once, and safe to call when pooling is disabled.
+        """
+        with self._session_lock:
+            if self._session is not None:
+                self._session.close()
+                self._session = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+        return False
 
     def get(self, request_method):
         """
@@ -137,16 +292,15 @@ class Route4Me:
         :param files:
         :return:
         """
-        return requests.post(  # nosec B113 - timeout is supplied below via self._timeout()
+        return self._send(
+            "POST",
             url,
             params=request_params,
             allow_redirects=self.redirects,
-            proxies=self.proxies,
             files=files,
             data=data,
             headers=self.headers,
             json=json,
-            verify=self.verify_ssl,
             timeout=self._timeout(timeout),
         )
 
@@ -158,14 +312,13 @@ class Route4Me:
         :param data:
         :return:
         """
-        return requests.get(  # nosec B113 - timeout is supplied below via self._timeout()
+        return self._send(
+            "GET",
             url,
             params=request_params,
             allow_redirects=self.redirects,
-            proxies=self.proxies,
             data=data,
             headers=self.headers,
-            verify=self.verify_ssl,
             timeout=self._timeout(timeout),
         )
 
@@ -177,15 +330,13 @@ class Route4Me:
         :param data:
         :return:
         """
-        return requests.request(
+        return self._send(
             "PUT",
             url,
             params=request_params,
-            proxies=self.proxies,
             data=data,
             json=json,
             headers=self.headers,
-            verify=self.verify_ssl,
             timeout=self._timeout(timeout),
         )
 
@@ -197,14 +348,13 @@ class Route4Me:
         :param data:
         :return:
         """
-        return requests.request(
+        return self._send(
             "DELETE",
             url,
             params=request_params,
             data=data,
             json=json,
             headers=self.headers,
-            verify=self.verify_ssl,
             timeout=self._timeout(timeout),
         )
 
