@@ -96,10 +96,6 @@ class TestRunOptimization:
 
 
 class TestGetOptimization:
-    # These two use an address-free payload deliberately: `get_optimization`
-    # ends by calling `parse_response`, which raises TypeError as soon as the
-    # payload contains "addresses" (see the xfail below). Keeping the payload
-    # bare isolates the request-building behaviour being asserted here.
     ADDRESSLESS = {"optimization_problem_id": OPTIMIZATION_ID, "state": 4}
 
     def test_sends_the_optimization_problem_id(self, client, mocked, query_of, last_request):
@@ -116,17 +112,22 @@ class TestGetOptimization:
 
         assert last_request().method == "GET"
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 6: get_optimization is unusable against any realistic "
-        "payload -- every real optimization response contains 'addresses', and "
-        "parse_response then raises TypeError. Remove this marker once "
-        "parse_response reads the decoded payload.",
-    )
     def test_works_with_a_realistic_payload(self, client, mocked):
+        """Regression: this raised TypeError for any payload containing
+        "addresses" -- i.e. every real optimization response -- because
+        `parse_response` subscripted the Response object."""
         mocked.add(responses.GET, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)
 
-        client.get_optimization(OPTIMIZATION_ID)
+        result = client.get_optimization(OPTIMIZATION_ID)
+
+        assert result["optimization_problem_id"] == OPTIMIZATION_ID
+        assert len(client.address.addresses) == 2
+
+    def test_it_returns_the_payload(self, client, mocked):
+        """Regression: previously returned None unconditionally."""
+        mocked.add(responses.GET, API_HOST, json=self.ADDRESSLESS, status=200)
+
+        assert client.get_optimization(OPTIMIZATION_ID) == self.ADDRESSLESS
 
 
 class TestParseResponse:
@@ -136,12 +137,6 @@ class TestParseResponse:
 
         client.parse_response()  # must not raise
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 6: parse_response subscripts self.response (a "
-        "requests.Response) instead of the parsed dict, raising TypeError. "
-        "Remove this marker once it reads the decoded payload.",
-    )
     def test_addresses_are_copied_onto_the_address_resource(self, client, mocked):
         mocked.add(responses.GET, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)
         client.response = client._make_request(API_HOST, {}, client._request_get)
@@ -168,12 +163,6 @@ class TestReOptimization:
 
         assert json.loads(last_request().body) == {"parameters": {"route_name": "Renamed"}}
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 6: re_optimization calls _request_put directly instead of "
-        "going through _make_request, so it never raises on an HTTP error. "
-        "Remove this marker once it is routed through _make_request.",
-    )
     def test_an_http_error_propagates(self, client, mocked):
         from route4me.exceptions import APIException
 
@@ -200,13 +189,6 @@ class TestExporters:
 
         assert not target.exists()
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 6: export_result_to_json passes Response.content (bytes) "
-        "to json.dump, which raises 'Object of type bytes is not JSON "
-        "serializable' -- the method has never worked. Remove this marker once "
-        "it serialises the decoded payload.",
-    )
     def test_export_result_writes_after_a_call(self, prepared, mocked, tmp_path):
         mocked.add(responses.POST, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)
         prepared.run_optimization()

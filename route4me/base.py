@@ -218,13 +218,29 @@ class Base:
         return set(requirements).issubset(set(params.keys()))
 
     def validate_params(self, **kwargs):
+        """Validate and apply each ``name=value`` via its field setter.
+
+        :raise ParamValueException: for an unknown parameter name, a name that
+            does not resolve to a setter, or a value the setter rejects.
+
+        .. versionchanged:: 0.3.1
+           Only the attribute *lookup* is guarded. The previous version wrapped
+           the setter call too, so an ``AttributeError`` raised by a bug *inside*
+           a setter was reported as ``ParamValueException(name, "Not supported")``
+           -- turning an SDK bug into a misleading "unsupported parameter"
+           message. The redundant ``except ParamValueException: raise e`` is
+           also gone.
+        """
         for k, v in kwargs.items():
             try:
-                self.__getattribute__(k)(v)
-            except ParamValueException as e:
-                raise e
+                setter = self.__getattribute__(k)
             except AttributeError:
-                raise ParamValueException(k, "Not supported")
+                raise ParamValueException(k, "Not supported") from None
+            if not callable(setter):
+                raise ParamValueException(k, "Not a settable parameter")
+            # Deliberately outside the try: errors from the setter itself must
+            # surface as themselves.
+            setter(v)
         return True
 
     def add(self, params=None, data=None):

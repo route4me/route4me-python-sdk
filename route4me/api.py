@@ -372,44 +372,68 @@ class Route4Me:
         :param optimization_id:
         :param data:
         :return: response as a object
+        :raise APIException: on a non-2xx/3xx response
+
+        .. versionchanged:: 0.3.1
+           Routed through ``_make_request``. It previously called
+           ``_request_put`` directly and so never raised on an HTTP error --
+           callers got ``response.json()`` of an error body, or a
+           ``JSONDecodeError`` if the server returned HTML.
         """
         if data is None:
             data = {}
         self.optimization.optimization_problem_id(optimization_id)
         self.optimization.reoptimize(1)
         data = {"parameters": data}
-        self.response = self._request_put(API_HOST, self.optimization.get_params(), json=data)
+        self.response = self._make_request(API_HOST, self.optimization.get_params(), self._request_put, json=data)
         return self.response.json()
 
     def get_optimization(self, optimization_problem_id):
         """
         Get optimization given optimization_problem_id
         :param optimization_problem_id:
-        :return:
+        :return: the parsed optimization payload
+
+        .. versionchanged:: 0.3.1
+           Now returns the payload. It previously returned ``None`` always, and
+           raised ``TypeError`` for any response containing ``addresses`` --
+           which is every real optimization response -- via ``parse_response``.
         """
         self.optimization.optimization_problem_id(optimization_problem_id)
         self.response = self.get(self._request_get)
-        self.parse_response()
+        return self.parse_response()
 
     def parse_response(self):
         """
         Parse response and set it to Route4me instance
-        :return:
+        :return: the parsed response payload
+
+        .. versionchanged:: 0.3.1
+           Reads the decoded payload. It previously subscripted
+           ``self.response`` -- a :class:`requests.Response`, which is not
+           subscriptable -- raising ``TypeError``.
         """
-        response = self.response.json()
-        if "addresses" in response:
-            self.address.addresses = self.response["addresses"]
+        payload = self.response.json()
+        if isinstance(payload, dict) and "addresses" in payload:
+            self.address.addresses = payload["addresses"]
+        return payload
 
     def export_result_to_json(self, file_name):
         """
         Export response to JSON File
         :param file_name:
         :return:
+
+        .. versionchanged:: 0.3.1
+           Serialises the decoded payload. It previously passed
+           ``Response.content`` (``bytes``) to ``json.dump``, which raises
+           ``TypeError: Object of type bytes is not JSON serializable`` -- so
+           this method had never worked.
         """
         if self.response:
             with open(file_name, "w") as f:
                 json.dump(
-                    self.response.content,
+                    self.response.json(),
                     f,
                     ensure_ascii=False,
                     sort_keys=True,

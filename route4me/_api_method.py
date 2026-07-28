@@ -6,7 +6,11 @@ def make_request(resource, endpoint, method, params, required=None, body=None, b
     Shared CRUD helper. Validates required params, makes request, handles errors.
     Returns response.json() or error dict.
     """
-    if required and not resource.check_required_params(params if body is None else params, required):
+    # Required params are always validated against `params`. The previous
+    # `params if body is None else params` ternary had identical branches --
+    # a leftover from a refactor that intended to validate against `body` in
+    # the body case. Callers that need body validation do it before calling.
+    if required and not resource.check_required_params(params, required):
         raise ParamValueException("params", "Params are not complete")
     request_fn = getattr(resource.api, f"_request_{method}")
     try:

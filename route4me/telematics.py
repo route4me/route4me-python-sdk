@@ -22,17 +22,34 @@ class Telematics(Base):
         Base.__init__(self, api)
 
     @staticmethod
-    def pp_response(response):
+    def pp_response(response, file=None):
+        """Pretty-print a telematics response.
+
+        A display helper, not library logging -- printing is the whole point of
+        a ``pp_`` function, and twelve scripts under ``examples/telematics/``
+        depend on it writing to stdout. Routing it through ``logging`` would
+        silently produce no output for all of them, since examples do not
+        configure a handler.
+
+        :param file: destination stream; defaults to stdout. Pass an
+            ``io.StringIO`` to capture the output instead.
+        """
         if isinstance(response, dict):
             for k, v in response.items():
-                print(f"{k} : {v}")
-            print("")
+                print(f"{k} : {v}", file=file)
+            print("", file=file)
 
     @staticmethod
-    def pp_vendor_comparison(vendor):
+    def pp_vendor_comparison(vendor, file=None):
+        """Pretty-print one vendor's feature list as a tab-separated row.
+
+        See :meth:`pp_response` on why this prints rather than logs.
+
+        :param file: destination stream; defaults to stdout.
+        """
         if isinstance(vendor, dict):
-            features = [x["name"] for x in vendor["features"]]
-            print("{}\t{}\t{}".format(vendor["id"], vendor["name"], ", ".join(features)))
+            features = [x["name"] for x in vendor.get("features", [])]
+            print("{}\t{}\t{}".format(vendor.get("id"), vendor.get("name"), ", ".join(features)), file=file)
 
     def get_vendors(self):
         if self.check_required_params(

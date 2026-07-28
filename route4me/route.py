@@ -83,14 +83,16 @@ class Route(Base):
         if self.check_required_params(kwargs, ["route_id"]):
             try:
                 self.response = self.api._make_request(ROUTE_HOST, kwargs, self.api._request_delete)
-                response = self.response.json()
-                try:
-                    response = response.get("deleted")
-                    return response
-                except AttributeError:
-                    return response.errors
+                payload = self.response.json()
             except APIException as e:
                 return e.to_dict()
+            # The old handler was `except AttributeError: return response.errors`,
+            # which raised AttributeError itself whenever the payload was a dict
+            # without an `errors` attribute -- i.e. always. Return the payload
+            # untouched when it is not the expected `{"deleted": ...}` envelope.
+            if isinstance(payload, dict) and "deleted" in payload:
+                return payload["deleted"]
+            return payload
         else:
             raise ParamValueException("params", "Params are not complete")
 

@@ -1,14 +1,10 @@
 import json
 import logging
-import random
 import time
 
 import requests
 
-from .exceptions import APIException
-
-logger = logging.getLogger(__name__)
-
+from ._resilience import backoff_delay
 from .api_endpoints import (
     ADD_ROUTE_NOTES_HOST,
     ADDRESS_HOST,
@@ -16,7 +12,17 @@ from .api_endpoints import (
     SINGLE_GEOCODER,
 )
 from .base import Base
-from .exceptions import ParamValueException
+from .exceptions import APIException, ParamValueException
+
+logger = logging.getLogger(__name__)
+
+#: Attempts (including the first) when geocoding a single address.
+MAX_GEOCODE_ATTEMPTS = 6
+
+#: Backoff base for geocode retries, in seconds. Larger than the transport's
+#: 0.2s because a geocoding failure usually means the geocoder is saturated
+#: rather than momentarily unreachable.
+GEOCODE_RETRY_INITIAL_DELAY = 0.5
 
 
 class Address(Base):
@@ -91,7 +97,13 @@ class Address(Base):
             json_data = self.get_batch_geocodes(params, data)
         except json.decoder.JSONDecodeError:
             logger.warning("Error Geocoding some of the Addresses. Please check the addresses and try again.")
-            return addresses, []
+            # Returns (geocoding_error, addresses), matching the success path at
+            # the end of this method. This used to return `addresses, []` --
+            # the two slots swapped -- so a caller unpacking
+            # `errors, addresses = batch_fix_geocodes(...)` silently got its
+            # addresses in the error variable and an empty list of addresses.
+            # The whole batch failed, so every address is an error.
+            return list(addresses), addresses
         geocoded_addresses = []
         for address in json_data:
             try:
@@ -132,23 +144,30 @@ class Address(Base):
         except APIException as e:
             return e.to_dict()
 
-    def fix_geocode(self, address):
-        geocoding_error = None
+    def fix_geocode(self, address, max_attempts=MAX_GEOCODE_ATTEMPTS):
+        """Geocode one address, retrying transient failures.
+
+        :returns: ``(geocoding_error, address)`` -- ``geocoding_error`` is
+            ``None`` on success, or the address itself when every attempt failed.
+
+        .. versionchanged:: 0.3.1
+           Backoff now comes from :func:`route4me._resilience.backoff_delay`,
+           the same exponential-with-jitter policy the transport uses. The
+           previous loop slept ``random.randrange(1, 5) * 0.5`` -- uniform, not
+           exponential, so it did not back off under sustained failure.
+        """
         params = {"format": "json", "address": address.get("address")}
-        count = 0
-        while True:
+        for attempt in range(1, max_attempts + 1):
             try:
                 json_data = self.get_geocode(params)
                 address.update(json_data)
-                return geocoding_error, address
+                return None, address
             except (AttributeError, requests.exceptions.ConnectionError):
-                count += 1
-                if count > 5:
-                    geocoding_error = address
-                    break
-                time.sleep(random.randrange(1, 5) * 0.5)
-
-        return geocoding_error, address
+                if attempt >= max_attempts:
+                    return address, address
+                time.sleep(backoff_delay(attempt, GEOCODE_RETRY_INITIAL_DELAY))
+        # Unreachable: the loop either returns or exhausts max_attempts above.
+        return address, address
 
     def request_address(self, params):
         params.update({"api_key": self.api.key})

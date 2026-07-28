@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "route4me"
-version = "0.3.0.0"
+version = "0.3.1.0"
 description = "Route4Me Python SDK"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
@@ -132,21 +132,20 @@ ignore = [
 # Re-exports.
 "route4me/__init__.py" = ["F401"]
 
-# --- Known defects, scoped to the file and dated to the phase that fixes them.
-# Each entry below is a real finding, not a false positive. Delete the entry in
-# the phase named; `ruff check` then fails if the fix regressed.
+# --- No per-file suppressions for library code remain.
 #
-# (S113 "requests call without timeout" was here for route4me/api.py and was
-# removed in Phase 4 -- every call now passes a resolved timeout.)
+# Every entry that used to live here was a real defect, scoped to its file and
+# dated to the phase that fixed it. All have now been removed along with their
+# causes, which is what makes `ruff check` meaningful again:
 #
-# S311: `random` used for retry jitter (not crypto, but the hand-rolled retry
-#       loop moves to `route4me/_resilience.py`) -- removed in Phase 6.
-# E402: module-level imports after code -- removed in Phase 6.
-"route4me/address.py" = ["S311", "E402"]
-# B904: `raise e` inside `except` without `from` -- removed in Phase 6.
-"route4me/base.py" = ["B904"]
-# RUF034: no-op ternary `params if body is None else params` -- removed in Phase 6.
-"route4me/_api_method.py" = ["RUF034"]
+#   S113 (requests call without timeout, api.py)          -- fixed in Phase 4
+#   S311 (`random` for retry jitter, address.py)          -- fixed in Phase 6
+#   E402 (module-level imports after code, address.py)    -- fixed in Phase 6
+#   B904 (`raise e` without `from`, base.py)              -- fixed in Phase 6
+#   RUF034 (no-op ternary, _api_method.py)                -- fixed in Phase 6
+#
+# Resist adding one back. If a new finding is genuine, fix it; if it is a false
+# positive, suppress it inline at the line with a reason.
 
 [tool.ruff.lint.isort]
 known-first-party = ["route4me"]
@@ -240,11 +239,10 @@ ignore_errors = true
 [tool.bandit]
 exclude_dirs = ["tests", "examples", "docs", "build", "dist"]
 
-# Known defects, dated to the phase that fixes them. Delete each skip in the
-# phase named, and the scan then fails if the fix regressed.
+# No skips. B113 (missing request timeout) was removed in Phase 4 and B311
+# (`random` for retry jitter) in Phase 6, together with their causes.
 #
-# (B113 "requests call without timeout" was here and was removed in Phase 4.)
-#
-# B311: `random` used for retry jitter; not a crypto use, but the hand-rolled
-#       retry loop in address.py moves to `_resilience.py` -- fixed in Phase 6.
-skips = ["B311"]
+# The two remaining B113 reports in api.py are genuine false positives -- bandit
+# only recognises a *literal* timeout value, not `timeout=self._timeout(...)` --
+# and carry a scoped `# nosec B113` each.
+skips = []

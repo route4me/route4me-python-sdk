@@ -5,6 +5,65 @@ This is the history of changes of the `route4me-python` package
 > This file should be filled by maintainers, using pull requests
 > Please, follow this [guide](https://keepachangelog.com/en/1.0.0/)
 
+## [0.3.1.0] - 2026-07-28
+
+Correctness release. Several of these had never worked at all.
+
+### Fixed
+
+-   **`get_optimization()` raised `TypeError` for any realistic response.**
+    `parse_response` subscripted `self.response` — a `requests.Response`, which
+    is not subscriptable — instead of the decoded body, and every real
+    optimization payload contains `addresses`. `get_optimization()` also
+    returned `None` unconditionally; it now returns the payload.
+-   **`export_result_to_json()` had never worked.** It passed
+    `Response.content` (`bytes`) to `json.dump`, which raises
+    `TypeError: Object of type bytes is not JSON serializable`.
+-   **`re_optimization()` never raised on an HTTP error.** It called
+    `_request_put` directly instead of going through `_make_request`, so
+    callers got `response.json()` of an error body — or a `JSONDecodeError`
+    when the server returned HTML.
+-   **`Route.delete_route()`'s error handler raised from inside itself.** It
+    had `except AttributeError: return response.errors`, but a `dict` has no
+    `.errors` attribute, so any payload other than `{"deleted": ...}` produced
+    an `AttributeError` from the SDK in place of the API's response.
+-   **`Address.batch_fix_geocodes()` returned its two values swapped on
+    error.** The success path returns `(geocoding_error, addresses)`; the
+    JSON-decode-failure path returned `(addresses, [])`. A caller unpacking
+    `errors, addresses = ...` silently got its addresses bound to `errors` and
+    an empty address list.
+-   **`Base.validate_params()` disguised SDK bugs as user errors.** It wrapped
+    the setter *call* in `except AttributeError`, so an `AttributeError` raised
+    by a bug inside a setter was reported as
+    `ParamValueException(name, "Not supported")`. Only the attribute lookup is
+    guarded now; a name that resolves to a non-callable reports
+    `"Not a settable parameter"`.
+-   `Telematics.pp_vendor_comparison()` raised `KeyError` for a vendor with no
+    `features` key.
+-   `_api_method.make_request()` had a no-op ternary
+    (`params if body is None else params`) left over from a refactor.
+
+### Changed
+
+-   `Address.fix_geocode()` now backs off using the same
+    exponential-with-jitter policy as the transport. It previously slept
+    `random.randrange(1, 5) * 0.5` — uniform, so it did not actually back off
+    under sustained failure. The attempt count is now a `max_attempts`
+    parameter.
+-   `Telematics.pp_response()` and `pp_vendor_comparison()` accept a `file`
+    argument. They still print, deliberately: they are display helpers (`pp_`
+    = pretty print) and twelve scripts under `examples/telematics/` depend on
+    stdout. Routing them through `logging` would have silently produced no
+    output for all of them.
+
+### Internal
+
+-   All per-file lint suppressions for library code are gone, together with
+    their causes. `ruff check` and `bandit` now pass over `route4me/` with no
+    rule disabled anywhere — the two remaining bandit reports are genuine false
+    positives (it only recognises a *literal* `timeout` value) and carry a
+    scoped `# nosec` each.
+
 ## [0.3.0.0] - 2026-07-28
 
 Resilience release. Brings the transport to parity with the C# SDK's Polly
