@@ -2,11 +2,13 @@ import json
 
 import requests
 
+from ._redact import redact_text
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook
 from .api_endpoints import API_HOST
 from .avoidance_zones import AvoidanceZones
+from .config import UNSET, normalize_timeout, resolve_timeout
 from .exceptions import APIException
 from .file_uploading import FileUploading
 from .gps import GPS
@@ -34,9 +36,29 @@ class Route4Me:
     Route4Me Python SDK
     """
 
-    def __init__(self, key, headers=HEADERS, redirects=True, verify_ssl=True, proxies=None):
+    def __init__(self, key, headers=HEADERS, redirects=True, verify_ssl=True, proxies=None, timeout=UNSET):
+        """
+        :param key: Route4Me API key.
+        :param headers: request headers; copied, never shared between clients.
+        :param redirects: follow redirects (also sent to the API as
+            ``redirect=0`` when disabled).
+        :param verify_ssl: verify TLS certificates. Leave this on.
+        :param proxies: ``requests``-style proxy mapping.
+        :param timeout: per-request timeout in seconds. Accepts ``None`` (wait
+            forever -- the pre-0.2.0 behaviour), a number, or a
+            ``(connect, read)`` pair. Defaults to
+            :data:`route4me.config.DEFAULT_TIMEOUT`, i.e. ``(6.05, 30.0)``.
+
+        .. versionchanged:: 0.2.0
+           Requests now time out after 30s by default; previously there was no
+           timeout at all and a stalled socket blocked the calling thread
+           indefinitely. Pass ``timeout=None`` to restore the old behaviour.
+        """
         self.key = key
         self.response = None
+        # Validate eagerly so a bad timeout is a construction-time error rather
+        # than a confusing failure on the first request.
+        self.timeout = timeout if timeout is UNSET else normalize_timeout(timeout)
         self.activity_feed = ActivityFeed(self)
         self.address = Address(self)
         self.address_book = AddressBook(self)
@@ -51,7 +73,11 @@ class Route4Me:
         self.rapid_address = RapidAddress(self)
         self.telematics = Telematics(self)
         self.territory = Territory(self)
-        self.headers = headers
+        # Copy: HEADERS is a module-level dict used as the default argument, so
+        # assigning it directly made every client share one object -- mutating
+        # one client's headers mutated every other client's and the module
+        # constant itself.
+        self.headers = dict(HEADERS) if headers is None else dict(headers)
         self.redirects = redirects
         self.verify_ssl = verify_ssl
         self.proxies = proxies if proxies is not None else {}
@@ -72,8 +98,20 @@ class Route4Me:
         params["api_key"] = self.key
         response = request_method(url, params, **kwargs)
         if not 200 <= response.status_code < 400:
-            raise APIException(response.status_code, response.text, response.url)
+            # Both the URL and the body are scrubbed. `Response.url` carries
+            # `?api_key=<plaintext>` for V4, and several V4 endpoints echo the
+            # request parameters back inside their error payloads, so the key
+            # can appear in the body as well.
+            raise APIException(
+                response.status_code,
+                redact_text(response.text, self.key),
+                response.url,
+            )
         return response
+
+    def _timeout(self, per_call=UNSET):
+        """Resolve the effective timeout: per-call > constructor > global."""
+        return resolve_timeout(per_call, self.timeout)
 
     def get(self, request_method):
         """
@@ -90,7 +128,7 @@ class Route4Me:
             )
         return self._make_request(API_HOST, params, request_method, data=json.dumps(self.optimization.data))
 
-    def _request_post(self, url, request_params, data=None, json=None, files=None):
+    def _request_post(self, url, request_params, data=None, json=None, files=None, timeout=UNSET):
         """
         POST request
         :param url:
@@ -99,7 +137,7 @@ class Route4Me:
         :param files:
         :return:
         """
-        return requests.post(
+        return requests.post(  # nosec B113 - timeout is supplied below via self._timeout()
             url,
             params=request_params,
             allow_redirects=self.redirects,
@@ -109,9 +147,10 @@ class Route4Me:
             headers=self.headers,
             json=json,
             verify=self.verify_ssl,
+            timeout=self._timeout(timeout),
         )
 
-    def _request_get(self, url, request_params, data=None):
+    def _request_get(self, url, request_params, data=None, timeout=UNSET):
         """
         GET request
         :param url:
@@ -119,7 +158,7 @@ class Route4Me:
         :param data:
         :return:
         """
-        return requests.get(
+        return requests.get(  # nosec B113 - timeout is supplied below via self._timeout()
             url,
             params=request_params,
             allow_redirects=self.redirects,
@@ -127,9 +166,10 @@ class Route4Me:
             data=data,
             headers=self.headers,
             verify=self.verify_ssl,
+            timeout=self._timeout(timeout),
         )
 
-    def _request_put(self, url, request_params, json=None, data=None):
+    def _request_put(self, url, request_params, json=None, data=None, timeout=UNSET):
         """
         PUT request
         :param url:
@@ -146,9 +186,10 @@ class Route4Me:
             json=json,
             headers=self.headers,
             verify=self.verify_ssl,
+            timeout=self._timeout(timeout),
         )
 
-    def _request_delete(self, url, request_params, data=None, json=None):
+    def _request_delete(self, url, request_params, data=None, json=None, timeout=UNSET):
         """
         DELETE request
         :param url:
@@ -164,6 +205,7 @@ class Route4Me:
             json=json,
             headers=self.headers,
             verify=self.verify_ssl,
+            timeout=self._timeout(timeout),
         )
 
     def run_optimization(self):

@@ -30,6 +30,32 @@ API_KEY = "1" * 32
 FIXTURE_DIR = pathlib.Path(__file__).resolve().parent / "fixtures"
 
 
+#: Hosts the SDK talks to. Used to short-circuit proxy resolution below.
+SDK_HOSTS = "route4me.com,swaggerhub.com,localhost,127.0.0.1"
+
+
+@pytest.fixture(autouse=True)
+def _isolate_proxy_environment(monkeypatch):
+    """Keep the ambient proxy configuration out of the test run.
+
+    Even with ``HTTPAdapter.send`` mocked, ``requests`` still calls
+    ``merge_environment_settings`` -> ``should_bypass_proxies`` on every
+    request. When ``no_proxy`` is unset that ends in
+    ``urllib.request.proxy_bypass``, which on macOS consults the system network
+    configuration and resolves the hostname -- tripping ``pytest-socket`` and
+    failing the test for reasons that have nothing to do with the SDK.
+
+    Setting ``no_proxy`` to cover the SDK's hosts makes ``requests`` return
+    early on a pure string comparison. Clearing the proxy variables means a
+    developer behind a corporate proxy gets the same result as CI, rather than
+    a differently-shaped request.
+    """
+    for var in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.setenv("NO_PROXY", SDK_HOSTS)
+    monkeypatch.setenv("no_proxy", SDK_HOSTS)
+
+
 @pytest.fixture
 def api_key():
     """The dummy API key the ``client`` fixture is built with."""

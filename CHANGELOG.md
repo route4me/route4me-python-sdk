@@ -5,6 +5,73 @@ This is the history of changes of the `route4me-python` package
 > This file should be filled by maintainers, using pull requests
 > Please, follow this [guide](https://keepachangelog.com/en/1.0.0/)
 
+## [0.2.0.0] - 2026-07-28
+
+Security and infrastructure release. Two defects here are urgent for anyone
+embedding the SDK in a service.
+
+### Security
+
+-   **Requests now time out.** Previously no `timeout` was passed to `requests`
+    at all, so a stalled socket blocked the calling thread indefinitely. The
+    default is `(6.05, 30.0)` — `(connect, read)` in seconds. The 30s read
+    matches the C# SDK's `Route4MeConfig.HttpTimeout`; the 6.05s connect clears
+    two TCP SYN retransmits so a blackholed host fails in ~6s rather than 30.
+    Configure per call, per client (`Route4Me(key, timeout=...)`), or globally
+    (`Route4MeConfig.timeout`). Pass `timeout=None` for the old unbounded
+    behaviour.
+-   **The API key no longer leaks into tracebacks.** `requests` resolves
+    `Response.url` to the fully expanded URL, which for the V4 API carries
+    `?api_key=<plaintext>`. That string was stored on `APIException` and
+    appeared in `str(exc)`, `repr(exc)`, `exc.args` and every traceback frame —
+    and was forwarded verbatim to any error reporter that serialises exception
+    attributes. `APIException.url` is now redacted, and the raw URL is not
+    retained on the instance at all. Response bodies are scrubbed too, since
+    several V4 endpoints echo request parameters back inside error payloads.
+    Opt out with `Route4MeConfig.redact_urls = False` (debugging only).
+-   **Path injection in `rapid_address`.** `zipcode`, `housenumber`, `pk`,
+    `offset` and `limit` were interpolated raw into URL paths, so a value
+    containing `/`, `?`, `#` or `..` rewrote the request path against
+    `rapid.route4me.com`. Path components are now percent-encoded with
+    `safe=""` and validated. New internal helpers `route4me/_url.py`
+    (`path_segment`, `path_int`, `join_path`) — mandatory for anything that
+    lands in a URL path.
+
+### Added
+
+-   `route4me/config.py` — `Route4MeConfig`, mirroring the C# SDK's config
+    class. Resolution order: per-call > constructor > global > default.
+-   `route4me/_redact.py` — total (never-raising) redaction helpers for URLs,
+    headers, query parameters and response bodies.
+-   `APIException.get_url()`.
+
+### Fixed
+
+-   `RapidAddress.get_street_data` never made a request when `offset` and
+    `limit` were supplied: it built the URL and then fell off the end of the
+    function, returning `None`. It also returned `None` when called with no
+    arguments. Both branches now issue the request.
+-   `UnboundLocalError` in the `rapid_address` error handlers, where
+    `except ValueError: return response.content` wrapped the request itself and
+    so referenced `response` before assignment — masking the real error.
+-   `APIException.to_dict()` raised out of the error path on three inputs: a
+    `None` or non-`str` body (`TypeError`, not covered by `JSONDecodeError`), and
+    a body that is valid JSON but not an object such as `[1, 2]`
+    (`AttributeError` from `.get`).
+-   `APIException.to_dict()` now understands the API V5 error envelope
+    (`{"status": false, "code": …, "messages": {…}}`), which has no `errors`
+    key. Every V5 failure previously returned `{"errors": None}` and discarded
+    the message.
+-   `Route4Me(headers=...)` no longer shares one dict between every client.
+    `HEADERS` was a module-level dict used as a default argument, so mutating
+    one client's headers mutated every other client's and the module constant.
+
+### Changed
+
+-   `APIException.to_dict()` on valid JSON with no `errors` key now returns
+    `{"errors": "Unexpected server response"}` rather than `{"errors": None}`.
+    An explicit `{"errors": null}` still round-trips as `{"errors": None}`.
+
 ## [Unreleased]
 
 ### Removed

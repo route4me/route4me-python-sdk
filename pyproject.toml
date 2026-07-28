@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "route4me"
-version = "0.2.0.0.dev0"
+version = "0.2.0.0"
 description = "Route4Me Python SDK"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
@@ -134,8 +134,9 @@ ignore = [
 # Each entry below is a real finding, not a false positive. Delete the entry in
 # the phase named; `ruff check` then fails if the fix regressed.
 #
-# S113: no `timeout=` on any requests call -- removed in Phase 4 (security).
-"route4me/api.py" = ["S113"]
+# (S113 "requests call without timeout" was here for route4me/api.py and was
+# removed in Phase 4 -- every call now passes a resolved timeout.)
+#
 # S311: `random` used for retry jitter (not crypto, but the hand-rolled retry
 #       loop moves to `route4me/_resilience.py`) -- removed in Phase 6.
 # E402: module-level imports after code -- removed in Phase 6.
@@ -237,11 +238,11 @@ ignore_errors = true
 [tool.bandit]
 exclude_dirs = ["tests", "examples", "docs", "build", "dist"]
 
-# Known defects, dated to the phase that fixes them. Both are real findings
-# that bandit and ruff independently agree on; delete each skip in the phase
-# named, and the scan then fails if the fix regressed.
+# Known defects, dated to the phase that fixes them. Delete each skip in the
+# phase named, and the scan then fails if the fix regressed.
 #
-# B113: `requests` calls with no `timeout=` -- fixed in Phase 4 (security).
+# (B113 "requests call without timeout" was here and was removed in Phase 4.)
+#
 # B311: `random` used for retry jitter; not a crypto use, but the hand-rolled
 #       retry loop in address.py moves to `_resilience.py` -- fixed in Phase 6.
-skips = ["B113", "B311"]
+skips = ["B311"]

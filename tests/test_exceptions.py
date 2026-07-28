@@ -38,9 +38,54 @@ class TestAPIException:
         assert exc.to_dict() == {"errors": ["a", "b"]}
 
     def test_to_dict_on_valid_json_without_an_errors_key(self):
+        """Changed in 0.2.0: this used to return ``{"errors": None}``, which
+        satisfied an ``"errors" in result`` check while carrying no
+        information."""
         exc = APIException(400, json.dumps({"status": False}), "u")
 
+        assert exc.to_dict() == {"errors": "Unexpected server response"}
+
+    def test_to_dict_preserves_an_explicitly_null_errors_key(self):
+        """``{"errors": null}`` keeps its historical shape -- some callers
+        distinguish "the key was present" from "the key was absent"."""
+        exc = APIException(400, json.dumps({"errors": None}), "u")
+
         assert exc.to_dict() == {"errors": None}
+
+    def test_to_dict_flattens_the_v5_messages_envelope(self):
+        """A V5 error has no ``errors`` key at all (see
+        ``DataTypes/V5/ResultResponse.cs``), so every V5 failure previously
+        came back as ``{"errors": None}`` with the message discarded."""
+        body = json.dumps(
+            {
+                "status": False,
+                "code": 422,
+                "messages": {
+                    "route_id": ["The route id field is required."],
+                    "lat": ["The lat must be a number.", "The lat is required."],
+                },
+            }
+        )
+
+        result = APIException(422, body, "u").to_dict()
+
+        assert result == {
+            "errors": [
+                "The route id field is required.",
+                "The lat must be a number.",
+                "The lat is required.",
+            ]
+        }
+
+    def test_to_dict_handles_a_scalar_v5_message(self):
+        exc = APIException(422, json.dumps({"status": False, "messages": "Nope"}), "u")
+
+        assert exc.to_dict() == {"errors": "Nope"}
+
+    def test_to_dict_falls_back_to_a_message_key(self):
+        exc = APIException(500, json.dumps({"message": "Server exploded"}), "u")
+
+        assert exc.to_dict() == {"errors": "Server exploded"}
 
     def test_to_dict_on_non_json_returns_a_placeholder(self):
         exc = APIException(500, "<html>Gateway Error</html>", "u")
@@ -52,22 +97,10 @@ class TestAPIException:
 
         assert exc.to_dict() == {"errors": "Unexpected server response"}
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 4: to_dict catches only JSONDecodeError, so a None body "
-        "raises TypeError out of the error path. Remove this marker once the "
-        "handler also catches TypeError.",
-    )
     def test_to_dict_survives_a_none_body(self):
         """A response with no body should not turn into a second exception."""
         assert APIException(504, None, "u").to_dict() == {"errors": "Unexpected server response"}
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 4: json.loads('[1,2]') returns a list, whose .get raises "
-        "AttributeError out of to_dict. Remove this marker once non-dict "
-        "payloads are handled.",
-    )
     def test_to_dict_survives_a_json_array_body(self):
         """Some endpoints return a bare array even on an error status."""
         assert APIException(400, "[1, 2]", "u").to_dict() == {"errors": "Unexpected server response"}

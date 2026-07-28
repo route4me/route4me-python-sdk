@@ -19,9 +19,14 @@ import responses
 from route4me import Route4Me
 from route4me.api import HEADERS
 from route4me.api_endpoints import ROUTE_HOST, TERRITORY_HOST
+from route4me.config import DEFAULT_TIMEOUT, Route4MeConfig
 from route4me.exceptions import APIException
 
 ANY_URL = ROUTE_HOST
+
+
+class _StopSend(Exception):
+    """Raised by the spies below to abort once the kwargs are captured."""
 
 
 class TestApiKeyInjection:
@@ -130,12 +135,6 @@ class TestClientConfiguration:
         break ``requests``, which expects a mapping."""
         assert Route4Me("k" * 32).proxies == {}
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 4: HEADERS is a mutable module-level dict used as a default "
-        "argument, so every client shares one object. Remove this marker when "
-        "the constructor copies it.",
-    )
     def test_clients_do_not_share_one_headers_dict(self):
         first = Route4Me("a" * 32)
         second = Route4Me("b" * 32)
@@ -156,54 +155,148 @@ class TestApiKeyLeakage:
     verbatim to Sentry, Datadog and any other log aggregator.
     """
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 4: the API key currently leaks through APIException.url. "
-        "Remove this marker once URLs are redacted.",
-    )
-    def test_api_key_is_not_in_the_exception_string(self, client, mocked, api_key):
-        mocked.add(responses.GET, ANY_URL, json={"errors": ["bad key"]}, status=401)
+    @staticmethod
+    def _raise(client, mocked, body=None):
+        """Trigger a real ``APIException`` through the transport.
 
+        Note this goes through ``_make_request`` rather than a resource method:
+        resource methods catch ``APIException`` and return ``e.to_dict()``, so
+        ``pytest.raises`` would never see anything.
+        """
+        mocked.add(responses.GET, ANY_URL, json=body or {"errors": ["bad key"]}, status=401)
         with pytest.raises(APIException) as excinfo:
-            client.route.get_routes(limit=1, offset=0)
+            client._make_request(ANY_URL, {"limit": 1}, client._request_get)
+        return excinfo.value
 
-        rendered = f"{excinfo.value!s} {excinfo.value!r} {excinfo.value.args}"
+    def test_api_key_is_not_in_the_exception_string(self, client, mocked, api_key):
+        exc = self._raise(client, mocked)
+
+        rendered = f"{exc!s} {exc!r} {exc.args}"
         assert api_key not in rendered
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 4: APIException.url is the raw resolved URL. Remove this marker once it holds the redacted form.",
-    )
     def test_api_key_is_not_in_the_exception_url_attribute(self, client, mocked, api_key):
-        mocked.add(responses.GET, ANY_URL, json={"errors": ["bad key"]}, status=401)
+        exc = self._raise(client, mocked)
 
-        with pytest.raises(APIException) as excinfo:
-            client.route.get_routes(limit=1, offset=0)
+        assert api_key not in exc.url
+        assert "REDACTED" in exc.url
 
-        assert api_key not in excinfo.value.url
+    def test_the_endpoint_is_still_identifiable_after_redaction(self, client, mocked):
+        """Redaction must not destroy the diagnostic value of the URL."""
+        exc = self._raise(client, mocked)
+
+        assert exc.url.startswith("https://api.route4me.com/api.v4/route.php")
+        assert "limit=1" in exc.url
+
+    def test_the_raw_url_is_not_retained_anywhere_on_the_instance(self, client, mocked, api_key):
+        """A private attribute would still escape via ``vars()``, ``pickle``
+        and any error reporter that serialises exception attributes."""
+        exc = self._raise(client, mocked)
+
+        for value in vars(exc).values():
+            assert api_key not in str(value)
+
+    def test_the_api_key_is_scrubbed_from_the_response_body(self, client, mocked, api_key):
+        """Several V4 endpoints echo the request parameters back in errors."""
+        exc = self._raise(client, mocked, body={"errors": [f"key {api_key} is invalid"]})
+
+        assert api_key not in exc.response
+        assert api_key not in str(exc.to_dict())
+
+    def test_redaction_can_be_disabled_for_debugging(self, client, mocked, api_key, monkeypatch):
+        monkeypatch.setattr(Route4MeConfig, "redact_urls", False)
+
+        exc = self._raise(client, mocked)
+
+        assert api_key in exc.url
 
 
 class TestTimeouts:
-    @pytest.mark.xfail(
-        strict=True,
-        reason="Phase 4: no timeout is passed to requests, so a stalled socket "
-        "hangs the caller forever. Remove this marker once a default lands.",
-    )
-    def test_requests_carry_a_default_timeout(self, client, mocked):
-        """Captured via the adapter, since ``responses`` records the prepared
-        request but not the send kwargs."""
+    """Every request must carry a timeout.
+
+    ``requests`` defaults to *no* timeout, so before 0.2.0 a stalled socket
+    blocked the calling thread forever -- the highest-impact defect for anyone
+    embedding the SDK in a server.
+
+    The timeout is resolved inside each ``_request_*`` helper, and ``responses``
+    records the prepared request but not the send kwargs, so these assert
+    against the ``requests`` entry points directly.
+    """
+
+    @staticmethod
+    def _capture_timeout(monkeypatch, module_attr):
+        """Record the ``timeout`` kwarg that reaches ``requests``."""
         captured = {}
-        original = client._request_get
 
-        def spy(url, request_params, **kwargs):
-            captured.update(kwargs)
-            return original(url, request_params, **kwargs)
+        def spy(*args, **kwargs):
+            captured["timeout"] = kwargs.get("timeout", "NOT PASSED")
+            raise _StopSend
 
-        mocked.add(responses.GET, ANY_URL, json={}, status=200)
-        client._request_get = spy
-        client._make_request(ANY_URL, {}, client._request_get)
+        monkeypatch.setattr(f"requests.{module_attr}", spy)
+        return captured
 
-        assert captured.get("timeout") is not None
+    @pytest.mark.parametrize(
+        ("helper", "entry_point"),
+        [
+            ("_request_get", "get"),
+            ("_request_post", "post"),
+            ("_request_put", "request"),
+            ("_request_delete", "request"),
+        ],
+    )
+    def test_every_verb_passes_a_timeout(self, client, monkeypatch, helper, entry_point):
+        captured = self._capture_timeout(monkeypatch, entry_point)
+
+        with pytest.raises(_StopSend):
+            getattr(client, helper)(ANY_URL, {})
+
+        assert captured["timeout"] == DEFAULT_TIMEOUT
+
+    def test_the_default_is_a_connect_read_pair(self):
+        """A scalar would make a blackholed SYN cost the full read timeout."""
+        assert DEFAULT_TIMEOUT == (6.05, 30.0)
+
+    def test_a_constructor_timeout_overrides_the_default(self, monkeypatch):
+        client = Route4Me("k" * 32, timeout=5)
+        captured = self._capture_timeout(monkeypatch, "get")
+
+        with pytest.raises(_StopSend):
+            client._request_get(ANY_URL, {})
+
+        assert captured["timeout"] == 5.0
+
+    def test_a_per_call_timeout_wins_over_the_constructor(self, monkeypatch):
+        client = Route4Me("k" * 32, timeout=5)
+        captured = self._capture_timeout(monkeypatch, "get")
+
+        with pytest.raises(_StopSend):
+            client._request_get(ANY_URL, {}, timeout=(1, 2))
+
+        assert captured["timeout"] == (1.0, 2.0)
+
+    def test_none_restores_the_pre_0_2_0_unbounded_behaviour(self, monkeypatch):
+        """An explicit, greppable opt-out."""
+        client = Route4Me("k" * 32, timeout=None)
+        captured = self._capture_timeout(monkeypatch, "get")
+
+        with pytest.raises(_StopSend):
+            client._request_get(ANY_URL, {})
+
+        assert captured["timeout"] is None
+
+    def test_the_global_config_is_the_last_fallback(self, client, monkeypatch):
+        monkeypatch.setattr(Route4MeConfig, "timeout", 12)
+        captured = self._capture_timeout(monkeypatch, "get")
+
+        with pytest.raises(_StopSend):
+            client._request_get(ANY_URL, {})
+
+        assert captured["timeout"] == 12.0
+
+    @pytest.mark.parametrize("bad", [0, -1, "30", (1,), (1, 2, 3), (0, 5), True, object()])
+    def test_an_invalid_timeout_is_rejected_at_construction(self, bad):
+        """Fail where the mistake is, not on the first request."""
+        with pytest.raises(ValueError):
+            Route4Me("k" * 32, timeout=bad)
 
 
 class TestParamsMutation:
