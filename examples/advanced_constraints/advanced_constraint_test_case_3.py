@@ -25,10 +25,8 @@ def main(api_key):
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
 
-    """
-    Advanced Constraints
-    """
-
+    # Advanced constraints: two groups of 10 drivers each. A driver serves only the stops
+    # whose tags match the group's, inside the group's time windows (seconds from midnight).
     advanced_constraint_1 = AdvancedConstraint()
     advanced_constraint_1.tags = ["TAG001", "TAG002"]
     advanced_constraint_1.members_count = 10

@@ -5,7 +5,6 @@ from route4me.constants import (
     ALGORITHM_TYPE,
     DEVICE_TYPE,
     DISTANCE_UNIT,
-    METRIC,
     OPTIMIZE,
     TRAVEL_MODE,
 )
@@ -23,7 +22,9 @@ def main(api_key):
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
-    optimization.metric(METRIC.ROUTE4ME_METRIC_MATRIX)
+    # 4 is METRIC.ROUTE4ME_METRIC_MATRIX. METRIC is built at run time by auto_enum(),
+    # so static checkers cannot see its members; the value is spelled out instead.
+    optimization.metric(4)
     optimization.vehicle_capacity(9999)
     optimization.vehicle_max_distance_mi(99999)
     optimization.parts(10)

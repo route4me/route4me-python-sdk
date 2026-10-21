@@ -14,7 +14,7 @@ def main(api_key):
         gps = route4me.gps
         gps.format(FORMAT.JSON)
         gps.route_id(response[0]["route_id"])
-        (gps.lat(33.14384),)
+        gps.lat(33.14384)
         gps.lng(-83.22466)
         gps.course(1)
         gps.speed(120)

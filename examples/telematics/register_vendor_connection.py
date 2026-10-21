@@ -5,10 +5,8 @@ from route4me import Route4Me
 
 
 def _load_credentials(fn):
-    with open(fn) as inputfile:
-        data = json.load(inputfile)
-        inputfile.close()
-        return data
+    with open(fn, encoding="utf-8") as inputfile:
+        return json.load(inputfile)
 
 
 def main(api_key, member_id, filename):

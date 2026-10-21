@@ -24,12 +24,9 @@ def main(api_key):
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
 
-    """
-    Bundling
-    """
-
+    # Bundling with the defaults, BUNDLING_MODE.BY_ADDRESS and BUNDLING_MERGE_MODE.KEEP_SEPARATED:
+    # stops with the same address are bundled and visited together, and stay separate stops.
     bundling = Bundling()
-
     optimization.bundling(bundling.to_dict())
 
     address.add_address(

@@ -11,9 +11,8 @@ def main(api_key):
 
     file_path = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(file_path, "10-Stops-MultiDepotSmall.csv")
-    upload_file = open(filename, "rb")
-    files = {"strFilename": upload_file}
-    response = file_uploading.upload_file_geocode(strUploadID=upload_id, files=files)
+    with open(filename, "rb") as upload_file:
+        response = file_uploading.upload_file_geocode(strUploadID=upload_id, files={"strFilename": upload_file})
     print(response)
 
 

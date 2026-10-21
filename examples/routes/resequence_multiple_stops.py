@@ -5,25 +5,22 @@ from route4me import Route4Me
 
 
 def load_json(filename):
-    data = []
-    with open(filename) as datafile:
-        data = json.load(datafile)
-        datafile.close()
-    return data
+    with open(filename, encoding="utf-8") as datafile:
+        return json.load(datafile)
 
 
-def main(args):
-    r4m = Route4Me(args.api_key)
-    route_data = load_json(args.route_data_filename)
+def main(api_key, route_id, route_data_filename):
+    r4m = Route4Me(api_key)
+    route_data = load_json(route_data_filename)
     route = r4m.route
-    print(f"Route ID: {args.route_id}")
+    print(f"Route ID: {route_id}")
     print("Addresses to be Re-sequence")
     for address in route_data["addresses"]:
         print(
             f"Address Sequence: {address['sequence_no']:6} - Route Destination ID: {address['route_destination_id']:9}"
         )
-    print(f"After Resequence the Route {args.route_id}")
-    response = route.resequence_multiple_stops(args.route_id, route_data)
+    print(f"After Resequence the Route {route_id}")
+    response = route.resequence_multiple_stops(route_id, route_data)
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
@@ -46,4 +43,4 @@ if __name__ == "__main__":
         required=True,
     )
     args = parser.parse_args()
-    main(args)
+    main(args.api_key, args.route_id, args.route_data_filename)

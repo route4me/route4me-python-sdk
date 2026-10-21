@@ -24,10 +24,8 @@ def main(api_key):
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
 
-    """
-    Bundling
-    """
-
+    # Bundling by coordinates: stops with the same lat/lng are bundled and visited together,
+    # and stay separate stops (the default BUNDLING_MERGE_MODE.KEEP_SEPARATED).
     bundling = Bundling()
     bundling.mode = BUNDLING_MODE.BY_COORDINATES
     optimization.bundling(bundling.to_dict())

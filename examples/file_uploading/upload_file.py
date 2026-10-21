@@ -9,9 +9,8 @@ def main(api_key):
     file_uploading = route4me.file_uploading
     file_path = os.path.dirname(os.path.abspath(__file__))
     filename = os.path.join(file_path, "10-Stops-MultiDepotSmall.csv")
-    upload_file = open(filename, "rb")
-    files = {"strFilename": upload_file}
-    response = file_uploading.upload_file(files=files, format="json")
+    with open(filename, "rb") as upload_file:
+        response = file_uploading.upload_file(files={"strFilename": upload_file}, format="json")
     print(response)
 
 
