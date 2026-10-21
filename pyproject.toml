@@ -182,6 +182,7 @@ omit = ["route4me/version.py"]
 [tool.coverage.report]
 precision = 2
 show_missing = true
+fail_under = 90
 exclude_lines = [
     "pragma: no cover",
     "if TYPE_CHECKING:",

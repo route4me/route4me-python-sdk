@@ -126,6 +126,7 @@ def query_of():
     ``parse_qs`` yields lists; this flattens single-valued keys, which is what
     assertions actually want to compare against.
     """
+
     def _query(request):
         raw = parse_qs(urlsplit(request.url).query, keep_blank_values=True)
         return {k: (v[0] if len(v) == 1 else v) for k, v in raw.items()}
