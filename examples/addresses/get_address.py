@@ -7,7 +7,7 @@ def main(api_key):
     route4me = Route4Me(api_key)
 
     route = route4me.route
-    response = route.get_routes(limit=10, offset=5)
+    response = route.get_routes(limit=1, offset=0)
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:

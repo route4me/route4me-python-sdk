@@ -8,8 +8,10 @@ def main(api_key, route_id):
 
     route = route4me.route
     exported_route = route.export_route_v5(route_id)
-
-    print(exported_route)
+    if isinstance(exported_route, dict) and "errors" in exported_route.keys():
+        print(exported_route["errors"])
+    else:
+        print(exported_route.decode("utf-8", errors="replace"))
 
 
 if __name__ == "__main__":
