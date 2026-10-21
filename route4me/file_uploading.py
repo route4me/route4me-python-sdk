@@ -30,7 +30,7 @@ class FileUploading(Base):
         )
         if self.check_required_params(kwargs, ["strUploadID", "format"]):
             try:
-                self.response = self.api._make_request(FILE_UPLOAD_PREVIEW_HOST, kwargs, self.api._request_get)
+                self.response = self._request(FILE_UPLOAD_PREVIEW_HOST, kwargs, "get")
                 return self.response.content
             except APIException as e:
                 return e.to_dict()
@@ -57,9 +57,7 @@ class FileUploading(Base):
             ],
         ):
             try:
-                self.response = self.api._make_request(
-                    FILE_UPLOAD_HOST, kwargs, self.api._request_post, files=kwargs.pop("files")
-                )
+                self.response = self._request(FILE_UPLOAD_HOST, kwargs, "post", files=kwargs.pop("files"))
                 return self.response.content
             except APIException as e:
                 return e.to_dict()
@@ -86,9 +84,7 @@ class FileUploading(Base):
             ],
         ):
             try:
-                self.response = self.api._make_request(
-                    FILE_UPLOAD_GEOCODE_HOST, kwargs, self.api._request_post, files=kwargs.pop("files")
-                )
+                self.response = self._request(FILE_UPLOAD_GEOCODE_HOST, kwargs, "post", files=kwargs.pop("files"))
                 return self.response.content
             except APIException as e:
                 return e.to_dict()

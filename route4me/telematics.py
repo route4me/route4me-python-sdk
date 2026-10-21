@@ -59,7 +59,7 @@ class Telematics(Base):
             ],
         ):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_V4, self.params, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -72,7 +72,7 @@ class Telematics(Base):
 
         if self.check_required_params(self.params, ["api_key"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_V4, self.params, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -89,7 +89,7 @@ class Telematics(Base):
 
         if self.check_required_params(kwargs, ["api_key"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_V4, kwargs, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_V4, kwargs, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -102,7 +102,7 @@ class Telematics(Base):
 
         if self.check_required_params(self.params, ["api_key"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_V4, self.params, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -114,7 +114,7 @@ class Telematics(Base):
 
         if self.check_required_params(self.params, ["api_key"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_REGISTER_V4, self.params, self.api._request_get)
+                self.response = self._request(TELEMATICS_REGISTER_V4, self.params, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -126,7 +126,7 @@ class Telematics(Base):
 
         if self.check_required_params(kwargs, ["api_token"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4, kwargs, self.api._request_get)
+                self.response = self._request(TELEMATICS_CONNECTIONS_V4, kwargs, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -138,7 +138,7 @@ class Telematics(Base):
 
         if self.check_required_params(kwargs, ["api_token"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_INFO_V4, kwargs, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_INFO_V4, kwargs, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -150,9 +150,7 @@ class Telematics(Base):
         kwargs.update({"validate_remote_credentials": "true"})
         if self.check_required_params(kwargs, ["vendor_id"]):
             try:
-                self.response = self.api._make_request(
-                    TELEMATICS_CONNECTIONS_V4, params, self.api._request_post, json=kwargs
-                )
+                self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "post", json=kwargs)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -162,7 +160,7 @@ class Telematics(Base):
     def get_connection(self, api_token, connection_token):
         params = {"api_token": api_token, "connection_token": connection_token}
         try:
-            self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4, params, self.api._request_get)
+            self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "get")
             return self.response.json()
         except APIException as e:
             return e.to_dict()
@@ -170,7 +168,7 @@ class Telematics(Base):
     def delete_connection(self, api_token, connection_token):
         params = {"api_token": api_token, "connection_token": connection_token}
         try:
-            self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4, params, self.api._request_delete)
+            self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "delete")
             return self.response.json()
         except APIException as e:
             return e.to_dict()
@@ -180,9 +178,7 @@ class Telematics(Base):
         kwargs.update({"validate_remote_credentials": "true"})
         if self.check_required_params(kwargs, ["vendor_id"]):
             try:
-                self.response = self.api._make_request(
-                    TELEMATICS_CONNECTIONS_V4, params, self.api._request_put, json=kwargs
-                )
+                self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "put", json=kwargs)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()

@@ -30,16 +30,14 @@ class RouteStatus(Base):
 
     def get_route_status(self, route_id):
         try:
-            response = self.api._make_request(f"{ROUTE_STATUS_V5}/{route_id}", self.params, self.api._request_get)
+            response = self._request(f"{ROUTE_STATUS_V5}/{route_id}", self.params, "get")
             return response.json()
         except APIException as e:
             return e.to_dict()
 
     def get_route_status_history(self, route_id):
         try:
-            response = self.api._make_request(
-                f"{ROUTE_STATUS_V5}/{route_id}/history", self.params, self.api._request_get
-            )
+            response = self._request(f"{ROUTE_STATUS_V5}/{route_id}/history", self.params, "get")
             return response.json()
         except APIException as e:
             return e.to_dict()
@@ -54,18 +52,14 @@ class RouteStatus(Base):
             "event_timestamp": event_timestamp,
         }
         try:
-            response = self.api._make_request(
-                f"{ROUTE_STATUS_V5}/{route_id}", self.params, self.api._request_post, json=data
-            )
+            response = self._request(f"{ROUTE_STATUS_V5}/{route_id}", self.params, "post", json=data)
             return response.json()
         except APIException as e:
             return e.to_dict()
 
     def rollback_route_status(self, route_id):
         try:
-            response = self.api._make_request(
-                f"{ROUTE_STATUS_V5}/{route_id}/rollback", self.params, self.api._request_get
-            )
+            response = self._request(f"{ROUTE_STATUS_V5}/{route_id}/rollback", self.params, "get")
             return response.json()
         except APIException as e:
             return e.to_dict()

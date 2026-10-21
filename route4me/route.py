@@ -1,6 +1,5 @@
 import warnings
 
-from ._api_method import make_request
 from .api_endpoints import (
     ADDRESS_HOST,
     DUPLICATE_ROUTE,
@@ -35,25 +34,25 @@ class Route(Base):
     def get_route(self, **kwargs):
         if self.validate_params(**kwargs):
             self.params.update(kwargs)
-        return make_request(self, ROUTE_HOST, "get", self.params, required=self.requirements)
+        return self._call_api(ROUTE_HOST, "get", self.params, required=self.requirements)
 
     def get_route_tracking(self, **kwargs):
         if self.validate_params(**kwargs):
             self.params.update(kwargs)
         self.params.update({"device_tracking_history": 1})
-        return make_request(self, ROUTE_HOST, "get", self.params, required=self.requirements)
+        return self._call_api(ROUTE_HOST, "get", self.params, required=self.requirements)
 
     def get_routes(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(self, ROUTE_HOST, "get", kwargs, required=["limit", "offset"])
+        return self._call_api(ROUTE_HOST, "get", kwargs, required=["limit", "offset"])
 
     def get_activities(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(self, GET_ACTIVITIES_HOST, "get", kwargs, required=["route_id", "limit", "offset"])
+        return self._call_api(GET_ACTIVITIES_HOST, "get", kwargs, required=["route_id", "limit", "offset"])
 
     def duplicate_route(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(self, DUPLICATE_ROUTE, "get", kwargs, required=["route_id"])
+        return self._call_api(DUPLICATE_ROUTE, "get", kwargs, required=["route_id"])
 
     def delete_routes(self, **kwargs):
         """
@@ -65,7 +64,7 @@ class Route(Base):
         if self.check_required_params(kwargs, ["route_id"]):
             kwargs["route_id"] = ",".join(kwargs["route_id"])
             try:
-                self.response = self.api._make_request(ROUTE_HOST, kwargs, self.api._request_delete)
+                self.response = self._request(ROUTE_HOST, kwargs, "delete")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -82,7 +81,7 @@ class Route(Base):
         kwargs.update({"api_key": self.params["api_key"]})
         if self.check_required_params(kwargs, ["route_id"]):
             try:
-                self.response = self.api._make_request(ROUTE_HOST, kwargs, self.api._request_delete)
+                self.response = self._request(ROUTE_HOST, kwargs, "delete")
                 payload = self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -119,7 +118,7 @@ class Route(Base):
         if self.check_required_params(kwargs, ["addresses", "route_id", "optimal_position"]):
             params = {"api_key": self.params["api_key"], "route_id": kwargs.pop("route_id")}
             try:
-                self.response = self.api._make_request(ROUTE_HOST, params, self.api._request_put, json=kwargs)
+                self.response = self._request(ROUTE_HOST, params, "put", json=kwargs)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -128,11 +127,11 @@ class Route(Base):
 
     def get_route_path_points(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(self, ROUTE_HOST, "get", kwargs, required=["route_path_output", "route_id"])
+        return self._call_api(ROUTE_HOST, "get", kwargs, required=["route_path_output", "route_id"])
 
     def get_route_directions(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(self, ROUTE_HOST, "get", kwargs, required=["directions", "route_id"])
+        return self._call_api(ROUTE_HOST, "get", kwargs, required=["directions", "route_id"])
 
     def share_route(self, **kwargs):
         """
@@ -145,7 +144,7 @@ class Route(Base):
                 "response_format": kwargs.pop("response_format"),
             }
             try:
-                self.response = self.api._make_request(SHARE_ROUTE_HOST, params, self.api._request_post, json=kwargs)
+                self.response = self._request(SHARE_ROUTE_HOST, params, "post", json=kwargs)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -163,7 +162,7 @@ class Route(Base):
                 "route_destination_id": kwargs.pop("route_destination_id"),
             }
             try:
-                self.response = self.api._make_request(ROUTE_HOST, params, self.api._request_put, json=kwargs)
+                self.response = self._request(ROUTE_HOST, params, "put", json=kwargs)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -176,19 +175,19 @@ class Route(Base):
                 "api_key": self.params["api_key"],
                 "route_id": route_id,
             }
-            return make_request(self, ROUTE_HOST, "put", params, body=addresses_data)
+            return self._call_api(ROUTE_HOST, "put", params, body=addresses_data)
         else:
             raise ParamValueException("params", "Params are not complete")
 
     def merge_routes(self, **kwargs):
         if not self.check_required_params(kwargs, ["route_ids"]):
             raise ParamValueException("params", "Params are not complete")
-        return make_request(self, MERGE_ROUTES_HOST, "post", self.params, body=kwargs, body_key="data")
+        return self._call_api(MERGE_ROUTES_HOST, "post", self.params, body=kwargs, body_key="data")
 
     def resequence_route_all(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(
-            self, RESEQUENCE_ROUTE, "get", kwargs, required=["disable_optimization", "route_id", "optimize"]
+        return self._call_api(
+            RESEQUENCE_ROUTE, "get", kwargs, required=["disable_optimization", "route_id", "optimize"]
         )
 
     def update_route_destination_custom_data(self, **kwargs):
@@ -201,20 +200,20 @@ class Route(Base):
                 "route_id": kwargs.pop("route_id"),
                 "route_destination_id": kwargs.pop("route_destination_id"),
             }
-            return make_request(self, ADDRESS_HOST, "put", params, body=kwargs)
+            return self._call_api(ADDRESS_HOST, "put", params, body=kwargs)
         else:
             raise ParamValueException("params", "Params are not complete")
 
     def export_route(self, route_id, output_format="csv"):
         warnings.warn("export_route is deprecated. Please use export_route_v5", DeprecationWarning, stacklevel=2)
         data = {"route_id": route_id, "strExportFormat": output_format}
-        self.response = self.api._make_request(EXPORTER, {}, self.api._request_post, data=data)
+        self.response = self._request(EXPORTER, {}, "post", data=data)
         return self.response.content
 
     def _update_route(self, params, data):
         params.update({"api_key": self.api.key})
         try:
-            response = self.api._make_request(ROUTE_HOST, params, self.api._request_put, data=data)
+            response = self._request(ROUTE_HOST, params, "put", data=data)
             return response.json()
         except APIException as e:
             return e.to_dict()
@@ -227,9 +226,7 @@ class Route(Base):
         if columns is not None:
             data["columns"] = columns
         try:
-            self.response = self.api._make_request(
-                EXPORTER_V5.format(route_id=route_id), params, self.api._request_post, data=data
-            )
+            self.response = self._request(EXPORTER_V5.format(route_id=route_id), params, "post", data=data)
             return self.response.content
         except APIException as e:
             return e.to_dict()

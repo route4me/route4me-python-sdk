@@ -37,7 +37,7 @@ class RapidAddress(Base):
         ``UnboundLocalError`` and hid the real error.
         """
         try:
-            response = self.api._make_request(url, params, self.api._request_get)
+            response = self._request(url, params, "get")
         except APIException as e:
             return e.to_dict()
         try:

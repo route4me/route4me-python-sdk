@@ -47,7 +47,7 @@ class Members(Base):
             ],
         ):
             try:
-                response = self.api._make_request(USER_LICENSE_HOST, self.params, self.api._request_post, json=kwargs)
+                response = self._request(USER_LICENSE_HOST, self.params, "post", json=kwargs)
                 try:
                     return json.loads(response.content)
                 except ValueError:
@@ -72,9 +72,7 @@ class Members(Base):
             ],
         ):
             try:
-                response = self.api._make_request(
-                    VERIFY_DEVICE_LICENSE, self.params, self.api._request_post, json=kwargs
-                )
+                response = self._request(VERIFY_DEVICE_LICENSE, self.params, "post", json=kwargs)
                 try:
                     return json.loads(response.content)
                 except ValueError:
@@ -100,7 +98,7 @@ class Members(Base):
             kwargs["strEmail"] = kwargs.pop("email")
             kwargs["strPassword"] = kwargs.pop("password")
             try:
-                response = self.api._make_request(MEMBER_AUTHENTICATE, self.params, self.api._request_post, json=kwargs)
+                response = self._request(MEMBER_AUTHENTICATE, self.params, "post", json=kwargs)
                 try:
                     return json.loads(response.content)
                 except ValueError:
@@ -121,7 +119,7 @@ class Members(Base):
             }
         )
         try:
-            response = self.api._make_request(GET_USERS_HOST, kwargs, self.api._request_get)
+            response = self._request(GET_USERS_HOST, kwargs, "get")
             try:
                 return response.json()
             except ValueError:
@@ -140,7 +138,7 @@ class Members(Base):
             }
         )
         try:
-            response = self.api._make_request(USER_URL, kwargs, self.api._request_get)
+            response = self._request(USER_URL, kwargs, "get")
             try:
                 return response.json()
             except ValueError:
@@ -167,7 +165,7 @@ class Members(Base):
             ],
         ):
             try:
-                response = self.api._make_request(VALIDATE_SESSION, kwargs, self.api._request_get)
+                response = self._request(VALIDATE_SESSION, kwargs, "get")
                 try:
                     return json.loads(response.content)
                 except ValueError:
@@ -188,7 +186,7 @@ class Members(Base):
             ["email_address", "first_name", "last_name", "phone_number", "company_name", "member_id", "webiinar_date"],
         ):
             try:
-                response = self.api._make_request(WEBINAR_REGISTER, self.params, self.api._request_post, data=kwargs)
+                response = self._request(WEBINAR_REGISTER, self.params, "post", data=kwargs)
                 try:
                     return json.loads(response.content)
                 except ValueError:
@@ -229,7 +227,7 @@ class Members(Base):
             kwargs["strPassword_1"] = kwargs.pop("password_1")
             kwargs["strPassword_2"] = kwargs.pop("password_2")
             try:
-                response = self.api._make_request(REGISTER_ACTION, params, self.api._request_post, data=kwargs)
+                response = self._request(REGISTER_ACTION, params, "post", data=kwargs)
                 try:
                     return response.json()
                 except ValueError:

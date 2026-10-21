@@ -30,7 +30,7 @@ class OrdersGroup(Base):
         }
         items = []
         try:
-            response = self.api._make_request(ORDERS_GROUP_V5, self.params, self.api._request_post, json=data)
+            response = self._request(ORDERS_GROUP_V5, self.params, "post", json=data)
             data = response.json()
             if "data" in data.keys():
                 items = data["data"].get("items", [])
@@ -46,7 +46,7 @@ class OrdersGroup(Base):
             "optimization_profile_id": optimization_profile_id,
         }
         try:
-            response = self.api._make_request(ASSIGN_PROFILES_V5, self.params, self.api._request_post, json=data)
+            response = self._request(ASSIGN_PROFILES_V5, self.params, "post", json=data)
             data = response.json()
             return data
         except APIException as e:

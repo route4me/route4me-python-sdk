@@ -12,7 +12,6 @@ import pytest
 import responses
 
 from route4me import Route4Me
-from route4me._api_method import make_request
 from route4me.api_endpoints import BATCH_GEOCODER, ROUTE_HOST, SINGLE_GEOCODER
 from route4me.exceptions import ParamValueException
 
@@ -194,20 +193,21 @@ class TestValidateParamsDoesNotMaskBugs:
             client.optimization.validate_params(route_name="x")
 
 
-class TestMakeRequestRequiredValidation:
-    """``_api_method`` had ``params if body is None else params`` -- identical
-    branches, a leftover from a refactor."""
+class TestCallApiRequiredValidation:
+    """The shared request helper (now ``Base._call_api``) once had
+    ``params if body is None else params`` -- identical branches, a leftover
+    from a refactor."""
 
     def test_required_params_are_validated_against_params(self, client, mocked):
         mocked.add(responses.GET, ROUTE_HOST, json={}, status=200)
 
         with pytest.raises(ParamValueException):
-            make_request(client.route, ROUTE_HOST, "get", {"api_key": "k"}, required=["route_id"])
+            client.route._call_api(ROUTE_HOST, "get", {"api_key": "k"}, required=["route_id"])
 
     def test_it_passes_when_the_requirement_is_met(self, client, mocked):
         mocked.add(responses.GET, ROUTE_HOST, json={"ok": True}, status=200)
 
-        result = make_request(client.route, ROUTE_HOST, "get", {"route_id": ROUTE_ID}, required=["route_id"])
+        result = client.route._call_api(ROUTE_HOST, "get", {"route_id": ROUTE_ID}, required=["route_id"])
 
         assert result == {"ok": True}
 
@@ -217,7 +217,7 @@ class TestMakeRequestRequiredValidation:
         mocked.add(responses.POST, ROUTE_HOST, json={"ok": True}, status=200)
 
         with pytest.raises(ParamValueException):
-            make_request(client.route, ROUTE_HOST, "post", {}, required=["route_id"], body={"route_id": ROUTE_ID})
+            client.route._call_api(ROUTE_HOST, "post", {}, required=["route_id"], body={"route_id": ROUTE_ID})
 
 
 class TestTelematicsDisplayHelpers:

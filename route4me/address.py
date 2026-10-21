@@ -126,7 +126,7 @@ class Address(Base):
         :return: response as a object
         """
         try:
-            self.response = self.api._make_request(SINGLE_GEOCODER, params, self.api._request_get, data=[])
+            self.response = self._request(SINGLE_GEOCODER, params, "get", data=[])
             return self.response.json()
         except APIException as e:
             return e.to_dict()
@@ -139,7 +139,7 @@ class Address(Base):
         :return: response as a object
         """
         try:
-            self.response = self.api._make_request(BATCH_GEOCODER, params, self.api._request_post, data=data)
+            self.response = self._request(BATCH_GEOCODER, params, "post", data=data)
             return self.response.json()
         except APIException as e:
             return e.to_dict()
@@ -172,7 +172,7 @@ class Address(Base):
     def request_address(self, params):
         params.update({"api_key": self.api.key})
         try:
-            response = self.api._make_request(ADDRESS_HOST, params, self.api._request_get)
+            response = self._request(ADDRESS_HOST, params, "get")
             return response
         except APIException as e:
             return e.to_dict()
@@ -195,7 +195,7 @@ class Address(Base):
         params = {"route_id": route_id, "route_destination_id": route_destination_id}
         params.update({"api_key": self.api.key})
         try:
-            response = self.api._make_request(ADDRESS_HOST, params, self.api._request_put, json=data)
+            response = self._request(ADDRESS_HOST, params, "put", json=data)
             return response.json()
         except APIException as e:
             return e.to_dict()
@@ -204,7 +204,7 @@ class Address(Base):
         params = {"route_id": route_id, "route_destination_id": route_destination_id}
         params.update({"api_key": self.api.key})
         try:
-            response = self.api._make_request(ADDRESS_HOST, params, self.api._request_delete)
+            response = self._request(ADDRESS_HOST, params, "delete")
             return response.json()
         except APIException as e:
             return e.to_dict()
@@ -223,7 +223,7 @@ class Address(Base):
                 }
             )
             try:
-                self.response = self.api._make_request(ADD_ROUTE_NOTES_HOST, kwargs, self.api._request_post, data=data)
+                self.response = self._request(ADD_ROUTE_NOTES_HOST, kwargs, "post", data=data)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -250,7 +250,7 @@ class Address(Base):
             ],
         ):
             try:
-                response = self.api._make_request(BATCH_GEOCODER, kwargs, self.api._request_post)
+                response = self._request(BATCH_GEOCODER, kwargs, "post")
                 return response.content
             except APIException as e:
                 return e.to_dict()

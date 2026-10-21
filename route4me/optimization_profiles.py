@@ -14,7 +14,7 @@ class OptimizationProfiles(Base):
 
     def get_optimization_profiles(self):
         try:
-            response = self.api._make_request(OPTIMIZATION_PROFILES_V5, self.params, self.api._request_get)
+            response = self._request(OPTIMIZATION_PROFILES_V5, self.params, "get")
             data = response.json()
             return data
         except APIException as e:

@@ -1,4 +1,3 @@
-from ._api_method import make_request
 from .api_endpoints import ADDRESS_HOST, API_HOST
 from .base import Base
 from .exceptions import APIException, ParamValueException
@@ -20,11 +19,11 @@ class Optimization(Base):
 
     def get_optimizations(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(self, API_HOST, "get", kwargs, required=["limit", "offset"])
+        return self._call_api(API_HOST, "get", kwargs, required=["limit", "offset"])
 
     def get_optimization(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(self, API_HOST, "get", kwargs, required=["optimization_problem_id"])
+        return self._call_api(API_HOST, "get", kwargs, required=["optimization_problem_id"])
 
     def update_optimization(self, **kwargs):
         """
@@ -35,7 +34,7 @@ class Optimization(Base):
         kwargs.update({"api_key": self.params["api_key"]})
         if self.check_required_params(kwargs, ["optimization_problem_id", "addresses", "reoptimize"]):
             try:
-                response = self.api._make_request(API_HOST, self.params, self.api._request_put, data=kwargs)
+                response = self._request(API_HOST, self.params, "put", data=kwargs)
                 return response.json()
             except APIException as e:
                 return e.to_dict()
@@ -46,12 +45,12 @@ class Optimization(Base):
         self.json_data = kwargs
         if not self.check_required_params(kwargs, ["optimization_problem_ids"]):
             raise ParamValueException("params", "Params are not complete")
-        return make_request(self, API_HOST, "delete", self.params, body=kwargs)
+        return self._call_api(API_HOST, "delete", self.params, body=kwargs)
 
     def delete_address_from_optimization(self, **kwargs):
         kwargs.update({"api_key": self.params["api_key"]})
-        return make_request(
-            self, ADDRESS_HOST, "delete", kwargs, required=["optimization_problem_id", "route_destination_id"]
+        return self._call_api(
+            ADDRESS_HOST, "delete", kwargs, required=["optimization_problem_id", "route_destination_id"]
         )
 
     def set_slowdowns(self, service_time, travel_time):

@@ -10,7 +10,7 @@ from .constants import (
     TRAVEL_MODE,
     TRUCK_HAZARDOUS_GOODS,
 )
-from .exceptions import ParamValueException
+from .exceptions import APIException, ParamValueException
 
 
 class Base:
@@ -196,6 +196,46 @@ class Base:
                 "Must be: Bundling Object",
             )
         self._copy_data({"bundling": bundling})
+
+    def _request(self, endpoint, params, method, **kwargs):
+        """Send one request through the client that owns this resource.
+
+        Every resource goes through here, so timeouts, retry, the circuit
+        breaker and ``api_key`` handling apply the same way to all of them.
+
+        :param endpoint: absolute URL of the API endpoint.
+        :param params: query parameters; the client adds ``api_key`` itself.
+        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param kwargs: ``data``, ``json``, ``files`` or ``timeout``, passed through.
+        :return: the :class:`requests.Response`.
+        :raise APIException: when the API answers outside the 200-399 range.
+        """
+        send = getattr(self.api, f"_request_{method}")
+        # The resources and the client are one package: _make_request is internal
+        # to it, and this is the only place a resource reaches into the client.
+        return self.api._make_request(endpoint, params, send, **kwargs)  # pylint: disable=protected-access
+
+    def _call_api(self, endpoint, method, params, required=None, body=None, body_key="json"):
+        """Validate required parameters, send the request and decode the reply.
+
+        :param endpoint: absolute URL of the API endpoint.
+        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param params: query parameters.
+        :param required: names that must be present in ``params``.
+        :param body: request body, or ``None`` for no body.
+        :param body_key: how to send ``body``: ``"json"`` or ``"data"`` (form).
+        :return: the decoded JSON reply, or the error dict from
+            :meth:`APIException.to_dict` when the API answers with an error.
+        :raise ParamValueException: when a required parameter is missing.
+        """
+        if required and not self.check_required_params(params, required):
+            raise ParamValueException("params", "Params are not complete")
+        kwargs = {} if body is None else {body_key: body}
+        try:
+            self.response = self._request(endpoint, params, method, **kwargs)
+            return self.response.json()
+        except APIException as e:
+            return e.to_dict()
 
     def _copy_data(self, params):
         self.data["parameters"].update(params)

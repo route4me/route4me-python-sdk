@@ -18,7 +18,7 @@ class Order(Base):
     def create_order(self, **kwargs):
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
             try:
-                response = self.api._make_request(ORDERS_HOST, self.params, self.api._request_post, json=kwargs)
+                response = self._request(ORDERS_HOST, self.params, "post", json=kwargs)
                 try:
                     return response.json()
                 except ValueError:
@@ -37,7 +37,7 @@ class Order(Base):
         kwargs.update({"api_key": self.params["api_key"]})
         if self.check_required_params(kwargs, ["order_id", "api_key"]):
             try:
-                response = self.api._make_request(ORDERS_HOST, kwargs, self.api._request_get)
+                response = self._request(ORDERS_HOST, kwargs, "get")
                 try:
                     return json.loads(response.content)
                 except ValueError:
@@ -55,7 +55,7 @@ class Order(Base):
         """
         if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
             try:
-                response = self.api._make_request(ORDERS_HOST, self.params, self.api._request_put, json=kwargs)
+                response = self._request(ORDERS_HOST, self.params, "put", json=kwargs)
                 try:
                     return json.loads(response.content)
                 except ValueError:
@@ -73,7 +73,7 @@ class Order(Base):
         """
         if self.check_required_params(kwargs, ["order_ids"]):
             try:
-                response = self.api._make_request(ORDERS_HOST, self.params, self.api._request_delete, json=kwargs)
+                response = self._request(ORDERS_HOST, self.params, "delete", json=kwargs)
                 try:
                     return json.loads(response.content)
                 except ValueError:
