@@ -98,7 +98,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param verify_ssl: verify TLS certificates. Leave this on.
         :param proxies: ``requests``-style proxy mapping.
         :param timeout: per-request timeout in seconds. Accepts ``None`` (wait
-            forever -- the pre-0.2.0 behaviour), a number, or a
+            forever -- the behaviour before 1.0.0), a number, or a
             ``(connect, read)`` pair. Defaults to
             :data:`route4me.config.DEFAULT_TIMEOUT`, i.e. ``(6.05, 30.0)``.
         :param retry_count: retries after the first attempt. 0 (the default)
@@ -119,12 +119,12 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :class:`route4me.config.Route4MeConfig`, so a whole process can be tuned
         in one place.
 
-        .. versionchanged:: 0.2.0
+        .. versionchanged:: 1.0.0
            Requests now time out after 30s by default; previously there was no
            timeout at all and a stalled socket blocked the calling thread
            indefinitely. Pass ``timeout=None`` to restore the old behaviour.
 
-        .. versionadded:: 0.3.0
+        .. versionadded:: 1.0.0
            Connection pooling, opt-in retry with exponential backoff, and an
            opt-in circuit breaker.
         """
@@ -492,7 +492,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :raise ParamValueException: when ``optimization_id`` is not a string.
         :raise APIException: when the API answers outside the 200-399 range.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Routed through ``_make_request``. It previously called
            ``_request_put`` directly and so never raised on an HTTP error --
            callers got ``response.json()`` of an error body, or a
@@ -517,7 +517,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             string.
         :raise APIException: when the API answers outside the 200-399 range.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Now returns the payload. It previously returned ``None`` always, and
            raised ``TypeError`` for any response containing ``addresses`` --
            which is every real optimization response -- via ``parse_response``.
@@ -535,7 +535,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
 
         :return: the decoded JSON of :attr:`response`.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Reads the decoded payload. It previously subscripted
            ``self.response`` -- a :class:`requests.Response`, which is not
            subscriptable -- raising ``TypeError``.
@@ -553,7 +553,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param file_name: path of the file to write; an existing file is
             overwritten.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Serialises the decoded payload. It previously passed
            ``Response.content`` (``bytes``) to ``json.dump``, which raises
            ``TypeError: Object of type bytes is not JSON serializable`` -- so

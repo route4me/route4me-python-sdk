@@ -22,7 +22,7 @@ jobs:
       - name: Install build tooling
         run: python -m pip install build twine
 
-      # Tags are `v0.2.0.0`; the package version is `0.2.0.0`. If they disagree
+      # Tags are `v1.0.0`; the package version is `1.0.0`. If they disagree
       # the release is wrong, and it is far cheaper to fail here than to yank
       # a bad upload from PyPI, which can never be re-uploaded under the same
       # version number.

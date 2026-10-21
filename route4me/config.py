@@ -75,7 +75,7 @@ class Route4MeConfig:
     """Global defaults. Assign to the class attributes to change them."""
 
     #: Default request timeout. ``None`` disables timeouts entirely (the
-    #: pre-0.2.0 behaviour), which risks hanging the calling thread forever.
+    #: behaviour before 1.0.0), which risks hanging the calling thread forever.
     timeout = DEFAULT_TIMEOUT
 
     #: When True (the default), credentials are stripped from URLs before they

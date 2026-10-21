@@ -46,7 +46,7 @@ class APIException(Exception):
     :param redact: whether to strip credentials from ``url``. ``None`` (the
         default) follows ``Route4MeConfig.redact_urls``.
 
-    .. versionchanged:: 0.2.0
+    .. versionchanged:: 1.0.0
        ``url`` is now redacted. ``requests`` resolves ``Response.url`` to the
        fully expanded request URL, which for the V4 API carries
        ``?api_key=<plaintext>``; that string used to appear in ``str(exc)``,

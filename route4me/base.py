@@ -399,7 +399,7 @@ class Base:
         :raise ParamValueException: for an unknown parameter name, a name that
             does not resolve to a setter, or a value the setter rejects.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Only the attribute *lookup* is guarded. The previous version wrapped
            the setter call too, so an ``AttributeError`` raised by a bug *inside*
            a setter was reported as ``ParamValueException(name, "Not supported")``

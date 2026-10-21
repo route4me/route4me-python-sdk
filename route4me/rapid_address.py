@@ -35,7 +35,7 @@ class RapidAddress(Base):
     ``{"errors": ...}`` dict from :meth:`APIException.to_dict
     <route4me.exceptions.APIException.to_dict>` instead of raising.
 
-    .. versionchanged:: 0.2.0
+    .. versionchanged:: 1.0.0
        Path components are percent-encoded and validated. They were previously
        interpolated raw, so a value containing ``/``, ``?``, ``#`` or ``..``
        rewrote the request path against ``rapid.route4me.com``.

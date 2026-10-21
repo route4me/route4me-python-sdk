@@ -208,7 +208,6 @@ class Address(Base):
            dict, which raised ``ValueError``, corrupted the address, or merged
            an API error and reported success.
 
-        .. versionchanged:: 0.3.1
            Backoff now comes from :func:`route4me._resilience.backoff_delay`,
            the same exponential-with-jitter policy the transport uses. The
            previous loop slept ``random.randrange(1, 5) * 0.5`` -- uniform, not

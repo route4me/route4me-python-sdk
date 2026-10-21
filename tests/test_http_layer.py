@@ -217,7 +217,7 @@ class TestApiKeyLeakage:
 class TestTimeouts:
     """Every request must carry a timeout.
 
-    ``requests`` defaults to *no* timeout, so before 0.2.0 a stalled socket
+    ``requests`` defaults to *no* timeout, so before 1.0.0 a stalled socket
     blocked the calling thread forever -- the highest-impact defect for anyone
     embedding the SDK in a server.
 
@@ -230,7 +230,7 @@ class TestTimeouts:
     def _capture_timeout(monkeypatch):
         """Record the ``timeout`` kwarg that reaches the transport.
 
-        Patches ``requests.Session.request`` -- since 0.3.0 every call is
+        Patches ``requests.Session.request`` -- since 1.0.0 every call is
         issued through a pooled session, not the module-level helpers.
         """
         captured = {}

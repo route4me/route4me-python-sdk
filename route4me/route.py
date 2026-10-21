@@ -441,7 +441,7 @@ class Route(Base):
         :return: the raw response body (``bytes``).
         :raise APIException: when the API answers outside the 200-399 range.
 
-        .. deprecated:: 0.3.0
+        .. deprecated:: 1.0.0
            ``/actions/route/export_current_route.php`` returns 404. Use
            :meth:`export_route_v5`.
         """
