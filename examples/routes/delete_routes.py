@@ -16,12 +16,12 @@ def main(api_key):
         print(f"Route IDs: {route_ids}")
         if len(route_ids) > 0:
             response = route.delete_routes(route_id=route_ids)
-            if hasattr(response, "errors"):
-                print(". ".join(response.errors))
+            if isinstance(response, dict) and "errors" in response.keys():
+                print(". ".join(response["errors"]))
             else:
                 print("Routes Deleted:")
-                for i, route in enumerate(response["route_ids"]):
-                    print(f"\t{i + 1} - {route}")
+                for i, deleted_id in enumerate(response["route_ids"]):
+                    print(f"\t{i + 1} - {deleted_id}")
 
 
 if __name__ == "__main__":

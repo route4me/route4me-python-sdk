@@ -14,8 +14,8 @@ def main(api_key):
         route_id = response[0]["route_id"]
         print(f"Route ID: {route_id}")
         response = route.get_route(route_id=route_id)
-        if hasattr(response, "errors"):
-            print(". ".join(response.errors))
+        if isinstance(response, dict) and "errors" in response.keys():
+            print(". ".join(response["errors"]))
         else:
             data = {"directions": 1, "route_id": route_id}
             response = route.get_route_directions(**data)

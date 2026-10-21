@@ -11,7 +11,7 @@ def main(api_key):
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
-        address_id = f"'{response['results'][0]['address_id']}'"
+        address_id = response["results"][0]["address_id"]
         response = address_book.get_addressbook_contact(address_id=address_id)
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))

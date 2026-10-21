@@ -64,7 +64,6 @@ def main(api_key):
 
         parameters = {
             "parameters": {
-                "member_id": 1,
                 "route_name": "Route name updated",
             }
         }

@@ -14,8 +14,8 @@ def main(api_key):
         route_id = response[0]["route_id"]
         print(f"Route ID: {route_id}")
         response = route.get_route(route_id=route_id)
-        if hasattr(response, "errors"):
-            print(". ".join(response.errors))
+        if isinstance(response, dict) and "errors" in response.keys():
+            print(". ".join(response["errors"]))
         else:
             data = {"route_path_output": "Points", "route_id": route_id}
             response = route.get_route_path_points(**data)
@@ -25,8 +25,8 @@ def main(api_key):
                 print(f"\tAddress: {address['address']}")
                 print(f"\tRoute Destination ID: {address['route_destination_id']}")
                 if "path_to_next" in address.keys():
-                    for i, path in enumerate(address["path_to_next"]):
-                        print(f"\t{i + 1} - \tlat: {path['lat']} \tlng: {path['lng']}")
+                    for j, path in enumerate(address["path_to_next"]):
+                        print(f"\t{j + 1} - \tlat: {path['lat']} \tlng: {path['lng']}")
 
 
 if __name__ == "__main__":

@@ -48,7 +48,7 @@ def main(api_key):
                 print(f"\tLongitude: {address['lng']}")
                 print(f"\tAlias: {address['alias']}")
             response = optimization.update_optimization(
-                optimization_problem_id=optimization_problem_id, addresses=addresses, reoptimize=True
+                optimization_problem_id=optimization_problem_id, addresses=addresses, reoptimize=1
             )
             if isinstance(response, dict) and "errors" in response.keys():
                 print(". ".join(response["errors"]))

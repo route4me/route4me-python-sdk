@@ -9,8 +9,8 @@ def main(api_key):
 
     optimization = route4me.optimization
     response = optimization.get_optimizations(limit=10, offset=5)
-    if hasattr(response, "errors"):
-        print(". ".join(response.errors))
+    if isinstance(response, dict) and "errors" in response.keys():
+        print(". ".join(response["errors"]))
     else:
         for i, optimization in enumerate(response["optimizations"]):
             print(f"Optimization #{i + 1}")

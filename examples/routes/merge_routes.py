@@ -13,7 +13,7 @@ def main(api_key):
     else:
         route_id1 = response[0]["route_id"]
         route_id2 = response[1]["route_id"]
-        data = {"route_ids": [route_id1, route_id2]}
+        data = {"route_ids": f"{route_id1},{route_id2}"}
         print(f"Routes to merge: {data['route_ids']}")
         response = route.merge_routes(**data)
         if isinstance(response, dict) and "errors" in response.keys():

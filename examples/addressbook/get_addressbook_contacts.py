@@ -7,8 +7,8 @@ def main(api_key):
     route4me = Route4Me(api_key)
 
     address_book = route4me.address_book
-    response = address_book.get_addressbook_contacts(limit=10, Offset=5)
-    if "errors" in response.keys():
+    response = address_book.get_addressbook_contacts(limit=10, offset=5)
+    if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
         contacts = response["results"]

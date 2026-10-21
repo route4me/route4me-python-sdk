@@ -14,15 +14,17 @@ def main(api_key):
         route_id = response[0]["route_id"]
         print(f"Route ID: {route_id}")
         response = route.get_route_tracking(route_id=route_id)
-        if hasattr(response, "errors"):
-            print(". ".join(response.errors))
+        if isinstance(response, dict) and "errors" in response.keys():
+            print(". ".join(response["errors"]))
         else:
             print(f"Optimization Problem ID: {response['optimization_problem_id']}")
             for i, address in enumerate(response["addresses"]):
                 print(f"Address #{i + 1}")
                 print(f"\tAddress: {address['address']}")
                 print(f"\tRoute Destination ID: {address['route_destination_id']}")
-            print(f"Tracking History: {','.join(response['tracking_history'])}")
+            print("Tracking History:")
+            for point in response.get("tracking_history", []):
+                print(f"\tlat: {point['lt']} lng: {point['lg']} time: {point['ts_friendly']} speed: {point['s']}")
 
 
 if __name__ == "__main__":
