@@ -14,7 +14,7 @@ def main(api_key):
         "phone_number": "454-454544",
         "company_name": "Python SDK",
         "member_id": "123456",
-        "webiinar_date": "2016-09-16 02:48:00",
+        "webinar_date": "2016-09-16 02:48:00",
     }
     response = members.webinar_registration(**data)
     if isinstance(response, dict) and "errors" in response.keys():
