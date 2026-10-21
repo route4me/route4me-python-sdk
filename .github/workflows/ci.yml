@@ -39,10 +39,13 @@ jobs:
       - name: ruff format --check
         run: ruff format --check route4me/ tests/ examples/
 
+      # The example subfolders have no __init__.py, so `pylint examples` would
+      # check only the top-level scripts. Every example file is passed instead;
+      # git's pathspec `*` also matches `/`, so this includes the subfolders.
       - name: pylint
         run: |
           pylint route4me --rcfile=pyproject.toml
-          pylint examples --rcfile=examples/pylintrc
+          pylint --rcfile=examples/pylintrc $(git ls-files 'examples/*.py')
           pylint tests --rcfile=tests/pylintrc
 
   typecheck:

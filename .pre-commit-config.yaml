@@ -46,6 +46,9 @@ repos:
         language: system
         types: [python]
         files: ^route4me/
+      # Runs per file: pre-commit passes each changed example file, or every
+      # example file with --all-files. Never pass the examples directory: its
+      # subfolders have no __init__.py, so pylint would skip them.
       - id: pylint-examples
         name: pylint (examples)
         entry: pylint --rcfile=examples/pylintrc
