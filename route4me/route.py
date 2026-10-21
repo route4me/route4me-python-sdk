@@ -132,17 +132,12 @@ class Route(Base):
             the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``route_id`` is missing.
         """
-        kwargs.update({"api_key": self.params["api_key"]})
-        if self.check_required_params(kwargs, ["route_id"]):
-            route_ids = kwargs["route_id"]
-            kwargs["route_id"] = route_ids if isinstance(route_ids, str) else ",".join(route_ids)
-            try:
-                self.response = self._request(ROUTE_HOST, kwargs, "delete")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, ["route_id"]):
             raise ParamValueException("params", "Params are not complete")
+        route_ids = kwargs["route_id"]
+        kwargs["route_id"] = route_ids if isinstance(route_ids, str) else ",".join(route_ids)
+        kwargs["api_key"] = self.params["api_key"]
+        return self._call_api(ROUTE_HOST, "delete", kwargs)
 
     def delete_route(self, **kwargs):
         """Delete one route.

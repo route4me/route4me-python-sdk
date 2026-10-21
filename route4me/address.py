@@ -330,22 +330,13 @@ class Address(Base):
         :raise ParamValueException: when ``route_id`` or ``address_id`` is
             missing.
         """
-        if self.check_required_params(kwargs, ["address_id", "route_id"]):
-            data = {"strNoteContents": note}
-            if "activity_type" in kwargs:
-                data["strUpdateType"] = kwargs.pop("activity_type")
-            kwargs.update(
-                {
-                    "api_key": self.params["api_key"],
-                }
-            )
-            try:
-                self.response = self._request(ADD_ROUTE_NOTES_HOST, kwargs, "post", data=data)
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, ["address_id", "route_id"]):
             raise ParamValueException("params", "Params are not complete")
+        data = {"strNoteContents": note}
+        if "activity_type" in kwargs:
+            data["strUpdateType"] = kwargs.pop("activity_type")
+        kwargs["api_key"] = self.params["api_key"]
+        return self._call_api(ADD_ROUTE_NOTES_HOST, "post", kwargs, body=data, body_key="data")
 
     def geocode(self, **kwargs):
         """Geocode several addresses in one request.
