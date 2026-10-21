@@ -135,9 +135,6 @@ class TestDeleteRoutes:
         assert last_request().method == "DELETE"
         assert query_of(last_request())["route_id"] == f"{ROUTE_ID},{OTHER_ROUTE_ID}"
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="a single route_id string is split into one id per character"
-    )
     def test_a_single_route_id_string_is_sent_as_is(self, client, mocked, query_of, last_request):
         mocked.add(responses.DELETE, ROUTE_HOST, json={"deleted": True}, status=200)
 
@@ -308,6 +305,7 @@ class TestExport:
 
         assert client.route.export_route_v5(ROUTE_ID) == b"csv,data"
         assert last_request().method == "POST"
+        assert json.loads(last_request().body) == {"all_custom_fields": True, "format": "csv"}
 
     def test_v5_export_encodes_the_route_id(self, client, monkeypatch):
         urls = []

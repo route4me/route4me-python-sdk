@@ -126,14 +126,16 @@ class Route(Base):
         as ``route_id`` in the query.
 
         :param kwargs: query parameters. Required: ``route_id``, the IDs of the
-            routes to delete as a list, e.g. ``route_id=[id_1, id_2]``.
+            routes to delete as a list, e.g. ``route_id=[id_1, id_2]``, or one
+            ID or a comma-separated string of IDs.
         :return: the decoded JSON reply, which lists the deleted route IDs, or
             the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``route_id`` is missing.
         """
         kwargs.update({"api_key": self.params["api_key"]})
         if self.check_required_params(kwargs, ["route_id"]):
-            kwargs["route_id"] = ",".join(kwargs["route_id"])
+            route_ids = kwargs["route_id"]
+            kwargs["route_id"] = route_ids if isinstance(route_ids, str) else ",".join(route_ids)
             try:
                 self.response = self._request(ROUTE_HOST, kwargs, "delete")
                 return self.response.json()
@@ -467,7 +469,7 @@ class Route(Base):
 
         Sends ``POST /modules/api/v5.0/route-export/{route_id}/export`` to
         ``wh.route4me.com`` with ``format``, ``all_custom_fields`` and
-        ``columns`` in the body.
+        ``columns`` as the JSON body.
 
         :param route_id: ID of the route.
         :param output_format: export format, ``"csv"`` by default.
@@ -477,6 +479,10 @@ class Route(Base):
         :return: the raw response body (``bytes``), or the ``{"errors": ...}``
             dict on an API error.
         :raise ParamValueException: when ``route_id`` is empty.
+
+        .. versionchanged:: 1.0.0
+           The body is JSON, as the API documents. As form data,
+           ``all_custom_fields=True`` arrived as the string ``"True"``.
         """
         url = EXPORTER_V5.format(route_id=path_segment(route_id, "route_id"))
         params = {
@@ -486,7 +492,7 @@ class Route(Base):
         if columns is not None:
             data["columns"] = columns
         try:
-            self.response = self._request(url, params, "post", data=data)
+            self.response = self._request(url, params, "post", json=data)
             return self.response.content
         except APIException as e:
             return e.to_dict()
