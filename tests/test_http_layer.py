@@ -50,7 +50,11 @@ class TestApiKeyInjection:
 class TestStatusHandling:
     @pytest.mark.parametrize("status", [200, 201, 204, 301, 302, 399])
     def test_2xx_and_3xx_are_returned(self, client, mocked, status):
-        mocked.add(responses.GET, ANY_URL, json={}, status=status)
+        # A 204 must not carry a body; current urllib3 rejects one.
+        if status == 204:
+            mocked.add(responses.GET, ANY_URL, body=b"", status=status)
+        else:
+            mocked.add(responses.GET, ANY_URL, json={}, status=status)
 
         response = client._make_request(ANY_URL, {}, client._request_get)
 
