@@ -262,10 +262,22 @@ class TestActivityFeed:
     def test_log_specific_message(self, client, mocked, last_request):
         mocked.add(responses.POST, ACTIVITY_FEED, json={"status": True}, status=200)
 
-        result = client.activity_feed.log_specific_message(route_id="R1", activity_message="hello", api_key="k")
+        result = client.activity_feed.log_specific_message(route_id="R1", activity_message="hello")
 
         assert result == {"status": True}
         assert last_request().method == "POST"
+        assert json.loads(last_request().body) == {
+            "route_id": "R1",
+            "activity_message": "hello",
+            "activity_type": "user_message",
+        }
+
+    def test_log_specific_message_keeps_the_key_out_of_the_body(self, client, mocked, last_request, api_key):
+        mocked.add(responses.POST, ACTIVITY_FEED, json={"status": True}, status=200)
+
+        client.activity_feed.log_specific_message(route_id="R1", activity_message="hello")
+
+        assert api_key not in last_request().body.decode()
 
     def test_log_specific_message_enforces_its_required_fields(self, client):
         with pytest.raises(ParamValueException):

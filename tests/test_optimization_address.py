@@ -57,11 +57,6 @@ class TestOptimizationWrites:
 
         assert last_request().method == "PUT"
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=json.JSONDecodeError,
-        reason="update_optimization sends form data instead of JSON (same class as #19)",
-    )
     def test_update_optimization_sends_the_addresses_as_json(self, client, mocked, last_request):
         mocked.add(responses.PUT, API_HOST, json={}, status=200)
 
@@ -69,11 +64,18 @@ class TestOptimizationWrites:
             optimization_problem_id=OPTIMIZATION_ID, addresses=[ADDRESS], reoptimize=1
         )
 
-        assert json.loads(last_request().body)["addresses"] == [ADDRESS]
+        assert json.loads(last_request().body) == {"addresses": [ADDRESS]}
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="security: update_optimization copies api_key into the request body"
-    )
+    def test_update_optimization_sends_the_problem_id_in_the_query(self, client, mocked, query_of, last_request):
+        mocked.add(responses.PUT, API_HOST, json={}, status=200)
+
+        client.optimization.update_optimization(
+            optimization_problem_id=OPTIMIZATION_ID, addresses=[ADDRESS], reoptimize=1
+        )
+
+        query = query_of(last_request())
+        assert (query["optimization_problem_id"], query["reoptimize"]) == (OPTIMIZATION_ID, "1")
+
     def test_update_optimization_keeps_the_key_out_of_the_body(self, client, mocked, last_request, api_key):
         mocked.add(responses.PUT, API_HOST, json={}, status=200)
 
@@ -81,7 +83,7 @@ class TestOptimizationWrites:
             optimization_problem_id=OPTIMIZATION_ID, addresses=[ADDRESS], reoptimize=1
         )
 
-        assert api_key not in (last_request().body or "")
+        assert api_key not in last_request().body.decode()
 
     def test_delete_optimization_sends_the_ids_as_json(self, client, mocked, last_request):
         mocked.add(responses.DELETE, API_HOST, json={"status": True}, status=200)

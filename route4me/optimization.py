@@ -2,7 +2,7 @@
 
 from .api_endpoints import ADDRESS_HOST, API_HOST
 from .base import Base
-from .exceptions import APIException, ParamValueException
+from .exceptions import ParamValueException
 from .slowdowns import Slowdowns
 from .utils import is_valid_datetime
 
@@ -58,7 +58,9 @@ class Optimization(Base):
     def update_optimization(self, **kwargs):
         """Add addresses to an optimization problem, optionally re-optimizing it.
 
-        Sends ``PUT /api.v4/optimization_problem.php``.
+        Sends ``PUT /api.v4/optimization_problem.php`` with
+        ``optimization_problem_id`` and ``reoptimize`` in the query and the
+        other keywords, ``addresses`` included, as the JSON body.
 
         :param kwargs: required: ``optimization_problem_id``; ``addresses``, a
             list of address dicts; and ``reoptimize``, ``1`` to re-optimize
@@ -66,16 +68,20 @@ class Optimization(Base):
         :return: the decoded JSON reply: the updated problem, or the
             ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required parameter is missing.
+
+        .. versionchanged:: 1.0.0
+           The body is JSON and the API key is no longer copied into it; the
+           problem ID and ``reoptimize`` moved to the query, as the API expects.
         """
-        kwargs.update({"api_key": self.params["api_key"]})
-        if self.check_required_params(kwargs, ["optimization_problem_id", "addresses", "reoptimize"]):
-            try:
-                response = self._request(API_HOST, self.params, "put", data=kwargs)
-                return response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, ["optimization_problem_id", "addresses", "reoptimize"]):
             raise ParamValueException("params", "Params are not complete")
+        body = dict(kwargs)
+        params = {
+            "api_key": self.params["api_key"],
+            "optimization_problem_id": body.pop("optimization_problem_id"),
+            "reoptimize": body.pop("reoptimize"),
+        }
+        return self._call_api(API_HOST, "put", params, body=body)
 
     def delete_optimization(self, **kwargs):
         """Delete optimization problems.
