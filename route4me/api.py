@@ -91,8 +91,9 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param key: Route4Me API key.
         :param headers: request headers, copied per client. ``None`` (the default)
             uses :data:`HEADERS`.
-        :param redirects: follow redirects (also sent to the API as
-            ``redirect=0`` when disabled).
+        :param redirects: follow redirects. When disabled, the optimization
+            requests (:meth:`run_optimization`, :meth:`get_optimization`) also
+            send ``redirect=0`` to the API.
         :param verify_ssl: verify TLS certificates. Leave this on.
         :param proxies: ``requests``-style proxy mapping.
         :param timeout: per-request timeout in seconds. Accepts ``None`` (wait
