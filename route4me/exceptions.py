@@ -13,6 +13,26 @@ from .version import VERSION_STRING
 DRIVER_VERSION = f"route4me-python-sdk-{VERSION_STRING}"
 
 
+def _message_list(value):
+    """Flatten an error value from a reply into a list of strings.
+
+    :param value: a string, a list of strings, a dict of field name to
+        messages (the V5 ``messages`` shape), or ``None``.
+    :return: the messages, each one a string; empty for ``None`` or an empty
+        value.
+    """
+    if value is None or value == "":
+        return []
+    if isinstance(value, dict):
+        value = list(value.values())
+    if not isinstance(value, (list, tuple)):
+        return [str(value)]
+    flattened = []
+    for item in value:
+        flattened.extend(_message_list(item))
+    return flattened
+
+
 class APIException(Exception):
     """The API answered with an HTTP status outside the 200-399 range.
 
@@ -78,11 +98,12 @@ class APIException(Exception):
         """
         return self.url
 
-    def to_dict(self):  # pylint: disable=too-many-return-statements  # one return per documented error shape
+    def to_dict(self):
         """Return the error as a dict.
 
-        Always shaped ``{"errors": ...}`` -- this is what almost every resource
-        method returns on an API error, so the shape is load-bearing.
+        Always shaped ``{"errors": [message, ...]}``: this is what almost every
+        resource method returns on an API error, so the shape is load-bearing.
+        ``". ".join(result["errors"])`` always works.
 
         Defensive on three inputs that used to raise *out of the error path*,
         turning a plain HTTP failure into a confusing traceback:
@@ -93,45 +114,32 @@ class APIException(Exception):
           ``json.loads`` returns a list, whose ``.get`` raises ``AttributeError``
         * a V5 error envelope, which has no ``errors`` key at all
 
-        :return: ``{"errors": value}``. ``value`` is the V4 ``errors`` value,
-            the V5 ``messages`` flattened into a list, or the ``message``
-            value; ``"Unexpected server response"`` when none of them is
+        :return: ``{"errors": messages}``, a non-empty list of strings: the V4
+            ``errors``, the V5 ``messages`` flattened, or the ``message``
+            value; ``["Unexpected server response"]`` when none of them is
             present or the body is not a JSON object.
+
+        .. versionchanged:: 1.0.0
+           ``errors`` is always a list of strings. It used to be a string for a
+           non-JSON body, and ``None`` when the reply had no ``errors`` key.
         """
         try:
             payload = json.loads(self.response)
         except (TypeError, ValueError):
             # ValueError covers json.JSONDecodeError, which subclasses it.
-            return {"errors": "Unexpected server response"}
+            payload = None
 
-        if not isinstance(payload, dict):
-            return {"errors": "Unexpected server response"}
-
-        if payload.get("errors") is not None:
-            # V4 shape: {"errors": [...]}
-            return {"errors": payload["errors"]}
-
-        # V5 shape (DataTypes/V5/ResultResponse.cs):
-        #   {"status": false, "code": 422, "messages": {"field": ["..."]}}
-        # There is no "errors" key, so without this branch every V5 failure
-        # returned {"errors": None} and threw the actual message away.
-        messages = payload.get("messages")
-        if isinstance(messages, dict):
-            flattened = []
-            for value in messages.values():
-                if isinstance(value, (list, tuple)):
-                    flattened.extend(value)
-                else:
-                    flattened.append(value)
-            return {"errors": flattened}
-        if messages:
-            return {"errors": messages}
-
-        if "errors" in payload:
-            # Present but explicitly null -- preserve the historical shape.
-            return {"errors": payload["errors"]}
-
-        return {"errors": payload.get("message") or "Unexpected server response"}
+        messages = []
+        if isinstance(payload, dict):
+            # V4 replies carry {"errors": [...]}. V5 replies have no "errors"
+            # key (DataTypes/V5/ResultResponse.cs):
+            #   {"status": false, "code": 422, "messages": {"field": ["..."]}}
+            # Without the fallbacks every V5 failure lost its message.
+            for key in ("errors", "messages", "message"):
+                messages = _message_list(payload.get(key))
+                if messages:
+                    break
+        return {"errors": messages or ["Unexpected server response"]}
 
 
 class ParamValueException(Exception):

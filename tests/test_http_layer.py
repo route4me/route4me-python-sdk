@@ -77,7 +77,7 @@ class TestStatusHandling:
         with pytest.raises(APIException) as excinfo:
             client._make_request(ANY_URL, {}, client._request_get)
 
-        assert excinfo.value.to_dict() == {"errors": "Unexpected server response"}
+        assert excinfo.value.to_dict() == {"errors": ["Unexpected server response"]}
 
 
 class TestVerbs:

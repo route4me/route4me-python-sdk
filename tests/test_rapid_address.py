@@ -93,7 +93,7 @@ class TestGetStreetData:
 
         result = client.rapid_address.get_street_data()
 
-        assert result == {"errors": "Unexpected server response"}
+        assert result == {"errors": ["Unexpected server response"]}
 
 
 class TestGetStreetDataZip:
