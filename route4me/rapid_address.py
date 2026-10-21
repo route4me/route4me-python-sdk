@@ -1,3 +1,5 @@
+"""The :class:`RapidAddress` resource: street data by ID, zip code or house number."""
+
 from ._url import join_path, path_int, path_segment
 from .api_endpoints import RAPID_ADDRESS, RAPID_ADDRESS_SERVICE, RAPID_ADDRESS_ZIP
 from .base import Base
@@ -5,9 +7,15 @@ from .exceptions import APIException, ParamValueException
 
 
 class RapidAddress(Base):
-    """
-    Rapid Address is a service to get Street Addresses given
-    Street name or Zip code
+    """Rapid Address: street addresses by ID, zip code or house number.
+
+    Use it as ``route4me.rapid_address``. Requests go to
+    ``https://rapid.route4me.com/street_data/``; IDs, zip codes and house
+    numbers become path segments, and ``offset`` and ``limit`` are appended
+    to the path when both are given. Every method returns the decoded JSON
+    reply, the raw body (``bytes``) when it is not JSON, or on an API error the
+    ``{"errors": ...}`` dict from :meth:`APIException.to_dict
+    <route4me.exceptions.APIException.to_dict>` instead of raising.
 
     .. versionchanged:: 0.2.0
        Path components are percent-encoded and validated. They were previously
@@ -20,10 +28,9 @@ class RapidAddress(Base):
     """
 
     def __init__(self, api):
-        """
-        Address Instance
-        :param api:
-        :return:
+        """Create the resource.
+
+        :param api: the :class:`~route4me.api.Route4Me` client.
         """
         Base.__init__(self, api)
 
@@ -35,6 +42,11 @@ class RapidAddress(Base):
         ``except ValueError: return response.content``, so when
         ``_make_request`` raised before the assignment the handler died with
         ``UnboundLocalError`` and hid the real error.
+
+        :param url: absolute URL to request.
+        :param params: query parameters.
+        :return: the decoded JSON reply, the raw body (``bytes``) when it is
+            not JSON, or the ``{"errors": ...}`` dict on an API error.
         """
         try:
             response = self._request(url, params, "get")
@@ -47,7 +59,15 @@ class RapidAddress(Base):
 
     @staticmethod
     def _paginated(url, kwargs):
-        """Append ``offset``/``limit`` path components when both are supplied."""
+        """Append ``offset``/``limit`` path components when both are supplied.
+
+        :param url: the URL to extend.
+        :param kwargs: the method's keywords; ``offset`` and ``limit`` are
+            removed from it when used.
+        :return: the URL, extended or unchanged.
+        :raise ParamValueException: when ``offset`` or ``limit`` is not a
+            non-negative integer.
+        """
         if "offset" in kwargs and "limit" in kwargs:
             return join_path(
                 url,
@@ -57,10 +77,18 @@ class RapidAddress(Base):
         return url
 
     def get_street_data(self, **kwargs):
-        """
-        Get Street Data
-        :param kwargs: optional ``pk``, or ``offset`` and ``limit``
-        :return: API response content
+        """Get street data: all of it, one page, or one record.
+
+        Sends ``GET /street_data/``, ``GET /street_data/{offset}/{limit}/``
+        or ``GET /street_data/{pk}/`` on ``rapid.route4me.com``.
+
+        :param kwargs: optional ``pk``, the ID of one record, or ``offset``
+            and ``limit`` for one page. Other keywords are sent as query
+            parameters.
+        :return: the decoded JSON reply, the raw body (``bytes``) when it is
+            not JSON, or the ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``offset`` or ``limit`` is not a
+            non-negative integer, or ``pk`` is empty.
         """
         kwargs.update({"api_key": self.params["api_key"]})
         url = RAPID_ADDRESS
@@ -71,10 +99,17 @@ class RapidAddress(Base):
         return self._get(url, kwargs)
 
     def get_street_data_zip(self, **kwargs):
-        """
-        Get Street Data Given Zipcode
-        :param kwargs: requires ``zipcode``; optional ``offset`` and ``limit``
-        :return: API response content
+        """Get the street data of a zip code.
+
+        Sends ``GET /street_data/zipcode/{zipcode}/`` on
+        ``rapid.route4me.com``, with ``{offset}/{limit}/`` appended when both
+        are given.
+
+        :param kwargs: requires ``zipcode``; optional ``offset`` and ``limit``.
+        :return: the decoded JSON reply, the raw body (``bytes``) when it is
+            not JSON, or the ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``zipcode`` is missing or empty, or
+            ``offset`` or ``limit`` is not a non-negative integer.
         """
         kwargs.update({"api_key": self.params["api_key"]})
         if not self.check_required_params(kwargs, ["zipcode", "api_key"]):
@@ -84,11 +119,19 @@ class RapidAddress(Base):
         return self._get(url, kwargs)
 
     def get_street_data_service(self, **kwargs):
-        """
-        Get Street Data Given Zipcode and House Number
+        """Get the street data of a house number in a zip code.
+
+        Sends ``GET /street_data/service/{zipcode}/{housenumber}/`` on
+        ``rapid.route4me.com``, with ``{offset}/{limit}/`` appended when both
+        are given.
+
         :param kwargs: requires ``zipcode`` and ``housenumber``; optional
-            ``offset`` and ``limit``
-        :return: API response content
+            ``offset`` and ``limit``.
+        :return: the decoded JSON reply, the raw body (``bytes``) when it is
+            not JSON, or the ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``zipcode`` or ``housenumber`` is
+            missing or empty, or ``offset`` or ``limit`` is not a non-negative
+            integer.
         """
         kwargs.update({"api_key": self.params["api_key"]})
         if not self.check_required_params(kwargs, ["zipcode", "api_key", "housenumber"]):

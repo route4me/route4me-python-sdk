@@ -1,27 +1,36 @@
+"""The :class:`FileUploading` resource: upload CSV and XLS(X) files of addresses, preview and geocode them."""
+
 from .api_endpoints import FILE_UPLOAD_GEOCODE_HOST, FILE_UPLOAD_HOST, FILE_UPLOAD_PREVIEW_HOST
 from .base import Base
 from .exceptions import APIException, ParamValueException
 
 
 class FileUploading(Base):
-    """
-    File Uploading is a service to upload data files
+    """File uploading: send data files of addresses to Route4Me.
+
+    Use it as ``route4me.file_uploading``. Every method returns the raw
+    response body (``bytes``), or on an API error the ``{"errors": ...}`` dict
+    from :meth:`APIException.to_dict
+    <route4me.exceptions.APIException.to_dict>` instead of raising.
     """
 
     def __init__(self, api):
-        """
-        FileUploading Instance
-        :param api:
-        :return:
+        """Create the resource.
+
+        :param api: the :class:`~route4me.api.Route4Me` client.
         """
         Base.__init__(self, api)
 
     def get_file_preview(self, **kwargs):
-        """
-        Get File Preview using GET request
-        :return: API response
-        :raise: ParamValueException if required params are not present.
+        """Preview the content of an uploaded file.
 
+        Sends ``GET /actions/upload/csv-xls-preview.php``.
+
+        :param kwargs: query parameters. Required: ``strUploadID``, the ID of
+            the upload, and ``format``, e.g. ``"json"``.
+        :return: the raw response body (``bytes``), or the ``{"errors": ...}``
+            dict on an API error.
+        :raise ParamValueException: when a required parameter is missing.
         """
         kwargs.update(
             {
@@ -38,11 +47,17 @@ class FileUploading(Base):
             raise ParamValueException("params", "Params are not complete")
 
     def upload_file(self, **kwargs):
-        """
-        Upload File Preview using POST request
-        :return: API response
-        :raise: ParamValueException if required params are not present.
+        """Upload a file.
 
+        Sends ``POST /actions/upload/upload.php`` with ``files`` as a multipart
+        upload and the other keywords in the query.
+
+        :param kwargs: required: ``files``, a ``requests`` files mapping such
+            as ``{"strFilename": open(path, "rb")}``, and ``format``, e.g.
+            ``"json"``.
+        :return: the raw response body (``bytes``), which identifies the
+            upload, or the ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when a required parameter is missing.
         """
         kwargs.update(
             {
@@ -65,11 +80,17 @@ class FileUploading(Base):
             raise ParamValueException("params", "Params are not complete")
 
     def upload_file_geocode(self, **kwargs):
-        """
-        Upload File Geocode using POST request
-        :return: API response
-        :raise: ParamValueException if required params are not present.
+        """Geocode the addresses of an uploaded file.
 
+        Sends ``POST /actions/upload/csv-xls-geocode.php`` with ``files`` as a
+        multipart upload and the other keywords in the query.
+
+        :param kwargs: required: ``strUploadID``, the ID of the upload, and
+            ``files``, a ``requests`` files mapping such as
+            ``{"strFilename": open(path, "rb")}``.
+        :return: the raw response body (``bytes``), or the ``{"errors": ...}``
+            dict on an API error.
+        :raise ParamValueException: when a required parameter is missing.
         """
         kwargs.update(
             {

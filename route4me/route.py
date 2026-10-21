@@ -446,8 +446,9 @@ class Route(Base):
     def export_route_v5(self, route_id, output_format="csv", all_custom_fields=True, columns=None):
         """Export a route with API V5.
 
-        Sends ``POST /modules/api/v5.0/route-export/{route_id}/export`` with
-        ``format``, ``all_custom_fields`` and ``columns`` in the body.
+        Sends ``POST /modules/api/v5.0/route-export/{route_id}/export`` to
+        ``wh.route4me.com`` with ``format``, ``all_custom_fields`` and
+        ``columns`` in the body.
 
         :param route_id: ID of the route.
         :param output_format: export format, ``"csv"`` by default.
