@@ -63,9 +63,6 @@ class TestRouteStatus:
 
         assert "errors" in result
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="security: route_id is put in the URL path without encoding"
-    )
     def test_a_route_id_cannot_escape_its_path_segment(self, client, monkeypatch):
         urls = []
 
@@ -79,6 +76,13 @@ class TestRouteStatus:
             client.route_status.get_route_status("../secret")
 
         assert urls == [f"{ROUTE_STATUS_V5}/..%2Fsecret"]
+
+    @pytest.mark.parametrize("method", ["get_route_status", "get_route_status_history", "rollback_route_status"])
+    def test_an_empty_route_id_is_rejected_before_any_request(self, client, mocked, method):
+        with pytest.raises(ParamValueException):
+            getattr(client.route_status, method)("")
+
+        assert not mocked.calls
 
 
 class TestOrdersGroup:

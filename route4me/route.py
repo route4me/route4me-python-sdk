@@ -2,6 +2,7 @@
 
 import warnings
 
+from ._url import path_segment
 from .api_endpoints import (
     ADDRESS_HOST,
     DUPLICATE_ROUTE,
@@ -457,7 +458,9 @@ class Route(Base):
             the API.
         :return: the raw response body (``bytes``), or the ``{"errors": ...}``
             dict on an API error.
+        :raise ParamValueException: when ``route_id`` is empty.
         """
+        url = EXPORTER_V5.format(route_id=path_segment(route_id, "route_id"))
         params = {
             "api_key": self.params["api_key"],
         }
@@ -465,7 +468,7 @@ class Route(Base):
         if columns is not None:
             data["columns"] = columns
         try:
-            self.response = self._request(EXPORTER_V5.format(route_id=route_id), params, "post", data=data)
+            self.response = self._request(url, params, "post", data=data)
             return self.response.content
         except APIException as e:
             return e.to_dict()

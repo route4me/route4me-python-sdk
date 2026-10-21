@@ -289,6 +289,20 @@ class TestExport:
         assert client.route.export_route_v5(ROUTE_ID) == b"csv,data"
         assert last_request().method == "POST"
 
+    def test_v5_export_encodes_the_route_id(self, client, monkeypatch):
+        urls = []
+
+        def capture(url, params, request_method, **kwargs):
+            urls.append(url)
+            raise RuntimeError("stop before sending")
+
+        monkeypatch.setattr(client, "_make_request", capture)
+
+        with pytest.raises(RuntimeError):
+            client.route.export_route_v5("../../secret")
+
+        assert urls == [EXPORTER_V5.format(route_id="..%2F..%2Fsecret")]
+
     def test_the_legacy_export_is_deprecated(self, client, mocked):
         mocked.add(responses.POST, EXPORTER, body=b"csv", status=200)
 
