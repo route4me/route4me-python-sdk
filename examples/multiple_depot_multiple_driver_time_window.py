@@ -10,11 +10,11 @@ from route4me.constants import (
 )
 
 
-def main(api_key):
-    route4me = Route4Me(api_key)
+def _set_parameters(optimization):
+    """Set the route parameters of the optimization.
 
-    optimization = route4me.optimization
-    address = route4me.address
+    :param optimization: the client's :class:`~route4me.optimization.Optimization` resource.
+    """
     optimization.route_name("Multiple Depot, Multiple Driver, Time window")
     optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_MD)
     optimization.share_route(0)
@@ -33,12 +33,25 @@ def main(api_key):
     optimization.route_max_duration(86400)
     optimization.optimize(OPTIMIZE.TIME)
 
+
+def _add_depots(address):
+    """Add the two depots the routes start from.
+
+    :param address: the client's :class:`~route4me.address.Address` resource.
+    """
     address.add_address(
         address="455 S 4th St, Louisville, KY 40202", lat=38.251698, lng=-85.757308, is_depot=1, time=300
     )
     address.add_address(
         address="1604 PARKRIDGE PKWY, Louisville, KY, 40214", lat=38.141598, lng=-85.793846, is_depot=1, time=300
     )
+
+
+def _add_stops(address):
+    """Add the 48 stops to visit.
+
+    :param address: the client's :class:`~route4me.address.Address` resource.
+    """
     address.add_address(
         address="1407 MCCOY, Louisville, KY, 40215",
         lat=38.202496,
@@ -472,12 +485,26 @@ def main(api_key):
         time_window_end=58800,
     )
 
-    response = route4me.run_optimization()
+
+def _print_routes(response):
+    """Print the optimization link and the addresses of each route.
+
+    :param response: the reply of :meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`.
+    """
     print(f"Optimization Link: {response['links']['view']}")
     for i, route in enumerate(response["routes"]):
         print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
             print(f"\t\t\tAddress: {address['address']}")
+
+
+def main(api_key):
+    route4me = Route4Me(api_key)
+    _set_parameters(route4me.optimization)
+    _add_depots(route4me.address)
+    _add_stops(route4me.address)
+    response = route4me.run_optimization()
+    _print_routes(response)
 
 
 if __name__ == "__main__":

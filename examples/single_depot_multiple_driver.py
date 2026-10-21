@@ -10,11 +10,11 @@ from route4me.constants import (
 )
 
 
-def main(api_key):
-    route4me = Route4Me(api_key)
+def _set_parameters(optimization):
+    """Set the route parameters of the optimization.
 
-    optimization = route4me.optimization
-    address = route4me.address
+    :param optimization: the client's :class:`~route4me.optimization.Optimization` resource.
+    """
     optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_SD)
     optimization.share_route(0)
     optimization.store_route(0)
@@ -27,7 +27,20 @@ def main(api_key):
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
 
+
+def _add_depot(address):
+    """Add the depot, where every route starts and ends.
+
+    :param address: the client's :class:`~route4me.address.Address` resource.
+    """
     address.add_address(address="455 S 4th St, Louisville, KY 40202", lat=38.251698, lng=-85.757308, is_depot=1)
+
+
+def _add_stops(address):
+    """Add the 49 stops to visit.
+
+    :param address: the client's :class:`~route4me.address.Address` resource.
+    """
     address.add_address(
         address="1604 PARKRIDGE PKWY, Louisville, KY, 40214",
         lat=38.141598,
@@ -326,12 +339,26 @@ def main(api_key):
         time=300,
     )
 
-    response = route4me.run_optimization()
+
+def _print_routes(response):
+    """Print the optimization link and the addresses of each route.
+
+    :param response: the reply of :meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`.
+    """
     print(f"Optimization Link: {response['links']['view']}")
     for i, route in enumerate(response["routes"]):
         print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
             print(f"\t\t\tAddress: {address['address']}")
+
+
+def main(api_key):
+    route4me = Route4Me(api_key)
+    _set_parameters(route4me.optimization)
+    _add_depot(route4me.address)
+    _add_stops(route4me.address)
+    response = route4me.run_optimization()
+    _print_routes(response)
 
 
 if __name__ == "__main__":
