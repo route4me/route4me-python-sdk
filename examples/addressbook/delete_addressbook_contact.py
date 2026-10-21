@@ -17,10 +17,10 @@ def main(api_key):
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
-        print("Address ID: {}".format(response["address_id"]))
-        print("First Name: {}".format(response["first_name"]))
-        print("Last Name: {}".format(response["last_name"]))
-        print("Address: {}".format(response["address_1"]))
+        print(f"Address ID: {response['address_id']}")
+        print(f"First Name: {response['first_name']}")
+        print(f"Last Name: {response['last_name']}")
+        print(f"Address: {response['address_1']}")
         print("Deleting this Contact")
         address_ids = [
             response["address_id"],
@@ -29,7 +29,7 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Deleted: {}".format(response["status"]))
+            print(f"Deleted: {response['status']}")
 
 
 if __name__ == "__main__":

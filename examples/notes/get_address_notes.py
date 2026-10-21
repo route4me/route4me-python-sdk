@@ -26,10 +26,10 @@ def main(api_key):
             if isinstance(response, dict) and "errors" in response.keys():
                 print(". ".join(response["errors"]))
             else:
-                print("Address: {}".format(response["address"]))
+                print(f"Address: {response['address']}")
                 print("Notes")
                 for i, note in enumerate(response["notes"]):
-                    print("\t{} - {} - {}".format(i + 1, note["contents"], note["activity_type"]))
+                    print(f"\t{i + 1} - {note['contents']} - {note['activity_type']}")
 
 
 if __name__ == "__main__":

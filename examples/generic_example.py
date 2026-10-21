@@ -14,9 +14,9 @@ def main(api_key):
     else:
         for i, optimization in enumerate(response["optimizations"]):
             print(f"Optimization #{i + 1}")
-            print("\tOptimization ID: {}".format(optimization["optimization_problem_id"]))
-            print("\tTotal Addresses: {}".format(optimization["total_addresses"]))
-            print("\tState: {}".format(OPTIMIZATION_STATE.reverse_mapping.get(optimization["state"])))
+            print(f"\tOptimization ID: {optimization['optimization_problem_id']}")
+            print(f"\tTotal Addresses: {optimization['total_addresses']}")
+            print(f"\tState: {OPTIMIZATION_STATE.reverse_mapping.get(optimization['state'])}")
 
 
 if __name__ == "__main__":

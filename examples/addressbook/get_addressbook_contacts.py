@@ -13,10 +13,10 @@ def main(api_key):
     else:
         contacts = response["results"]
         for i, contact in enumerate(contacts):
-            print("Address: {} -  ID: {}".format(i + 1, contact["address_id"]))
-            print("\tFirst Name: {}".format(contact["first_name"]))
-            print("\tLast Name: {}".format(contact["last_name"]))
-            print("\tAddress: {}".format(contact["address_1"]))
+            print(f"Address: {i + 1} -  ID: {contact['address_id']}")
+            print(f"\tFirst Name: {contact['first_name']}")
+            print(f"\tLast Name: {contact['last_name']}")
+            print(f"\tAddress: {contact['address_1']}")
 
 
 if __name__ == "__main__":

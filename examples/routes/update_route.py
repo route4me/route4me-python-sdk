@@ -69,13 +69,13 @@ def main(api_key):
         }
         route_id = response["addresses"][1]["route_id"]
         print(f"Route ID: {route_id}")
-        print("Driver Alias: {}".format(data["driver_alias"]))
+        print(f"Driver Alias: {data['driver_alias']}")
         response = r4m.route.update_route(data, route_id)
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
             print("Updating Route")
-            print("Driver Alias: {}".format(response["driver_alias"]))
+            print(f"Driver Alias: {response['driver_alias']}")
 
 
 if __name__ == "__main__":

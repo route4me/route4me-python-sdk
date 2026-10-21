@@ -69,8 +69,8 @@ def main(api_key):
             optimization_id,
         ]
     )
-    print("Status: {}".format(response["status"]))
-    print("Removed: {}".format(response["removed"]))
+    print(f"Status: {response['status']}")
+    print(f"Removed: {response['removed']}")
 
 
 if __name__ == "__main__":

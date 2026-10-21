@@ -11,7 +11,7 @@ def main(api_key):
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
-        print("Street Name:\t{}\t\tZip Code:\t{}".format(response.get("street_name"), response.get("zipcode")))
+        print(f"Street Name:\t{response.get('street_name')}\t\tZip Code:\t{response.get('zipcode')}")
 
 
 if __name__ == "__main__":

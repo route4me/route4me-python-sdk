@@ -35,12 +35,12 @@ def main(api_key):
                 "route_id": route_id,
             }
             response = route.insert_address_into_route_optimal_position(**data)
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
-            print("Route ID: {}".format(response["route_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
+            print(f"Route ID: {response['route_id']}")
             for i, address in enumerate(response["addresses"]):
                 print(f"Address #{i + 1}")
-                print("\tAddress: {}".format(address["address"]))
-                print("\tRoute Destination ID: {}".format(address["route_destination_id"]))
+                print(f"\tAddress: {address['address']}")
+                print(f"\tRoute Destination ID: {address['route_destination_id']}")
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ def main(api_key):
         limit=10, offset=0, query="juan", fields="first_name,address_email"
     )
     for row in response.get("results", []):
-        print("First Name: {} - Email: {}".format(*row))
+        print(f"First Name: {row[0]} - Email: {row[1]}")
 
 
 if __name__ == "__main__":

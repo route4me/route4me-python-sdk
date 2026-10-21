@@ -25,7 +25,7 @@ def main(api_key):
             print(f"Optimization Problem ID: {opt}")
             print(f"Route ID: {route_id}")
             for address in addresses:
-                print("\t\t\tAddress: {}".format(address["address"]))
+                print(f"\t\t\tAddress: {address['address']}")
         else:
             print("Duplicate Route failed...")
 

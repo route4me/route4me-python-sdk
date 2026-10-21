@@ -13,11 +13,7 @@ def main(api_key):
     else:
         for i, route in enumerate(response):
             print(f"Route #{i + 1}")
-            print(
-                "\tOptimization Problem ID: {}\tRoute ID: {}".format(
-                    route["optimization_problem_id"], route["route_id"]
-                )
-            )
+            print(f"\tOptimization Problem ID: {route['optimization_problem_id']}\tRoute ID: {route['route_id']}")
 
 
 if __name__ == "__main__":

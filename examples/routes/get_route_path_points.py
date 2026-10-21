@@ -19,14 +19,14 @@ def main(api_key):
         else:
             data = {"route_path_output": "Points", "route_id": route_id}
             response = route.get_route_path_points(**data)
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
             for i, address in enumerate(response["addresses"]):
                 print(f"Address #{i + 1}")
-                print("\tAddress: {}".format(address["address"]))
-                print("\tRoute Destination ID: {}".format(address["route_destination_id"]))
+                print(f"\tAddress: {address['address']}")
+                print(f"\tRoute Destination ID: {address['route_destination_id']}")
                 if "path_to_next" in address.keys():
                     for i, path in enumerate(address["path_to_next"]):
-                        print("\t{} - \tlat: {} \tlng: {}".format(i + 1, path["lat"], path["lng"]))
+                        print(f"\t{i + 1} - \tlat: {path['lat']} \tlng: {path['lng']}")
 
 
 if __name__ == "__main__":

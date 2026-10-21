@@ -20,10 +20,10 @@ def main(api_key):
             print("Addresses to include")
             for i, address in enumerate(response["addresses"]):
                 print(f"Address #{i + 1}")
-                print("\tAddress: {}".format(address["address"]))
-                print("\tLatitude: {}".format(address["lat"]))
-                print("\tLongitude: {}".format(address["lng"]))
-                print("\tAlias: {}".format(address["alias"]))
+                print(f"\tAddress: {address['address']}")
+                print(f"\tLatitude: {address['lat']}")
+                print(f"\tLongitude: {address['lng']}")
+                print(f"\tAlias: {address['alias']}")
             addresses = [
                 {
                     "address": "555 W 57th St New York, NY 10019",
@@ -43,10 +43,10 @@ def main(api_key):
             print("Addresses to include")
             for i, address in enumerate(addresses):
                 print(f"Address #{i + 1}")
-                print("\tAddress: {}".format(address["address"]))
-                print("\tLatitude: {}".format(address["lat"]))
-                print("\tLongitude: {}".format(address["lng"]))
-                print("\tAlias: {}".format(address["alias"]))
+                print(f"\tAddress: {address['address']}")
+                print(f"\tLatitude: {address['lat']}")
+                print(f"\tLongitude: {address['lng']}")
+                print(f"\tAlias: {address['alias']}")
             response = optimization.update_optimization(
                 optimization_problem_id=optimization_problem_id, addresses=addresses, reoptimize=True
             )
@@ -56,10 +56,10 @@ def main(api_key):
                 print("Current Addresses")
                 for i, address in enumerate(response["addresses"]):
                     print(f"Address #{i + 1}")
-                    print("\tAddress: {}".format(address["address"]))
-                    print("\tLatitude: {}".format(address["lat"]))
-                    print("\tLongitude: {}".format(address["lng"]))
-                    print("\tAlias: {}".format(address["alias"]))
+                    print(f"\tAddress: {address['address']}")
+                    print(f"\tLatitude: {address['lat']}")
+                    print(f"\tLongitude: {address['lng']}")
+                    print(f"\tAlias: {address['alias']}")
 
 
 if __name__ == "__main__":

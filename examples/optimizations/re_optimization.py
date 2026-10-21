@@ -16,7 +16,7 @@ def main(api_key):
         optimization_problem_id = optimizations[0]["optimization_problem_id"]
         print(f"Re-optimization problem id: {optimization_problem_id}")
         response = route4me.re_optimization(optimization_problem_id)
-        print("Re-optimization status: {}".format(OPTIMIZATION_STATE.reverse_mapping.get(response["state"])))
+        print(f"Re-optimization status: {OPTIMIZATION_STATE.reverse_mapping.get(response['state'])}")
 
 
 if __name__ == "__main__":

@@ -26,9 +26,9 @@ def main(api_key):
             }
             response = route.update_route_destination_custom_data(**data)
             print(f"Route ID: {route_id}")
-            print("\tAddress: {}".format(response["address"]))
-            print("\tRoute Destination ID: {}".format(response["route_destination_id"]))
-            print("\tCustom Fields: {}".format(response["custom_fields"]))
+            print(f"\tAddress: {response['address']}")
+            print(f"\tRoute Destination ID: {response['route_destination_id']}")
+            print(f"\tCustom Fields: {response['custom_fields']}")
 
 
 if __name__ == "__main__":

@@ -73,7 +73,7 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Route Name: {}".format(response["parameters"]["route_name"]))
+            print(f"Route Name: {response['parameters']['route_name']}")
 
 
 if __name__ == "__main__":

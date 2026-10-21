@@ -11,21 +11,21 @@ def main(api_key):
     if "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
-        address_id = "'{}'".format(response["results"][0]["address_id"])
+        address_id = f"'{response['results'][0]['address_id']}'"
         response = address_book.get_addressbook_contact(address_id=address_id)
         if "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
             contact = response["results"][0]
-            contact["first_name"] = "{} Updated".format(contact["first_name"])
+            contact["first_name"] = f"{contact['first_name']} Updated"
             response = address_book.update_contact(**contact)
             if "errors" in response.keys():
                 print(". ".join(response["errors"]))
             else:
-                print("Address ID: {}".format(response["address_id"]))
-                print("First Name: {}".format(response["first_name"]))
-                print("Last Name: {}".format(response["last_name"]))
-                print("Address: {}".format(response["address_1"]))
+                print(f"Address ID: {response['address_id']}")
+                print(f"First Name: {response['first_name']}")
+                print(f"Last Name: {response['last_name']}")
+                print(f"Address: {response['address_1']}")
 
 
 if __name__ == "__main__":

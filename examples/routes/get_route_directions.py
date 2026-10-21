@@ -19,26 +19,26 @@ def main(api_key):
         else:
             data = {"directions": 1, "route_id": route_id}
             response = route.get_route_directions(**data)
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
             for i, direction in enumerate(response["directions"]):
                 print(f"Direction #{i + 1}")
                 print("\tLocation")
-                print("\t\tTime: {}".format(direction["location"]["time"]))
-                print("\t\tName: {}".format(direction["location"]["name"]))
-                print("\t\tStart Location: {}".format(direction["location"]["start_location"]))
-                print("\t\tEnd Location: {}".format(direction["location"]["end_location"]))
+                print(f"\t\tTime: {direction['location']['time']}")
+                print(f"\t\tName: {direction['location']['name']}")
+                print(f"\t\tStart Location: {direction['location']['start_location']}")
+                print(f"\t\tEnd Location: {direction['location']['end_location']}")
                 print("\tSteps")
                 for step in direction["steps"]:
-                    print("\t\tDirections: {}".format(step["directions"]))
-                    print("\t\tDirection: {}".format(step["direction"]))
-                    print("\t\tDistance: {}".format(step["distance"]))
-                    print("\t\tDistance unit: {}".format(step["distance_unit"]))
-                    print("\t\tManeuver Type: {}".format(step["maneuverType"]))
-                    print("\t\tCompass Direction: {}".format(step["compass_direction"]))
-                    print("\t\tDuration sec: {}".format(step["duration_sec"]))
+                    print(f"\t\tDirections: {step['directions']}")
+                    print(f"\t\tDirection: {step['direction']}")
+                    print(f"\t\tDistance: {step['distance']}")
+                    print(f"\t\tDistance unit: {step['distance_unit']}")
+                    print(f"\t\tManeuver Type: {step['maneuverType']}")
+                    print(f"\t\tCompass Direction: {step['compass_direction']}")
+                    print(f"\t\tDuration sec: {step['duration_sec']}")
                     print("\t\tManeuver Point")
-                    print("\t\t\tLat: {}".format(step["maneuverPoint"]["lat"]))
-                    print("\t\t\tLng: {}".format(step["maneuverPoint"]["lng"]))
+                    print(f"\t\t\tLat: {step['maneuverPoint']['lat']}")
+                    print(f"\t\t\tLng: {step['maneuverPoint']['lng']}")
 
 
 if __name__ == "__main__":

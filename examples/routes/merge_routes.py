@@ -14,16 +14,12 @@ def main(api_key):
         route_id1 = response[0]["route_id"]
         route_id2 = response[1]["route_id"]
         data = {"route_ids": [route_id1, route_id2]}
-        print("Routes to merge: {}".format(data["route_ids"]))
+        print(f"Routes to merge: {data['route_ids']}")
         response = route.merge_routes(**data)
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print(
-                "Optimization Problem ID: {} - Status: {}".format(
-                    response["optimization_problem_id"], response["status"]
-                )
-            )
+            print(f"Optimization Problem ID: {response['optimization_problem_id']} - Status: {response['status']}")
 
 
 if __name__ == "__main__":

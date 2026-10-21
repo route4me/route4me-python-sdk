@@ -17,9 +17,9 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
             for address in response["addresses"]:
-                print("\t\t\tID: {} - Address: {}".format(address["route_destination_id"], address["address"]))
+                print(f"\t\t\tID: {address['route_destination_id']} - Address: {address['address']}")
 
 
 if __name__ == "__main__":

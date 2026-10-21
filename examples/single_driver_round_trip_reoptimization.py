@@ -70,16 +70,16 @@ def main(api_key):
     )
 
     response = route4me.run_optimization()
-    print("Optimization status: {}".format(OPTIMIZATION_STATE.reverse_mapping.get(response["state"])))
-    print("Optimization Link: {}".format(response["links"]["view"]))
+    print(f"Optimization status: {OPTIMIZATION_STATE.reverse_mapping.get(response['state'])}")
+    print(f"Optimization Link: {response['links']['view']}")
 
     for address in response["addresses"]:
-        print("\t\t\tAddress: {}".format(address["address"]))
+        print(f"\t\t\tAddress: {address['address']}")
 
     print("Re-optimization...")
     optimization_problem_id = response["optimization_problem_id"]
     response = route4me.re_optimization(optimization_problem_id)
-    print("Re-optimization status: {}".format(OPTIMIZATION_STATE.reverse_mapping.get(response["state"])))
+    print(f"Re-optimization status: {OPTIMIZATION_STATE.reverse_mapping.get(response['state'])}")
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ def main(api_key):
         print("Unknown error occured")
     else:
         for street in response:
-            print("Street Name:\t{}\t\tZip Code:\t{}".format(street.get("street_name"), street.get("zipcode")))
+            print(f"Street Name:\t{street.get('street_name')}\t\tZip Code:\t{street.get('zipcode')}")
 
 
 if __name__ == "__main__":

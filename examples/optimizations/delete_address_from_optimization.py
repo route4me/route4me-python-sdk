@@ -69,8 +69,8 @@ def main(api_key):
         optimization_problem_id=optimization_id, route_destination_id=route_destination_id
     )
 
-    print("Route Destination ID: {}".format(response["route_destination_id"]))
-    print("Deleted: {}".format(response["deleted"]))
+    print(f"Route Destination ID: {response['route_destination_id']}")
+    print(f"Deleted: {response['deleted']}")
 
 
 if __name__ == "__main__":

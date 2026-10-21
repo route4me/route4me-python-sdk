@@ -72,7 +72,7 @@ def main(api_key):
         print(f"Number {i}:")
         if address["is_depot"]:
             print("\t This is a Depot")
-        print("\taddress: {}".format(address["address"]))
+        print(f"\taddress: {address['address']}")
         print("\t")
         if new_sequence[i] == 0:
             addresses["addresses"].append({"route_destination_id": address["route_destination_id"], "is_depot": True})
@@ -99,7 +99,7 @@ def main(api_key):
             print(f"Number {i}:")
             if address["is_depot"]:
                 print("\t This is a Depot")
-            print("\taddress: {}".format(address["address"]))
+            print(f"\taddress: {address['address']}")
             print("\t")
 
 

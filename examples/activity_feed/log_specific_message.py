@@ -19,7 +19,7 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Message Logged: {}".format(response["status"]))
+            print(f"Message Logged: {response['status']}")
 
 
 if __name__ == "__main__":

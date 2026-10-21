@@ -18,15 +18,15 @@ def main(api_key):
         if "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Total: {}".format(response["total"]))
+            print(f"Total: {response['total']}")
             print("Activities:\n")
             for i, activity in enumerate(response["results"]):
                 print(f"Activity #{i + 1}")
-                print("\tActivity ID: {}".format(activity["activity_id"]))
-                print("\tActivity Message: {}".format(activity["activity_message"]))
-                print("\tActivity Type: {}".format(activity["activity_type"]))
-                print("\tRoute ID: {}".format(activity["route_id"]))
-                print("\tRoute Name: {}".format(activity["route_name"]))
+                print(f"\tActivity ID: {activity['activity_id']}")
+                print(f"\tActivity Message: {activity['activity_message']}")
+                print(f"\tActivity Type: {activity['activity_type']}")
+                print(f"\tRoute ID: {activity['route_id']}")
+                print(f"\tRoute Name: {activity['route_name']}")
 
 
 if __name__ == "__main__":

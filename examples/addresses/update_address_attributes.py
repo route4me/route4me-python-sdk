@@ -65,24 +65,24 @@ def main(api_key):
 
     for i, address in enumerate(response["addresses"]):
         print(f"Number {i}:")
-        print("\taddress: {}".format(address["address"]))
-        print("\troute_id: {}".format(address["route_id"]))
-        print("\troute_destination_id: {}".format(address["route_destination_id"]))
+        print(f"\taddress: {address['address']}")
+        print(f"\troute_id: {address['route_id']}")
+        print(f"\troute_destination_id: {address['route_destination_id']}")
         print("\t")
         if address["route_id"]:
             print("Modifying Address and Alias")
             print("Current Address and Alias")
             data = {
-                "address": "{} - Modified".format(address["address"]),
-                "alias": "{} - {}".format(address["alias"], address["address"]),
+                "address": f"{address['address']} - Modified",
+                "alias": f"{address['alias']} - {address['address']}",
             }
-            print("\taddress: {}".format(address["address"]))
-            print("\talias: {}".format(address["alias"]))
+            print(f"\taddress: {address['address']}")
+            print(f"\talias: {address['alias']}")
             print("Updating Address")
             response = r4m.address.update_address(data, address["route_id"], address["route_destination_id"])
             print("New Address and Alias")
-            print("\taddress: {}".format(response["address"]))
-            print("\talias: {}".format(response["alias"]))
+            print(f"\taddress: {response['address']}")
+            print(f"\talias: {response['alias']}")
 
 
 if __name__ == "__main__":

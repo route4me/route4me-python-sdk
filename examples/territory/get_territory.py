@@ -18,11 +18,11 @@ def main(api_key):
             print(". ".join(response["errors"]))
         else:
             territory = response
-            print("Territory ID: {}".format(territory["territory_id"]))
-            print("\tTerritory Name: {}".format(territory["territory_name"]))
-            print("\tTerritory Color: {}".format(territory["territory_color"]))
-            print("\tMember ID: {}".format(territory["member_id"]))
-            print("\tTerritory Type: {}".format(territory["territory"]["type"]))
+            print(f"Territory ID: {territory['territory_id']}")
+            print(f"\tTerritory Name: {territory['territory_name']}")
+            print(f"\tTerritory Color: {territory['territory_color']}")
+            print(f"\tMember ID: {territory['member_id']}")
+            print(f"\tTerritory Type: {territory['territory']['type']}")
             if territory["territory"]["data"]:
                 print("\tData:")
                 for data in territory["territory"]["data"]:

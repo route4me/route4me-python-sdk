@@ -45,11 +45,7 @@ def main(api_key):
         )
         response = route.get_route()
         for history in response["tracking_history"]:
-            print(
-                "lng: {} lat: {} time: {} speed: {} ".format(
-                    history["lg"], history["lt"], history["ts_friendly"], history["s"]
-                )
-            )
+            print(f"lng: {history['lg']} lat: {history['lt']} time: {history['ts_friendly']} speed: {history['s']} ")
 
 
 if __name__ == "__main__":

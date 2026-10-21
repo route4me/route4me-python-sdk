@@ -17,12 +17,12 @@ def main(api_key):
         if hasattr(response, "errors"):
             print(". ".join(response.errors))
         else:
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
             for i, address in enumerate(response["addresses"]):
                 print(f"Address #{i + 1}")
-                print("\tAddress: {}".format(address["address"]))
-                print("\tRoute Destination ID: {}".format(address["route_destination_id"]))
-            print("Tracking History: {}".format(",".join(response["tracking_history"])))
+                print(f"\tAddress: {address['address']}")
+                print(f"\tRoute Destination ID: {address['route_destination_id']}")
+            print(f"Tracking History: {','.join(response['tracking_history'])}")
 
 
 if __name__ == "__main__":

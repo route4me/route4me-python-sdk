@@ -21,16 +21,16 @@ def main(api_key):
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
-        print("Member ID:\t{}".format(response.get("member_id")))
-        print("Order ID:\t{}".format(response.get("order_id")))
-        print("Order Status ID:\t{}".format(response.get("order_status_id")))
-        print("In Route Count:\t{}".format(response.get("in_route_count")))
-        print("Day Added:\t{}".format(response.get("day_added_YYMMDD")))
-        print("Is Pending:\t{}".format(response.get("is_pending")))
-        print("Is Accepted:\t{}".format(response.get("is_accepted")))
-        print("Is Started:\t{}".format(response.get("is_started")))
-        print("Is Validated:\t{}".format(response.get("is_validated")))
-        print("Is Completed:\t{}".format(response.get("is_completed")))
+        print(f"Member ID:\t{response.get('member_id')}")
+        print(f"Order ID:\t{response.get('order_id')}")
+        print(f"Order Status ID:\t{response.get('order_status_id')}")
+        print(f"In Route Count:\t{response.get('in_route_count')}")
+        print(f"Day Added:\t{response.get('day_added_YYMMDD')}")
+        print(f"Is Pending:\t{response.get('is_pending')}")
+        print(f"Is Accepted:\t{response.get('is_accepted')}")
+        print(f"Is Started:\t{response.get('is_started')}")
+        print(f"Is Validated:\t{response.get('is_validated')}")
+        print(f"Is Completed:\t{response.get('is_completed')}")
 
 
 if __name__ == "__main__":

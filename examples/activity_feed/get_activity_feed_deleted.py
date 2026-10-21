@@ -19,11 +19,11 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Total affected: {}".format(response["total"]))
+            print(f"Total affected: {response['total']}")
             for i, activity in enumerate(response["results"]):
                 print(f"Activity #{i + 1}")
-                print("\tActivity ID: {}".format(activity["activity_id"]))
-                print("\tActivity Type: {}".format(activity["activity_type"]))
+                print(f"\tActivity ID: {activity['activity_id']}")
+                print(f"\tActivity Type: {activity['activity_type']}")
 
 
 if __name__ == "__main__":

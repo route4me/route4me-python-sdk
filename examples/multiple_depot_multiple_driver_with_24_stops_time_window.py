@@ -233,11 +233,11 @@ def main(api_key):
     )
 
     response = route4me.run_optimization()
-    print("Optimization Link: {}".format(response["links"]["view"]))
+    print(f"Optimization Link: {response['links']['view']}")
     for i, route in enumerate(response["routes"]):
-        print("\t{}\tRoute Link: {}".format(i + 1, route["links"]["route"]))
+        print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
-            print("\t\t\tAddress: {}".format(address["address"]))
+            print(f"\t\t\tAddress: {address['address']}")
 
 
 if __name__ == "__main__":

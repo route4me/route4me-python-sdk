@@ -37,10 +37,10 @@ def main(api_key):
                 print(". ".join(response["errors"]))
             else:
                 note = response["note"]
-                print("Note ID: {}".format(response["note_id"]))
-                print("Note contents: {}".format(note["contents"]))
-                print("Route ID: {}".format(note["route_id"]))
-                print("Route Destination ID: {}".format(note["route_destination_id"]))
+                print(f"Note ID: {response['note_id']}")
+                print(f"Note contents: {note['contents']}")
+                print(f"Route ID: {note['route_id']}")
+                print(f"Route Destination ID: {note['route_destination_id']}")
 
 
 if __name__ == "__main__":

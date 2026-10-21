@@ -14,10 +14,10 @@ def main(api_key):
         cached_lat=38.024654,
         cached_lng=-77.338814,
     )
-    print("Address ID: {}".format(response["address_id"]))
-    print("First Name: {}".format(response["first_name"]))
-    print("Last Name: {}".format(response["last_name"]))
-    print("Address: {}".format(response["address_1"]))
+    print(f"Address ID: {response['address_id']}")
+    print(f"First Name: {response['first_name']}")
+    print(f"Last Name: {response['last_name']}")
+    print(f"Address: {response['address_1']}")
 
 
 if __name__ == "__main__":

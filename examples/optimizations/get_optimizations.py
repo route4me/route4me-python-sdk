@@ -15,9 +15,7 @@ def main(api_key):
         for i, optimization in enumerate(response["optimizations"]):
             optimization_problem_id = optimization["optimization_problem_id"]
             print(
-                "{}.-\tOptimization ID: {} - \t{}".format(
-                    i + 1, optimization_problem_id, optimization["parameters"]["route_name"]
-                )
+                f"{i + 1}.-\tOptimization ID: {optimization_problem_id} - \t{optimization['parameters']['route_name']}"
             )
 
 

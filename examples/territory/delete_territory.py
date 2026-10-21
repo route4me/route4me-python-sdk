@@ -33,7 +33,7 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Territory ID: {} -> Deleted: {}".format(territory_id, response["status"]))
+            print(f"Territory ID: {territory_id} -> Deleted: {response['status']}")
 
 
 if __name__ == "__main__":

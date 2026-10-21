@@ -66,7 +66,7 @@ def main(api_key):
     print("Current Addresses")
     for i, address in enumerate(response["addresses"]):
         print(f"Number {i}:")
-        print("\taddress: {}".format(address["address"]))
+        print(f"\taddress: {address['address']}")
         print("\t")
     addresses = {
         "addresses": [
@@ -99,7 +99,7 @@ def main(api_key):
         print("Addresses after insert")
         for i, address in enumerate(response["addresses"]):
             print(f"Number {i}:")
-            print("\taddress: {}".format(address["address"]))
+            print(f"\taddress: {address['address']}")
             print("\t")
 
 

@@ -13,8 +13,8 @@ def main(api_key):
     else:
         for i, member in enumerate(response):
             print(f"Member #{i + 1}")
-            print("\tName: {}, {}".format(member.get("member_first_name"), member.get("member_last_name")))
-            print("\tEmail: {}".format(member.get("member_email")))
+            print(f"\tName: {member.get('member_first_name')}, {member.get('member_last_name')}")
+            print(f"\tEmail: {member.get('member_email')}")
 
 
 if __name__ == "__main__":

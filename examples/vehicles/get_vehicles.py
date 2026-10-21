@@ -12,7 +12,7 @@ def main(api_key):
         print(". ".join(response.get("errors")))
     else:
         for vehicle in response:
-            print("Vehicle ID: {}\tVehicle Alias: {}".format(vehicle.get("vehicle_id"), vehicle.get("vehicle_alias")))
+            print(f"Vehicle ID: {vehicle.get('vehicle_id')}\tVehicle Alias: {vehicle.get('vehicle_alias')}")
 
 
 if __name__ == "__main__":
