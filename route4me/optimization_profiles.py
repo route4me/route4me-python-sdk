@@ -2,7 +2,6 @@
 
 from .api_endpoints import OPTIMIZATION_PROFILES_V5
 from .base import Base
-from .exceptions import APIException
 
 
 class OptimizationProfiles(Base):
@@ -27,11 +26,4 @@ class OptimizationProfiles(Base):
         :return: the decoded JSON reply, the raw body (``bytes``) when it is
             not JSON, or the ``{"errors": ...}`` dict on an API error.
         """
-        try:
-            response = self._request(OPTIMIZATION_PROFILES_V5, self.params, "get")
-            data = response.json()
-            return data
-        except APIException as e:
-            return e.to_dict()
-        except ValueError:
-            return response.content
+        return self._request_decoded(OPTIMIZATION_PROFILES_V5, self.params, "get")
