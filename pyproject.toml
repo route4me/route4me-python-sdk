@@ -160,9 +160,13 @@ known-first-party = ["route4me"]
 
 # ------------------------------------------------------------------ pylint --
 #
-# The package and the examples must pass with zero messages:
-#     pylint route4me examples --rcfile=pyproject.toml
-# Tests use tests/pylintrc, which relaxes only the checks that fight pytest.
+# The package, the tests and the examples must pass with zero messages:
+#     pylint route4me --rcfile=pyproject.toml
+#     pylint tests --rcfile=tests/pylintrc
+#     pylint --rcfile=examples/pylintrc $(git ls-files 'examples/*.py')
+# tests/pylintrc relaxes only the checks that fight pytest; examples/pylintrc
+# only drops duplicate-code. The examples are passed as files because their
+# subfolders have no __init__.py.
 
 [tool.pylint.main]
 py-version = "3.9"
