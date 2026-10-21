@@ -3,9 +3,10 @@
 import json
 from collections import namedtuple
 from datetime import datetime
+from typing import Any
 
 
-def _json_object_hook(d):
+def _json_object_hook(d: dict[str, Any]) -> Any:
     """Turn one decoded JSON object into a namedtuple.
 
     Keys that start with a digit get a ``d_`` prefix. Any other key that is not
@@ -24,7 +25,7 @@ def _json_object_hook(d):
     return namedtuple("X", keys, rename=True)(*d.values())
 
 
-def json2obj(data):
+def json2obj(data: "str | bytes") -> Any:
     """Decode a JSON document into namedtuples instead of dicts.
 
     :param data: the JSON text.
@@ -34,7 +35,7 @@ def json2obj(data):
     return json.loads(data, object_hook=_json_object_hook)
 
 
-def clean_dict(data):
+def clean_dict(data: Any) -> Any:
     """Remove ``None`` values and empty containers, recursively.
 
     Dicts and lists are cleaned item by item, and a container left empty is
@@ -54,7 +55,7 @@ def clean_dict(data):
         cleaned_list = [item for item in (clean_dict(i) for i in data) if item is not None]
         return cleaned_list if cleaned_list else None
     if isinstance(data, dict):
-        cleaned_dict = {}
+        cleaned_dict: dict[Any, Any] = {}
         for k, v in data.items():
             cleaned_v = clean_dict(v)
             if cleaned_v is not None and cleaned_v != "":
@@ -63,7 +64,7 @@ def clean_dict(data):
     return data
 
 
-def is_valid_datetime(s, date_format="%Y-%m-%d %H:%M:%S"):
+def is_valid_datetime(s: object, date_format: str = "%Y-%m-%d %H:%M:%S") -> bool:
     """Check whether a value is a date-time in the given format.
 
     :param s: the value to check; converted with ``str()``.

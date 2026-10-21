@@ -63,11 +63,10 @@ jobs:
       - name: Install
         run: python -m pip install -e ".[lint]"
 
-      # Typing lands tier by tier (see the mypy overrides in pyproject.toml).
-      # Non-blocking until tier C is complete; flip `continue-on-error` off then.
+      # Typing lands tier by tier (see the mypy overrides in pyproject.toml):
+      # strict on the tier-A modules, default checks everywhere else.
       - name: mypy
         run: mypy route4me/
-        continue-on-error: true
 
   test:
     name: Test py${{ matrix.python-version }} on ${{ matrix.os }}

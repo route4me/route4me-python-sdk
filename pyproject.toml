@@ -266,7 +266,8 @@ output = "coverage.xml"
 # -------------------------------------------------------------------- mypy --
 
 [tool.mypy]
-python_version = "3.9"
+# No python_version: current mypy releases only target 3.10 and later, so it
+# checks against the interpreter it runs on. The 3.9 test job covers runtime.
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
@@ -292,10 +293,6 @@ warn_return_any = true
 # [[tool.mypy.overrides]]
 # module = ["route4me._fields", "route4me.base"]
 # disallow_untyped_defs = true
-
-[[tool.mypy.overrides]]
-module = ["tests.*", "examples.*"]
-ignore_errors = true
 
 # ------------------------------------------------------------------ bandit --
 
