@@ -242,7 +242,8 @@ class TestTelematicsDisplayHelpers:
         buffer = io.StringIO()
         vendor = {"id": 7, "name": "Acme", "features": [{"name": "gps"}, {"name": "fuel"}]}
 
-        Route4Me("k" * 32).telematics.pp_vendor_comparison(vendor, file=buffer)
+        with pytest.warns(DeprecationWarning):
+            Route4Me("k" * 32).telematics.pp_vendor_comparison(vendor, file=buffer)
 
         assert buffer.getvalue().strip() == "7\tAcme\tgps, fuel"
 
@@ -250,7 +251,8 @@ class TestTelematicsDisplayHelpers:
         """Previously raised ``KeyError`` on a vendor with no ``features``."""
         buffer = io.StringIO()
 
-        Route4Me("k" * 32).telematics.pp_vendor_comparison({"id": 7, "name": "Acme"}, file=buffer)
+        with pytest.warns(DeprecationWarning):
+            Route4Me("k" * 32).telematics.pp_vendor_comparison({"id": 7, "name": "Acme"}, file=buffer)
 
         # rstrip("\n") only -- the trailing tab is the empty feature column and
         # is part of the expected output.

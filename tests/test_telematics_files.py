@@ -183,7 +183,8 @@ class TestPrettyPrinters:
     def test_pp_vendor_comparison_writes_a_tab_separated_row(self):
         out = io.StringIO()
 
-        Telematics.pp_vendor_comparison({"id": 55, "name": "Geotab", "features": [{"name": "GPS"}]}, file=out)
+        with pytest.warns(DeprecationWarning, match="pp_vendor_comparison"):
+            Telematics.pp_vendor_comparison({"id": 55, "name": "Geotab", "features": [{"name": "GPS"}]}, file=out)
 
         assert out.getvalue() == "55\tGeotab\tGPS\n"
 

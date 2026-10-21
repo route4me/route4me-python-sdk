@@ -78,7 +78,18 @@ class Telematics(Base):
 
         :param vendor: one vendor, as decoded from a reply.
         :param file: destination stream; defaults to stdout.
+
+        .. deprecated:: 1.0.0
+           Only the retired :meth:`compare_vendors` reply lists ``features``;
+           API V5 vendors have none. Print the fields of the
+           :meth:`get_vendor_v5` reply instead.
         """
+        warnings.warn(
+            "Telematics.pp_vendor_comparison is deprecated: it prints the features of the retired "
+            "compare_vendors reply, and API V5 vendors have none.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if isinstance(vendor, dict):
             features = [x["name"] for x in vendor.get("features", [])]
             print(f"{vendor.get('id')}\t{vendor.get('name')}\t{', '.join(features)}", file=file)
