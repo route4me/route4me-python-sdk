@@ -1,11 +1,2 @@
-# Development dependencies
-# in one place
-
-pytest
-pytest-cov
-flake8
-mock
-sphinx
-codecov
-coverage
-
+# Development dependencies are declared in pyproject.toml; this file installs them.
+-e .[dev]
