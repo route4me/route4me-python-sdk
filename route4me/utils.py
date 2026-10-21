@@ -37,29 +37,28 @@ def clean_dict(data):
     """Remove ``None`` values and empty containers, recursively.
 
     Dicts and lists are cleaned item by item, and a container left empty is
-    removed from its parent. Empty strings inside lists are kept. Any other
-    value is returned as is.
+    removed from its parent. In a dict, empty strings are removed too; in a
+    list they are kept. ``0``, ``0.0`` and ``False`` are values, not gaps, and
+    are always kept. Any other value is returned as is.
 
     :param data: a dict, a list, or a plain value.
     :return: a cleaned copy of ``data``, or ``None`` when nothing is left.
+
+    .. versionchanged:: 1.0.0
+       ``0``, ``0.0`` and ``False`` are kept. They used to be dropped, which
+       turned a time window ``[0, 3600]`` into ``[3600]`` and removed zero
+       coordinates and capacities (#41).
     """
     if isinstance(data, list):
-        cleaned_list = []
-        for i in data:
-            cleaned_item = clean_dict(i)
-            # Append non-None items except empty strings
-            if cleaned_item or cleaned_item == "":
-                cleaned_list.append(cleaned_item)
+        cleaned_list = [item for item in (clean_dict(i) for i in data) if item is not None]
         return cleaned_list if cleaned_list else None
     if isinstance(data, dict):
         cleaned_dict = {}
         for k, v in data.items():
             cleaned_v = clean_dict(v)
-            # Append non-None key-value pairs
-            if cleaned_v:
+            if cleaned_v is not None and cleaned_v != "":
                 cleaned_dict[k] = cleaned_v
         return cleaned_dict if cleaned_dict else None
-    # For non-container type, return as is
     return data
 
 

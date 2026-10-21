@@ -95,15 +95,12 @@ class TestBundling:
 
 
 class TestCleanDict:
-    @pytest.mark.xfail(strict=True, raises=AssertionError, reason="#41: clean_dict drops 0, corrupting time windows")
     def test_a_time_window_starting_at_zero_survives(self):
         assert clean_dict({"available_time_windows": [[0, 3600]]}) == {"available_time_windows": [[0, 3600]]}
 
-    @pytest.mark.xfail(strict=True, raises=AssertionError, reason="#41: clean_dict drops 0.0 coordinates")
     def test_zero_coordinates_survive(self):
         assert clean_dict({"lat": 0.0, "lng": 0.0}) == {"lat": 0.0, "lng": 0.0}
 
-    @pytest.mark.xfail(strict=True, raises=AssertionError, reason="#41: clean_dict drops False")
     def test_false_survives(self):
         assert clean_dict({"is_depot": False}) == {"is_depot": False}
 
@@ -115,7 +112,6 @@ class TestCleanDict:
 
 
 class TestAdvancedConstraintSerialisation:
-    @pytest.mark.xfail(strict=True, raises=KeyError, reason="#41: a constraint with capacity 0 loses the field")
     def test_a_zero_capacity_is_sent(self):
         constraint = AdvancedConstraint(max_capacity=0, members_count=1)
 
