@@ -328,6 +328,53 @@ class TestCircuitBreaker:
 
         assert breaker.is_open
 
+    def test_half_open_lets_exactly_one_probe_through(self):
+        breaker = CircuitBreaker(failure_threshold=5, reset_timeout=0.0)
+        for _ in range(5):
+            breaker.record_failure()
+
+        breaker.before_request()  # the probe
+
+        assert breaker.state == "half-open"
+        with pytest.raises(CircuitBreakerOpen):
+            breaker.before_request()
+
+    def test_a_failed_probe_reopens_at_once_whatever_the_threshold(self):
+        breaker = CircuitBreaker(failure_threshold=5, reset_timeout=30.0)
+        for _ in range(5):
+            breaker.record_failure()
+        breaker._opened_at -= 31.0  # pretend the reset timeout elapsed
+        breaker.before_request()
+
+        breaker.record_failure()
+
+        assert breaker.state == "open"
+        with pytest.raises(CircuitBreakerOpen):
+            breaker.before_request()
+
+    def test_a_successful_probe_closes_it(self):
+        breaker = CircuitBreaker(failure_threshold=2, reset_timeout=0.0)
+        breaker.record_failure()
+        breaker.record_failure()
+        breaker.before_request()
+
+        breaker.record_success()
+
+        assert breaker.state == "closed"
+        assert breaker.failure_count == 0
+
+    def test_an_unexpected_error_releases_the_probe(self):
+        breaker = CircuitBreaker(failure_threshold=1, reset_timeout=0.0)
+        breaker.record_failure()
+
+        def broken_send():
+            raise ValueError("bug in a hook")
+
+        with pytest.raises(ValueError):
+            execute_with_retry(broken_send, "GET", circuit_breaker=breaker)
+
+        assert breaker.state == "open"
+
     def test_reset_forces_it_closed(self):
         breaker = CircuitBreaker(failure_threshold=1)
         breaker.record_failure()

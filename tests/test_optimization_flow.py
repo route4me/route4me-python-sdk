@@ -193,9 +193,9 @@ class TestExporters:
         encodings = []
         real_open = open
 
-        def spy(file, mode="r", *args, **kwargs):
+        def spy(file, *args, **kwargs):
             encodings.append(kwargs.get("encoding"))
-            return real_open(file, mode, *args, **kwargs)
+            return real_open(file, *args, **kwargs)
 
         monkeypatch.setattr("route4me.api.open", spy, raising=False)
 

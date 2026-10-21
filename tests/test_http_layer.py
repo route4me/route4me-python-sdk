@@ -317,3 +317,23 @@ class TestParamsMutation:
         client._make_request(ANY_URL, params, client._request_get)
 
         assert params == {"limit": 1}, "api_key was written into the caller's dict"
+
+
+class TestRedirectsSetting:
+    """``redirects=False`` applies to every verb, not just GET and POST."""
+
+    @pytest.mark.parametrize("verb", ["get", "post", "put", "delete"])
+    def test_redirects_false_is_passed_to_every_verb(self, monkeypatch, verb):
+        client = Route4Me("1" * 32, redirects=False)
+        seen = {}
+
+        def capture(method, url, **kwargs):
+            seen.update(kwargs)
+            raise RuntimeError("stop before sending")
+
+        monkeypatch.setattr(client, "_send", capture)
+
+        with pytest.raises(RuntimeError):
+            getattr(client, f"_request_{verb}")(ANY_URL, {})
+
+        assert seen["allow_redirects"] is False
