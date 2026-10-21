@@ -155,25 +155,21 @@ known-first-party = ["route4me"]
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]
-# `-m "not live"` keeps the network-hitting smoke tests out of the default run;
-# CI runs them nightly with a real key. No --cov-report=html here: forcing it
-# regenerated cover-html/ on every local run, which is how an 86 KB .coverage
-# and a 40-file cover-html/ ended up committed to the working tree. Opt in with
+# The suite never talks to the real API: tests that need a live key are kept
+# outside the repository. No --cov-report=html here: forcing it regenerated
+# cover-html/ on every local run, which is how an 86 KB .coverage and a
+# 40-file cover-html/ ended up committed to the working tree. Opt in with
 # `pytest --cov-report=html` when you actually want it.
 addopts = [
     "-v",
     "-rfesxX",
     "--strict-markers",
     "--strict-config",
-    "-m", "not live",
     # Offline by design. Any test that reaches a real socket fails loudly
     # instead of silently depending on the network, a live key, or Route4Me's
-    # uptime. Tests under tests/live/ opt back in with @pytest.mark.enable_socket.
+    # uptime.
     "--disable-socket",
     "--allow-unix-socket",
-]
-markers = [
-    "live: hits the real Route4Me API; requires ROUTE4ME_API_KEY. Deselected by default.",
 ]
 
 # ---------------------------------------------------------------- coverage --
