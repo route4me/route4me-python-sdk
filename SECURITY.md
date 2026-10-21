@@ -20,7 +20,7 @@ The SDK supports every Python release from 3.9 up.
 ## How the SDK protects your API key
 
 - Every request goes over HTTPS to a Route4Me host. The test suite fails if any request leaves `api.route4me.com`, `wh.route4me.com`, `rapid.route4me.com` or `validator.route4me.com`, or goes over plain HTTP.
-- The key is sent only as the `api_key` query parameter, never in a request body or an unrelated header.
+- API V5 requests send the key as an `Authorization: Bearer` header, so it never appears in a URL or a server log. The V4 API requires it as the `api_key` query parameter. It is never put in a request body.
 - `APIException` messages, URLs and logged errors are redacted (`route4me/_redact.py`), so the key does not end up in logs.
 - Values placed in a URL path are percent-encoded, so a crafted ID cannot redirect a request to another endpoint.
 - No request state is kept between calls: one call's parameters never travel with the next.

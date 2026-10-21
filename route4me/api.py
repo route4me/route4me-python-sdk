@@ -13,6 +13,7 @@ from requests.adapters import HTTPAdapter
 
 from ._redact import redact_text
 from ._resilience import CircuitBreaker, execute_with_retry
+from ._url import is_v5_url
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook
@@ -175,9 +176,14 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     def _make_request(self, url, params, request_method, **kwargs):
         """Send one request, adding the API key, and raise on an HTTP error.
 
+        API V5 requests (``https://wh.route4me.com/modules/api/v5.x/...``) carry
+        the key as an ``Authorization: Bearer`` header, which keeps it out of
+        URLs and therefore out of proxy and server logs. Every other request
+        carries it as the ``api_key`` query parameter, which the V4 API requires.
+
         :param url: absolute URL of the API endpoint.
-        :param params: query parameters. They are copied, and ``api_key`` is
-            set on the copy; the caller's dict is not changed.
+        :param params: query parameters. They are copied, and the key is added
+            to the copy; the caller's dict is not changed.
         :param request_method: one of :meth:`_request_get`,
             :meth:`_request_post`, :meth:`_request_put` or
             :meth:`_request_delete`.
@@ -186,12 +192,19 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :return: the :class:`requests.Response`.
         :raise APIException: when the API answers outside the 200-399 range.
             The API key is removed from the stored body and URL.
+
+        .. versionchanged:: 1.0.0
+           API V5 requests send the key as a bearer token instead of ``api_key``.
         """
         # Copy rather than mutate. Every resource passes its own long-lived
         # `self.params`, so writing api_key in place meant query parameters
         # accumulated on that dict across calls and leaked between them.
         params = dict(params) if params else {}
-        params["api_key"] = self.key
+        if is_v5_url(url):
+            params.pop("api_key", None)
+            kwargs["headers"] = {**self.headers, "Authorization": f"Bearer {self.key}"}
+        else:
+            params["api_key"] = self.key
         response = request_method(url, params, **kwargs)
         if not 200 <= response.status_code < 400:
             # Both the URL and the body are scrubbed. `Response.url` carries
@@ -363,7 +376,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             params["redirect"] = 0
         return self._make_request(API_HOST, params, request_method, data=dumps(self.optimization.data))
 
-    def _request_post(self, url, request_params, *, data=None, json=None, files=None, timeout=UNSET):
+    def _request_post(self, url, request_params, *, data=None, json=None, files=None, timeout=UNSET, headers=None):
         """Send a POST request through :meth:`_send`.
 
         :param url: absolute URL of the API endpoint.
@@ -372,6 +385,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param json: body to send as JSON.
         :param files: files for a multipart upload.
         :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
         :return: the :class:`requests.Response`.
         """
         return self._send(
@@ -381,18 +395,19 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             allow_redirects=self.redirects,
             files=files,
             data=data,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             json=json,
             timeout=self._timeout(timeout),
         )
 
-    def _request_get(self, url, request_params, *, data=None, timeout=UNSET):
+    def _request_get(self, url, request_params, *, data=None, timeout=UNSET, headers=None):
         """Send a GET request through :meth:`_send`.
 
         :param url: absolute URL of the API endpoint.
         :param request_params: query parameters.
         :param data: request body, if any.
         :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
         :return: the :class:`requests.Response`.
         """
         return self._send(
@@ -401,11 +416,11 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             params=request_params,
             allow_redirects=self.redirects,
             data=data,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 
-    def _request_put(self, url, request_params, *, json=None, data=None, timeout=UNSET):
+    def _request_put(self, url, request_params, *, json=None, data=None, timeout=UNSET, headers=None):
         """Send a PUT request through :meth:`_send`.
 
         :param url: absolute URL of the API endpoint.
@@ -413,6 +428,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param json: body to send as JSON.
         :param data: form fields, or a pre-encoded body.
         :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
         :return: the :class:`requests.Response`.
         """
         return self._send(
@@ -422,11 +438,11 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             allow_redirects=self.redirects,
             data=data,
             json=json,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 
-    def _request_delete(self, url, request_params, *, data=None, json=None, timeout=UNSET):
+    def _request_delete(self, url, request_params, *, data=None, json=None, timeout=UNSET, headers=None):
         """Send a DELETE request through :meth:`_send`.
 
         :param url: absolute URL of the API endpoint.
@@ -434,6 +450,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param data: form fields, or a pre-encoded body.
         :param json: body to send as JSON.
         :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
         :return: the :class:`requests.Response`.
         """
         return self._send(
@@ -443,7 +460,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             allow_redirects=self.redirects,
             data=data,
             json=json,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 

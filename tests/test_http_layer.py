@@ -337,3 +337,33 @@ class TestRedirectsSetting:
             getattr(client, f"_request_{verb}")(ANY_URL, {})
 
         assert seen["allow_redirects"] is False
+
+
+class TestKeyPlacement:
+    """V5 takes a bearer token; everything else keeps ``api_key`` in the query."""
+
+    def test_a_v5_request_sends_a_bearer_token_and_no_query_key(self, client, mocked, query_of, last_request, api_key):
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/C0FFEE00C0FFEE00C0FFEE00C0FFEE00"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client.route_status.get_route_status("C0FFEE00C0FFEE00C0FFEE00C0FFEE00")
+
+        assert last_request().headers["Authorization"] == f"Bearer {api_key}"
+        assert "api_key" not in query_of(last_request())
+
+    def test_a_v4_request_keeps_the_query_key_and_sends_no_token(self, client, mocked, query_of, last_request, api_key):
+        mocked.add(responses.GET, ROUTE_HOST, json=[], status=200)
+
+        client.route.get_routes(limit=1, offset=0)
+
+        assert query_of(last_request())["api_key"] == api_key
+        assert "Authorization" not in last_request().headers
+
+    def test_custom_headers_are_kept_on_v5_requests(self, mocked, last_request):
+        client = Route4Me("1" * 32, headers={"User-Agent": "my-app/2.0"})
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/C0FFEE00C0FFEE00C0FFEE00C0FFEE00"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client.route_status.get_route_status("C0FFEE00C0FFEE00C0FFEE00C0FFEE00")
+
+        assert last_request().headers["User-Agent"] == "my-app/2.0"
