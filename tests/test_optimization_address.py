@@ -85,6 +85,19 @@ class TestOptimizationWrites:
 
         assert api_key not in last_request().body.decode()
 
+    @pytest.mark.parametrize(("reoptimize", "sent"), [(True, "1"), (False, "0"), (1, "1")])
+    def test_update_optimization_sends_reoptimize_as_0_or_1(
+        self, client, mocked, query_of, last_request, reoptimize, sent
+    ):
+        """``True`` used to reach the API as ``reoptimize=True``."""
+        mocked.add(responses.PUT, API_HOST, json={}, status=200)
+
+        client.optimization.update_optimization(
+            optimization_problem_id=OPTIMIZATION_ID, addresses=[ADDRESS], reoptimize=reoptimize
+        )
+
+        assert query_of(last_request())["reoptimize"] == sent
+
     def test_delete_optimization_sends_the_ids_as_json(self, client, mocked, last_request):
         mocked.add(responses.DELETE, API_HOST, json={"status": True}, status=200)
 
@@ -206,6 +219,7 @@ class TestGeocoding:
 
         assert client.address.get_geocode({"format": "json", "address": ADDRESS["address"]}) == [ADDRESS]
         assert query_of(last_request())["address"] == ADDRESS["address"]
+        assert not last_request().body
 
     def test_batch_geocodes_posts_the_addresses_as_a_form(self, client, mocked, last_request):
         mocked.add(responses.POST, BATCH_GEOCODER, json=[], status=200)

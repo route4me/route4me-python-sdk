@@ -297,6 +297,14 @@ class TestShareAndMerge:
 
         assert parse_qs(last_request().body) == {"route_ids": [f"{ROUTE_ID},{OTHER_ROUTE_ID}"]}
 
+    def test_merge_routes_joins_a_list_of_ids(self, client, mocked, last_request):
+        """A list used to be form-encoded as one ``route_ids`` field per ID."""
+        mocked.add(responses.POST, MERGE_ROUTES_HOST, json={"status": True}, status=200)
+
+        client.route.merge_routes(route_ids=[ROUTE_ID, OTHER_ROUTE_ID])
+
+        assert parse_qs(last_request().body) == {"route_ids": [f"{ROUTE_ID},{OTHER_ROUTE_ID}"]}
+
 
 class TestExport:
     def test_v5_export_posts_to_the_route_export_endpoint(self, client, mocked, last_request):

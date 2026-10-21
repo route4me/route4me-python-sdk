@@ -374,14 +374,21 @@ class Route(Base):
         fields.
 
         :param kwargs: form fields. Required: ``route_ids``, the IDs of the
-            routes to merge, comma-separated.
+            routes to merge: a comma-separated string or a list of IDs.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
         :raise ParamValueException: when ``route_ids`` is missing.
+
+        .. versionchanged:: 1.0.0
+           ``route_ids`` may be a list. It used to be form-encoded as one field
+           per ID, which the API does not read.
         """
         if not self.check_required_params(kwargs, ["route_ids"]):
             raise ParamValueException("params", "Params are not complete")
-        return self._call_api(MERGE_ROUTES_HOST, "post", self.params, body=kwargs, body_key="data")
+        body = dict(kwargs)
+        if not isinstance(body["route_ids"], str):
+            body["route_ids"] = ",".join(str(route_id) for route_id in body["route_ids"])
+        return self._call_api(MERGE_ROUTES_HOST, "post", self.params, body=body, body_key="data")
 
     def resequence_route_all(self, **kwargs):
         """Resequence all the stops of a route.

@@ -63,8 +63,8 @@ class Optimization(Base):
         other keywords, ``addresses`` included, as the JSON body.
 
         :param kwargs: required: ``optimization_problem_id``; ``addresses``, a
-            list of address dicts; and ``reoptimize``, ``1`` to re-optimize
-            after adding them.
+            list of address dicts; and ``reoptimize``, ``1`` (or ``True``) to
+            re-optimize after adding them.
         :return: the decoded JSON reply: the updated problem, or the
             ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required parameter is missing.
@@ -72,14 +72,16 @@ class Optimization(Base):
         .. versionchanged:: 1.0.0
            The body is JSON and the API key is no longer copied into it; the
            problem ID and ``reoptimize`` moved to the query, as the API expects.
+           A boolean ``reoptimize`` is sent as ``1`` or ``0``, not ``"True"``.
         """
         if not self.check_required_params(kwargs, ["optimization_problem_id", "addresses", "reoptimize"]):
             raise ParamValueException("params", "Params are not complete")
         body = dict(kwargs)
+        reoptimize = body.pop("reoptimize")
         params = {
             "api_key": self.params["api_key"],
             "optimization_problem_id": body.pop("optimization_problem_id"),
-            "reoptimize": body.pop("reoptimize"),
+            "reoptimize": int(reoptimize) if isinstance(reoptimize, bool) else reoptimize,
         }
         return self._call_api(API_HOST, "put", params, body=body)
 

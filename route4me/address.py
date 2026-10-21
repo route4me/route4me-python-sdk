@@ -166,7 +166,7 @@ class Address(Base):
             API error.
         """
         try:
-            self.response = self._request(SINGLE_GEOCODER, params, "get", data=[])
+            self.response = self._request(SINGLE_GEOCODER, params, "get")
             return self.response.json()
         except APIException as e:
             return e.to_dict()
