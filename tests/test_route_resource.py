@@ -50,9 +50,6 @@ class TestGetRoute:
         with pytest.raises(ParamValueException):
             client.route.get_route()
 
-    @pytest.mark.xfail(
-        strict=True, raises=pytest.fail.Exception, reason="#36: route_id persists in Route.params between calls"
-    )
     def test_a_later_call_does_not_reuse_the_previous_route_id(self, client, mocked):
         mocked.add(responses.GET, ROUTE_HOST, json={}, status=200)
         client.route.get_route(route_id=ROUTE_ID)
@@ -60,11 +57,6 @@ class TestGetRoute:
         with pytest.raises(ParamValueException):
             client.route.get_route()
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=AssertionError,
-        reason="#36: get_route_tracking leaves device_tracking_history in Route.params",
-    )
     def test_tracking_does_not_leak_into_the_next_get_route(self, client, mocked, query_of, last_request):
         mocked.add(responses.GET, ROUTE_HOST, json={}, status=200)
         client.route.get_route_tracking(route_id=ROUTE_ID)

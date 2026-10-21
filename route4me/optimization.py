@@ -115,6 +115,18 @@ class Optimization(Base):
             ADDRESS_HOST, "delete", kwargs, required=["optimization_problem_id", "route_destination_id"]
         )
 
+    def reset(self):
+        """Clear everything staged on this optimization, so the client can build another one.
+
+        Resets the query parameters (keeping the API key), the body data and the
+        addresses staged with :meth:`route4me.address.Address.add_address`.
+
+        .. versionadded:: 1.0.0
+        """
+        self.params = {"api_key": self.api.key}
+        self.data = {"parameters": {}}
+        self.api.address.addresses = []
+
     def set_slowdowns(self, service_time, travel_time):
         """Set the ``slowdowns`` route parameter.
 

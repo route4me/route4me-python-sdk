@@ -98,19 +98,10 @@ class Telematics(Base):
         :param vendor_id: ID of the vendor.
         :return: the decoded JSON reply: the vendor, or the ``{"errors": ...}``
             dict on an API error.
-        :raise ParamValueException: when the resource has no API key.
         """
 
-        self.params.update({"vendor_id": vendor_id})
-
-        if self.check_required_params(self.params, ["api_key"]):
-            try:
-                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException("params", "Missing API KEY")
+        params = {"api_key": self.api.key, "vendor_id": vendor_id}
+        return self._call_api(TELEMATICS_VENDORS_V4, "get", params)
 
     def search_vendor(self, **kwargs):
         """Search the telematics vendors.
@@ -147,19 +138,10 @@ class Telematics(Base):
         :param vendors_id: the vendor IDs, comma-separated, e.g. ``"55,56"``.
         :return: the decoded JSON reply: the vendors, or the
             ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when the resource has no API key.
         """
 
-        self.params.update({"vendors": vendors_id})
-
-        if self.check_required_params(self.params, ["api_key"]):
-            try:
-                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException("params", "Missing API KEY")
+        params = {"api_key": self.api.key, "vendors": vendors_id}
+        return self._call_api(TELEMATICS_VENDORS_V4, "get", params)
 
     def register_member(self, member_id):
         """Register a member with the telematics service.
@@ -169,18 +151,9 @@ class Telematics(Base):
         :param member_id: ID of the member.
         :return: the decoded JSON reply, with the member's ``api_token``, or
             the ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when the resource has no API key.
         """
-        self.params.update({"member_id": member_id})
-
-        if self.check_required_params(self.params, ["api_key"]):
-            try:
-                self.response = self._request(TELEMATICS_REGISTER_V4, self.params, "get")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException("params", "Missing API KEY")
+        params = {"api_key": self.api.key, "member_id": member_id}
+        return self._call_api(TELEMATICS_REGISTER_V4, "get", params)
 
     def get_connections(self, api_token, **kwargs):
         """List a member's telematics connections.

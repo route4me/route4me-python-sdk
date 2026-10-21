@@ -55,9 +55,6 @@ class TestTelematicsVendors:
 
         assert query_of(last_request())["vendors"] == "55,56,57"
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#36: get_vendor leaves vendor_id in Telematics.params"
-    )
     def test_get_vendor_does_not_leak_into_get_vendors(self, client, mocked, query_of, last_request):
         mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
         client.telematics.get_vendor(55)
@@ -66,9 +63,6 @@ class TestTelematicsVendors:
 
         assert "vendor_id" not in query_of(last_request())
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#36: compare_vendors leaves vendors in Telematics.params"
-    )
     def test_compare_vendors_does_not_leak_into_get_vendors(self, client, mocked, query_of, last_request):
         mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
         client.telematics.compare_vendors("55,56")

@@ -56,9 +56,9 @@ class Route(Base):
         :raise ParamValueException: when ``route_id`` is missing, or a keyword
             is not a supported parameter or has an invalid value.
         """
-        if self.validate_params(**kwargs):
-            self.params.update(kwargs)
-        return self._call_api(ROUTE_HOST, "get", self.params, required=self.requirements)
+        params = self.validated_params(**kwargs)
+        params.update(kwargs)
+        return self._call_api(ROUTE_HOST, "get", params, required=self.requirements)
 
     def get_route_tracking(self, **kwargs):
         """Get a route with its GPS tracking history.
@@ -72,10 +72,10 @@ class Route(Base):
         :raise ParamValueException: when ``route_id`` is missing, or a keyword
             is not a supported parameter or has an invalid value.
         """
-        if self.validate_params(**kwargs):
-            self.params.update(kwargs)
-        self.params.update({"device_tracking_history": 1})
-        return self._call_api(ROUTE_HOST, "get", self.params, required=self.requirements)
+        params = self.validated_params(**kwargs)
+        params.update(kwargs)
+        params["device_tracking_history"] = 1
+        return self._call_api(ROUTE_HOST, "get", params, required=self.requirements)
 
     def get_routes(self, **kwargs):
         """List routes, a page at a time.

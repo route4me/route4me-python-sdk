@@ -343,7 +343,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.close()
         return False
 
-    def get(self, request_method):
+    def get(self, request_method, params=None):
         """Send the optimization built on :attr:`optimization`.
 
         Sends a request to ``/api.v4/optimization_problem.php`` with the query
@@ -353,16 +353,14 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
 
         :param request_method: :meth:`_request_post` to create an optimization,
             :meth:`_request_get` to fetch one.
+        :param params: the query to send; ``None`` (the default) uses a copy of
+            the query parameters of :attr:`optimization`.
         :return: the :class:`requests.Response`.
         :raise APIException: when the API answers outside the 200-399 range.
         """
-        params = self.optimization.get_params()
+        params = dict(self.optimization.get_params() if params is None else params)
         if not self.redirects:
-            params.update(
-                {
-                    "redirect": 0,
-                }
-            )
+            params["redirect"] = 0
         return self._make_request(API_HOST, params, request_method, data=dumps(self.optimization.data))
 
     def _request_post(self, url, request_params, *, data=None, json=None, files=None, timeout=UNSET):
@@ -483,10 +481,9 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         """
         if data is None:
             data = {}
-        self.optimization.optimization_problem_id(optimization_id)
-        self.optimization.reoptimize(1)
+        params = self.optimization.validated_params(optimization_problem_id=optimization_id, reoptimize=1)
         data = {"parameters": data}
-        self.response = self._make_request(API_HOST, self.optimization.get_params(), self._request_put, json=data)
+        self.response = self._make_request(API_HOST, params, self._request_put, json=data)
         return self.response.json()
 
     def get_optimization(self, optimization_problem_id):
@@ -506,8 +503,8 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
            raised ``TypeError`` for any response containing ``addresses`` --
            which is every real optimization response -- via ``parse_response``.
         """
-        self.optimization.optimization_problem_id(optimization_problem_id)
-        self.response = self.get(self._request_get)
+        params = self.optimization.validated_params(optimization_problem_id=optimization_problem_id)
+        self.response = self.get(self._request_get, params)
         return self.parse_response()
 
     def parse_response(self):

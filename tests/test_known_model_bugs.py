@@ -120,9 +120,6 @@ class TestAdvancedConstraintSerialisation:
 class TestClientState:
     """Issue #26 and the leftover from #30: one client reused for two optimizations."""
 
-    @pytest.mark.xfail(
-        strict=True, raises=AttributeError, reason="#26: a reused client keeps the previous optimization's addresses"
-    )
     def test_a_second_optimization_starts_without_the_first_ones_addresses(self, mocked):
         mocked.add(responses.POST, API_HOST, json={"optimization_problem_id": "A"}, status=200)
         client = Route4Me("1" * 32)

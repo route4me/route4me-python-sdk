@@ -1,5 +1,6 @@
 """Base class of every resource: validated parameter setters and request helpers."""
 
+import copy
 import json
 
 from route4me.utils import is_valid_datetime
@@ -390,6 +391,26 @@ class Base:
             # surface as themselves.
             setter(v)
         return True
+
+    def validated_params(self, **kwargs):
+        """Validate keywords with the field setters and return the query they produce.
+
+        Works like :meth:`validate_params`, but on a copy: the resource itself is
+        left unchanged, so one call's values can never leak into the next request.
+
+        :param kwargs: parameter names mapped to values, as for :meth:`validate_params`.
+        :return: a new dict holding this resource's query parameters plus the
+            validated keywords.
+        :raise ParamValueException: when a keyword is not a supported parameter
+            or has an invalid value.
+        """
+        saved_params, saved_data = self.params, self.data
+        self.params, self.data = dict(saved_params), copy.deepcopy(saved_data)
+        try:
+            self.validate_params(**kwargs)
+            return self.params
+        finally:
+            self.params, self.data = saved_params, saved_data
 
     def add(self, params=None, data=None):
         """Validate and apply several parameters at once.
