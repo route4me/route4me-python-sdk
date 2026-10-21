@@ -541,7 +541,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
            this method had never worked.
         """
         if self.response:
-            with open(file_name, "w") as f:
+            with open(file_name, "w", encoding="utf-8") as f:
                 dump(
                     self.response.json(),
                     f,
@@ -557,7 +557,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             overwritten.
         """
         if self.optimization.data:
-            with open(file_name, "w") as f:
+            with open(file_name, "w", encoding="utf-8") as f:
                 dump(
                     self.optimization.data,
                     f,
