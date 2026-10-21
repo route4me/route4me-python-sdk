@@ -62,7 +62,9 @@ def main(api_key):
         address="57 W 57th St New York, NY 10019", lat=40.7558695, lng=-73.9862019, alias="Verizon Wireless", time=0
     )
 
-    new_sequence = [8, 5, 1, 7, 2, 6, 0, 3, 4]
+    # New position of each destination, in the order the route visits them. The depot comes first
+    # and keeps position 0; the eight stops are shuffled.
+    new_sequence = [0, 8, 5, 1, 7, 2, 6, 3, 4]
 
     addresses = {"addresses": []}
     response = r4m.run_optimization()
@@ -74,7 +76,7 @@ def main(api_key):
             print("\t This is a Depot")
         print(f"\taddress: {address['address']}")
         print("\t")
-        if new_sequence[i] == 0:
+        if address["is_depot"]:
             addresses["addresses"].append({"route_destination_id": address["route_destination_id"], "is_depot": True})
         else:
             addresses["addresses"].append(
