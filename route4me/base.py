@@ -1,3 +1,5 @@
+"""Base class of every resource: validated parameter setters and request helpers."""
+
 import json
 
 from route4me.utils import is_valid_datetime
@@ -16,8 +18,20 @@ from .exceptions import APIException, ParamValueException
 
 
 class Base:
-    """
-    Base Class, with common methods.
+    """Base class of every resource.
+
+    A resource keeps two dicts between calls: ``params``, the query parameters,
+    which always include ``api_key``; and ``data``, the request body, whose
+    ``data["parameters"]`` holds the route parameters.
+
+    Each class attribute declared with
+    :class:`~route4me._fields.ValidatedField` is a setter that validates one
+    value and stores it in ``params`` or ``data["parameters"]``, e.g.
+    ``optimization.route_name("Monday")``. A setter raises
+    :class:`~route4me.exceptions.ParamValueException` for an invalid value.
+
+    :param api: the :class:`~route4me.api.Route4Me` client that sends this
+        resource's requests.
     """
 
     # String → query params
@@ -154,21 +168,48 @@ class Base:
 
     @staticmethod
     def check_string_type(obj):
+        """Check whether a value is a string.
+
+        :param obj: the value to check.
+        :return: ``True`` if ``obj`` is a ``str``.
+        """
         return isinstance(obj, str)
 
     def format(self, set_format):
+        """Set the ``format`` query parameter.
+
+        :param set_format: a :data:`~route4me.constants.FORMAT` value, e.g.
+            ``FORMAT.JSON``.
+        :raise ParamValueException: when the value is not a ``FORMAT`` value.
+        """
         if set_format in FORMAT.reverse_mapping:
             self._copy_param({"format": set_format})
         else:
             raise ParamValueException("format", "Must be CSV, SERIALIZED, XML")
 
     def member_id(self, member_id, target="data"):
+        """Set ``member_id``.
+
+        :param member_id: the member ID.
+        :param target: ``"data"`` to store it in the route parameters (the
+            default), or ``"param"`` to send it in the query string.
+        :raise ParamValueException: when ``member_id`` is not an ``int``.
+        """
         if isinstance(member_id, int):
             getattr(self, f"_copy_{target}")({"member_id": member_id})
         else:
             raise ParamValueException("member_id", "Must be integer")
 
     def device_type(self, device_type, target="data"):
+        """Set ``device_type``.
+
+        :param device_type: a :data:`~route4me.constants.DEVICE_TYPE` value,
+            e.g. ``DEVICE_TYPE.WEB``.
+        :param target: ``"data"`` to store it in the route parameters (the
+            default), or ``"param"`` to send it in the query string.
+        :raise ParamValueException: when the value is not a ``DEVICE_TYPE``
+            value.
+        """
         if device_type in DEVICE_TYPE.reverse_mapping:
             getattr(self, f"_copy_{target}")({"device_type": device_type})
         else:
@@ -178,12 +219,24 @@ class Base:
             )
 
     def device_timestamp(self, device_timestamp):
+        """Set the ``device_timestamp`` query parameter.
+
+        :param device_timestamp: the time, as ``YYYY-MM-DD HH:MM:SS``.
+        :raise ParamValueException: when the value is not in that format.
+        """
         if is_valid_datetime(device_timestamp):
             self._copy_param({"device_timestamp": device_timestamp})
         else:
             raise ParamValueException("device_timestamp", "Must be YYYY-MM-DD HH:MM:SS format")
 
     def advanced_constraints(self, advanced_constraints):
+        """Set the ``advanced_constraints`` route parameter.
+
+        :param advanced_constraints: a list of constraints, e.g.
+            ``[constraint.to_dict()]`` for
+            :class:`~route4me.advanced_constraint.AdvancedConstraint` objects.
+        :raise ParamValueException: when the value is not a list.
+        """
         if not isinstance(advanced_constraints, list):
             raise ParamValueException(
                 "advanced_constraints",
@@ -192,6 +245,13 @@ class Base:
         self._copy_data({"advanced_constraints": advanced_constraints})
 
     def bundling(self, bundling):
+        """Set the ``bundling`` route parameter.
+
+        :param bundling: the bundling settings, e.g.
+            ``Bundling().to_dict()`` (see :class:`~route4me.bundling.Bundling`).
+        :raise ParamValueException: when the value is not valid bundling
+            settings.
+        """
         if not isinstance(bundling, dict):
             raise ParamValueException(
                 "bundling",
@@ -260,21 +320,44 @@ class Base:
             return response.content
 
     def _copy_data(self, params):
+        """Merge values into the route parameters, ``data["parameters"]``.
+
+        :param params: name-to-value mapping.
+        """
         self.data["parameters"].update(params)
 
     def _copy_param(self, params):
+        """Merge values into the query parameters, ``params``.
+
+        :param params: name-to-value mapping.
+        """
         self.params.update(params)
 
     def get_params(self):
+        """Return the query parameters collected so far.
+
+        :return: the ``params`` dict itself, not a copy.
+        """
         return self.params
 
     def required_params(self, requirements=None):
+        """Check that the query parameters contain every required name.
+
+        :param requirements: names that must be keys of ``params``.
+        :return: ``True`` when all of them are present.
+        """
         if requirements is None:
             requirements = []
         return set(requirements).issubset(set(self.params.keys()))
 
     @staticmethod
     def check_required_params(params, requirements=None):
+        """Check that a mapping contains every required name.
+
+        :param params: the mapping to check, e.g. a method's ``kwargs``.
+        :param requirements: names that must be keys of ``params``.
+        :return: ``True`` when all of them are present.
+        """
         if requirements is None:
             requirements = []
         return set(requirements).issubset(set(params.keys()))
@@ -282,6 +365,9 @@ class Base:
     def validate_params(self, **kwargs):
         """Validate and apply each ``name=value`` via its field setter.
 
+        :param kwargs: parameter names mapped to values. Each name must be a
+            setter of this resource, e.g. ``route_id`` or ``limit``.
+        :return: ``True``.
         :raise ParamValueException: for an unknown parameter name, a name that
             does not resolve to a setter, or a value the setter rejects.
 
@@ -306,6 +392,19 @@ class Base:
         return True
 
     def add(self, params=None, data=None):
+        """Validate and apply several parameters at once.
+
+        Every name in ``params`` and ``data`` goes through its setter, which
+        stores the value in the query or the route parameters. Then ``params``
+        is also merged into the query parameters and ``data`` into the top level
+        of the request body.
+
+        :param params: parameter names mapped to values.
+        :param data: parameter names mapped to values, also merged into
+            ``data``.
+        :raise ParamValueException: for an unknown parameter name or a value
+            its setter rejects.
+        """
         if params is None:
             params = {}
         if data is None:
