@@ -8,6 +8,8 @@
 #   unused-argument       some fixtures are requested only for their side effect
 #   too-many-*arguments   parametrised tests take many fixtures and parameters
 #   duplicate-code        parametrised tables repeat by design
+#   use-implicit-booleaness-not-comparison
+#                         `assert x == []` checks the type as well as emptiness
 
 [MAIN]
 py-version=3.9
@@ -31,6 +33,7 @@ disable=
     too-many-arguments,
     too-many-positional-arguments,
     duplicate-code,
+    use-implicit-booleaness-not-comparison,
     raw-checker-failed,
     bad-inline-option,
     locally-disabled,

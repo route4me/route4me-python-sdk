@@ -7,6 +7,7 @@ if it throws *before* redacting, the credential escapes anyway.
 """
 
 import pytest
+from requests.structures import CaseInsensitiveDict
 
 from route4me._redact import (
     REDACTED,
@@ -126,8 +127,6 @@ class TestRedactHeaders:
         assert redact_headers({}) == {}
 
     def test_accepts_a_case_insensitive_dict(self):
-        from requests.structures import CaseInsensitiveDict
-
         result = redact_headers(CaseInsensitiveDict({"Authorization": "x"}))
 
         assert result["Authorization"] == REDACTED

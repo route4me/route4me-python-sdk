@@ -9,6 +9,7 @@ with an obvious name.
 import io
 
 import pytest
+import requests as requests_lib
 import responses
 
 from route4me import Route4Me
@@ -119,8 +120,6 @@ class TestFixGeocodeBackoff:
         assert address["lat"] == 40.76
 
     def test_delays_grow_exponentially(self, client, mocked, monkeypatch):
-        import requests as requests_lib
-
         slept = []
         monkeypatch.setattr("route4me.address.time.sleep", slept.append)
         monkeypatch.setattr(
@@ -138,8 +137,6 @@ class TestFixGeocodeBackoff:
         assert slept[0] < slept[1] < slept[2]
 
     def test_it_reports_the_address_as_the_error_when_exhausted(self, client, monkeypatch):
-        import requests as requests_lib
-
         monkeypatch.setattr("route4me.address.time.sleep", lambda _: None)
         monkeypatch.setattr(
             client.address,
