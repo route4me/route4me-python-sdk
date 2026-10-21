@@ -19,6 +19,27 @@ STREET_DATA = [{"zipcode": "00602", "street": "Calle 1"}]
 ANY_RAPID_URL = re.compile(r"https://rapid\.route4me\.com/.*")
 
 
+# The street-data endpoints are retired; these tests pin the request shape the
+# deprecated methods still send.
+pytestmark = pytest.mark.filterwarnings("ignore::DeprecationWarning")
+
+
+@pytest.mark.filterwarnings("default::DeprecationWarning")
+@pytest.mark.parametrize(
+    ("method", "kwargs"),
+    [
+        ("get_street_data", {}),
+        ("get_street_data_zip", {"zipcode": "00602"}),
+        ("get_street_data_service", {"zipcode": "00602", "housenumber": "17"}),
+    ],
+)
+def test_every_street_data_method_is_deprecated(client, mocked, method, kwargs):
+    mocked.add(responses.GET, re.compile(r"https://rapid\.route4me\.com/street_data/.*"), json=[], status=200)
+
+    with pytest.warns(DeprecationWarning, match="no replacement"):
+        getattr(client.rapid_address, method)(**kwargs)
+
+
 class TestGetStreetData:
     def test_a_pk_lands_in_the_path(self, client, mocked, last_request):
         mocked.add(responses.GET, f"{RAPID_ADDRESS}PK1/", json=STREET_DATA, status=200)

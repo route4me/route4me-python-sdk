@@ -1,13 +1,31 @@
 """The :class:`RapidAddress` resource: street data by ID, zip code or house number."""
 
+import warnings
+
 from ._url import join_path, path_int, path_segment
 from .api_endpoints import RAPID_ADDRESS, RAPID_ADDRESS_SERVICE, RAPID_ADDRESS_ZIP
 from .base import Base
 from .exceptions import APIException, ParamValueException
 
 
+def _warn_retired(method):
+    """Warn that a street-data method calls an endpoint the API no longer serves.
+
+    :param method: name of the deprecated method.
+    """
+    warnings.warn(
+        f"RapidAddress.{method} is deprecated: rapid.route4me.com/street_data returns 404 and has no replacement.",
+        DeprecationWarning,
+        stacklevel=3,
+    )
+
+
 class RapidAddress(Base):
     """Rapid Address: street addresses by ID, zip code or house number.
+
+    .. deprecated:: 1.0.0
+       The street-data endpoints are gone from the API (they return 404), so
+       every method here warns. The class will be removed in 2.0.
 
     Use it as ``route4me.rapid_address``. Requests go to
     ``https://rapid.route4me.com/street_data/``; IDs, zip codes and house
@@ -89,7 +107,12 @@ class RapidAddress(Base):
             not JSON, or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``offset`` or ``limit`` is not a
             non-negative integer, or ``pk`` is empty.
+
+        .. deprecated:: 1.0.0
+           ``rapid.route4me.com`` no longer serves ``/street_data``: every
+           request returns 404. There is no replacement in the API.
         """
+        _warn_retired("get_street_data")
         kwargs.update({"api_key": self.params["api_key"]})
         url = RAPID_ADDRESS
         if "offset" in kwargs and "limit" in kwargs:
@@ -110,7 +133,12 @@ class RapidAddress(Base):
             not JSON, or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``zipcode`` is missing or empty, or
             ``offset`` or ``limit`` is not a non-negative integer.
+
+        .. deprecated:: 1.0.0
+           ``rapid.route4me.com`` no longer serves ``/street_data``: every
+           request returns 404. There is no replacement in the API.
         """
+        _warn_retired("get_street_data_zip")
         kwargs.update({"api_key": self.params["api_key"]})
         if not self.check_required_params(kwargs, ["zipcode", "api_key"]):
             raise ParamValueException("params", "Params are not complete")
@@ -132,7 +160,12 @@ class RapidAddress(Base):
         :raise ParamValueException: when ``zipcode`` or ``housenumber`` is
             missing or empty, or ``offset`` or ``limit`` is not a non-negative
             integer.
+
+        .. deprecated:: 1.0.0
+           ``rapid.route4me.com`` no longer serves ``/street_data``: every
+           request returns 404. There is no replacement in the API.
         """
+        _warn_retired("get_street_data_service")
         kwargs.update({"api_key": self.params["api_key"]})
         if not self.check_required_params(kwargs, ["zipcode", "api_key", "housenumber"]):
             raise ParamValueException("params", "Params are not complete")

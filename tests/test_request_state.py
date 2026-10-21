@@ -12,7 +12,13 @@ import pytest
 import responses
 
 from route4me import Route4Me
-from route4me.api_endpoints import API_HOST, AVOIDANCE, TELEMATICS_REGISTER_V4, TELEMATICS_VENDORS_V4, TERRITORY_HOST
+from route4me.api_endpoints import (
+    API_HOST,
+    AVOIDANCE,
+    TELEMATICS_REGISTER_V4,
+    TELEMATICS_VENDORS_ALL_V5,
+    TERRITORY_HOST,
+)
 from route4me.exceptions import ParamValueException
 
 OPTIMIZATION_ID = "0F3B8C2D5E7A419B6C8D0E2F4A6B8C1D"
@@ -50,10 +56,10 @@ def test_a_rejected_update_leaves_the_resource_unchanged(client, resource):
 
 def test_register_member_does_not_leak_the_member_id(client, mocked, query_of, last_request):
     mocked.add(responses.GET, TELEMATICS_REGISTER_V4, json={}, status=200)
-    mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
+    mocked.add(responses.GET, TELEMATICS_VENDORS_ALL_V5, json={}, status=200)
     client.telematics.register_member(123456)
 
-    client.telematics.get_vendors()
+    client.telematics.get_vendors_v5()
 
     assert "member_id" not in query_of(last_request())
 

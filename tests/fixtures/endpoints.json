@@ -784,12 +784,22 @@
   {
    "method": "DELETE",
    "host": "wh.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
    "path": "/api/v1.0/marketplace/cart/add-ons/{}"
   },
   {
    "method": "DELETE",
    "host": "wh.route4me.com",
    "path": "/api/v1.0/marketplace/cart/packages/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/api/v5.0/geotab-integration/geotab-integration-delete"
   },
   {
    "method": "DELETE",
@@ -1014,6 +1024,16 @@
   {
    "method": "DELETE",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/{}/assets"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/files/{}/delete"
   },
   {
@@ -1145,6 +1165,26 @@
    "method": "DELETE",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/orders-import/connections/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/legacy"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/legacy/order_custom_user_fields.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/order-custom-user-fields/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/{}"
   },
   {
    "method": "DELETE",
@@ -1419,6 +1459,16 @@
   {
    "method": "GET",
    "host": "wh.route4me.com",
+   "path": "/android"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
    "path": "/api/v1.0/marketplace/add-ons/{}"
   },
   {
@@ -1440,6 +1490,96 @@
    "method": "GET",
    "host": "wh.route4me.com",
    "path": "/api/v1.0/marketplace/search/suggestions"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1/health"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1/route/metrics"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1/route/updated"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1/route/{}/metrics"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/compliance"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/compliance/updated"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/segments/map-test"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/updated"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/metrics"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/segments/actuals"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/{}/compliance"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/{}/metrics"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v5.0/geotab-integration/geotab-integration"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/apple-app-site-association"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/create-session-by-geotab-credentials"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/external/v5.0/geotab-integration/create-session-by-geotab-credentials"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/info/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/ios-app"
   },
   {
    "method": "GET",
@@ -2369,6 +2509,36 @@
   {
    "method": "GET",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/assets"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/list/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/{}/assets"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/{}/custom-data"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/file-uploads"
   },
   {
@@ -2730,6 +2900,31 @@
    "method": "GET",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/orders-import/vendors"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/assign"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/legacy"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/legacy/order_custom_user_fields.php"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/order-custom-user-fields"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/{}"
   },
   {
    "method": "GET",
@@ -3664,6 +3859,16 @@
   {
    "method": "GET",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/upload-downloader/d/t/{}"
   },
   {
@@ -3894,6 +4099,11 @@
   {
    "method": "GET",
    "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/reset-password/reset-password/verify"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
    "path": "/modules/external-api/v5.0/reset-password/verify"
   },
   {
@@ -4000,6 +4210,11 @@
    "method": "GET",
    "host": "wh.route4me.com",
    "path": "/modules/{}/export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/{}"
   },
   {
    "method": "PATCH",
@@ -4179,12 +4394,182 @@
   {
    "method": "POST",
    "host": "wh.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
    "path": "/api/v1.0/marketplace/cart/add-ons"
   },
   {
    "method": "POST",
    "host": "wh.route4me.com",
    "path": "/api/v1.0/marketplace/cart/packages"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v1/route/metrics"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v1/track"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/metrics/dry-run"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/metrics/dry-run-route"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/metrics/dry-run-with-traffic"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/metrics/worker-dry-run"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/deviations"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/deviations/iterative"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/events"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/recalculate-duration"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/recalculate-duration/sync"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/recalculate-finalize"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/recalculate-route"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/segments/distances"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/segments/map"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/segments/distances"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/segments/distances/by-vendor"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/segments/recompute-from-addresses"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/segments/recompute-from-r4m"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/segments/stops"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v2/route/{}/segments/stops/by-vendor"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/create-session-by-geotab-credentials"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/event/approve"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/event/destination-departed"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/event/destination-visited"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/event/geofence-enter"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/event/geofence-left"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/event/note-insert"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/event/notify"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/event/unapprove"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/external/v5.0/geotab-integration/create-session-by-geotab-credentials"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/geotab-unlink"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/get-short-link"
   },
   {
    "method": "POST",
@@ -5084,6 +5469,31 @@
   {
    "method": "POST",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/assets"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/custom-data/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/{}/assets"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/file-uploads/combined"
   },
   {
@@ -5610,6 +6020,46 @@
    "method": "POST",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/orders-import/connections/{}/request-history"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/batch-create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/batch-delete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/batch-update"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/legacy"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/legacy/order_custom_user_fields.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/order-custom-user-fields"
   },
   {
    "method": "POST",
@@ -6934,6 +7384,16 @@
   {
    "method": "POST",
    "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/reset-password/reset-password"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/reset-password/reset-password/complete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
    "path": "/modules/external-api/v5.0/tracking-page-api"
   },
   {
@@ -7060,6 +7520,16 @@
    "method": "PUT",
    "host": "api.route4me.com",
    "path": "/api.v4/territory.php"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/api/v1/route/metrics"
   },
   {
    "method": "PUT",
@@ -7269,6 +7739,31 @@
   {
    "method": "PUT",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/assets"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/custom-data/bulk"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/list/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/{}/custom-data"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/file-uploads"
   },
   {
@@ -7380,6 +7875,31 @@
    "method": "PUT",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/orders-import/connections/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/batch-update/filter"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/legacy"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/legacy/order_custom_user_fields.php"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/order-custom-user-fields/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/{}"
   },
   {
    "method": "PUT",

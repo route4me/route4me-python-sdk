@@ -433,6 +433,10 @@ class Route(Base):
         :param output_format: export format, ``"csv"`` by default.
         :return: the raw response body (``bytes``).
         :raise APIException: when the API answers outside the 200-399 range.
+
+        .. deprecated:: 0.3.0
+           ``/actions/route/export_current_route.php`` returns 404. Use
+           :meth:`export_route_v5`.
         """
         warnings.warn("export_route is deprecated. Please use export_route_v5", DeprecationWarning, stacklevel=2)
         data = {"route_id": route_id, "strExportFormat": output_format}
