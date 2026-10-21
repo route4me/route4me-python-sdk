@@ -7,7 +7,7 @@ def main(api_key):
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization
-    response = optimization.get_optimizations(limit=10, offset=5)
+    response = optimization.get_optimizations(limit=1, offset=0)
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:

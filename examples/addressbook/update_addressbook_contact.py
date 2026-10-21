@@ -7,7 +7,7 @@ def main(api_key):
     route4me = Route4Me(api_key)
 
     address_book = route4me.address_book
-    response = address_book.get_addressbook_contacts(limit=10, offset=5)
+    response = address_book.get_addressbook_contacts(limit=1, offset=0)
     if "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
