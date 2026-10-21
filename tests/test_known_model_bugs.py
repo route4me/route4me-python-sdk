@@ -16,7 +16,8 @@ from route4me.api import Route4Me
 from route4me.api_endpoints import API_HOST
 from route4me.bundling import BUNDLING_FIRST_ITEM_MODE, Bundling, ServiceTimeRules
 from route4me.exceptions import ParamValueException
-from route4me.utils import clean_dict
+from route4me.slowdowns import Slowdowns
+from route4me.utils import clean_dict, json2obj
 
 
 class TestServiceTimeRules:
@@ -131,3 +132,22 @@ class TestClientState:
         client.address.add_address(address="second", lat=2.0, lng=2.0)
 
         assert [a["address"] for a in client.optimization.data["addresses"]] == ["second"]
+
+
+class TestSmallFixes:
+    def test_slowdowns_reject_booleans(self):
+        with pytest.raises(ValueError):
+            Slowdowns(True, 10)
+
+    def test_json2obj_tolerates_keys_that_are_not_identifiers(self):
+        obj = json2obj('{"ok": 1, "class": 2, "": 3, "a-b": 4, "7days": 5}')
+
+        assert obj.ok == 1
+        assert obj.d_7days == 5
+        assert obj[1:4] == (2, 3, 4)
+
+    def test_the_speed_message_says_integer(self):
+        with pytest.raises(ParamValueException) as excinfo:
+            Route4Me("1" * 32).optimization.speed("fast")
+
+        assert excinfo.value.msg == "Must be integer"

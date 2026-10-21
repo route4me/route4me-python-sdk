@@ -8,19 +8,20 @@ from datetime import datetime
 def _json_object_hook(d):
     """Turn one decoded JSON object into a namedtuple.
 
-    Keys that start with a digit get a ``d_`` prefix, so that they are valid
-    field names.
+    Keys that start with a digit get a ``d_`` prefix. Any other key that is not
+    a valid field name (empty, a keyword, or containing punctuation) is
+    renamed positionally, e.g. ``_2``, instead of raising.
 
     :param d: the decoded JSON object.
     :return: a namedtuple with one field per key.
     """
     keys = []
     for k in d.keys():
-        if k[0].isdigit():
+        if k and k[0].isdigit():
             k = f"d_{k}"
         keys.append(k)
 
-    return namedtuple("X", keys)(*d.values())
+    return namedtuple("X", keys, rename=True)(*d.values())
 
 
 def json2obj(data):

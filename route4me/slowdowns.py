@@ -23,10 +23,10 @@ class Slowdowns:
         :param travel_time: travel-time slowdown to check.
         :raise ValueError: when either value is not an integer from 0 to 50.
         """
-        if not isinstance(service_time, int) or service_time < 0 or service_time > 50:
+        if isinstance(service_time, bool) or not isinstance(service_time, int) or service_time < 0 or service_time > 50:
             raise ValueError("Service time must be an integer between 0 and 50")
 
-        if not isinstance(travel_time, int) or travel_time < 0 or travel_time > 50:
+        if isinstance(travel_time, bool) or not isinstance(travel_time, int) or travel_time < 0 or travel_time > 50:
             raise ValueError("Travel time must be an integer between 0 and 50")
 
     def to_dict(self):

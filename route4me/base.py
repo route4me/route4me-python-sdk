@@ -64,15 +64,15 @@ class Base:
     remote_ip = ValidatedField("remote_ip", int, "data", "Must be integer")
 
     # Float (int|float) → data body
-    limited_weight_t = ValidatedField("limited_weight_t", "numeric", "data", "Must be integer")
-    weight_per_axle_t = ValidatedField("weight_per_axle_t", "numeric", "data", "Must be integer")
-    truck_height = ValidatedField("truck_height", "numeric", "data", "Must be integer")
-    truck_width = ValidatedField("truck_width", "numeric", "data", "Must be integer")
-    truck_length = ValidatedField("truck_length", "numeric", "data", "Must be integer")
+    limited_weight_t = ValidatedField("limited_weight_t", "numeric", "data", "Must be a number")
+    weight_per_axle_t = ValidatedField("weight_per_axle_t", "numeric", "data", "Must be a number")
+    truck_height = ValidatedField("truck_height", "numeric", "data", "Must be a number")
+    truck_width = ValidatedField("truck_width", "numeric", "data", "Must be a number")
+    truck_length = ValidatedField("truck_length", "numeric", "data", "Must be a number")
 
     # Int → query params
     course = ValidatedField("course", int, "param", "Must be integer")
-    speed = ValidatedField("speed", int, "param", "Must be Float")
+    speed = ValidatedField("speed", int, "param", "Must be integer")
     limit = ValidatedField("limit", int, "param", "Must be integer")
     offset = ValidatedField("offset", int, "param", "Must be integer")
 
@@ -94,7 +94,7 @@ class Base:
     )
     distance_unit = ValidatedField("distance_unit", "enum", "data", "Must be MI or KM", enum_cls=DISTANCE_UNIT)
     truck_hazardous_goods = ValidatedField(
-        "truck_hazardous_goods", "enum", "data", "Must be MI or KM", enum_cls=TRUCK_HAZARDOUS_GOODS
+        "truck_hazardous_goods", "enum", "data", "Must be a TRUCK_HAZARDOUS_GOODS value", enum_cls=TRUCK_HAZARDOUS_GOODS
     )
 
     # Enum → query params
@@ -123,16 +123,16 @@ class Base:
         "data",
         "Must be ALGORITHM_TYPE: TSP(1), VRP(2), CVRP_TW_SD(3), "
         "CVRP_TW_MD(4), TSP_TW(5), TSP_TW_CR(6), BBCVRP(7), "
-        "NO OPTIMIZATION(100) or LEGACY_DISTRIBUTED(101)",
+        "ADVANCED_CVRP_TW(9), NO OPTIMIZATION(100) or LEGACY_DISTRIBUTED(101)",
         valid_values=[1, 2, 3, 4, 5, 6, 7, 9, 100, 101],
     )
     metric = ValidatedField(
         "metric",
         "range",
         "data",
-        "Must be METRIC: ROUTE4ME_METRIC_EUCLIDEAN , "
-        "ROUTE4ME_METRIC_MANHATTAN, ROUTE4ME_METRIC_GEODESIC"
-        "ROUTE4ME_METRIC_MATRIXROUTE4ME_METRIC_EXACT_2D",
+        "Must be METRIC: ROUTE4ME_METRIC_EUCLIDEAN, "
+        "ROUTE4ME_METRIC_MANHATTAN, ROUTE4ME_METRIC_GEODESIC, "
+        "ROUTE4ME_METRIC_MATRIX or ROUTE4ME_METRIC_EXACT_2D",
         valid_range=(1, 7),
     )
     optimization_quality = ValidatedField(
@@ -156,7 +156,11 @@ class Base:
         valid_values=[1, 3, 6],
     )
     dirm = ValidatedField(
-        "dirm", "oneof", "data", "Must be : R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM orTRUCKING", valid_values=[1, 3]
+        "dirm",
+        "oneof",
+        "data",
+        "Must be R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM (1) or TRUCKING (3)",
+        valid_values=[1, 3],
     )
 
     def __init__(self, api):
@@ -188,7 +192,7 @@ class Base:
         if set_format in FORMAT.reverse_mapping:
             self._copy_param({"format": set_format})
         else:
-            raise ParamValueException("format", "Must be CSV, SERIALIZED, XML")
+            raise ParamValueException("format", "Must be CSV, SERIALIZED, XML or JSON")
 
     def member_id(self, member_id, target="data"):
         """Set ``member_id``.
