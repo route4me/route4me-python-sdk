@@ -35,7 +35,7 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            data = {"recipient_email": "jhon@route4me.com", "route_id": route_id, "response_format": "json"}
+            data = {"recipient_email": "recipient@example.com", "route_id": route_id, "response_format": "json"}
             response = route.share_route(**data)
             print(response)
 

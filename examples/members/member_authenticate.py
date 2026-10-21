@@ -22,7 +22,7 @@ def main(api_key):
     route4me = Route4Me(api_key)
 
     members = route4me.members
-    data = {"email": "john@route4me.com", "password": "ultrasecretword", "format": "json"}
+    data = {"email": "john@example.com", "password": "ultrasecretword", "format": "json"}
     response = members.member_authenticate(**data)
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))

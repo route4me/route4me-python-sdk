@@ -25,7 +25,7 @@ def main(api_key):
 
     members = route4me.members
     data = {
-        "email_address": "john@route4me.com",
+        "email_address": "john@example.com",
         "first_name": "Jhon",
         "last_name": "Route4Me",
         "check_terms": "1",
