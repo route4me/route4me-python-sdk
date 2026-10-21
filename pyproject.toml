@@ -59,6 +59,7 @@ test = [
 ]
 lint = [
     "ruff>=0.6",
+    "pylint>=3.3",
     "mypy>=1.8",
     "types-requests",
 ]
@@ -142,13 +143,69 @@ ignore = [
 #   S311 (`random` for retry jitter, address.py)          -- fixed in Phase 6
 #   E402 (module-level imports after code, address.py)    -- fixed in Phase 6
 #   B904 (`raise e` without `from`, base.py)              -- fixed in Phase 6
-#   RUF034 (no-op ternary, _api_method.py)                -- fixed in Phase 6
+#   RUF034 (no-op ternary, the old _api_method.py)        -- fixed in Phase 6
 #
 # Resist adding one back. If a new finding is genuine, fix it; if it is a false
 # positive, suppress it inline at the line with a reason.
 
 [tool.ruff.lint.isort]
 known-first-party = ["route4me"]
+
+# ------------------------------------------------------------------ pylint --
+#
+# The package and the examples must pass with zero messages:
+#     pylint route4me examples --rcfile=pyproject.toml
+# Tests use tests/pylintrc, which relaxes only the checks that fight pytest.
+
+[tool.pylint.main]
+py-version = "3.9"
+load-plugins = ["pylint.extensions.docparams"]
+jobs = 0
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.basic]
+# The public enum types in constants.py and bundling.py (TRAVEL_MODE,
+# BUNDLING_MODE, ...) are built by constants.enum() and read like constants.
+# Renaming them would break every caller, so UPPER_CASE class names are allowed.
+class-rgx = "^([A-Z][a-zA-Z0-9]*|[A-Z][A-Z0-9_]*)$"
+
+[tool.pylint.design]
+# Resource classes map one method to one API operation, so they are wide by nature.
+max-public-methods = 40
+max-attributes = 12
+min-public-methods = 0
+
+[tool.pylint.parameter_documentation]
+default-docstring-type = "sphinx"
+accept-no-param-doc = false
+accept-no-raise-doc = false
+accept-no-return-doc = false
+accept-no-yields-doc = false
+
+[tool.pylint.similarities]
+ignore-imports = true
+ignore-signatures = true
+
+[tool.pylint."messages control"]
+# Types belong in annotations (checked by mypy), not repeated in docstrings;
+# parameters, return values and raised exceptions must still be documented.
+# The rest of the list is pylint's own default.
+disable = [
+    "missing-type-doc",
+    "missing-return-type-doc",
+    "raw-checker-failed",
+    "bad-inline-option",
+    "locally-disabled",
+    "file-ignored",
+    "suppressed-message",
+    "useless-suppression",
+    "deprecated-pragma",
+    "use-symbolic-message-instead",
+    "use-implicit-booleaness-not-comparison-to-string",
+    "use-implicit-booleaness-not-comparison-to-zero",
+]
 
 # ------------------------------------------------------------------ pytest --
 
@@ -224,7 +281,7 @@ warn_return_any = true
 
 # --- Tiers B-D: flip these on as each tier lands. ---------------------------
 # [[tool.mypy.overrides]]
-# module = ["route4me._fields", "route4me._api_method", "route4me.base"]
+# module = ["route4me._fields", "route4me.base"]
 # disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
