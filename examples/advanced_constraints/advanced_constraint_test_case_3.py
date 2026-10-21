@@ -1,3 +1,20 @@
+"""Advanced constraints: a driver's shift with a break.
+
+Builds an ADVANCED_CVRP_TW optimization of nine New York addresses, one of them the depot, optimized for
+time, and sets two :class:`~route4me.advanced_constraint.AdvancedConstraint` groups with
+:meth:`Optimization.advanced_constraints <route4me.base.Base.advanced_constraints>`: 10 drivers tagged
+``TAG001`` and ``TAG002``, available from 25200 to 75000 seconds after midnight (07:00 to 20:50), and 10
+drivers tagged ``TAG003``, whose shift has two time windows: 45200 to 55000 and 62000 to 95000 (12:33 to
+15:16, then 17:13 to 02:23 the next day). Each stop carries the tags of the drivers who may serve it.
+
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php``. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/advanced_constraints/advanced_constraint_test_case_3.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import AdvancedConstraint, Route4Me
@@ -11,6 +28,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization with a split driver shift and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization

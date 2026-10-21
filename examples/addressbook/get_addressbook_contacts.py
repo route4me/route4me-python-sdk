@@ -1,9 +1,24 @@
+"""List address book contacts, a page at a time.
+
+Calls :meth:`AddressBook.get_addressbook_contacts
+<route4me.address_book.AddressBook.get_addressbook_contacts>` with ``limit=10`` and ``offset=5``, which
+sends ``GET /api.v4/address_book.php``, and prints the ID, name and address of each contact.
+
+Run it with::
+
+    python examples/addressbook/get_addressbook_contacts.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print ten contacts, after the first five.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     address_book = route4me.address_book

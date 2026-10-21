@@ -1,9 +1,26 @@
+"""Get an optimization by ID.
+
+Calls :meth:`Optimization.get_optimizations <route4me.optimization.Optimization.get_optimizations>` with
+``limit=1`` (``GET /api.v4/optimization_problem.php``) to find the latest optimization, then
+:meth:`Optimization.get_optimization <route4me.optimization.Optimization.get_optimization>` with its
+``optimization_problem_id``, which sends the same request with the ID in the query. Prints the
+optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/optimizations/get_optimization.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the latest optimization.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization

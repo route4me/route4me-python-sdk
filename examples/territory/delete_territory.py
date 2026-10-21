@@ -1,9 +1,25 @@
+"""Create a territory, then delete it.
+
+Calls :meth:`Territory.add_territory <route4me.territory.Territory.add_territory>`
+(``POST /api.v4/territory.php``) to create a polygon territory, then :meth:`Territory.delete_territory
+<route4me.territory.Territory.delete_territory>` with its ``territory_id``, which sends
+``DELETE /api.v4/territory.php``, and prints the status.
+
+Run it with::
+
+    python examples/territory/delete_territory.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create a territory, delete it and print the status.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     territories = route4me.territory

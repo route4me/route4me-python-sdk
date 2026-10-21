@@ -1,3 +1,17 @@
+"""Create an optimization.
+
+Sets the route parameters with the :class:`~route4me.optimization.Optimization` setters, adds nine New
+York addresses, one of them the depot with
+:meth:`Address.add_address <route4me.address.Address.add_address>`, and runs a TSP optimization,
+optimized for distance, with :meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`,
+which sends ``POST /api.v4/optimization_problem.php``. Prints the optimization link and the addresses of
+each route.
+
+Run it with::
+
+    python examples/optimizations/create_optimization.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +25,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization and print the route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization

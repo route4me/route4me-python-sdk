@@ -1,9 +1,25 @@
+"""Create an order.
+
+Calls :meth:`Order.create_order <route4me.orders.Order.create_order>`, which sends
+``POST /api.v4/order.php`` with the order as the JSON body (``address_1`` is required; ``EXT_FIELD_*``
+are extra fields), and prints the new order. The order stays in the account; delete_order.py shows how
+to remove one.
+
+Run it with::
+
+    python examples/order/create_order.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create an order and print it.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     order = route4me.order

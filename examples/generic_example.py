@@ -1,3 +1,14 @@
+"""List optimizations and their state.
+
+Calls :meth:`Optimization.get_optimizations <route4me.optimization.Optimization.get_optimizations>` with
+``limit=10`` and ``offset=5``, which sends ``GET /api.v4/optimization_problem.php``, and prints the ID,
+the number of addresses and the state (an ``OPTIMIZATION_STATE`` name) of each optimization.
+
+Run it with::
+
+    python examples/generic_example.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -5,6 +16,10 @@ from route4me.constants import OPTIMIZATION_STATE
 
 
 def main(api_key):
+    """Print ten optimizations, after the first five.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization

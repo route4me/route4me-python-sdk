@@ -1,9 +1,28 @@
+"""Update an address book contact.
+
+Calls :meth:`AddressBook.get_addressbook_contacts
+<route4me.address_book.AddressBook.get_addressbook_contacts>` and
+:meth:`AddressBook.get_addressbook_contact <route4me.address_book.AddressBook.get_addressbook_contact>`
+(``GET /api.v4/address_book.php``) to read the first contact, appends " Updated" to its first name and
+sends the whole contact back with :meth:`AddressBook.update_contact
+<route4me.address_book.AddressBook.update_contact>` (``PUT /api.v4/address_book.php``, the contact as
+the JSON body). This changes a contact of the account.
+
+Run it with::
+
+    python examples/addressbook/update_addressbook_contact.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Rename the first contact and print it.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     address_book = route4me.address_book

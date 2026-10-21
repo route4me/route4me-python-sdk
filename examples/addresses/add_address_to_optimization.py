@@ -1,9 +1,28 @@
+"""Add addresses to an existing optimization and re-optimize it.
+
+Calls :meth:`Optimization.get_optimizations <route4me.optimization.Optimization.get_optimizations>` and
+:meth:`Optimization.get_optimization <route4me.optimization.Optimization.get_optimization>`
+(``GET /api.v4/optimization_problem.php``) to read the latest optimization, then
+:meth:`Optimization.update_optimization <route4me.optimization.Optimization.update_optimization>` with
+two new addresses and ``reoptimize=1``, which sends ``PUT /api.v4/optimization_problem.php`` with the
+problem ID and ``reoptimize`` in the query and the addresses as the JSON body. Prints the addresses
+before and after. This changes the latest optimization of the account.
+
+Run it with::
+
+    python examples/addresses/add_address_to_optimization.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Add two addresses to the latest optimization.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization

@@ -1,9 +1,26 @@
+"""Get the owner changes of the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`ActivityFeed.get_activity_feed_route_owner_changed
+<route4me.activity_feed.ActivityFeed.get_activity_feed_route_owner_changed>`, which sends
+``GET /api.v4/activity_feed.php`` with its ``route_id`` and ``activity_type=route-owner-changed``.
+Prints the total and the ID and type of each activity.
+
+Run it with::
+
+    python examples/activity_feed/get_activity_feed_route_owner_changed.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the ``route-owner-changed`` activities of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     activity_feed = route4me.activity_feed

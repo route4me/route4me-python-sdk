@@ -1,9 +1,26 @@
+"""Get an avoidance zone by ID.
+
+Calls :meth:`AvoidanceZones.get_avoidance_zones
+<route4me.avoidance_zones.AvoidanceZones.get_avoidance_zones>` (``GET /api.v4/avoidance.php``) to pick
+the first zone, then :meth:`AvoidanceZones.get_avoidance_zone
+<route4me.avoidance_zones.AvoidanceZones.get_avoidance_zone>` with its ``territory_id``, which sends the
+same request with ``territory_id`` in the query, and prints the zone.
+
+Run it with::
+
+    python examples/avoidance_zones/get_avoidance_zone.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the first avoidance zone of the account.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     avoidance_zones = route4me.avoidance_zones

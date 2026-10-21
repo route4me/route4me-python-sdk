@@ -1,9 +1,26 @@
+"""Search the address book, returning only some fields.
+
+Calls :meth:`AddressBook.get_addressbook_contacts
+<route4me.address_book.AddressBook.get_addressbook_contacts>` with ``query="juan"`` and
+``fields="first_name,address_email"``, which sends ``GET /api.v4/address_book.php``. With ``fields``,
+each result is a list of those values rather than a contact; the example prints the first name and the
+email of each match.
+
+Run it with::
+
+    python examples/addressbook/get_specified_field_contains_specified_text.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the first name and email of the contacts that match "juan".
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     address_book = route4me.address_book

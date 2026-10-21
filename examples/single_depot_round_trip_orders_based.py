@@ -1,3 +1,17 @@
+"""Optimize a round trip built from orders.
+
+Creates five orders with :meth:`Order.create_order <route4me.orders.Order.create_order>`
+(``POST /api.v4/order.php``), adds each to the optimization by its ``order_id`` with
+:meth:`Address.add_address <route4me.address.Address.add_address>`, adds a depot, and runs a CVRP_TW_SD
+round trip (``rt``) optimized for time with :meth:`Route4Me.run_optimization
+<route4me.api.Route4Me.run_optimization>` (``POST /api.v4/optimization_problem.php``). The orders stay
+in the account. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/single_depot_round_trip_orders_based.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +25,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Create the orders, run the optimization and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization
@@ -109,7 +127,7 @@ def main(api_key):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Single Driver Round Trip")
+    parser = argparse.ArgumentParser(description="Single Depot Round Trip, Orders Based")
     parser.add_argument("--api_key", dest="api_key", help="Route4Me API KEY", type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)

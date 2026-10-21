@@ -1,9 +1,25 @@
+"""Get the GPS tracking history of the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`Route.get_route_tracking <route4me.route.Route.get_route_tracking>`, which
+sends ``GET /api.v4/route.php`` with ``device_tracking_history=1``, and prints the destinations and each
+tracked point.
+
+Run it with::
+
+    python examples/routes/get_route_tracking.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the destinations and tracking history of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     route = r4m.route

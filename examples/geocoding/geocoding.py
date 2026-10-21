@@ -1,9 +1,24 @@
+"""Geocode addresses one at a time, retrying failures.
+
+Calls :meth:`Address.fix_geocode <route4me.address.Address.fix_geocode>` for each of five Louisville,
+Kentucky addresses. It sends ``GET /api/address.php``, copies the ``lat`` and ``lng`` of the first match
+into the address dict, and retries connection errors with backoff. Prints each address before and after.
+
+Run it with::
+
+    python examples/geocoding/geocoding.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Geocode the sample addresses and print them.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     addresses = [

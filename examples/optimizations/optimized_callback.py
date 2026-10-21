@@ -1,3 +1,17 @@
+"""Create an optimization that notifies a URL when it is done.
+
+Runs a TSP optimization of nine New York addresses, one of them the depot, after setting a callback URL
+with ``optimization.optimized_callback_url(callback_url)``.
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php`` with the URL in the query, and Route4Me then sends a POST
+request with the ``optimization_problem_id`` to that URL. ``https://private.webhook`` is a placeholder:
+use an endpoint you control.
+
+Run it with::
+
+    python examples/optimizations/optimized_callback.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +25,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization with a callback URL and print the route.
+
+    :param api_key: Route4Me API key.
+    """
     callback_url = "https://private.webhook"
     route4me = Route4Me(api_key)
 

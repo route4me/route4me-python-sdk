@@ -1,9 +1,26 @@
+"""Preview the content of an uploaded file.
+
+Calls :meth:`FileUploading.get_file_preview <route4me.file_uploading.FileUploading.get_file_preview>`
+with the upload ID and ``format="json"``, which sends ``GET /actions/upload/csv-xls-preview.php`` with
+``strUploadID``, and prints the raw reply. upload_file.py prints the reply of a new upload, which
+identifies it.
+
+Run it with::
+
+    python examples/file_uploading/get_file_preview.py --api_key <your key> --upload_id <upload ID>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key, upload_id):
+    """Print the preview of an uploaded file.
+
+    :param api_key: Route4Me API key.
+    :param upload_id: ID of the upload.
+    """
     route4me = Route4Me(api_key)
     file_uploading = route4me.file_uploading
     response = file_uploading.get_file_preview(format="json", strUploadID=upload_id)

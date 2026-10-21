@@ -1,9 +1,27 @@
+"""Move one stop of a route to a new position.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` and
+:meth:`Route.get_route <route4me.route.Route.get_route>` (``GET /api.v4/route.php``) to read the latest
+route, then :meth:`Route.resequence_route <route4me.route.Route.resequence_route>`, which sends
+``PUT /api.v4/route.php`` with ``route_id`` and the second destination's ``route_destination_id`` in the
+query, and the third destination with ``sequence_no=6`` in ``addresses`` as the JSON body. Prints the
+route before and after. This changes the latest route of the account.
+
+Run it with::
+
+    python examples/routes/resequence_route.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Move a stop of the latest route and print the route.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     route = r4m.route

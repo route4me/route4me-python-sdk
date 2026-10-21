@@ -1,9 +1,24 @@
+"""List the account's avoidance zones.
+
+Calls :meth:`AvoidanceZones.get_avoidance_zones
+<route4me.avoidance_zones.AvoidanceZones.get_avoidance_zones>`, which sends
+``GET /api.v4/avoidance.php``, and prints the name, colour, owner, shape and data of each zone.
+
+Run it with::
+
+    python examples/avoidance_zones/get_avoidance_zones.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print every avoidance zone.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     avoidance_zones = route4me.avoidance_zones

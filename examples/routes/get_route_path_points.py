@@ -1,9 +1,26 @@
+"""Get the path points of the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` and
+:meth:`Route.get_route <route4me.route.Route.get_route>` (``GET /api.v4/route.php``) to read the latest
+route, then :meth:`Route.get_route_path_points <route4me.route.Route.get_route_path_points>` with
+``route_path_output="Points"``, which sends ``GET /api.v4/route.php``, and prints each destination and
+the points of the path to the next one.
+
+Run it with::
+
+    python examples/routes/get_route_path_points.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the destinations and path points of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     route = r4m.route

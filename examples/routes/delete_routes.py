@@ -1,9 +1,25 @@
+"""Delete the two latest routes.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` with ``limit=2``
+(``GET /api.v4/route.php``), then :meth:`Route.delete_routes <route4me.route.Route.delete_routes>` with
+both IDs, which sends ``DELETE /api.v4/route.php`` with ``route_id`` set to the comma-separated IDs, and
+prints the deleted IDs. This deletes the two latest routes of the account.
+
+Run it with::
+
+    python examples/routes/delete_routes.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Delete the two latest routes and print their IDs.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     route = route4me.route

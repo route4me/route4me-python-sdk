@@ -1,3 +1,18 @@
+"""Bundle the stops that share coordinates.
+
+Builds a CVRP_TW_SD optimization of thirteen New York addresses, one of them the depot and two groups of
+three at the same coordinates, and sets a :class:`~route4me.bundling.Bundling` with
+``mode=BUNDLING_MODE.BY_COORDINATES`` with :meth:`Optimization.bundling <route4me.base.Base.bundling>`.
+
+The client is created with ``redirects=False``, so :meth:`Route4Me.run_optimization
+<route4me.api.Route4Me.run_optimization>` sends ``POST /api.v4/optimization_problem.php`` with
+``redirect=0``. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/bundling/bundling_by_coordinates.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import BUNDLING_MODE, Bundling, Route4Me
@@ -11,6 +26,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization with bundling by coordinates and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key, redirects=False)
     optimization = route4me.optimization
     address = route4me.address

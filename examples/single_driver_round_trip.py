@@ -1,3 +1,14 @@
+"""Optimize a round trip for one driver.
+
+Builds a TSP optimization of nine New York addresses, one of them the depot, as a round trip (``rt``)
+optimized for time. :meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php``. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/single_driver_round_trip.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +22,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization and print the route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization

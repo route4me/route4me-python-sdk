@@ -1,9 +1,23 @@
+"""List the latest ten routes.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` with ``limit=10`` and ``offset=0``,
+which sends ``GET /api.v4/route.php``, and prints the optimization ID and route ID of each route.
+
+Run it with::
+
+    python examples/routes/get_routes.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the latest ten routes.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     route = route4me.route

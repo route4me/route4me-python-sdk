@@ -1,9 +1,25 @@
+"""Create an order, then read it back.
+
+Calls :meth:`Order.create_order <route4me.orders.Order.create_order>` (``POST /api.v4/order.php``), then
+:meth:`Order.get_order <route4me.orders.Order.get_order>` with its ``order_id``, which sends
+``GET /api.v4/order.php``, and prints the order. The order stays in the account; delete_order.py shows
+how to remove one.
+
+Run it with::
+
+    python examples/order/get_order.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create an order and print it as read back.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     order = route4me.order

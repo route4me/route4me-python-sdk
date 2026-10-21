@@ -1,9 +1,25 @@
+"""Get the activities recorded on the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`Route.get_activities <route4me.route.Route.get_activities>` with ``limit=10``
+and ``offset=5``, which sends ``GET /api/get_activities.php``. Prints the total and the ID, message,
+type and route of each activity.
+
+Run it with::
+
+    python examples/activities/get_activities.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the activities of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     route = route4me.route

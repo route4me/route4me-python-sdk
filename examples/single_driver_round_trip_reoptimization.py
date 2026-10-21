@@ -1,3 +1,17 @@
+"""Optimize a route for one driver, then re-optimize it.
+
+Builds a TSP optimization of nine New York addresses, one of them the depot and runs it with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then re-optimizes it with :meth:`Route4Me.re_optimization
+<route4me.api.Route4Me.re_optimization>`, which sends ``PUT /api.v4/optimization_problem.php`` with its
+``optimization_problem_id`` and ``reoptimize=1``. Prints the state (an ``OPTIMIZATION_STATE`` name)
+after each step.
+
+Run it with::
+
+    python examples/single_driver_round_trip_reoptimization.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -12,6 +26,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization, re-optimize it and print its state.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization

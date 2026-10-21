@@ -1,3 +1,18 @@
+"""Record GPS positions on the latest route, then read its tracking history.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, sets the values shared by every position once with
+:meth:`GPS.add <route4me.base.Base.add>`, and sends four positions with
+:meth:`GPS.set_gps_track <route4me.gps.GPS.set_gps_track>` (``GET /track/set.php``). It then reads the
+route with :meth:`Route.get_route <route4me.route.Route.get_route>` and ``device_tracking_history=1``
+(``GET /api.v4/route.php``) and prints each tracked point. ``member_id`` 1 is a sample: use a member of
+your account.
+
+Run it with::
+
+    python examples/tracking/track_device_last_location_history.py --api_key <your key>
+"""
+
 import argparse
 import datetime as dt
 
@@ -6,6 +21,10 @@ from route4me.constants import DEVICE_TYPE, FORMAT
 
 
 def main(api_key):
+    """Record four positions on the latest route and print its tracking history.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     gps = route4me.gps

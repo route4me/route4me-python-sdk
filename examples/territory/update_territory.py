@@ -1,9 +1,26 @@
+"""Create a territory, then update it.
+
+Calls :meth:`Territory.add_territory <route4me.territory.Territory.add_territory>`
+(``POST /api.v4/territory.php``) to create a polygon territory, then :meth:`Territory.update_territory
+<route4me.territory.Territory.update_territory>` with its ``territory_id``, a new name and a new colour,
+which sends ``PUT /api.v4/territory.php`` with ``territory_id`` in the query and the territory as the
+JSON body. Prints the territory before and after. The territory stays in the account.
+
+Run it with::
+
+    python examples/territory/update_territory.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create a territory, rename and recolour it, and print it.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     territories = route4me.territory

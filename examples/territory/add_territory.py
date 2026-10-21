@@ -1,9 +1,25 @@
+"""Create three territories: a polygon, a circle and a rectangle.
+
+Calls :meth:`Territory.add_territory <route4me.territory.Territory.add_territory>` once per shape, which
+sends ``POST /api.v4/territory.php`` with ``territory_name``, ``territory_color`` and ``territory``
+(type ``poly``, ``circle`` or ``rect``, and its data) as the JSON body, and prints each new territory.
+They stay in the account; delete_territory.py shows how to remove one.
+
+Run it with::
+
+    python examples/territory/add_territory.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create the three territories and print them.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     territories = route4me.territory

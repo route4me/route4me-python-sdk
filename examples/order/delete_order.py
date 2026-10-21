@@ -1,9 +1,24 @@
+"""Create an order, then delete it.
+
+Calls :meth:`Order.create_order <route4me.orders.Order.create_order>` (``POST /api.v4/order.php``), then
+:meth:`Order.delete_order <route4me.orders.Order.delete_order>` with its ID in ``order_ids``, which
+sends ``DELETE /api.v4/order.php`` with them as the JSON body, and prints the reply.
+
+Run it with::
+
+    python examples/order/delete_order.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create an order, delete it and print the reply.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     order = route4me.order

@@ -1,3 +1,16 @@
+"""Optimize 48 stops with time windows, from two depots.
+
+Builds a CVRP_TW_MD (multiple depot) optimization in Louisville, Kentucky: two depots and 48 stops, each
+with a ten-minute time window and five minutes of service, split into up to ten round-trip routes
+(``parts``, ``rt``) that start at 07:00, on the matrix distance metric, optimized for time.
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php``. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/multiple_depot_multiple_driver_time_window.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -499,6 +512,10 @@ def _print_routes(response):
 
 
 def main(api_key):
+    """Run the optimization and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
     _set_parameters(route4me.optimization)
     _add_depots(route4me.address)

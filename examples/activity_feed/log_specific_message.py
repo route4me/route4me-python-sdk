@@ -1,9 +1,26 @@
+"""Log a message on the latest route's activity feed.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`ActivityFeed.log_specific_message
+<route4me.activity_feed.ActivityFeed.log_specific_message>`, which sends
+``POST /api.v4/activity_feed.php`` with the ``route_id``, the ``activity_message`` and
+``activity_type=user_message`` as the JSON body. The message stays in the route's feed.
+
+Run it with::
+
+    python examples/activity_feed/log_specific_message.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Log a message on the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     activity_feed = route4me.activity_feed

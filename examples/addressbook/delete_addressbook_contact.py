@@ -1,9 +1,26 @@
+"""Create an address book contact, then delete it.
+
+Calls :meth:`AddressBook.create_contact <route4me.address_book.AddressBook.create_contact>`
+(``POST /api.v4/address_book.php``), then :meth:`AddressBook.delete_addressbook_contact
+<route4me.address_book.AddressBook.delete_addressbook_contact>` with the new contact's ID in
+``address_ids``, which sends ``DELETE /api.v4/address_book.php`` with them as the JSON body, and prints
+the status.
+
+Run it with::
+
+    python examples/addressbook/delete_addressbook_contact.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create a contact, delete it and print the status.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     address_book = route4me.address_book

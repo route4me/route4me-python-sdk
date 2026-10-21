@@ -1,3 +1,15 @@
+"""Get the activity feed one activity type at a time.
+
+For each type in ``ACTIVITY_TYPE``, calls :meth:`ActivityFeed.get_activities_feed_by_type
+<route4me.activity_feed.ActivityFeed.get_activities_feed_by_type>` with ``limit=1``, which sends
+``GET /api.v4/activity_feed.php`` with ``activity_type``. Prints how many activities of that type there
+are, and the first one.
+
+Run it with::
+
+    python examples/activity_feed/get_activities_feed_by_type.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -35,6 +47,10 @@ ACTIVITY_TYPE = (
 
 
 def main(api_key):
+    """Print the count and the first activity of each type.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     activity_feed = route4me.activity_feed

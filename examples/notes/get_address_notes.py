@@ -1,9 +1,26 @@
+"""Get the notes of a route destination.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` and
+:meth:`Route.get_route <route4me.route.Route.get_route>` (``GET /api.v4/route.php``) to read the latest
+route, then :meth:`Address.get_address_notes <route4me.address.Address.get_address_notes>` for its first
+destination, which sends ``GET /api.v4/address.php`` with ``notes=True``, and prints the address and
+each note.
+
+Run it with::
+
+    python examples/notes/get_address_notes.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the notes of the first destination of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     route = route4me.route

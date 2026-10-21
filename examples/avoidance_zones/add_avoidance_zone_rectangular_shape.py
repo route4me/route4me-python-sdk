@@ -1,9 +1,26 @@
+"""Create a rectangular avoidance zone, an area that routes must avoid.
+
+Calls :meth:`AvoidanceZones.add_avoidance_zone
+<route4me.avoidance_zones.AvoidanceZones.add_avoidance_zone>`, which sends
+``POST /api.v4/avoidance.php`` with the zone as the JSON body: ``territory_name``, ``territory_color``
+and ``territory``, of type ``rect``, whose ``data`` is two opposite corners, each as ``"lat,lng"``.
+Prints the new zone. The zone stays in the account; delete_avoidance_zone.py shows how to remove one.
+
+Run it with::
+
+    python examples/avoidance_zones/add_avoidance_zone_rectangular_shape.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create a rectangular avoidance zone and print it.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     avoidance_zones = route4me.avoidance_zones

@@ -1,9 +1,25 @@
+"""Duplicate the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`Route.duplicate_route <route4me.route.Route.duplicate_route>` with its
+``route_id``, which sends ``GET /actions/duplicate_route.php``, and prints the optimization, ID and
+addresses of the copy.
+
+Run it with::
+
+    python examples/routes/duplicate_route.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Duplicate the latest route and print the copy.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     route = route4me.route

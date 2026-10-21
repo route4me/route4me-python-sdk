@@ -1,9 +1,23 @@
+"""List the account's territories.
+
+Calls :meth:`Territory.get_territories <route4me.territory.Territory.get_territories>`, which sends
+``GET /api.v4/territory.php``, and prints the name, colour, owner, shape and data of each territory.
+
+Run it with::
+
+    python examples/territory/get_territories.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print every territory.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     territory = route4me.territory

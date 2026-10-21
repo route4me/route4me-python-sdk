@@ -1,3 +1,16 @@
+"""Optimize a round trip with slower service and travel times.
+
+:meth:`Optimization.set_slowdowns <route4me.optimization.Optimization.set_slowdowns>` with 20 and 30
+adds ``slowdowns`` to the route parameters: service times grow by 20% and travel times by 30%. The
+optimization is a TSP round trip (``rt``) of nine New York addresses, one of them the depot, optimized
+for time. :meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php``; the example prints the addresses of each route.
+
+Run it with::
+
+    python examples/slowdowns/set_slowdowns.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -5,6 +18,10 @@ from route4me.constants import ALGORITHM_TYPE, DEVICE_TYPE, DISTANCE_UNIT, OPTIM
 
 
 def main(api_key):
+    """Run the optimization with slowdowns and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     optimization = r4m.optimization

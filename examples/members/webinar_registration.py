@@ -1,9 +1,24 @@
+"""Register a member for a webinar.
+
+Calls :meth:`Members.webinar_registration <route4me.members.Members.webinar_registration>`, which sends
+``POST /actions/webinar_register.php`` with the contact details, ``member_id`` and ``webinar_date`` as
+form fields, and prints the reply. The values are samples.
+
+Run it with::
+
+    python examples/members/webinar_registration.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Register the sample member and print the reply.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     members = route4me.members

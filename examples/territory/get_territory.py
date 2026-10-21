@@ -1,9 +1,25 @@
+"""Get a territory by ID.
+
+Calls :meth:`Territory.get_territories <route4me.territory.Territory.get_territories>`
+(``GET /api.v4/territory.php``) to pick the first territory, then :meth:`Territory.get_territory
+<route4me.territory.Territory.get_territory>` with its ``territory_id``, which sends the same request
+with ``territory_id`` in the query, and prints the territory.
+
+Run it with::
+
+    python examples/territory/get_territory.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the first territory of the account.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     territories = route4me.territory

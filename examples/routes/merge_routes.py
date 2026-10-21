@@ -1,9 +1,25 @@
+"""Merge the two latest routes into one.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` with ``limit=2``
+(``GET /api.v4/route.php``), then :meth:`Route.merge_routes <route4me.route.Route.merge_routes>` with
+``route_ids``, the two IDs as one comma-separated string, which sends ``POST /actions/merge_routes.php``
+with it as a form field. Prints the optimization ID and status. This changes the routes of the account.
+
+Run it with::
+
+    python examples/routes/merge_routes.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Merge the two latest routes and print the result.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     route = r4m.route

@@ -1,3 +1,15 @@
+"""Get the manifest of the latest route: its directions, path and tracking history.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`Route.get_route <route4me.route.Route.get_route>` with ``directions=1``,
+``route_path_output=ROUTE_PATH_OUTPUT.POINTS`` and ``device_tracking_history=1``, which sends
+``GET /api.v4/route.php``. Prints the trip distance, the fuel economy and the steps of each leg.
+
+Run it with::
+
+    python examples/routes/routes_manifest.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -7,6 +19,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Print the manifest of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     route = route4me.route

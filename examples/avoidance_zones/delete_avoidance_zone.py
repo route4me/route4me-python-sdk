@@ -1,9 +1,26 @@
+"""Create an avoidance zone, then delete it.
+
+Calls :meth:`AvoidanceZones.add_avoidance_zone
+<route4me.avoidance_zones.AvoidanceZones.add_avoidance_zone>` (``POST /api.v4/avoidance.php``) to create
+a polygon zone, then :meth:`AvoidanceZones.delete_avoidance_zone
+<route4me.avoidance_zones.AvoidanceZones.delete_avoidance_zone>` with its ``territory_id``, which sends
+``DELETE /api.v4/avoidance.php``, and prints the status.
+
+Run it with::
+
+    python examples/avoidance_zones/delete_avoidance_zone.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create a polygon avoidance zone, delete it and print the status.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     avoidance_zones = route4me.avoidance_zones

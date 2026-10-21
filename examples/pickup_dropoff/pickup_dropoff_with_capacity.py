@@ -1,3 +1,18 @@
+"""Optimize a route with pickups and deliveries, and a vehicle capacity.
+
+Sets the route parameters in one call with :meth:`Optimization.add <route4me.base.Base.add>`
+(CVRP_TW_SD, optimized for distance, ``vehicle_capacity=6``) and adds a depot and seven customers in
+Milledgeville, Georgia, from two original routes (``original_route_id`` ROUTE001 and ROUTE002). Each
+customer has a pickup stop (``address_stop_type`` PICKUP) that names it in ``pickup``, and a delivery
+stop (DELIVERY) that names it in ``dropoff``. :meth:`Route4Me.run_optimization
+<route4me.api.Route4Me.run_optimization>` sends ``POST /api.v4/optimization_problem.php``. Prints the
+optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/pickup_dropoff/pickup_dropoff_with_capacity.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +26,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization

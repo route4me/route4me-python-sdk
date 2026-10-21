@@ -1,9 +1,23 @@
+"""List the account's vehicles.
+
+Calls :meth:`Vehicle.get_vehicles <route4me.vehicles.Vehicle.get_vehicles>`, which sends
+``GET /api/vehicles/view_vehicles.php``, and prints the ID and alias of each vehicle.
+
+Run it with::
+
+    python examples/vehicles/get_vehicles.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print every vehicle.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     vehicles = route4me.vehicles
