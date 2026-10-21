@@ -1394,6 +1394,11 @@
   {
    "method": "DELETE",
    "host": "wh.route4me.com",
+   "path": "/modules/api/vehicles/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
    "path": "/modules/oauth/authorize"
   },
   {
@@ -2520,6 +2525,11 @@
    "method": "GET",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/facilities/list/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/types/{}"
   },
   {
    "method": "GET",
@@ -3974,6 +3984,16 @@
   {
    "method": "GET",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/vehicles/license"
   },
   {
@@ -4045,6 +4065,16 @@
    "method": "GET",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/workflows/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/vehicles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/vehicles/{}"
   },
   {
    "method": "GET",
@@ -4355,6 +4385,16 @@
    "method": "PATCH",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/vehicles"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/vehicles/{}"
+  },
+  {
+   "method": "POST",
+   "host": "api.route4me.com",
+   "path": "/actions/route/rename_route.php"
   },
   {
    "method": "POST",
@@ -7324,6 +7364,11 @@
   {
    "method": "POST",
    "host": "wh.route4me.com",
+   "path": "/modules/api/vehicles"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
    "path": "/modules/async-export"
   },
   {
@@ -8069,6 +8114,11 @@
   {
    "method": "PUT",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/telematics/connections"
   },
   {
@@ -8119,12 +8169,27 @@
   {
    "method": "PUT",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/vehicle-inventory/{}"
   },
   {
    "method": "PUT",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/vehicles/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/{}"
   },
   {
    "method": "PUT",
@@ -8135,6 +8200,11 @@
    "method": "PUT",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/workflows/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/vehicles/{}"
   },
   {
    "method": "PUT",
