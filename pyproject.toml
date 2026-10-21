@@ -38,10 +38,17 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# 2.25.0 is the floor for modern urllib3 interop and predates none of the
-# security fixes we rely on; 2.31.0 carries the CVE-2023-32681 fix for the
-# proxy-Authorization leak, which matters because this SDK accepts `proxies`.
-dependencies = ["requests>=2.31.0"]
+# Floors are set by security fixes, not by features:
+#   requests 2.33.0  CVE-2024-35195, CVE-2024-47081 (.netrc leak), CVE-2026-25645
+#   urllib3  2.8.0   CVE-2024-37891 .. CVE-2026-97689 (redirects, decompression, proxy TLS)
+# Those releases need Python 3.10+. On 3.9 the newest available versions are
+# the floor instead; the advisories still open there are listed in SECURITY.md.
+dependencies = [
+    "requests>=2.33.0; python_version >= '3.10'",
+    "urllib3>=2.8.0; python_version >= '3.10'",
+    "requests>=2.32.5; python_version < '3.10'",
+    "urllib3>=2.6.3; python_version < '3.10'",
+]
 
 [project.urls]
 Homepage = "https://github.com/route4me/route4me-python-sdk"
