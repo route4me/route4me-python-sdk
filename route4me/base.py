@@ -6,6 +6,8 @@ import json
 from route4me.utils import is_valid_datetime
 
 from ._fields import ValidatedField
+from .advanced_constraint import AdvancedConstraint
+from .bundling import Bundling
 from .constants import (
     DEVICE_TYPE,
     DISTANCE_UNIT,
@@ -233,30 +235,41 @@ class Base:
     def advanced_constraints(self, advanced_constraints):
         """Set the ``advanced_constraints`` route parameter.
 
-        :param advanced_constraints: a list of constraints, e.g.
-            ``[constraint.to_dict()]`` for
-            :class:`~route4me.advanced_constraint.AdvancedConstraint` objects.
+        :param advanced_constraints: a list of constraints:
+            :class:`~route4me.advanced_constraint.AdvancedConstraint` objects,
+            or dicts such as ``constraint.to_dict()``.
         :raise ParamValueException: when the value is not a list.
+
+        .. versionchanged:: 1.0.0
+           :class:`~route4me.advanced_constraint.AdvancedConstraint` objects are
+           converted with ``to_dict()``; they used to fail when the request was
+           serialised.
         """
         if not isinstance(advanced_constraints, list):
             raise ParamValueException(
                 "advanced_constraints",
                 "Must be: List of Advanced Constraints",
             )
-        self._copy_data({"advanced_constraints": advanced_constraints})
+        constraints = [c.to_dict() if isinstance(c, AdvancedConstraint) else c for c in advanced_constraints]
+        self._copy_data({"advanced_constraints": constraints})
 
     def bundling(self, bundling):
         """Set the ``bundling`` route parameter.
 
-        :param bundling: the bundling settings, e.g.
-            ``Bundling().to_dict()`` (see :class:`~route4me.bundling.Bundling`).
-        :raise ParamValueException: when the value is not valid bundling
-            settings.
+        :param bundling: the bundling settings: a
+            :class:`~route4me.bundling.Bundling` object, or a dict such as
+            ``Bundling().to_dict()``.
+        :raise ParamValueException: when the value is neither.
+
+        .. versionchanged:: 1.0.0
+           A :class:`~route4me.bundling.Bundling` object is accepted (#43).
         """
+        if isinstance(bundling, Bundling):
+            bundling = bundling.to_dict()
         if not isinstance(bundling, dict):
             raise ParamValueException(
                 "bundling",
-                "Must be: Bundling Object",
+                "Must be: Bundling object or dict",
             )
         self._copy_data({"bundling": bundling})
 

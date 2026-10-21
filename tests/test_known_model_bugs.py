@@ -5,6 +5,7 @@ the GitHub issue that tracks it. A fix makes the test pass, strict xfail turns
 that into a failure, and the marker has to be removed with the fix.
 """
 
+import dataclasses
 import json
 
 import pytest
@@ -19,9 +20,6 @@ from route4me.utils import clean_dict
 
 
 class TestServiceTimeRules:
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#33: list defaults are class attributes shared by every instance"
-    )
     def test_instances_do_not_share_their_param_lists(self):
         first = ServiceTimeRules()
         second = ServiceTimeRules()
@@ -30,9 +28,6 @@ class TestServiceTimeRules:
 
         assert second.first_item_mode_params == []
 
-    @pytest.mark.xfail(
-        strict=True, raises=KeyError, reason="#40: the rules serialise as {} because values live in attributes"
-    )
     def test_the_rules_reach_the_request_body(self):
         rules = ServiceTimeRules()
         rules.first_item_mode = BUNDLING_FIRST_ITEM_MODE.USE_CUSTOM_SERVICE_TIME
@@ -43,24 +38,24 @@ class TestServiceTimeRules:
         assert payload["rules"]["first_item_mode"] == BUNDLING_FIRST_ITEM_MODE.USE_CUSTOM_SERVICE_TIME
         assert payload["rules"]["first_item_mode_params"] == [300]
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#40: to_dict returns the instance __dict__, not the rules"
-    )
-    def test_to_dict_returns_every_rule(self):
+    def test_to_dict_sends_the_first_item_mode_and_any_rule_that_is_set(self):
         rules = ServiceTimeRules()
+        assert rules.to_dict() == {"first_item_mode": None}
 
-        assert set(rules.to_dict()) == {
-            "first_item_mode",
-            "first_item_mode_params",
-            "additional_items_mode",
-            "additional_items_mode_params",
+        rules.additional_items_mode = 3
+        rules.additional_items_mode_params = [60]
+
+        assert rules.to_dict() == {
+            "first_item_mode": None,
+            "additional_items_mode": 3,
+            "additional_items_mode_params": [60],
         }
+
+    def test_it_round_trips_through_dataclasses_asdict(self):
+        assert dataclasses.asdict(Bundling())["service_time_rules"]["first_item_mode_params"] == []
 
 
 class TestBundling:
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#40: Bundling.to_dict returns the live __dict__, not a copy"
-    )
     def test_to_dict_is_a_snapshot(self):
         bundling = Bundling()
         snapshot = bundling.to_dict()
@@ -69,13 +64,23 @@ class TestBundling:
 
         assert snapshot["mode_params"] == []
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=ParamValueException,
-        reason="#43: bundling() rejects the Bundling object its error message asks for",
-    )
     def test_a_bundling_object_is_accepted(self):
         Route4Me("1" * 32).optimization.bundling(Bundling())
+
+    def test_a_bundling_object_is_sent_as_its_dict(self):
+        client = Route4Me("1" * 32)
+
+        client.optimization.bundling(Bundling(mode_params=["zip"]))
+
+        assert client.optimization.data["parameters"]["bundling"]["mode_params"] == ["zip"]
+
+    def test_advanced_constraint_objects_are_converted(self):
+        client = Route4Me("1" * 32)
+
+        client.optimization.advanced_constraints([AdvancedConstraint(max_cargo_weight=1000, members_count=2)])
+
+        constraint = client.optimization.data["parameters"]["advanced_constraints"][0]
+        assert (constraint["max_cargo_weight"], constraint["members_count"]) == (1000, 2)
 
     def test_a_plain_dict_is_accepted(self):
         client = Route4Me("1" * 32)
