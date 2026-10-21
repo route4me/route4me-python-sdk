@@ -1,3 +1,10 @@
+"""URLs of the Route4Me API endpoints the SDK calls.
+
+``MAIN_HOST`` serves API V4 and the older action endpoints; ``API_V5`` is the
+base of API V5. :data:`EXPORTER_V5` is a template: fill ``{route_id}`` with
+``str.format``.
+"""
+
 MAIN_HOST = "https://api.route4me.com"
 API_V5 = "https://wh.route4me.com/modules/api/v5.0"
 

@@ -1,3 +1,9 @@
+"""Exceptions raised by the SDK.
+
+:class:`APIException` is raised when the API answers with an HTTP error;
+:class:`ParamValueException` when a parameter is missing or invalid.
+"""
+
 import json
 
 from ._redact import redact_url
@@ -8,8 +14,17 @@ DRIVER_VERSION = f"route4me-python-sdk-{VERSION_STRING}"
 
 
 class APIException(Exception):
-    """
-    Handle API Exceptions
+    """The API answered with an HTTP status outside the 200-399 range.
+
+    Most resource methods catch it and return :meth:`to_dict` instead of
+    raising it.
+
+    :param status_code: the HTTP status code.
+    :param response: the response body text. The client removes the API key
+        from it before raising.
+    :param url: the request URL.
+    :param redact: whether to strip credentials from ``url``. ``None`` (the
+        default) follows ``Route4MeConfig.redact_urls``.
 
     .. versionchanged:: 0.2.0
        ``url`` is now redacted. ``requests`` resolves ``Response.url`` to the
@@ -42,29 +57,29 @@ class APIException(Exception):
         Exception.__init__(self, exception)
 
     def get_status_code(self):
-        """
-        Status code
-        :return:
+        """Return the HTTP status code.
+
+        :return: the status code, e.g. ``404``.
         """
         return self.status_code
 
     def get_response(self):
-        """
-        Return response
-        :return:
+        """Return the response body.
+
+        :return: the response body text.
         """
         return self.response
 
     def get_url(self):
-        """
-        Redacted request URL
-        :return:
+        """Return the request URL.
+
+        :return: the URL, with credentials stripped unless redaction was
+            turned off.
         """
         return self.url
 
     def to_dict(self):  # pylint: disable=too-many-return-statements  # one return per documented error shape
-        """
-        Return a dictionary representation of the exception
+        """Return the error as a dict.
 
         Always shaped ``{"errors": ...}`` -- this is what almost every resource
         method returns on an API error, so the shape is load-bearing.
@@ -77,6 +92,11 @@ class APIException(Exception):
         * a body that is valid JSON but not an object, e.g. ``[1, 2]`` --
           ``json.loads`` returns a list, whose ``.get`` raises ``AttributeError``
         * a V5 error envelope, which has no ``errors`` key at all
+
+        :return: ``{"errors": value}``. ``value`` is the V4 ``errors`` value,
+            the V5 ``messages`` flattened into a list, or the ``message``
+            value; ``"Unexpected server response"`` when none of them is
+            present or the body is not a JSON object.
         """
         try:
             payload = json.loads(self.response)
@@ -115,8 +135,13 @@ class APIException(Exception):
 
 
 class ParamValueException(Exception):
-    """
-    Handle Params exceptions
+    """A parameter is missing or has an invalid value.
+
+    Raised before any request is sent.
+
+    :param param: name of the offending parameter, or a group name such as
+        ``"params"`` when required parameters are missing.
+    :param msg: what is wrong with it.
     """
 
     def __init__(self, param, msg):
@@ -129,8 +154,8 @@ class ParamValueException(Exception):
         Exception.__init__(self, exception)
 
     def get_msg(self):
-        """
-        Message from exception
-        :return:
+        """Return the error message.
+
+        :return: the message passed as ``msg``.
         """
         return self.msg

@@ -1,13 +1,18 @@
+"""Small helpers: JSON-to-object decoding, dictionary cleaning and datetime checks."""
+
 import json
 from collections import namedtuple
 from datetime import datetime
 
 
 def _json_object_hook(d):
-    """
-    JSON to object helper
-    :param d: data
-    :return: namedtuple
+    """Turn one decoded JSON object into a namedtuple.
+
+    Keys that start with a digit get a ``d_`` prefix, so that they are valid
+    field names.
+
+    :param d: the decoded JSON object.
+    :return: a namedtuple with one field per key.
     """
     keys = []
     for k in d.keys():
@@ -19,19 +24,24 @@ def _json_object_hook(d):
 
 
 def json2obj(data):
-    """
-    Parse JSON to object
-    :param data: JSON data
-    :return: object
+    """Decode a JSON document into namedtuples instead of dicts.
+
+    :param data: the JSON text.
+    :return: the decoded document, with every JSON object as a namedtuple
+        whose fields are the object's keys.
     """
     return json.loads(data, object_hook=_json_object_hook)
 
 
 def clean_dict(data):
-    """
-    Clean dictionary values
-    :param data: input dictionary
-    :return: cleaned dictionary
+    """Remove ``None`` values and empty containers, recursively.
+
+    Dicts and lists are cleaned item by item, and a container left empty is
+    removed from its parent. Empty strings inside lists are kept. Any other
+    value is returned as is.
+
+    :param data: a dict, a list, or a plain value.
+    :return: a cleaned copy of ``data``, or ``None`` when nothing is left.
     """
     if isinstance(data, list):
         cleaned_list = []
@@ -54,11 +64,12 @@ def clean_dict(data):
 
 
 def is_valid_datetime(s, date_format="%Y-%m-%d %H:%M:%S"):
-    """
-    Checks if the given datetime string is valid.
-    Default format is 'YYYY-MM-DD HH:MM:SS'.
-    :param s: The datetime string to validate.
-    :return: True if the datetime string is valid, False otherwise.
+    """Check whether a value is a date-time in the given format.
+
+    :param s: the value to check; converted with ``str()``.
+    :param date_format: a :meth:`datetime.strptime <datetime.datetime.strptime>`
+        format. The default is ``YYYY-MM-DD HH:MM:SS``.
+    :return: ``True`` if the value matches the format, ``False`` otherwise.
     """
     try:
         datetime.strptime(str(s), date_format)

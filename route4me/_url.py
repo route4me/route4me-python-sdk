@@ -29,6 +29,9 @@ def path_segment(value, name="value"):
     >>> path_segment("a b?c#d", "alias")
     'a%20b%3Fc%23d'
 
+    :param value: the value to encode; converted with ``str()``.
+    :param name: parameter name reported in the error.
+    :return: the percent-encoded segment.
     :raise ParamValueException: if the value is ``None`` or empty. An empty
         segment would silently collapse the path and hit the wrong endpoint.
     """
@@ -50,6 +53,10 @@ def path_int(value, name="value", minimum=0):
     >>> path_int(10, "offset")
     '10'
 
+    :param value: an ``int``, or a string holding one. ``bool`` is rejected.
+    :param name: parameter name reported in the error.
+    :param minimum: smallest accepted value.
+    :return: the integer as a string.
     :raise ParamValueException: if the value is not an integer, or is below
         ``minimum``.
     """
@@ -73,6 +80,10 @@ def join_path(base, *segments):
 
     >>> join_path("https://rapid.route4me.com/street_data/", "00602", "17")
     'https://rapid.route4me.com/street_data/00602/17/'
+
+    :param base: the base URL.
+    :param segments: path segments, already encoded.
+    :return: the joined URL, always ending with ``/``.
     """
     url = base.rstrip("/")
     for segment in segments:

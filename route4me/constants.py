@@ -1,3 +1,11 @@
+"""Enum-like constants for API parameter values.
+
+Each constant is a type built by :func:`enum`: its attributes are the members,
+e.g. ``TRAVEL_MODE.DRIVING == "Driving"``, and ``reverse_mapping`` maps each
+value back to its name.
+"""
+
+
 class _EnumBase:
     """Base of every type built by :func:`enum`; declares the shared attribute."""
 
@@ -18,11 +26,11 @@ def enum(**enums):
 
 
 def auto_enum(*sequential, **named):
-    """
-    Create enum
-    :param sequential:
-    :param named:
-    :return:
+    """Create an enum-like type whose positional members are numbered from 1.
+
+    :param sequential: member names, given the values 1, 2, 3, ... in order.
+    :param named: further member names mapped to explicit values.
+    :return: a new type, as returned by :func:`enum`.
     """
     enums = dict(zip(sequential, range(1, len(sequential) + 1)), **named)
     return enum(**enums)
