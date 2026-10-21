@@ -1,12 +1,20 @@
+class _EnumBase:
+    """Base of every type built by :func:`enum`; declares the shared attribute."""
+
+    #: Maps each value back to its member name, e.g. ``{1: "DRIVING"}``.
+    reverse_mapping: dict = {}
+
+
 def enum(**enums):
-    """
-    Create enums with custom values to help user set their params
-    :param enums:
-    :return:
+    """Create an enum-like type whose attributes are the given members.
+
+    :param enums: member names mapped to their API values.
+    :return: a new type with one attribute per member and a ``reverse_mapping``
+        dict from value to member name.
     """
     reverse = {value: key for key, value in enums.items()}
     enums["reverse_mapping"] = reverse
-    return type("Enum", (), enums)
+    return type("Enum", (_EnumBase,), enums)
 
 
 def auto_enum(*sequential, **named):
