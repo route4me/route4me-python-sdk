@@ -13,9 +13,10 @@ max-line-length=120
 
 [DESIGN]
 min-public-methods=0
+max-args=8
 
 [BASIC]
-class-rgx=^([A-Z][a-zA-Z0-9]*|[A-Z][A-Z0-9_]*)$
+class-rgx=^_?([A-Z][a-zA-Z0-9]*|[A-Z][A-Z0-9_]*)$
 
 [MESSAGES CONTROL]
 disable=

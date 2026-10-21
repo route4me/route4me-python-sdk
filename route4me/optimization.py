@@ -42,7 +42,6 @@ class Optimization(Base):
             raise ParamValueException("params", "Params are not complete")
 
     def delete_optimization(self, **kwargs):
-        self.json_data = kwargs
         if not self.check_required_params(kwargs, ["optimization_problem_ids"]):
             raise ParamValueException("params", "Params are not complete")
         return self._call_api(API_HOST, "delete", self.params, body=kwargs)

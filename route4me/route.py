@@ -79,21 +79,20 @@ class Route(Base):
         AttributeError if there is an error deleting a route
         """
         kwargs.update({"api_key": self.params["api_key"]})
-        if self.check_required_params(kwargs, ["route_id"]):
-            try:
-                self.response = self._request(ROUTE_HOST, kwargs, "delete")
-                payload = self.response.json()
-            except APIException as e:
-                return e.to_dict()
-            # The old handler was `except AttributeError: return response.errors`,
-            # which raised AttributeError itself whenever the payload was a dict
-            # without an `errors` attribute -- i.e. always. Return the payload
-            # untouched when it is not the expected `{"deleted": ...}` envelope.
-            if isinstance(payload, dict) and "deleted" in payload:
-                return payload["deleted"]
-            return payload
-        else:
+        if not self.check_required_params(kwargs, ["route_id"]):
             raise ParamValueException("params", "Params are not complete")
+        try:
+            self.response = self._request(ROUTE_HOST, kwargs, "delete")
+            payload = self.response.json()
+        except APIException as e:
+            return e.to_dict()
+        # The old handler was `except AttributeError: return response.errors`,
+        # which raised AttributeError itself whenever the payload was a dict
+        # without an `errors` attribute -- i.e. always. Return the payload
+        # untouched when it is not the expected `{"deleted": ...}` envelope.
+        if isinstance(payload, dict) and "deleted" in payload:
+            return payload["deleted"]
+        return payload
 
     def insert_address_into_route(self, addresses, route_id):
         params = {"route_id": route_id}
@@ -170,14 +169,13 @@ class Route(Base):
             raise ParamValueException("params", "Params are not complete")
 
     def resequence_multiple_stops(self, route_id, addresses_data):
-        if self.check_required_params(addresses_data, ["addresses"]):
-            params = {
-                "api_key": self.params["api_key"],
-                "route_id": route_id,
-            }
-            return self._call_api(ROUTE_HOST, "put", params, body=addresses_data)
-        else:
+        if not self.check_required_params(addresses_data, ["addresses"]):
             raise ParamValueException("params", "Params are not complete")
+        params = {
+            "api_key": self.params["api_key"],
+            "route_id": route_id,
+        }
+        return self._call_api(ROUTE_HOST, "put", params, body=addresses_data)
 
     def merge_routes(self, **kwargs):
         if not self.check_required_params(kwargs, ["route_ids"]):
@@ -194,15 +192,14 @@ class Route(Base):
         """
         Update route destination custom data using PUT
         """
-        if self.check_required_params(kwargs, ["route_id", "route_destination_id"]):
-            params = {
-                "api_key": self.params["api_key"],
-                "route_id": kwargs.pop("route_id"),
-                "route_destination_id": kwargs.pop("route_destination_id"),
-            }
-            return self._call_api(ADDRESS_HOST, "put", params, body=kwargs)
-        else:
+        if not self.check_required_params(kwargs, ["route_id", "route_destination_id"]):
             raise ParamValueException("params", "Params are not complete")
+        params = {
+            "api_key": self.params["api_key"],
+            "route_id": kwargs.pop("route_id"),
+            "route_destination_id": kwargs.pop("route_destination_id"),
+        }
+        return self._call_api(ADDRESS_HOST, "put", params, body=kwargs)
 
     def export_route(self, route_id, output_format="csv"):
         warnings.warn("export_route is deprecated. Please use export_route_v5", DeprecationWarning, stacklevel=2)

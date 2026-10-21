@@ -1,5 +1,17 @@
 from .exceptions import ParamValueException
 
+#: How each ``vtype`` validates a value. An unknown ``vtype`` accepts anything.
+_CHECKS = {
+    str: lambda field, value: isinstance(value, str),
+    int: lambda field, value: isinstance(value, int),
+    "numeric": lambda field, value: isinstance(value, (int, float)),
+    "float_strict": lambda field, value: isinstance(value, float),
+    "boolish": lambda field, value: isinstance(value, int) and 0 <= value <= 1,
+    "enum": lambda field, value: value in field.enum_cls.reverse_mapping,
+    "oneof": lambda field, value: value in field.valid_values,
+    "range": lambda field, value: field.valid_range[0] <= value <= field.valid_range[1],
+}
+
 
 class ValidatedField:
     """
@@ -15,6 +27,7 @@ class ValidatedField:
         self.enum_cls = enum_cls
         self.valid_values = valid_values
         self.valid_range = valid_range
+        self.attr_name = None
 
     def __set_name__(self, owner, attr_name):
         self.attr_name = attr_name
@@ -29,31 +42,7 @@ class ValidatedField:
         return setter
 
     def _validate_and_set(self, obj, value):
-        vtype = self.vtype
-        if vtype is str:
-            if not isinstance(value, str):
-                raise ParamValueException(self.name, self.error_msg)
-        elif vtype is int:
-            if not isinstance(value, int):
-                raise ParamValueException(self.name, self.error_msg)
-        elif vtype == "numeric":
-            if not isinstance(value, (int, float)):
-                raise ParamValueException(self.name, self.error_msg)
-        elif vtype == "float_strict":
-            if not isinstance(value, float):
-                raise ParamValueException(self.name, self.error_msg)
-        elif vtype == "boolish":
-            if not (isinstance(value, int) and 0 <= value <= 1):
-                raise ParamValueException(self.name, self.error_msg)
-        elif vtype == "enum":
-            if value not in self.enum_cls.reverse_mapping.keys():
-                raise ParamValueException(self.name, self.error_msg)
-        elif vtype == "oneof":
-            if value not in self.valid_values:
-                raise ParamValueException(self.name, self.error_msg)
-        elif vtype == "range":
-            if not (self.valid_range[0] <= value <= self.valid_range[1]):
-                raise ParamValueException(self.name, self.error_msg)
-
-        copy_fn = getattr(obj, f"_copy_{self.target}")
-        copy_fn({self.name: value})
+        check = _CHECKS.get(self.vtype)
+        if check is not None and not check(self, value):
+            raise ParamValueException(self.name, self.error_msg)
+        getattr(obj, f"_copy_{self.target}")({self.name: value})

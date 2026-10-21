@@ -41,7 +41,7 @@ def clean_dict(data):
             if cleaned_item or cleaned_item == "":
                 cleaned_list.append(cleaned_item)
         return cleaned_list if cleaned_list else None
-    elif isinstance(data, dict):
+    if isinstance(data, dict):
         cleaned_dict = {}
         for k, v in data.items():
             cleaned_v = clean_dict(v)
@@ -49,9 +49,8 @@ def clean_dict(data):
             if cleaned_v:
                 cleaned_dict[k] = cleaned_v
         return cleaned_dict if cleaned_dict else None
-    else:
-        # For non-container type, return as is
-        return data
+    # For non-container type, return as is
+    return data
 
 
 def is_valid_datetime(s, date_format="%Y-%m-%d %H:%M:%S"):

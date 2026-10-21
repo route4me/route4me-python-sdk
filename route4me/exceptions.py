@@ -62,7 +62,7 @@ class APIException(Exception):
         """
         return self.url
 
-    def to_dict(self):
+    def to_dict(self):  # pylint: disable=too-many-return-statements  # one return per documented error shape
         """
         Return a dictionary representation of the exception
 

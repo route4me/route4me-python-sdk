@@ -1,5 +1,3 @@
-import json
-
 from .api_endpoints import (
     GET_USERS_HOST,
     MEMBER_AUTHENTICATE,
@@ -11,7 +9,7 @@ from .api_endpoints import (
     WEBINAR_REGISTER,
 )
 from .base import Base
-from .exceptions import APIException, ParamValueException
+from .exceptions import ParamValueException
 
 
 class Members(Base):
@@ -33,7 +31,7 @@ class Members(Base):
         :param kwargs:
         :return: API response content
         """
-        if self.check_required_params(
+        if not self.check_required_params(
             kwargs,
             [
                 "member_id",
@@ -46,16 +44,8 @@ class Members(Base):
                 "format",
             ],
         ):
-            try:
-                response = self._request(USER_LICENSE_HOST, self.params, "post", json=kwargs)
-                try:
-                    return json.loads(response.content)
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
             raise ParamValueException("order", "Missing required params")
+        return self._request_decoded(USER_LICENSE_HOST, self.params, "post", json=kwargs)
 
     def verify_device_license(self, **kwargs):
         """
@@ -63,7 +53,7 @@ class Members(Base):
         :param kwargs:
         :return: API response content
         """
-        if self.check_required_params(
+        if not self.check_required_params(
             kwargs,
             [
                 "device_id",
@@ -71,16 +61,8 @@ class Members(Base):
                 "format",
             ],
         ):
-            try:
-                response = self._request(VERIFY_DEVICE_LICENSE, self.params, "post", json=kwargs)
-                try:
-                    return json.loads(response.content)
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
             raise ParamValueException("order", "Missing required params")
+        return self._request_decoded(VERIFY_DEVICE_LICENSE, self.params, "post", json=kwargs)
 
     def member_authenticate(self, **kwargs):
         """
@@ -88,25 +70,17 @@ class Members(Base):
         :param kwargs:
         :return: API response content
         """
-        if self.check_required_params(
+        if not self.check_required_params(
             kwargs,
             [
                 "email",
                 "password",
             ],
         ):
-            kwargs["strEmail"] = kwargs.pop("email")
-            kwargs["strPassword"] = kwargs.pop("password")
-            try:
-                response = self._request(MEMBER_AUTHENTICATE, self.params, "post", json=kwargs)
-                try:
-                    return json.loads(response.content)
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
             raise ParamValueException("order", "Missing required params")
+        kwargs["strEmail"] = kwargs.pop("email")
+        kwargs["strPassword"] = kwargs.pop("password")
+        return self._request_decoded(MEMBER_AUTHENTICATE, self.params, "post", json=kwargs)
 
     def get_users(self, **kwargs):
         """
@@ -118,14 +92,7 @@ class Members(Base):
                 "api_key": self.params["api_key"],
             }
         )
-        try:
-            response = self._request(GET_USERS_HOST, kwargs, "get")
-            try:
-                return response.json()
-            except ValueError:
-                return response.content
-        except APIException as e:
-            return e.to_dict()
+        return self._request_decoded(GET_USERS_HOST, kwargs, "get")
 
     def get_api_key_users(self, **kwargs):
         """
@@ -137,14 +104,7 @@ class Members(Base):
                 "api_key": self.params["api_key"],
             }
         )
-        try:
-            response = self._request(USER_URL, kwargs, "get")
-            try:
-                return response.json()
-            except ValueError:
-                return response.content
-        except APIException as e:
-            return e.to_dict()
+        return self._request_decoded(USER_URL, kwargs, "get")
 
     def validate_session(self, **kwargs):
         """
@@ -157,23 +117,15 @@ class Members(Base):
                 "api_key": self.params["api_key"],
             }
         )
-        if self.check_required_params(
+        if not self.check_required_params(
             kwargs,
             [
                 "session_guid",
                 "member_id",
             ],
         ):
-            try:
-                response = self._request(VALIDATE_SESSION, kwargs, "get")
-                try:
-                    return json.loads(response.content)
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
             raise ParamValueException("order", "Missing required params")
+        return self._request_decoded(VALIDATE_SESSION, kwargs, "get")
 
     def webinar_registration(self, **kwargs):
         """
@@ -181,20 +133,12 @@ class Members(Base):
         :param kwargs:
         :return: API response content
         """
-        if self.check_required_params(
+        if not self.check_required_params(
             kwargs,
             ["email_address", "first_name", "last_name", "phone_number", "company_name", "member_id", "webiinar_date"],
         ):
-            try:
-                response = self._request(WEBINAR_REGISTER, self.params, "post", data=kwargs)
-                try:
-                    return json.loads(response.content)
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
             raise ParamValueException("order", "Missing required params")
+        return self._request_decoded(WEBINAR_REGISTER, self.params, "post", data=kwargs)
 
     def register(self, **kwargs):
         """
@@ -202,7 +146,7 @@ class Members(Base):
         :param kwargs:
         :return: API response content
         """
-        if self.check_required_params(
+        if not self.check_required_params(
             kwargs,
             [
                 "industry",
@@ -217,22 +161,14 @@ class Members(Base):
                 "format",
             ],
         ):
-            params = {"plan": kwargs.pop("plan")}
-            kwargs["strIndustry"] = kwargs.pop("industry")
-            kwargs["strFirstName"] = kwargs.pop("first_name")
-            kwargs["strLastName"] = kwargs.pop("last_name")
-            kwargs["strEmail"] = kwargs.pop("email_address")
-            kwargs["chkTerms"] = kwargs.pop("check_terms")
-            kwargs["device_type"] = kwargs.pop("device_type")
-            kwargs["strPassword_1"] = kwargs.pop("password_1")
-            kwargs["strPassword_2"] = kwargs.pop("password_2")
-            try:
-                response = self._request(REGISTER_ACTION, params, "post", data=kwargs)
-                try:
-                    return response.json()
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
             raise ParamValueException("order", "Missing required params")
+        params = {"plan": kwargs.pop("plan")}
+        kwargs["strIndustry"] = kwargs.pop("industry")
+        kwargs["strFirstName"] = kwargs.pop("first_name")
+        kwargs["strLastName"] = kwargs.pop("last_name")
+        kwargs["strEmail"] = kwargs.pop("email_address")
+        kwargs["chkTerms"] = kwargs.pop("check_terms")
+        kwargs["device_type"] = kwargs.pop("device_type")
+        kwargs["strPassword_1"] = kwargs.pop("password_1")
+        kwargs["strPassword_2"] = kwargs.pop("password_2")
+        return self._request_decoded(REGISTER_ACTION, params, "post", data=kwargs)

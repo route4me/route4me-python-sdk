@@ -1,3 +1,5 @@
+import json
+
 from route4me.utils import is_valid_datetime
 
 from ._fields import ValidatedField
@@ -155,7 +157,7 @@ class Base:
         return isinstance(obj, str)
 
     def format(self, set_format):
-        if set_format in FORMAT.reverse_mapping.keys():
+        if set_format in FORMAT.reverse_mapping:
             self._copy_param({"format": set_format})
         else:
             raise ParamValueException("format", "Must be CSV, SERIALIZED, XML")
@@ -167,7 +169,7 @@ class Base:
             raise ParamValueException("member_id", "Must be integer")
 
     def device_type(self, device_type, target="data"):
-        if device_type in DEVICE_TYPE.reverse_mapping.keys():
+        if device_type in DEVICE_TYPE.reverse_mapping:
             getattr(self, f"_copy_{target}")({"device_type": device_type})
         else:
             raise ParamValueException(
@@ -215,7 +217,7 @@ class Base:
         # to it, and this is the only place a resource reaches into the client.
         return self.api._make_request(endpoint, params, send, **kwargs)  # pylint: disable=protected-access
 
-    def _call_api(self, endpoint, method, params, required=None, body=None, body_key="json"):
+    def _call_api(self, endpoint, method, params, *, required=None, body=None, body_key="json"):
         """Validate required parameters, send the request and decode the reply.
 
         :param endpoint: absolute URL of the API endpoint.
@@ -236,6 +238,26 @@ class Base:
             return self.response.json()
         except APIException as e:
             return e.to_dict()
+
+    def _request_decoded(self, endpoint, params, method, **kwargs):
+        """Send a request and decode the reply, tolerating a body that is not JSON.
+
+        :param endpoint: absolute URL of the API endpoint.
+        :param params: query parameters; the client adds ``api_key`` itself.
+        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param kwargs: ``data``, ``json``, ``files`` or ``timeout``, passed through.
+        :return: the decoded JSON reply, the raw body as bytes when it is not
+            JSON, or the error dict from :meth:`APIException.to_dict` when the
+            API answers with an error.
+        """
+        try:
+            response = self._request(endpoint, params, method, **kwargs)
+        except APIException as e:
+            return e.to_dict()
+        try:
+            return json.loads(response.content)
+        except ValueError:
+            return response.content
 
     def _copy_data(self, params):
         self.data["parameters"].update(params)
@@ -273,7 +295,7 @@ class Base:
         """
         for k, v in kwargs.items():
             try:
-                setter = self.__getattribute__(k)
+                setter = getattr(self, k)
             except AttributeError:
                 raise ParamValueException(k, "Not supported") from None
             if not callable(setter):

@@ -1,5 +1,5 @@
-import json
 import threading
+from json import dump, dumps
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -34,15 +34,16 @@ HEADERS = {
 }
 
 
-class Route4Me:
+class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute per API resource
     """
     Route4Me Python SDK
     """
 
-    def __init__(
+    # Public constructor: each keyword mirrors an option of route4me.config.Route4MeConfig.
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments,too-many-locals
         self,
         key,
-        headers=HEADERS,
+        headers=None,
         redirects=True,
         verify_ssl=True,
         proxies=None,
@@ -59,7 +60,8 @@ class Route4Me:
     ):
         """
         :param key: Route4Me API key.
-        :param headers: request headers; copied, never shared between clients.
+        :param headers: request headers, copied per client. ``None`` (the default)
+            uses :data:`HEADERS`.
         :param redirects: follow redirects (also sent to the API as
             ``redirect=0`` when disabled).
         :param verify_ssl: verify TLS certificates. Leave this on.
@@ -281,9 +283,9 @@ class Route4Me:
                     "redirect": 0,
                 }
             )
-        return self._make_request(API_HOST, params, request_method, data=json.dumps(self.optimization.data))
+        return self._make_request(API_HOST, params, request_method, data=dumps(self.optimization.data))
 
-    def _request_post(self, url, request_params, data=None, json=None, files=None, timeout=UNSET):
+    def _request_post(self, url, request_params, *, data=None, json=None, files=None, timeout=UNSET):
         """
         POST request
         :param url:
@@ -304,7 +306,7 @@ class Route4Me:
             timeout=self._timeout(timeout),
         )
 
-    def _request_get(self, url, request_params, data=None, timeout=UNSET):
+    def _request_get(self, url, request_params, *, data=None, timeout=UNSET):
         """
         GET request
         :param url:
@@ -322,7 +324,7 @@ class Route4Me:
             timeout=self._timeout(timeout),
         )
 
-    def _request_put(self, url, request_params, json=None, data=None, timeout=UNSET):
+    def _request_put(self, url, request_params, *, json=None, data=None, timeout=UNSET):
         """
         PUT request
         :param url:
@@ -340,7 +342,7 @@ class Route4Me:
             timeout=self._timeout(timeout),
         )
 
-    def _request_delete(self, url, request_params, data=None, json=None, timeout=UNSET):
+    def _request_delete(self, url, request_params, *, data=None, json=None, timeout=UNSET):
         """
         DELETE request
         :param url:
@@ -432,7 +434,7 @@ class Route4Me:
         """
         if self.response:
             with open(file_name, "w") as f:
-                json.dump(
+                dump(
                     self.response.json(),
                     f,
                     ensure_ascii=False,
@@ -448,7 +450,7 @@ class Route4Me:
         """
         if self.optimization.data:
             with open(file_name, "w") as f:
-                json.dump(
+                dump(
                     self.optimization.data,
                     f,
                     ensure_ascii=False,

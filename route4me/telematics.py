@@ -49,7 +49,7 @@ class Telematics(Base):
         """
         if isinstance(vendor, dict):
             features = [x["name"] for x in vendor.get("features", [])]
-            print("{}\t{}\t{}".format(vendor.get("id"), vendor.get("name"), ", ".join(features)), file=file)
+            print(f"{vendor.get('id')}\t{vendor.get('name')}\t{', '.join(features)}", file=file)
 
     def get_vendors(self):
         if self.check_required_params(

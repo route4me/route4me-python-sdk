@@ -169,12 +169,14 @@ max-line-length = 120
 # The public enum types in constants.py and bundling.py (TRAVEL_MODE,
 # BUNDLING_MODE, ...) are built by constants.enum() and read like constants.
 # Renaming them would break every caller, so UPPER_CASE class names are allowed.
-class-rgx = "^([A-Z][a-zA-Z0-9]*|[A-Z][A-Z0-9_]*)$"
+class-rgx = "^_?([A-Z][a-zA-Z0-9]*|[A-Z][A-Z0-9_]*)$"
 
 [tool.pylint.design]
 # Resource classes map one method to one API operation, so they are wide by nature.
 max-public-methods = 40
 max-attributes = 12
+# SDK methods mirror API parameters; positional ones stay capped at the default 5.
+max-args = 8
 min-public-methods = 0
 
 [tool.pylint.parameter_documentation]

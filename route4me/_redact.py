@@ -69,7 +69,7 @@ def _drop_query(url):
     """
     try:
         return url.split("?", 1)[0] + "?" + REDACTED
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return REDACTED
 
 
@@ -93,7 +93,7 @@ def redact_url(url):
         pairs = parse_qsl(parts.query, keep_blank_values=True)
         cleaned = [(k, REDACTED if k.lower() in SENSITIVE_PARAMS else v) for k, v in pairs]
         return urlunsplit(parts._replace(query=urlencode(cleaned)))
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return _drop_query(url)
 
 
@@ -116,7 +116,7 @@ def redact_text(text, *secrets):
                 # Also catch a percent- or URL-encoded appearance.
                 text = re.sub(re.escape(secret), REDACTED, text, flags=re.IGNORECASE)
         return text
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return REDACTED
 
 
@@ -130,7 +130,7 @@ def redact_headers(headers):
         return {}
     try:
         return {k: (REDACTED if str(k).lower() in SENSITIVE_HEADERS else v) for k, v in dict(headers).items()}
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return {REDACTED: REDACTED}
 
 
@@ -140,5 +140,5 @@ def redact_params(params):
         return {}
     try:
         return {k: (REDACTED if str(k).lower() in SENSITIVE_PARAMS else v) for k, v in dict(params).items()}
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return {REDACTED: REDACTED}

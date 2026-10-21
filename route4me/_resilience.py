@@ -153,7 +153,7 @@ class CircuitBreaker:
                 callback = self.on_open
                 threshold, timeout = self._failures, self.reset_timeout
             else:
-                callback = None
+                callback, threshold, timeout = None, None, None
         if callback is not None:
             logger.warning(
                 "Route4Me circuit breaker opened after %d consecutive failures; requests will fail fast for %.1fs",
@@ -164,7 +164,7 @@ class CircuitBreaker:
             # deadlock the breaker by touching it re-entrantly.
             try:
                 callback(exc, timeout)
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught  # a user callback must never break a request
                 logger.exception("Route4Me on_circuit_breaker_open callback raised")
 
     def reset(self):
@@ -210,6 +210,7 @@ def should_retry_exception(exc, method):
 def execute_with_retry(
     send,
     method,
+    *,
     retry_count=0,
     initial_delay=0.2,
     circuit_breaker=None,
@@ -251,7 +252,7 @@ def execute_with_retry(
                 circuit_breaker.record_failure(exc)
             if attempt >= attempts or not should_retry_exception(exc, method):
                 raise
-            _wait(attempt, initial_delay, None, exc, on_retry, sleep, rng)
+            _wait(attempt, initial_delay, retry_after=None, outcome=exc, on_retry=on_retry, sleep=sleep, rng=rng)
             continue
         except requests.RequestException as exc:
             # Not transient (e.g. TooManyRedirects, InvalidURL): the breaker
@@ -270,21 +271,23 @@ def execute_with_retry(
             return response
 
         retry_after = parse_retry_after(response.headers.get("Retry-After"))
-        _wait(attempt, initial_delay, retry_after, response, on_retry, sleep, rng)
+        _wait(
+            attempt, initial_delay, retry_after=retry_after, outcome=response, on_retry=on_retry, sleep=sleep, rng=rng
+        )
 
     # Unreachable: the loop either returns or raises. Kept as a guard so a
     # future edit to the control flow fails loudly instead of returning None.
     raise last_exc or RuntimeError("retry loop exited without a result")
 
 
-def _wait(attempt, initial_delay, retry_after, outcome, on_retry, sleep, rng):
+def _wait(attempt, initial_delay, *, retry_after, outcome, on_retry, sleep, rng):
     """Sleep before the next attempt, honouring ``Retry-After`` when present."""
     delay = retry_after if retry_after is not None else backoff_delay(attempt, initial_delay, rng=rng)
     logger.debug("Route4Me retrying after %.3fs (attempt %d)", delay, attempt)
     if on_retry is not None:
         try:
             on_retry(outcome, delay, attempt)
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught  # a user callback must never break a request
             logger.exception("Route4Me on_retry callback raised")
     if delay > 0:
         sleep(delay)

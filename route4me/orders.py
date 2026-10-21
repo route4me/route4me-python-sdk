@@ -1,8 +1,6 @@
-import json
-
 from .api_endpoints import ORDERS_HOST
 from .base import Base
-from .exceptions import APIException, ParamValueException
+from .exceptions import ParamValueException
 
 
 class Order(Base):
@@ -16,17 +14,9 @@ class Order(Base):
         Base.__init__(self, api)
 
     def create_order(self, **kwargs):
-        if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
-            try:
-                response = self._request(ORDERS_HOST, self.params, "post", json=kwargs)
-                try:
-                    return response.json()
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, self.REQUIRED_FIELDS):
             raise ParamValueException("order", "Missing required params")
+        return self._request_decoded(ORDERS_HOST, self.params, "post", json=kwargs)
 
     def get_order(self, **kwargs):
         """
@@ -35,17 +25,9 @@ class Order(Base):
         :return: API response content
         """
         kwargs.update({"api_key": self.params["api_key"]})
-        if self.check_required_params(kwargs, ["order_id", "api_key"]):
-            try:
-                response = self._request(ORDERS_HOST, kwargs, "get")
-                try:
-                    return json.loads(response.content)
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, ["order_id", "api_key"]):
             raise ParamValueException("order", "Missing required params")
+        return self._request_decoded(ORDERS_HOST, kwargs, "get")
 
     def update_order(self, **kwargs):
         """
@@ -53,17 +35,9 @@ class Order(Base):
         :param kwargs:
         :return: API response content
         """
-        if self.check_required_params(kwargs, self.REQUIRED_FIELDS):
-            try:
-                response = self._request(ORDERS_HOST, self.params, "put", json=kwargs)
-                try:
-                    return json.loads(response.content)
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, self.REQUIRED_FIELDS):
             raise ParamValueException("order", "Missing required params")
+        return self._request_decoded(ORDERS_HOST, self.params, "put", json=kwargs)
 
     def delete_order(self, **kwargs):
         """
@@ -71,14 +45,6 @@ class Order(Base):
         :param kwargs:
         :return: API response content
         """
-        if self.check_required_params(kwargs, ["order_ids"]):
-            try:
-                response = self._request(ORDERS_HOST, self.params, "delete", json=kwargs)
-                try:
-                    return json.loads(response.content)
-                except ValueError:
-                    return response.content
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, ["order_ids"]):
             raise ParamValueException("order", "Missing required params")
+        return self._request_decoded(ORDERS_HOST, self.params, "delete", json=kwargs)
