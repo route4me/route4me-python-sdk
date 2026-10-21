@@ -124,21 +124,38 @@ class TestMembersPosts:
             getattr(client.members, method)(**kwargs)
 
 
+class TestMissingParameters:
+    def test_the_error_names_the_missing_parameters(self, client):
+        with pytest.raises(ParamValueException) as excinfo:
+            client.members.member_authenticate(email="ada@example.com")
+
+        assert excinfo.value.param == "password"
+
+
 class TestWebinarRegistration:
     def test_posts_a_form(self, client, mocked, last_request):
         mocked.add(responses.POST, WEBINAR_REGISTER, json={"status": True}, status=200)
 
-        client.members.webinar_registration(webiinar_date="2026-11-01 10:00:00", **WEBINAR)
+        client.members.webinar_registration(webinar_date="2026-11-01 10:00:00", **WEBINAR)
 
         assert parse_qs(last_request().body)["email_address"] == ["ada@example.com"]
 
-    @pytest.mark.xfail(
-        strict=True, raises=ParamValueException, reason="webinar_registration requires the misspelled key webiinar_date"
-    )
-    def test_accepts_webinar_date(self, client, mocked):
+    def test_sends_webinar_date(self, client, mocked, last_request):
         mocked.add(responses.POST, WEBINAR_REGISTER, json={"status": True}, status=200)
 
         client.members.webinar_registration(webinar_date="2026-11-01 10:00:00", **WEBINAR)
+
+        assert parse_qs(last_request().body)["webinar_date"] == ["2026-11-01 10:00:00"]
+
+    def test_the_old_misspelling_still_works_with_a_warning(self, client, mocked, last_request):
+        mocked.add(responses.POST, WEBINAR_REGISTER, json={"status": True}, status=200)
+
+        with pytest.warns(DeprecationWarning):
+            client.members.webinar_registration(webiinar_date="2026-11-01 10:00:00", **WEBINAR)
+
+        form = parse_qs(last_request().body)
+        assert form["webinar_date"] == ["2026-11-01 10:00:00"]
+        assert "webiinar_date" not in form
 
 
 class TestMembersGets:

@@ -1,5 +1,7 @@
 """The :class:`Members` resource: users, sessions, licenses and registration."""
 
+import warnings
+
 from .api_endpoints import (
     GET_USERS_HOST,
     MEMBER_AUTHENTICATE,
@@ -45,20 +47,19 @@ class Members(Base):
             not JSON, or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required parameter is missing.
         """
-        if not self.check_required_params(
-            kwargs,
-            [
-                "member_id",
-                "session_guid",
-                "device_id",
-                "device_type",
-                "subscription_name",
-                "token",
-                "payload",
-                "format",
-            ],
-        ):
-            raise ParamValueException("order", "Missing required params")
+        required = [
+            "member_id",
+            "session_guid",
+            "device_id",
+            "device_type",
+            "subscription_name",
+            "token",
+            "payload",
+            "format",
+        ]
+        missing = self._missing(kwargs, required)
+        if missing:
+            raise ParamValueException(", ".join(missing), "Missing required params")
         return self._request_decoded(USER_LICENSE_HOST, self.params, "post", json=kwargs)
 
     def verify_device_license(self, **kwargs):
@@ -72,15 +73,10 @@ class Members(Base):
             not JSON, or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required parameter is missing.
         """
-        if not self.check_required_params(
-            kwargs,
-            [
-                "device_id",
-                "device_type",
-                "format",
-            ],
-        ):
-            raise ParamValueException("order", "Missing required params")
+        required = ["device_id", "device_type", "format"]
+        missing = self._missing(kwargs, required)
+        if missing:
+            raise ParamValueException(", ".join(missing), "Missing required params")
         return self._request_decoded(VERIFY_DEVICE_LICENSE, self.params, "post", json=kwargs)
 
     def member_authenticate(self, **kwargs):
@@ -95,14 +91,10 @@ class Members(Base):
             not JSON, or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required parameter is missing.
         """
-        if not self.check_required_params(
-            kwargs,
-            [
-                "email",
-                "password",
-            ],
-        ):
-            raise ParamValueException("order", "Missing required params")
+        required = ["email", "password"]
+        missing = self._missing(kwargs, required)
+        if missing:
+            raise ParamValueException(", ".join(missing), "Missing required params")
         kwargs["strEmail"] = kwargs.pop("email")
         kwargs["strPassword"] = kwargs.pop("password")
         return self._request_decoded(MEMBER_AUTHENTICATE, self.params, "post", json=kwargs)
@@ -155,14 +147,10 @@ class Members(Base):
                 "api_key": self.params["api_key"],
             }
         )
-        if not self.check_required_params(
-            kwargs,
-            [
-                "session_guid",
-                "member_id",
-            ],
-        ):
-            raise ParamValueException("order", "Missing required params")
+        required = ["session_guid", "member_id"]
+        missing = self._missing(kwargs, required)
+        if missing:
+            raise ParamValueException(", ".join(missing), "Missing required params")
         return self._request_decoded(VALIDATE_SESSION, kwargs, "get")
 
     def webinar_registration(self, **kwargs):
@@ -177,12 +165,26 @@ class Members(Base):
         :return: the decoded JSON reply, the raw body (``bytes``) when it is
             not JSON, or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required parameter is missing.
+
+        .. versionchanged:: 1.0.0
+           Requires and sends ``webinar_date``. The misspelled ``webiinar_date``
+           it used to require still works, with a ``DeprecationWarning``.
         """
-        if not self.check_required_params(
-            kwargs,
-            ["email_address", "first_name", "last_name", "phone_number", "company_name", "member_id", "webiinar_date"],
-        ):
-            raise ParamValueException("order", "Missing required params")
+        if "webiinar_date" in kwargs and "webinar_date" not in kwargs:
+            warnings.warn("webiinar_date is deprecated; pass webinar_date", DeprecationWarning, stacklevel=2)
+            kwargs["webinar_date"] = kwargs.pop("webiinar_date")
+        required = [
+            "email_address",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "company_name",
+            "member_id",
+            "webinar_date",
+        ]
+        missing = self._missing(kwargs, required)
+        if missing:
+            raise ParamValueException(", ".join(missing), "Missing required params")
         return self._request_decoded(WEBINAR_REGISTER, self.params, "post", data=kwargs)
 
     def register(self, **kwargs):
@@ -202,22 +204,21 @@ class Members(Base):
             not JSON, or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required parameter is missing.
         """
-        if not self.check_required_params(
-            kwargs,
-            [
-                "industry",
-                "first_name",
-                "last_name",
-                "email_address",
-                "check_terms",
-                "device_type",
-                "plan",
-                "password_1",
-                "password_2",
-                "format",
-            ],
-        ):
-            raise ParamValueException("order", "Missing required params")
+        required = [
+            "industry",
+            "first_name",
+            "last_name",
+            "email_address",
+            "check_terms",
+            "device_type",
+            "plan",
+            "password_1",
+            "password_2",
+            "format",
+        ]
+        missing = self._missing(kwargs, required)
+        if missing:
+            raise ParamValueException(", ".join(missing), "Missing required params")
         params = {"plan": kwargs.pop("plan")}
         kwargs["strIndustry"] = kwargs.pop("industry")
         kwargs["strFirstName"] = kwargs.pop("first_name")

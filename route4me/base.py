@@ -376,6 +376,16 @@ class Base:
             requirements = []
         return set(requirements).issubset(set(params.keys()))
 
+    @staticmethod
+    def _missing(params, requirements):
+        """Return the names in ``requirements`` that ``params`` lacks.
+
+        :param params: the parameters given.
+        :param requirements: the names that must be present.
+        :return: the missing names, in the order of ``requirements``.
+        """
+        return [name for name in requirements if name not in params]
+
     def validate_params(self, **kwargs):
         """Validate and apply each ``name=value`` via its field setter.
 
