@@ -37,8 +37,9 @@ import requests
 logger = logging.getLogger(__name__)
 
 #: HTTP statuses worth retrying. 408 Request Timeout, 429 Too Many Requests,
-#: and the 5xx family that indicates a transient server-side fault.
-RETRYABLE_STATUSES = frozenset({408, 429, 500, 502, 503, 504})
+#: the 5xx family that indicates a transient server-side fault, and the
+#: Cloudflare origin errors 520-524 (524 is a timeout at the edge, issue #19).
+RETRYABLE_STATUSES = frozenset({408, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524})
 
 #: Transport-level exceptions worth retrying. Note ``requests.Timeout`` is a
 #: subclass of ``RequestException`` but *not* of ``ConnectionError``.
@@ -47,13 +48,17 @@ RETRYABLE_EXCEPTIONS = (
     requests.Timeout,
 )
 
-#: Only idempotent verbs are retried.
+#: Only verbs that are safe to repeat are retried.
 #:
 #: POST is excluded deliberately. Retrying ``POST /orders-platform/batch-create``
 #: after a 503 can create the orders twice -- the server may well have processed
 #: the first request and failed only while responding. The C# Polly policy does
 #: retry POST; that is a hazard this SDK does not reproduce.
-RETRYABLE_METHODS = frozenset({"GET", "HEAD", "OPTIONS", "PUT", "DELETE"})
+#:
+#: PUT is excluded for the same reason: ``PUT /api.v4/route.php`` appends the
+#: addresses it is given, so replaying it after a timeout can insert the stops
+#: twice (issue #19).
+RETRYABLE_METHODS = frozenset({"GET", "HEAD", "OPTIONS", "DELETE"})
 
 #: Ceiling on a server-supplied ``Retry-After``. Without it, a misconfigured
 #: proxy sending ``Retry-After: 86400`` would hang the caller for a day.

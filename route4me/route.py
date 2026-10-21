@@ -15,6 +15,7 @@ from .api_endpoints import (
     SHARE_ROUTE_HOST,
 )
 from .base import Base
+from .config import UNSET
 from .exceptions import APIException, ParamValueException
 
 
@@ -168,7 +169,7 @@ class Route(Base):
             return payload["deleted"]
         return payload
 
-    def insert_address_into_route(self, addresses, route_id):
+    def insert_address_into_route(self, addresses, route_id, *, timeout=UNSET):
         """Add addresses to an existing route.
 
         Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
@@ -178,13 +179,16 @@ class Route(Base):
             dict with at least ``address``, ``lat`` and ``lng``. An address
             with a ``sequence_no`` is placed at that position.
         :param route_id: ID of the route.
+        :param timeout: read timeout for this call, in seconds, or a
+            ``(connect, read)`` pair. Inserting into a long route can take
+            longer than the 30-second default. Unset uses the client's timeout.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
         """
         params = {"route_id": route_id}
-        return self._update_route(params, addresses)
+        return self._update_route(params, addresses, timeout=timeout)
 
-    def move_addresses_from_route(self, addresses, route_id):
+    def move_addresses_from_route(self, addresses, route_id, *, timeout=UNSET):
         """Move existing destinations into a route, at the given positions.
 
         Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
@@ -194,13 +198,16 @@ class Route(Base):
         :param addresses: the body: ``{"addresses": [...]}``, each address a
             dict with its ``route_destination_id`` and new ``sequence_no``.
         :param route_id: ID of the route the destinations go to.
+        :param timeout: read timeout for this call, in seconds, or a
+            ``(connect, read)`` pair. Inserting into a long route can take
+            longer than the 30-second default. Unset uses the client's timeout.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
         """
         params = {"route_id": route_id}
-        return self._update_route(params, addresses)
+        return self._update_route(params, addresses, timeout=timeout)
 
-    def update_route_parameters(self, data, route_id):
+    def update_route_parameters(self, data, route_id, *, timeout=UNSET):
         """Update the parameters of a route.
 
         Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
@@ -208,13 +215,16 @@ class Route(Base):
 
         :param data: the body, e.g. ``{"parameters": {"route_name": "Monday"}}``.
         :param route_id: ID of the route.
+        :param timeout: read timeout for this call, in seconds, or a
+            ``(connect, read)`` pair. Inserting into a long route can take
+            longer than the 30-second default. Unset uses the client's timeout.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
         """
         params = {"route_id": route_id}
-        return self._update_route(params, data)
+        return self._update_route(params, data, timeout=timeout)
 
-    def update_route(self, data, route_id):
+    def update_route(self, data, route_id, *, timeout=UNSET):
         """Update the fields of a route.
 
         Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
@@ -222,11 +232,14 @@ class Route(Base):
 
         :param data: the body: the route fields to change.
         :param route_id: ID of the route.
+        :param timeout: read timeout for this call, in seconds, or a
+            ``(connect, read)`` pair. Inserting into a long route can take
+            longer than the 30-second default. Unset uses the client's timeout.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
         """
         params = {"route_id": route_id}
-        return self._update_route(params, data)
+        return self._update_route(params, data, timeout=timeout)
 
     def insert_address_into_route_optimal_position(self, **kwargs):
         """Insert addresses into a route, each at its optimal position.
@@ -429,17 +442,22 @@ class Route(Base):
         self.response = self._request(EXPORTER, {}, "post", data=data)
         return self.response.content
 
-    def _update_route(self, params, data):
-        """Send ``PUT /api.v4/route.php`` with ``data`` as the body.
+    def _update_route(self, params, data, *, timeout=UNSET):
+        """Send ``PUT /api.v4/route.php`` with ``data`` as the JSON body.
 
         :param params: query parameters, including ``route_id``.
         :param data: the request body.
+        :param timeout: read timeout for this call; unset uses the client's.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
+
+        .. versionchanged:: 1.0.0
+           The body is JSON again. Since 0.1.6.0 it had been sent as form data,
+           which the API cannot read for nested addresses or parameters (#19).
         """
         params.update({"api_key": self.api.key})
         try:
-            response = self._request(ROUTE_HOST, params, "put", data=data)
+            response = self._request(ROUTE_HOST, params, "put", json=data, timeout=timeout)
             return response.json()
         except APIException as e:
             return e.to_dict()

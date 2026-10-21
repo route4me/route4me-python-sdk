@@ -12,6 +12,7 @@ from urllib.parse import parse_qs
 import pytest
 import responses
 
+from route4me import Route4Me
 from route4me.api_endpoints import (
     ADDRESS_HOST,
     DUPLICATE_ROUTE,
@@ -181,16 +182,13 @@ class TestRouteUpdates:
         assert last_request().method == "PUT"
         assert query_of(last_request())["route_id"] == ROUTE_ID
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=json.JSONDecodeError,
-        reason="#19: _update_route sends form data instead of JSON since 6283680",
-    )
     @pytest.mark.parametrize(
         ("method", "payload"),
         [
             ("insert_address_into_route", {"addresses": ADDRESSES}),
+            ("move_addresses_from_route", {"addresses": [{"route_destination_id": DESTINATION_ID}]}),
             ("update_route_parameters", {"parameters": {"route_name": "Renamed"}}),
+            ("update_route", {"parameters": {"route_name": "Renamed"}}),
         ],
     )
     def test_sends_the_payload_as_json(self, client, mocked, last_request, method, payload):
@@ -199,6 +197,36 @@ class TestRouteUpdates:
         getattr(client.route, method)(payload, ROUTE_ID)
 
         assert body_of(last_request()) == payload
+
+    def test_a_per_call_timeout_reaches_the_transport(self, client, monkeypatch):
+        seen = {}
+
+        def capture(url, params, request_method, **kwargs):
+            seen.update(kwargs)
+            raise RuntimeError("stop before sending")
+
+        monkeypatch.setattr(client, "_make_request", capture)
+
+        with pytest.raises(RuntimeError):
+            client.route.insert_address_into_route({"addresses": ADDRESSES}, ROUTE_ID, timeout=(5, 120))
+
+        assert seen["timeout"] == (5, 120)
+
+    def test_a_put_is_never_retried_even_with_retries_on(self, mocked):
+        client = Route4Me("1" * 32, retry_count=3, retry_initial_delay=0)
+        mocked.add(responses.PUT, ROUTE_HOST, json={"errors": ["timeout"]}, status=524)
+
+        client.route.insert_address_into_route({"addresses": ADDRESSES}, ROUTE_ID)
+
+        assert len(mocked.calls) == 1
+
+    def test_a_cloudflare_timeout_on_a_get_is_retried(self, mocked):
+        client = Route4Me("1" * 32, retry_count=2, retry_initial_delay=0)
+        mocked.add(responses.GET, ROUTE_HOST, json={"errors": ["timeout"]}, status=524)
+
+        client.route.get_routes(limit=1, offset=0)
+
+        assert len(mocked.calls) == 3
 
     def test_optimal_position_insert_sends_json(self, client, mocked, query_of, last_request):
         mocked.add(responses.PUT, ROUTE_HOST, json={}, status=200)
