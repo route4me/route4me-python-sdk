@@ -1,10 +1,11 @@
-"""The :class:`RouteStatus` resource (API V5): read, set and roll back the status of a route."""
+"""The :class:`RouteStatus` resource (API V5): read, set and roll back the status of a route, and set stop statuses."""
 
 from datetime import datetime
 
 from ._url import path_segment
-from .api_endpoints import ROUTE_STATUS_V5
+from .api_endpoints import ROUTE_STATUS_V5, ROUTE_STOP_STATUS_V5
 from .base import Base
+from .exceptions import ParamValueException
 
 
 class RouteStatus(Base):
@@ -13,7 +14,8 @@ class RouteStatus(Base):
     A route is planned, started, paused, resumed or completed; the values are
     in :data:`~route4me.constants.ROUTE_STATUS`. Use it as
     ``route4me.route_status``. Every method sends a request to
-    ``/modules/api/v5.0/route-status/{route_id}`` on ``wh.route4me.com``.
+    ``/modules/api/v5.0/route-status/{route_id}`` on ``wh.route4me.com``,
+    except :meth:`set_route_stop_status`, which sets the status of stops.
 
     Unless stated otherwise, a method returns the decoded JSON reply, or on an
     API error the ``{"errors": ...}`` dict from :meth:`APIException.to_dict
@@ -103,3 +105,36 @@ class RouteStatus(Base):
         :raise ParamValueException: when ``route_id`` is empty.
         """
         return self._call_api(self._status_url(route_id, "/rollback"), "get", self.params)
+
+    def set_route_stop_status(self, status, *, destination_ids=None, destination_uuids=None, event_timestamp=None):
+        """Set the status of one or more stops of routes.
+
+        Sends ``POST /modules/api/v5.0/route-stop-status`` with ``status`` and
+        the stops as the JSON body. Give the stops by ID, by UUID, or both.
+
+        :param status: the new status: ``"Skipped"``, ``"Completed"``,
+            ``"Failed"`` or ``"Empty"``.
+        :param destination_ids: the route destination IDs, a list of integers.
+        :param destination_uuids: the destination UUIDs, a list of 32-character
+            hex strings.
+        :param event_timestamp: when the status changed, as a Unix timestamp
+            in seconds. ``None`` (the default) leaves it to the API.
+        :return: the decoded JSON reply, with ``status``, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``status`` is empty, or neither
+            ``destination_ids`` nor ``destination_uuids`` is given.
+
+        .. versionadded:: 1.0.0
+        """
+        if not status:
+            raise ParamValueException("status", "Missing required params")
+        if destination_ids is None and destination_uuids is None:
+            raise ParamValueException("destination_ids, destination_uuids", "Give one of them")
+        data = {"status": status}
+        if destination_ids is not None:
+            data["destination_ids"] = destination_ids
+        if destination_uuids is not None:
+            data["destination_uuids"] = destination_uuids
+        if event_timestamp is not None:
+            data["event_timestamp"] = event_timestamp
+        return self._call_api(ROUTE_STOP_STATUS_V5, "post", {}, body=data)
