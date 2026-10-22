@@ -171,6 +171,20 @@ Routes V5
 	:members:
 	:show-inheritance:
 
+Configuration Settings
+----------------------
+
+.. automodule:: route4me.configuration_settings
+	:members:
+	:show-inheritance:
+
+Configuration Settings (API V5)
+-------------------------------
+
+.. automodule:: route4me.configuration_settings_v5
+	:members:
+	:show-inheritance:
+
 Team (API V5)
 -------------
 
