@@ -115,14 +115,14 @@ class TestVehicleLocations:
 
         assert result == {"data": []}
         assert last_request().method == "GET"
-        assert query_of(last_request()) == {"vehicle_ids[]": ["VEHICLE-1", "VEHICLE-2"]}
+        assert query_of(last_request()) == {"ids[]": ["VEHICLE-1", "VEHICLE-2"]}
 
     def test_a_single_vehicle_id_is_sent_as_a_list(self, client, mocked, last_request, query_of):
         mocked.add(responses.GET, VEHICLE_LOCATIONS_V5, json={"data": []}, status=200)
 
         client.gps.get_vehicle_locations("VEHICLE-1")
 
-        assert query_of(last_request()) == {"vehicle_ids[]": "VEHICLE-1"}
+        assert query_of(last_request()) == {"ids[]": "VEHICLE-1"}
 
     @pytest.mark.parametrize("vehicle_ids", [[], ""])
     def test_needs_a_vehicle_id(self, client, mocked, vehicle_ids):

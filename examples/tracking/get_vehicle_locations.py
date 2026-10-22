@@ -1,7 +1,7 @@
 """Get the latest known location of one or more vehicles, with API V5.
 
 Calls :meth:`GPS.get_vehicle_locations <route4me.gps.GPS.get_vehicle_locations>`, which sends
-``GET /modules/api/v5.0/vehicles/location`` (API V5, on ``wh.route4me.com``) with ``vehicle_ids[]`` in
+``GET /modules/api/v5.0/vehicles/location`` (API V5, on ``wh.route4me.com``) with ``ids[]`` in
 the query, and prints the reply.
 
 Run it with::
