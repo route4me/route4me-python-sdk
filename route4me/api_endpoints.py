@@ -122,3 +122,7 @@ ROUTE_DESTINATIONS_LIST_FIELDS_V5 = f"{API_V5}/route-destinations/list/fields"
 ROUTE_DESTINATIONS_SEQUENCE_V5 = f"{API_V5}/route-destinations/sequence"
 ROUTE_DESTINATIONS_SORTING_V5 = f"{API_V5}/route-destinations/sorting"
 ROUTE_STOP_STATUS_V5 = f"{API_V5}/route-stop-status"
+
+# Phase 5: p4-team-account
+TEAM_USERS_BULK_INSERT_V5 = f"{API_V5}/team/users/bulk-insert"
+TEAM_USERS_V5 = f"{API_V5}/team/users"

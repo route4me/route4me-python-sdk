@@ -170,3 +170,10 @@ Routes V5
 .. automodule:: route4me.routes_v5
 	:members:
 	:show-inheritance:
+
+Team (API V5)
+-------------
+
+.. automodule:: route4me.team_v5
+	:members:
+	:show-inheritance:
