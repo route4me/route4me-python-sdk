@@ -4404,6 +4404,11 @@
   {
    "method": "PATCH",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
    "path": "/modules/api/vehicles/{}"
   },
   {
