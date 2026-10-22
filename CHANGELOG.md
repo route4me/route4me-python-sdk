@@ -9,7 +9,7 @@ This is the history of changes of the `route4me` package.
 
 This is the first release since 0.1.7.0, and PyPI still serves 0.0.7.1 from 2020.
 
-It fixes every open bug report (#19, #26, #30–#43) and hardens how the SDK handles the API key. It also adds an offline test suite of 801 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
+It fixes every open bug report (#19, #26, #30–#43), adds 204 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,345 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
 
 ### Breaking changes
 
@@ -33,6 +33,8 @@ It fixes every open bug report (#19, #26, #30–#43) and hardens how the SDK han
   - POST and PUT are never retried, because replaying them can create or insert things twice.
   - Cloudflare's 520–524 errors now count as retryable.
 - `redirects=False` now also applies to PUT and DELETE.
+- **Boolean query values are sent as `1` and `0`.** `requests` sent them as `"True"` and `"False"`; PHP reads `"False"` as true, and the API V5 validation rejects both strings. `get_address_notes()` now sends `notes=1`.
+- **API V5 list and dict query values are sent with bracketed keys**, for example `ids[]=1&ids[]=2` and `filters[status]=1`. PHP keeps only the last value of a repeated plain key, and `requests` could not send a dict or a nested list at all.
 
 **Errors and return values**
 - **`APIException.to_dict()["errors"]` is always a non-empty list of strings.** It holds:
@@ -70,6 +72,7 @@ It fixes every open bug report (#19, #26, #30–#43) and hardens how the SDK han
   - `requests` resolves dot segments, so `route-status/../secret` reached `/modules/api/v5.0/secret` with the caller's key.
   - The `rapid_address` path components are now encoded the same way.
 - **The API key stays out of request bodies.** `Optimization.update_optimization` and `ActivityFeed.log_specific_message` copied it there.
+- **Credential-like query parameters are redacted by name**, not only the known list. Any name ending in `api_key`, `apikey`, `_token`, `_secret` or `password` is redacted, so `organization_api_key` (API V5 member configuration settings) never reaches a traceback.
 - **The API key stays out of URLs, tracebacks and logs:**
   - URLs, for API V5, which now uses a bearer token;
   - tracebacks: `APIException` redacts URLs and bodies, including those of the V4 endpoints that echo parameters back;
@@ -82,6 +85,33 @@ It fixes every open bug report (#19, #26, #30–#43) and hardens how the SDK han
   - `SECURITY.md` describes how to report a vulnerability.
 
 ### Added
+- **API coverage: 204 new methods (#44–#107).** They cover the Route4Me API V4 and V5 operations the coverage issues list. Every request shape comes from the OpenAPI specs, then the C# SDK; the issues' own paths were often wrong. Each method has a unit test and a runnable example.
+  - **New resources on the client:**
+    - Address book: `address_book_v5`, `address_barcodes`.
+    - Vehicles: `vehicles_v5`, `vehicle_profiles`, `vehicle_capacity_profiles`.
+    - Routes: `routes_v5`, `route_destinations_v5`.
+    - Team and account: `team_v5`, `account_profile`, `auth_history`, `configuration_settings`, `configuration_settings_v5`.
+    - Orders and schedules: `orders_v5`, `recurring_routes`.
+    - Notes and proof of delivery: `notes`, `driver_reviews`, `pod_workflows`.
+    - Places: `customers`, `facilities`, `locations` (with location types), `territories_v5`.
+    - Tracking: `tracking_history`, `route_breaks`, `asset_tracking`.
+    - Lookups: `distance`, `drivers`, `autocomplete`.
+  - **Existing resources gain methods:**
+    - `AddressBook`: groups, search by filter, saving geocoded addresses.
+    - `Address`: move a destination to another route, delete destinations, mark visited or departed.
+    - `Route.rename_route`.
+    - `RouteStatus`: `set_route_stop_status`, `update_route_status_as_planned`, and cancel reasons in `set_route_status`.
+    - `Members`: create, update and delete users, and member capabilities.
+    - `Order`: filter, updates and custom user fields.
+    - `Optimization`: hybrid optimizations and time prediction.
+    - `OptimizationProfiles`: CRUD and entities.
+    - `GPS`: batch pings, user locations and vehicle locations.
+    - `FileUploading`: the JSON upload for bulk geocoding.
+  - **Not implemented, with the reason recorded on each issue:**
+    - operations on retired hosts or 404 endpoints;
+    - the MyQ and OCR operations, which are not Route4Me APIs;
+    - `expire_session.php`, which ends a browser session and is not an API-key call.
+- PATCH requests (`Base._call_api(..., "patch", ...)`), used by API V5 partial updates. Like PUT, they are never retried.
 - `Telematics.get_vendors_v5(**filters)` and `Telematics.get_vendor_v5(vendor_id)`, on `GET /modules/api/v5.0/telematics/vendors(/all)`.
 - `Optimization.reset()` clears a staged optimization, so one client can build another (#26).
 - `Base.validated_params(**kwargs)` runs the field setters on a copy.
@@ -155,7 +185,7 @@ It fixes every open bug report (#19, #26, #30–#43) and hardens how the SDK han
 - `Telematics.pp_vendor_comparison()` raised `KeyError` for a vendor without `features`.
 
 ### Examples
-- Every example has a docstring saying what it shows, which SDK method it calls, the request it sends, and how to run it. All 123 example files pass pylint.
+- **327 examples**, one per method, including 204 for the new API coverage. Every example has a docstring saying what it shows, which SDK method it calls, the request it sends, and how to run it. All of them pass pylint.
 - The vendor examples use API V5.
 - New examples:
   - `members/get_api_key_users.py` (#112);
@@ -171,7 +201,7 @@ It fixes every open bug report (#19, #26, #30–#43) and hardens how the SDK han
 
 ### Internal
 - Packaging moved to `pyproject.toml` (hatchling); `setup.py` is a shim.
-- 801 offline tests with 95% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
+- 1,345 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
 - pylint gives zero messages on the package, the tests and the examples. ruff formats the code. mypy passes, with strict checks on the tier-A modules, and blocks CI.
 - CI runs Python 3.9–3.14 on Linux, and Python 3.12 on macOS and Windows.
 
