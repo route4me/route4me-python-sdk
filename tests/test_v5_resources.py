@@ -44,6 +44,29 @@ class TestRouteStatus:
             "event_timestamp": 1792600000,
         }
 
+    def test_set_route_status_can_cancel_with_a_reason(self, client, mocked, last_request, query_of):
+        """The spec requires a cancel reason for ``canceled``; the SDK could not send one."""
+        mocked.add(responses.POST, f"{ROUTE_STATUS_V5}/{ROUTE_ID}", json={"status": True}, status=200)
+
+        client.route_status.set_route_status(
+            ROUTE_ID, "canceled", 40.7, -73.9, event_timestamp=1792600000, reason_code="NOS", device_id="DEVICE-1"
+        )
+
+        assert json.loads(last_request().body) == {
+            "status": "canceled",
+            "lat": 40.7,
+            "lng": -73.9,
+            "event_timestamp": 1792600000,
+            "reason_code": "NOS",
+        }
+        assert query_of(last_request()) == {"device_id": "DEVICE-1"}
+
+    def test_set_route_status_takes_one_kind_of_reason(self, client, mocked):
+        with pytest.raises(ParamValueException):
+            client.route_status.set_route_status(ROUTE_ID, "canceled", 40.7, -73.9, reason="7", reason_code="NOS")
+
+        assert not mocked.calls
+
     def test_set_route_status_defaults_the_timestamp_to_now(self, client, mocked, last_request):
         mocked.add(responses.POST, f"{ROUTE_STATUS_V5}/{ROUTE_ID}", json={"status": True}, status=200)
 
