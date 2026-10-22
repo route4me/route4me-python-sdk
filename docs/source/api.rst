@@ -254,3 +254,10 @@ Notes
 .. automodule:: route4me.notes
 	:members:
 	:show-inheritance:
+
+Driver Reviews
+--------------
+
+.. automodule:: route4me.driver_reviews
+	:members:
+	:show-inheritance:
