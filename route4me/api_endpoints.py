@@ -124,6 +124,8 @@ ROUTE_DESTINATIONS_SORTING_V5 = f"{API_V5}/route-destinations/sorting"
 ROUTE_STOP_STATUS_V5 = f"{API_V5}/route-stop-status"
 
 # Phase 5: p4-team-account
+ACCOUNT_PROFILE_V5 = f"{API_V5}/profile-api"
+AUTH_HISTORY_API_CONFIG_V5 = f"{API_V5}/auth-history/apiconf"
 CONFIGURATION_SETTINGS = f"{MAIN_HOST}/api.v4/configuration-settings.php"
 FAST_GEOCODER = f"{MAIN_HOST}/actions/upload/json-geocode.php"
 MEMBER_CAPABILITIES = f"{MAIN_HOST}/api/member/capabilities.php"

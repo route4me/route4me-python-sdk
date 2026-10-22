@@ -14,12 +14,14 @@ from requests.adapters import HTTPAdapter
 from ._redact import redact_text
 from ._resilience import CircuitBreaker, execute_with_retry
 from ._url import is_v5_url
+from .account_profile import AccountProfile
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_barcodes import AddressBarcodes
 from .address_book import AddressBook
 from .address_book_v5 import AddressBookV5
 from .api_endpoints import API_HOST
+from .auth_history import AuthHistory
 from .avoidance_zones import AvoidanceZones
 from .config import UNSET, normalize_timeout, resolve, resolve_timeout
 from .configuration_settings import ConfigurationSettings
@@ -55,16 +57,17 @@ HEADERS = {
 class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute per API resource
     """Client for the Route4Me API.
 
-    Each API area is a resource attribute: :attr:`activity_feed`,
-    :attr:`address`, :attr:`address_barcodes`, :attr:`address_book`,
-    :attr:`address_book_v5`, :attr:`avoidance_zones`,
-    :attr:`configuration_settings`, :attr:`configuration_settings_v5`,
-    :attr:`file_uploading`, :attr:`gps`, :attr:`members`, :attr:`optimization`,
-    :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
-    :attr:`rapid_address`, :attr:`route`, :attr:`route_destinations_v5`,
-    :attr:`route_status`, :attr:`routes_v5`, :attr:`team_v5`,
-    :attr:`telematics`, :attr:`territory`, :attr:`vehicle_capacity_profiles`,
-    :attr:`vehicle_profiles`, :attr:`vehicles` and :attr:`vehicles_v5`.
+    Each API area is a resource attribute: :attr:`account_profile`,
+    :attr:`activity_feed`, :attr:`address`, :attr:`address_barcodes`,
+    :attr:`address_book`, :attr:`address_book_v5`, :attr:`auth_history`,
+    :attr:`avoidance_zones`, :attr:`configuration_settings`,
+    :attr:`configuration_settings_v5`, :attr:`file_uploading`, :attr:`gps`,
+    :attr:`members`, :attr:`optimization`, :attr:`optimization_profiles`,
+    :attr:`order`, :attr:`orders_group`, :attr:`rapid_address`, :attr:`route`,
+    :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
+    :attr:`team_v5`, :attr:`telematics`, :attr:`territory`,
+    :attr:`vehicle_capacity_profiles`, :attr:`vehicle_profiles`,
+    :attr:`vehicles` and :attr:`vehicles_v5`.
 
     The client can be used as a context manager; leaving the block closes the
     pooled session::
@@ -186,8 +189,10 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.route_status = RouteStatus(self)
         self.orders_group = OrdersGroup(self)
         self.optimization_profiles = OptimizationProfiles(self)
+        self.account_profile = AccountProfile(self)
         self.address_barcodes = AddressBarcodes(self)
         self.address_book_v5 = AddressBookV5(self)
+        self.auth_history = AuthHistory(self)
         self.configuration_settings = ConfigurationSettings(self)
         self.configuration_settings_v5 = ConfigurationSettingsV5(self)
         self.route_destinations_v5 = RouteDestinationsV5(self)

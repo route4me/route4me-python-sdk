@@ -171,6 +171,20 @@ Routes V5
 	:members:
 	:show-inheritance:
 
+Account Profile (API V5)
+------------------------
+
+.. automodule:: route4me.account_profile
+	:members:
+	:show-inheritance:
+
+Auth History (API V5)
+---------------------
+
+.. automodule:: route4me.auth_history
+	:members:
+	:show-inheritance:
+
 Configuration Settings
 ----------------------
 
