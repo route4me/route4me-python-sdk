@@ -76,14 +76,12 @@ class Base:
     limit = ValidatedField("limit", int, "param", "Must be integer")
     offset = ValidatedField("offset", int, "param", "Must be integer")
 
-    # Float strict (float only) → query params
-    lat = ValidatedField("lat", "float_strict", "param", "Must be Float")
-    lng = ValidatedField("lng", "float_strict", "param", "Must be Float")
-    altitude = ValidatedField("altitude", "float_strict", "param", "Must be Float")
-
-    # Aliases: cached_lat/cached_lng write to "lat"/"lng" keys
-    cached_lat = ValidatedField("lat", "float_strict", "param", "Must be Float")
-    cached_lng = ValidatedField("lng", "float_strict", "param", "Must be Float")
+    # Numbers (int or float, not bool) → query params
+    lat = ValidatedField("lat", "number", "param", "Must be a number")
+    lng = ValidatedField("lng", "number", "param", "Must be a number")
+    altitude = ValidatedField("altitude", "number", "param", "Must be a number")
+    cached_lat = ValidatedField("cached_lat", "number", "param", "Must be a number")
+    cached_lng = ValidatedField("cached_lng", "number", "param", "Must be a number")
 
     # Enum → data body
     travel_mode = ValidatedField(

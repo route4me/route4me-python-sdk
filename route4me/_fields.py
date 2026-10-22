@@ -7,7 +7,7 @@ _CHECKS = {
     str: lambda field, value: isinstance(value, str),
     int: lambda field, value: isinstance(value, int),
     "numeric": lambda field, value: isinstance(value, (int, float)),
-    "float_strict": lambda field, value: isinstance(value, float),
+    "number": lambda field, value: isinstance(value, (int, float)) and not isinstance(value, bool),
     "boolish": lambda field, value: isinstance(value, int) and 0 <= value <= 1,
     "enum": lambda field, value: value in field.enum_cls.reverse_mapping,
     "oneof": lambda field, value: value in field.valid_values,
@@ -22,10 +22,9 @@ class ValidatedField:
     ``obj.field_name(value)`` validates the value and copies it into the query
     parameters or the route parameters of ``obj``.
 
-    :param name: key the value is stored under. Usually the attribute name;
-        ``cached_lat`` and ``cached_lng`` store ``lat`` and ``lng``.
+    :param name: key the value is stored under, usually the attribute name.
     :param vtype: validation kind: ``str``, ``int``, ``"numeric"`` (int or
-        float), ``"float_strict"`` (float only), ``"boolish"`` (0 or 1),
+        float), ``"number"`` (int or float, not bool), ``"boolish"`` (0 or 1),
         ``"enum"``, ``"oneof"`` or ``"range"``. Any other value accepts
         everything.
     :param target: ``"param"`` for the query parameters, ``"data"`` for the
