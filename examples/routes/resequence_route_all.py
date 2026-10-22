@@ -7,6 +7,9 @@ route, then :meth:`Route.resequence_route_all <route4me.route.Route.resequence_r
 ``GET /api.v3/route/reoptimize_2.php``, and prints the reply. This changes the latest route of the
 account.
 
+Deprecated: Route.resequence_route_all is deprecated, because the C# SDK marks the operation obsolete.
+Use :meth:`Route.update_route <route4me.route.Route.update_route>` with ``reoptimize=1``.
+
 Run it with::
 
     python examples/routes/resequence_route_all.py --api_key <your key>

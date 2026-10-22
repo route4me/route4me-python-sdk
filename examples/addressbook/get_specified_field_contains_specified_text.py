@@ -6,6 +6,9 @@ Calls :meth:`AddressBook.get_addressbook_contacts
 each result is a list of those values rather than a contact; the example prints the first name and the
 email of each match.
 
+Deprecated: AddressBook.get_addressbook_contacts is deprecated, because the C# SDK marks the operation obsolete.
+The API V5 replacement is shown in ``examples/addressbook/get_address_book_contacts.py``.
+
 Run it with::
 
     python examples/addressbook/get_specified_field_contains_specified_text.py --api_key <your key>

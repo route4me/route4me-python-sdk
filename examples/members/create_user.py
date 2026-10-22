@@ -6,6 +6,9 @@ Calls :meth:`Members.create_user <route4me.members.Members.create_user>`, which 
 sample ``example.com`` email address; change the values first. API V5 does the same with
 ``examples/team/create_team_member.py``.
 
+Deprecated: Members.create_user is deprecated, because the C# SDK marks the operation obsolete.
+The API V5 replacement is shown in ``examples/team/create_team_member.py``.
+
 Run it with::
 
     python examples/members/create_user.py --api_key <your key> --owner_member_id <member ID>

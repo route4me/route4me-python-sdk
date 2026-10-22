@@ -6,6 +6,10 @@ Calls :meth:`AddressBook.create_contact <route4me.address_book.AddressBook.creat
 ``address_ids``, which sends ``DELETE /api.v4/address_book.php`` with them as the JSON body, and prints
 the status.
 
+Deprecated: AddressBook.create_contact and AddressBook.delete_addressbook_contact are deprecated,
+because the C# SDK marks the operations obsolete.
+The API V5 replacement is shown in ``examples/addressbook/remove_address_book_contacts.py``.
+
 Run it with::
 
     python examples/addressbook/delete_addressbook_contact.py --api_key <your key>

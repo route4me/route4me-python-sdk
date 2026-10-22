@@ -9,7 +9,7 @@ This is the history of changes of the `route4me` package.
 
 This is the first release since 0.1.7.0, and PyPI still serves 0.0.7.1 from 2020.
 
-It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,357 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
+It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,366 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
 
 ### Breaking changes
 
@@ -138,6 +138,10 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 - `Telematics.pp_vendor_comparison`: it prints the features of the retired `compare_vendors` reply, and API V5 vendors have none.
 - `RapidAddress.get_street_data`, `get_street_data_zip` and `get_street_data_service`: the street-data endpoints return 404 and have no replacement. They still check their arguments, then send no request and return an error dict.
 - `Route.export_route`: the V4 export endpoint returns 404. Use `export_route_v5`.
+- Operations the C# SDK marks obsolete. They still work, but warn, and will be removed in the next major version:
+  - `Members.get_api_key_users`, `create_user`, `user_update` and `user_delete` (`/api.v4/user.php`): use `TeamV5.get_team_members` or `get_team_member_by_id`, `create_team_member`, `update_team_member` and `remove_team_member`;
+  - `AddressBook.get_addressbook_contacts`, `create_contact`, `update_contact` and `delete_addressbook_contact` (`/api.v4/address_book.php`): use `AddressBookV5.get_address_book_contacts`, `add_address_book_contact`, `update_address_book_contact` and `remove_address_book_contacts`. `get_addressbook_contact` and `search_address_book_contacts_by_filter` are not deprecated;
+  - `Route.resequence_route_all` (`/api.v3/route/reoptimize_2.php`): use `Route.update_route` with `reoptimize=1`.
 - `Members.webinar_registration(webiinar_date=...)`: pass `webinar_date`.
 
 ### Removed
@@ -203,7 +207,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 
 ### Internal
 - Packaging moved to `pyproject.toml` (hatchling); `setup.py` is a shim.
-- 1,357 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
+- 1,366 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
 - pylint gives zero messages on the package, the tests and the examples. ruff formats the code. mypy passes, with strict checks on the tier-A modules, and blocks CI.
 - CI runs Python 3.9–3.14 on Linux, and Python 3.12 on macOS and Windows.
 

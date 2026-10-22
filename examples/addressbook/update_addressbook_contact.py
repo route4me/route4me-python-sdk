@@ -8,6 +8,10 @@ sends the whole contact back with :meth:`AddressBook.update_contact
 <route4me.address_book.AddressBook.update_contact>` (``PUT /api.v4/address_book.php``, the contact as
 the JSON body). This changes a contact of the account.
 
+Deprecated: AddressBook.get_addressbook_contacts and AddressBook.update_contact are deprecated,
+because the C# SDK marks the operations obsolete.
+The API V5 replacement is shown in ``examples/addressbook/update_address_book_contact.py``.
+
 Run it with::
 
     python examples/addressbook/update_addressbook_contact.py --api_key <your key>

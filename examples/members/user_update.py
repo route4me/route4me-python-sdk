@@ -4,6 +4,9 @@ Calls :meth:`Members.user_update <route4me.members.Members.user_update>`, which 
 ``PUT /api.v4/user.php`` with ``member_id`` in the query and ``member_phone`` as the JSON body, and
 prints the updated user. API V5 does the same with ``examples/team/update_team_member.py``.
 
+Deprecated: Members.user_update is deprecated, because the C# SDK marks the operation obsolete.
+The API V5 replacement is shown in ``examples/team/update_team_member.py``.
+
 Run it with::
 
     python examples/members/user_update.py --api_key <your key> --member_id <member ID>

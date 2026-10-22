@@ -6,6 +6,9 @@ the first contact, then :meth:`AddressBook.get_addressbook_contact
 <route4me.address_book.AddressBook.get_addressbook_contact>` with its ``address_id``, which sends the
 same request with ``address_id`` in the query, and prints the contacts of the reply.
 
+Deprecated: AddressBook.get_addressbook_contacts is deprecated, because the C# SDK marks the operation obsolete.
+The API V5 replacement is shown in ``examples/addressbook/get_address_book_contacts.py``.
+
 Run it with::
 
     python examples/addressbook/get_addressbook_contact.py --api_key <your key>

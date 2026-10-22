@@ -446,7 +446,17 @@ class Route(Base):
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
         :raise ParamValueException: when a required parameter is missing.
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`update_route` with ``reoptimize=1``.
         """
+        warnings.warn(
+            "Route.resequence_route_all is deprecated: the C# SDK marks it obsolete. "
+            "Use Route.update_route with reoptimize=1.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         kwargs.update({"api_key": self.params["api_key"]})
         return self._call_api(
             RESEQUENCE_ROUTE, "get", kwargs, required=["disable_optimization", "route_id", "optimize"]
