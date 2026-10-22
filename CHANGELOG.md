@@ -9,7 +9,7 @@ This is the history of changes of the `route4me` package.
 
 This is the first release since 0.1.7.0, and PyPI still serves 0.0.7.1 from 2020.
 
-It fixes every open bug report (#19, #26, #30–#43, #124–#135), adds 216 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,414 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
+It fixes every open bug report (#19, #26, #30–#43, #124–#135), adds 216 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,422 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
 
 ### Breaking changes
 
@@ -212,7 +212,7 @@ It fixes every open bug report (#19, #26, #30–#43, #124–#135), adds 216 API 
 
 ### Internal
 - Packaging moved to `pyproject.toml` (hatchling); `setup.py` is a shim.
-- 1,414 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
+- 1,422 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
 - pylint gives zero messages on the package, the tests and the examples. ruff formats the code. mypy passes, with strict checks on the tier-A modules, and blocks CI.
 - CI runs Python 3.9–3.14 on Linux, and Python 3.12 on macOS and Windows.
 

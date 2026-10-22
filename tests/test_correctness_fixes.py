@@ -163,10 +163,11 @@ class TestValidateParamsDoesNotMaskBugs:
         assert excinfo.value.param == "definitely_not_a_field"
         assert excinfo.value.get_msg() == "Not supported"
 
-    def test_a_non_callable_attribute_is_rejected_clearly(self, client):
-        """``params`` is a dict on ``Base``, not a setter."""
+    @pytest.mark.parametrize(("name", "value"), [("params", {}), ("data", "value")])
+    def test_a_non_callable_attribute_is_rejected_clearly(self, client, name, value):
+        """#131: ``params`` and ``data`` are dicts on ``Base``, not setters; calling one raised ``TypeError``."""
         with pytest.raises(ParamValueException) as excinfo:
-            client.optimization.validate_params(params={})
+            client.optimization.validate_params(**{name: value})
 
         assert excinfo.value.get_msg() == "Not a settable parameter"
 
@@ -257,3 +258,12 @@ class TestTelematicsDisplayHelpers:
         # rstrip("\n") only -- the trailing tab is the empty feature column and
         # is part of the expected output.
         assert buffer.getvalue().rstrip("\n") == "7\tAcme\t"
+
+
+class TestSetterMessages:
+    def test_truck_hazardous_goods_names_its_own_values(self, client):
+        """#133: the message was "Must be MI or KM", copied from the distance unit setter."""
+        with pytest.raises(ParamValueException) as excinfo:
+            client.optimization.truck_hazardous_goods("INVALID_GOODS")
+
+        assert excinfo.value.get_msg() == "Must be a TRUCK_HAZARDOUS_GOODS value"

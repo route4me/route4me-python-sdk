@@ -14,6 +14,7 @@ as XPASS and forces the marker to be removed -- the fix cannot land silently.
 import json
 
 import pytest
+import requests
 import responses
 
 from route4me import Route4Me
@@ -404,7 +405,7 @@ class TestParamsMutation:
 
 
 class TestRedirectsSetting:
-    """``redirects=False`` applies to every verb, not just GET and POST."""
+    """``redirects=False`` applies to every verb, not just GET and POST (#128)."""
 
     @pytest.mark.parametrize("verb", ["get", "post", "put", "delete"])
     def test_redirects_false_is_passed_to_every_verb(self, monkeypatch, verb):
@@ -421,6 +422,27 @@ class TestRedirectsSetting:
             getattr(client, f"_request_{verb}")(ANY_URL, {})
 
         assert seen["allow_redirects"] is False
+
+
+class TestProxiesSetting:
+    """#128: the client's proxies reach every verb; DELETE used to drop them."""
+
+    @pytest.mark.parametrize("verb", ["get", "post", "put", "delete"])
+    def test_proxies_are_passed_to_every_verb(self, monkeypatch, verb):
+        proxies = {"https": "http://proxy.example.com:3128"}
+        client = Route4Me("1" * 32, proxies=proxies)
+        seen = {}
+
+        def capture(session, method, url, **kwargs):
+            seen.update(kwargs)
+            raise RuntimeError("stop before sending")
+
+        monkeypatch.setattr(requests.Session, "request", capture)
+
+        with pytest.raises(RuntimeError):
+            getattr(client, f"_request_{verb}")(ANY_URL, {})
+
+        assert seen["proxies"] == proxies
 
 
 class TestKeyPlacement:
