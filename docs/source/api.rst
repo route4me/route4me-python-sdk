@@ -178,10 +178,24 @@ Account Profile (API V5)
 	:members:
 	:show-inheritance:
 
+Asset Tracking
+--------------
+
+.. automodule:: route4me.asset_tracking
+	:members:
+	:show-inheritance:
+
 Auth History (API V5)
 ---------------------
 
 .. automodule:: route4me.auth_history
+	:members:
+	:show-inheritance:
+
+Autocomplete
+------------
+
+.. automodule:: route4me.autocomplete
 	:members:
 	:show-inheritance:
 
@@ -196,6 +210,20 @@ Configuration Settings (API V5)
 -------------------------------
 
 .. automodule:: route4me.configuration_settings_v5
+	:members:
+	:show-inheritance:
+
+Distance
+--------
+
+.. automodule:: route4me.distance
+	:members:
+	:show-inheritance:
+
+Drivers
+-------
+
+.. automodule:: route4me.drivers
 	:members:
 	:show-inheritance:
 

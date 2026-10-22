@@ -21,11 +21,15 @@ from .address_barcodes import AddressBarcodes
 from .address_book import AddressBook
 from .address_book_v5 import AddressBookV5
 from .api_endpoints import API_HOST
+from .asset_tracking import AssetTracking
 from .auth_history import AuthHistory
+from .autocomplete import Autocomplete
 from .avoidance_zones import AvoidanceZones
 from .config import UNSET, normalize_timeout, resolve, resolve_timeout
 from .configuration_settings import ConfigurationSettings
 from .configuration_settings_v5 import ConfigurationSettingsV5
+from .distance import Distance
+from .drivers import Drivers
 from .exceptions import APIException
 from .file_uploading import FileUploading
 from .gps import GPS
@@ -59,9 +63,10 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
 
     Each API area is a resource attribute: :attr:`account_profile`,
     :attr:`activity_feed`, :attr:`address`, :attr:`address_barcodes`,
-    :attr:`address_book`, :attr:`address_book_v5`, :attr:`auth_history`,
-    :attr:`avoidance_zones`, :attr:`configuration_settings`,
-    :attr:`configuration_settings_v5`, :attr:`file_uploading`, :attr:`gps`,
+    :attr:`address_book`, :attr:`address_book_v5`, :attr:`asset_tracking`,
+    :attr:`auth_history`, :attr:`autocomplete`, :attr:`avoidance_zones`,
+    :attr:`configuration_settings`, :attr:`configuration_settings_v5`,
+    :attr:`distance`, :attr:`drivers`, :attr:`file_uploading`, :attr:`gps`,
     :attr:`members`, :attr:`optimization`, :attr:`optimization_profiles`,
     :attr:`order`, :attr:`orders_group`, :attr:`rapid_address`, :attr:`route`,
     :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
@@ -192,9 +197,13 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.account_profile = AccountProfile(self)
         self.address_barcodes = AddressBarcodes(self)
         self.address_book_v5 = AddressBookV5(self)
+        self.asset_tracking = AssetTracking(self)
         self.auth_history = AuthHistory(self)
+        self.autocomplete = Autocomplete(self)
         self.configuration_settings = ConfigurationSettings(self)
         self.configuration_settings_v5 = ConfigurationSettingsV5(self)
+        self.distance = Distance(self)
+        self.drivers = Drivers(self)
         self.route_destinations_v5 = RouteDestinationsV5(self)
         self.routes_v5 = RoutesV5(self)
         self.team_v5 = TeamV5(self)
