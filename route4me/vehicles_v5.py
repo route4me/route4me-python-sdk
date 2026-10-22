@@ -19,7 +19,7 @@ from .api_endpoints import (
     VEHICLES_V5,
 )
 from .base import Base
-from .exceptions import APIException
+from .exceptions import APIException, ParamValueException
 
 
 class VehiclesV5(Base):
@@ -164,6 +164,27 @@ class VehiclesV5(Base):
         .. versionadded:: 1.0.0
         """
         return self._call_api(self._vehicle_url(vehicle_id), "delete", {})
+
+    def update_vehicle(self, vehicle_id, **fields):
+        """Change some fields of one vehicle.
+
+        Sends ``PATCH /modules/api/v5.0/vehicles/{vehicle_id}`` with the
+        keywords as the JSON body. Fields that are not given keep their value.
+
+        :param vehicle_id: ID of the vehicle.
+        :param fields: the fields to change, e.g. ``vehicle_alias``,
+            ``vehicle_license_plate`` or ``vehicle_capacity_profile_id``.
+        :return: the decoded JSON reply: the updated vehicle, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``vehicle_id`` is empty or no field
+            is given.
+
+        .. versionadded:: 1.0.0
+        """
+        url = self._vehicle_url(vehicle_id)
+        if not fields:
+            raise ParamValueException("fields", "Give at least one field to change")
+        return self._call_api(url, "patch", {}, body=fields)
 
     def get_vehicle_track(self, vehicle_id, **kwargs):
         """Get the track of one vehicle.
