@@ -156,3 +156,17 @@ Optimization Profiles
 .. automodule:: route4me.optimization_profiles
 	:members:
 	:show-inheritance:
+
+Route Destinations V5
+---------------------
+
+.. automodule:: route4me.route_destinations_v5
+	:members:
+	:show-inheritance:
+
+Routes V5
+---------
+
+.. automodule:: route4me.routes_v5
+	:members:
+	:show-inheritance:

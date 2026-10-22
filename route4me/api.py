@@ -32,7 +32,9 @@ from .orders import Order
 from .orders_group import OrdersGroup
 from .rapid_address import RapidAddress
 from .route import Route
+from .route_destinations_v5 import RouteDestinationsV5
 from .route_status import RouteStatus
+from .routes_v5 import RoutesV5
 from .telematics import Telematics
 from .territory import Territory
 from .vehicle_capacity_profiles import VehicleCapacityProfiles
@@ -55,8 +57,9 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`address_book_v5`, :attr:`avoidance_zones`, :attr:`file_uploading`,
     :attr:`gps`, :attr:`members`, :attr:`optimization`,
     :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
-    :attr:`rapid_address`, :attr:`route`, :attr:`route_status`,
-    :attr:`telematics`, :attr:`territory`, :attr:`vehicle_capacity_profiles`,
+    :attr:`rapid_address`, :attr:`route`, :attr:`route_destinations_v5`,
+    :attr:`route_status`, :attr:`routes_v5`, :attr:`telematics`,
+    :attr:`territory`, :attr:`vehicle_capacity_profiles`,
     :attr:`vehicle_profiles`, :attr:`vehicles` and :attr:`vehicles_v5`.
 
     The client can be used as a context manager; leaving the block closes the
@@ -181,6 +184,8 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.optimization_profiles = OptimizationProfiles(self)
         self.address_barcodes = AddressBarcodes(self)
         self.address_book_v5 = AddressBookV5(self)
+        self.route_destinations_v5 = RouteDestinationsV5(self)
+        self.routes_v5 = RoutesV5(self)
         self.vehicle_capacity_profiles = VehicleCapacityProfiles(self)
         self.vehicle_profiles = VehicleProfiles(self)
         self.vehicles_v5 = VehiclesV5(self)
