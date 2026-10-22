@@ -47,6 +47,23 @@ SENSITIVE_PARAMS = frozenset(
     }
 )
 
+#: Name endings that mark a credential, e.g. ``organization_api_key`` or
+#: ``device_token``. A name that is not in :data:`SENSITIVE_PARAMS` is still
+#: redacted when it ends with one of these.
+SENSITIVE_SUFFIXES = ("api_key", "apikey", "_token", "_secret", "password")
+
+
+def is_sensitive_param(name):
+    """Tell whether a query or form parameter holds a credential.
+
+    :param name: the parameter name; matched case-insensitively.
+    :return: ``True`` when the name is in :data:`SENSITIVE_PARAMS` or ends
+        with one of :data:`SENSITIVE_SUFFIXES`.
+    """
+    lowered = str(name).lower()
+    return lowered in SENSITIVE_PARAMS or lowered.endswith(SENSITIVE_SUFFIXES)
+
+
 #: Request/response headers whose values must never be logged.
 SENSITIVE_HEADERS = frozenset(
     {
@@ -99,7 +116,7 @@ def redact_url(url):
         if not parts.query:
             return url
         pairs = parse_qsl(parts.query, keep_blank_values=True)
-        cleaned = [(k, REDACTED if k.lower() in SENSITIVE_PARAMS else v) for k, v in pairs]
+        cleaned = [(k, REDACTED if is_sensitive_param(k) else v) for k, v in pairs]
         return urlunsplit(parts._replace(query=urlencode(cleaned)))
     except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return _drop_query(url)
@@ -157,13 +174,13 @@ def redact_params(params):
     """Return a copy of a query-parameter mapping with sensitive values replaced.
 
     :param params: the query parameters to redact.
-    :return: a new dict with the values of :data:`SENSITIVE_PARAMS` replaced;
-        ``{}`` for empty input, or ``{"REDACTED": "REDACTED"}`` if redaction
-        fails.
+    :return: a new dict with the values of credential parameters (see
+        :func:`is_sensitive_param`) replaced; ``{}`` for empty input, or
+        ``{"REDACTED": "REDACTED"}`` if redaction fails.
     """
     if not params:
         return {}
     try:
-        return {k: (REDACTED if str(k).lower() in SENSITIVE_PARAMS else v) for k, v in dict(params).items()}
+        return {k: (REDACTED if is_sensitive_param(k) else v) for k, v in dict(params).items()}
     except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return {REDACTED: REDACTED}
