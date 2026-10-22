@@ -125,6 +125,7 @@ ROUTE_STOP_STATUS_V5 = f"{API_V5}/route-stop-status"
 
 # Phase 5: p4-team-account
 CONFIGURATION_SETTINGS = f"{MAIN_HOST}/api.v4/configuration-settings.php"
+FAST_GEOCODER = f"{MAIN_HOST}/actions/upload/json-geocode.php"
 MEMBER_CAPABILITIES = f"{MAIN_HOST}/api/member/capabilities.php"
 MEMBER_CONFIGURATION_SETTINGS_V5 = f"{API_V5}/member-configuration-settings"
 TEAM_USERS_BULK_INSERT_V5 = f"{API_V5}/team/users/bulk-insert"
