@@ -7,6 +7,10 @@ updates:
       interval: weekly
       day: monday
       time: "06:00"
+    # Propose a release only once it is a week old, so a compromised release has time
+    # to be found and pulled before it reaches a pull request.
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     commit-message:
       # Conventional commits are enforced by commit-validation.yml, and
@@ -37,6 +41,8 @@ updates:
       interval: weekly
       day: monday
       time: "06:00"
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: "chore"
       include: scope
