@@ -1453,6 +1453,21 @@
   },
   {
    "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api/distance.php"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api/drivers/view_drivers.php"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/autocomplete.php"
+  },
+  {
+   "method": "GET",
    "host": "rapid.route4me.com",
    "path": "/country"
   },
@@ -4390,6 +4405,11 @@
    "method": "PATCH",
    "host": "wh.route4me.com",
    "path": "/modules/api/vehicles/{}"
+  },
+  {
+   "method": "POST",
+   "host": "api.route4me.com",
+   "path": "/actions/route/delete_route_destination.php"
   },
   {
    "method": "POST",
@@ -7565,6 +7585,11 @@
    "method": "PUT",
    "host": "api.route4me.com",
    "path": "/api.v4/territory.php"
+  },
+  {
+   "method": "PUT",
+   "host": "api.route4me.com",
+   "path": "/api/route/mark_address_visited.php"
   },
   {
    "method": "PUT",
