@@ -155,46 +155,6 @@ class TestGetDestination:
         assert last_request().url == f"{ROUTE_DESTINATIONS_BY_ORDER_V5}/a%2Fb"
 
 
-class TestDeleteRouteDestination:
-    def test_deletes_by_id_in_the_path(self, client, mocked, last_request):
-        mocked.add(responses.DELETE, f"{ROUTE_DESTINATIONS_V5}/{DESTINATION_ID}", json={"status": True}, status=200)
-
-        assert client.route_destinations_v5.delete_route_destination(DESTINATION_ID) == {"status": True}
-        assert last_request().method == "DELETE"
-        assert last_request().body is None
-
-    def test_an_empty_reply_is_returned_raw(self, client, mocked):
-        mocked.add(responses.DELETE, f"{ROUTE_DESTINATIONS_V5}/{DESTINATION_ID}", body=b"", status=204)
-
-        assert client.route_destinations_v5.delete_route_destination(DESTINATION_ID) == b""
-
-    def test_an_id_cannot_escape_its_path_segment(self, client, mocked, last_request):
-        mocked.add(responses.DELETE, f"{ROUTE_DESTINATIONS_V5}/a%2Fb", json={}, status=200)
-
-        client.route_destinations_v5.delete_route_destination("a/b")
-
-        assert last_request().url == f"{ROUTE_DESTINATIONS_V5}/a%2Fb"
-
-    @pytest.mark.parametrize("destination_id", ["", None])
-    def test_an_empty_id_is_rejected_before_any_request(self, client, mocked, destination_id):
-        with pytest.raises(ParamValueException):
-            client.route_destinations_v5.delete_route_destination(destination_id)
-
-        assert not mocked.calls
-
-    def test_an_api_error_is_returned_as_a_dict(self, client, mocked):
-        mocked.add(
-            responses.DELETE,
-            f"{ROUTE_DESTINATIONS_V5}/{DESTINATION_ID}",
-            json={"status": False, "code": 404, "messages": ["Destination not found"]},
-            status=404,
-        )
-
-        assert client.route_destinations_v5.delete_route_destination(DESTINATION_ID) == {
-            "errors": ["Destination not found"]
-        }
-
-
 class TestErrors:
     def test_a_v5_error_is_returned_as_a_dict(self, client, mocked, load_fixture):
         mocked.add(responses.POST, ROUTE_DESTINATIONS_LIST_V5, json=load_fixture("error_v5"), status=422)

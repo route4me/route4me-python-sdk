@@ -1,4 +1,4 @@
-"""The :class:`RouteDestinationsV5` resource (API V5): list, get, sequence and delete route destinations."""
+"""The :class:`RouteDestinationsV5` resource (API V5): list, get and sequence route destinations."""
 
 from ._url import path_segment
 from .api_endpoints import (
@@ -183,18 +183,3 @@ class RouteDestinationsV5(Base):
         """
         body = {"coordinates": _required(coordinates, "coordinates")}
         return self._call_api(ROUTE_DESTINATIONS_SEQUENCE_V5, "post", {}, body=body)
-
-    def delete_route_destination(self, route_destination_id):
-        """Remove a destination from its route.
-
-        Sends ``DELETE /modules/api/v5.0/route-destinations/{route_destination_id}``.
-
-        :param route_destination_id: ID of the destination.
-        :return: the decoded JSON reply, the raw body (``bytes``) when it is
-            not JSON, or the ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when ``route_destination_id`` is empty.
-
-        .. versionadded:: 1.0.0
-        """
-        url = f"{ROUTE_DESTINATIONS_V5}/{path_segment(route_destination_id, 'route_destination_id')}"
-        return self._request_decoded(url, {}, "delete")

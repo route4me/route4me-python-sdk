@@ -584,11 +584,6 @@
   {
    "method": "*",
    "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-destinations/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/route-status/planned"
   },
   {
