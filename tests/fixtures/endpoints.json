@@ -84,11 +84,6 @@
   {
    "method": "*",
    "host": "api.route4me.com",
-   "path": "/api.v4/address.php"
-  },
-  {
-   "method": "*",
-   "host": "api.route4me.com",
    "path": "/api.v4/address_book.php"
   },
   {
@@ -114,37 +109,12 @@
   {
    "method": "*",
    "host": "api.route4me.com",
-   "path": "/api.v4/note_custom_types.php"
-  },
-  {
-   "method": "*",
-   "host": "api.route4me.com",
-   "path": "/api.v4/optimization_problem.php"
-  },
-  {
-   "method": "*",
-   "host": "api.route4me.com",
-   "path": "/api.v4/order.php"
-  },
-  {
-   "method": "*",
-   "host": "api.route4me.com",
-   "path": "/api.v4/order_custom_user_fields.php"
-  },
-  {
-   "method": "*",
-   "host": "api.route4me.com",
    "path": "/api.v4/orders/changes.php"
   },
   {
    "method": "*",
    "host": "api.route4me.com",
    "path": "/api.v4/predict-optimization-time.php"
-  },
-  {
-   "method": "*",
-   "host": "api.route4me.com",
-   "path": "/api.v4/route.php"
   },
   {
    "method": "*",
@@ -165,11 +135,6 @@
    "method": "*",
    "host": "api.route4me.com",
    "path": "/api.v4/telematics/vendors.php"
-  },
-  {
-   "method": "*",
-   "host": "api.route4me.com",
-   "path": "/api.v4/territory.php"
   },
   {
    "method": "*",
@@ -269,232 +234,7 @@
   {
    "method": "*",
    "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-barcodes"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/batch-create"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/batch-update"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/custom-fields"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/depots"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/export"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/export-by-area-ids"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/export-by-areas"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/index/all"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/index/clustering"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/index/pagination"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/show"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/update-by-areas"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/addresses/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/clustering"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/export"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/export/columns"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/heatmap"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/list"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/list/combined"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/territories"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/types"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/locations/types/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/customers"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/customers/list"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/customers/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/driver-reviews"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/facilities"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/facilities/types"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/notes"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/notes/bulk-create"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/notes/custom-types"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/notes/destination/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/notes/route/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/notes/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/optimization-profiles"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/optimization-profiles/data-list"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/optimization-profiles/delete-entities"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/optimization-profiles/save-entities"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/orders-platform"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/orders-platform/batch-create"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/orders-platform/batch-delete"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/orders-platform/batch-update"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/orders-platform/batch-update/filter"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/orders-platform/order-custom-user-fields"
   },
   {
    "method": "*",
@@ -509,117 +249,7 @@
   {
    "method": "*",
    "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/orders/archive"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/orders/history"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/profile-api"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/recurring-routes/master-routes"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/recurring-routes/route-schedules"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/recurring-routes/route-schedules/replace"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/recurring-routes/scheduled-routes/get-copies"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/recurring-routes/schedules"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-breaks"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-destinations/columns"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-destinations/list"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-destinations/list/fields"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-destinations/order/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-destinations/sequence"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-destinations/sorting"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-status/planned"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-status/{}"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-status/{}/history"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-status/{}/rollback"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/route-stop-status"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/routes"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/routes/custom-data/bulk"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/routes/custom-data/keys"
   },
   {
    "method": "*",
@@ -629,112 +259,7 @@
   {
    "method": "*",
    "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/routes/delete"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/routes/list"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/routes/lookup-for-new-destination"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/routes/{}/custom-data"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/team/bulk-insert"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/team/users"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicle-capacity-profiles"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicle-profiles"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/assign"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/bulk/activate"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/bulk/deactivate"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/bulk/delete"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/bulk/restore"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/bulk/update"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/execute"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/license"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/location"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/paginate"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/search"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/vehicles/sync/pending"
-  },
-  {
-   "method": "*",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/workflows"
   },
   {
    "method": "*",
@@ -3914,6 +3439,11 @@
   {
    "method": "GET",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/vehicle-capacity-profiles/datatable"
   },
   {
@@ -4655,6 +4185,11 @@
    "method": "POST",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/activity-feed/counts-by-type"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-barcodes"
   },
   {
    "method": "POST",

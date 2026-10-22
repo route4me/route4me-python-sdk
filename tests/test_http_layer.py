@@ -18,11 +18,12 @@ import responses
 
 from route4me import Route4Me
 from route4me.api import HEADERS
-from route4me.api_endpoints import ROUTE_HOST, TERRITORY_HOST
+from route4me.api_endpoints import ROUTE_HOST, TERRITORY_HOST, VEHICLES_V5
 from route4me.config import DEFAULT_TIMEOUT, Route4MeConfig
 from route4me.exceptions import APIException
 
 ANY_URL = ROUTE_HOST
+PATCH_URL = f"{VEHICLES_V5}/C0FFEE00C0FFEE00C0FFEE00C0FFEE00"
 
 
 class _StopSend(Exception):
@@ -166,9 +167,11 @@ class TestVerbs:
         ],
     )
     def test_verb(self, client, mocked, last_request, helper, expected, registered):
-        mocked.add(registered, ANY_URL, json={}, status=200)
+        # PATCH exists only on API V5 endpoints, such as a vehicle update.
+        url = PATCH_URL if expected == "PATCH" else ANY_URL
+        mocked.add(registered, url, json={}, status=200)
 
-        getattr(client, helper)(ANY_URL, {"api_key": "k"})
+        client._make_request(url, {}, getattr(client, helper))
 
         assert last_request().method == expected
 
@@ -187,11 +190,11 @@ class TestVerbs:
         assert json.loads(last_request().body) == {"territory_name": "X"}
 
     def test_patch_sends_a_json_body(self, client, mocked, last_request):
-        mocked.add(responses.PATCH, TERRITORY_HOST, json={}, status=200)
+        mocked.add(responses.PATCH, PATCH_URL, json={}, status=200)
 
-        client._request_patch(TERRITORY_HOST, {}, json={"territory_name": "X"})
+        client._make_request(PATCH_URL, {}, client._request_patch, json={"alias": "X"})
 
-        assert json.loads(last_request().body) == {"territory_name": "X"}
+        assert json.loads(last_request().body) == {"alias": "X"}
 
 
 class TestClientConfiguration:
