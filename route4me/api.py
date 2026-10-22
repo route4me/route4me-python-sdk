@@ -40,6 +40,7 @@ from .orders import Order
 from .orders_group import OrdersGroup
 from .orders_v5 import OrdersV5
 from .rapid_address import RapidAddress
+from .recurring_routes import RecurringRoutes
 from .route import Route
 from .route_destinations_v5 import RouteDestinationsV5
 from .route_status import RouteStatus
@@ -70,10 +71,11 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`distance`, :attr:`drivers`, :attr:`file_uploading`, :attr:`gps`,
     :attr:`members`, :attr:`optimization`, :attr:`optimization_profiles`,
     :attr:`order`, :attr:`orders_group`, :attr:`orders_v5`,
-    :attr:`rapid_address`, :attr:`route`, :attr:`route_destinations_v5`,
-    :attr:`route_status`, :attr:`routes_v5`, :attr:`team_v5`,
-    :attr:`telematics`, :attr:`territory`, :attr:`vehicle_capacity_profiles`,
-    :attr:`vehicle_profiles`, :attr:`vehicles` and :attr:`vehicles_v5`.
+    :attr:`rapid_address`, :attr:`recurring_routes`, :attr:`route`,
+    :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
+    :attr:`team_v5`, :attr:`telematics`, :attr:`territory`,
+    :attr:`vehicle_capacity_profiles`, :attr:`vehicle_profiles`,
+    :attr:`vehicles` and :attr:`vehicles_v5`.
 
     The client can be used as a context manager; leaving the block closes the
     pooled session::
@@ -206,6 +208,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.distance = Distance(self)
         self.drivers = Drivers(self)
         self.orders_v5 = OrdersV5(self)
+        self.recurring_routes = RecurringRoutes(self)
         self.route_destinations_v5 = RouteDestinationsV5(self)
         self.routes_v5 = RoutesV5(self)
         self.team_v5 = TeamV5(self)
