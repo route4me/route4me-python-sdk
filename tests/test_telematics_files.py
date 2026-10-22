@@ -15,7 +15,6 @@ from route4me.api_endpoints import (
     TELEMATICS_REGISTER_V4,
     TELEMATICS_VENDORS_ALL_V5,
     TELEMATICS_VENDORS_INFO_V4,
-    TELEMATICS_VENDORS_V4,
     TELEMATICS_VENDORS_V5,
 )
 from route4me.exceptions import ParamValueException
@@ -26,70 +25,26 @@ CONNECTION_TOKEN = "connection-token"
 UPLOAD_ID = "upload-0001"
 
 
-@pytest.mark.filterwarnings("ignore::DeprecationWarning")
-class TestTelematicsVendors:
-    """The vendor directory lives on telematics.route4me.com, which is retired."""
+class TestRetiredVendorMethods:
+    """The vendor directory lived on telematics.route4me.com, which is retired: the
+    methods warn and send no request, so the API key never reaches that host."""
 
-    def test_get_vendors(self, client, mocked, last_request):
-        mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={"vendors": []}, status=200)
+    CALLS = [
+        ("get_vendors", (), {}, "get_vendors_v5"),
+        ("get_vendor", (55,), {}, "get_vendor_v5"),
+        ("search_vendor", (), {"country": "GB", "per_page": 5}, "get_vendors_v5"),
+        ("compare_vendors", ("55,56",), {}, "get_vendor_v5"),
+    ]
 
-        assert client.telematics.get_vendors() == {"vendors": []}
-        assert last_request().method == "GET"
-
-    def test_get_vendor_sends_the_vendor_id(self, client, mocked, query_of, last_request):
-        mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={"vendor": {}}, status=200)
-
-        client.telematics.get_vendor(55)
-
-        assert query_of(last_request())["vendor_id"] == "55"
-
-    def test_search_vendor_sends_the_filters(self, client, mocked, query_of, last_request):
-        mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={"vendors": []}, status=200)
-
-        client.telematics.search_vendor(country="GB", is_integrated=1, page=1, per_page=5)
-
-        query = query_of(last_request())
-        assert (query["country"], query["is_integrated"], query["per_page"]) == ("GB", "1", "5")
-
-    def test_compare_vendors_sends_the_ids(self, client, mocked, query_of, last_request):
-        mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={"vendors": []}, status=200)
-
-        client.telematics.compare_vendors("55,56,57")
-
-        assert query_of(last_request())["vendors"] == "55,56,57"
-
-    def test_get_vendor_does_not_leak_into_get_vendors(self, client, mocked, query_of, last_request):
-        mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
-        client.telematics.get_vendor(55)
-
-        client.telematics.get_vendors()
-
-        assert "vendor_id" not in query_of(last_request())
-
-    def test_compare_vendors_does_not_leak_into_get_vendors(self, client, mocked, query_of, last_request):
-        mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
-        client.telematics.compare_vendors("55,56")
-
-        client.telematics.get_vendors()
-
-        assert "vendors" not in query_of(last_request())
-
-
-class TestVendorDeprecation:
-    @pytest.mark.parametrize(
-        ("method", "args", "replacement"),
-        [
-            ("get_vendors", (), "get_vendors_v5"),
-            ("get_vendor", (55,), "get_vendor_v5"),
-            ("search_vendor", (), "get_vendors_v5"),
-            ("compare_vendors", ("55,56",), "get_vendor_v5"),
-        ],
-    )
-    def test_the_retired_host_methods_warn(self, client, mocked, method, args, replacement):
-        mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
-
+    @pytest.mark.parametrize(("method", "args", "kwargs", "replacement"), CALLS)
+    def test_they_warn_send_nothing_and_name_the_replacement(self, client, mocked, method, args, kwargs, replacement):
         with pytest.warns(DeprecationWarning, match=replacement):
-            getattr(client.telematics, method)(*args)
+            result = getattr(client.telematics, method)(*args, **kwargs)
+
+        assert not mocked.calls
+        assert len(result["errors"]) == 1
+        assert "no request was sent" in result["errors"][0]
+        assert f"Telematics.{replacement}" in result["errors"][0]
 
 
 class TestTelematicsVendorsV5:

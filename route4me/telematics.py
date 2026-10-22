@@ -7,7 +7,6 @@ from .api_endpoints import (
     TELEMATICS_REGISTER_V4,
     TELEMATICS_VENDORS_ALL_V5,
     TELEMATICS_VENDORS_INFO_V4,
-    TELEMATICS_VENDORS_V4,
     TELEMATICS_VENDORS_V5,
 )
 from .base import Base
@@ -25,6 +24,20 @@ def _warn_retired(method, replacement):
         DeprecationWarning,
         stacklevel=3,
     )
+
+
+def _retired_reply(replacement):
+    """Return the error dict of a vendor method on the retired host, which sends no request.
+
+    :param replacement: name of the method to use instead.
+    :return: ``{"errors": [...]}``.
+    """
+    return {
+        "errors": [
+            f"telematics.route4me.com is retired, so no request was sent (the API key is never sent there). "
+            f"Use Telematics.{replacement}."
+        ]
+    }
 
 
 class Telematics(Base):
@@ -127,68 +140,79 @@ class Telematics(Base):
     def get_vendors(self):
         """List the telematics vendors.
 
-        Sends ``GET /api/vendors.php`` to ``telematics.route4me.com``.
+        Sends no request: ``telematics.route4me.com`` is retired.
 
-        :return: the decoded JSON reply: the vendors, or the
-            ``{"errors": ...}`` dict on an API error.
+        :return: the ``{"errors": ...}`` dict that names the replacement.
 
         .. deprecated:: 1.0.0
            ``telematics.route4me.com`` is retired and redirects to the website,
            so this call cannot succeed. Use :meth:`get_vendors_v5`.
+
+        .. versionchanged:: 1.0.0
+           It no longer sends the request, so the API key never reaches the
+           retired host.
         """
         _warn_retired("get_vendors", "get_vendors_v5")
-        return self._call_api(TELEMATICS_VENDORS_V4, "get", {"api_key": self.api.key})
+        return _retired_reply("get_vendors_v5")
 
     def get_vendor(self, vendor_id):
         """Get one telematics vendor.
 
-        Sends ``GET /api/vendors.php`` to ``telematics.route4me.com`` with
-        ``vendor_id``.
+        Sends no request: ``telematics.route4me.com`` is retired.
 
         :param vendor_id: ID of the vendor.
-        :return: the decoded JSON reply: the vendor, or the ``{"errors": ...}``
-            dict on an API error.
+        :return: the ``{"errors": ...}`` dict that names the replacement.
 
         .. deprecated:: 1.0.0
            ``telematics.route4me.com`` is retired. Use :meth:`get_vendor_v5`.
+
+        .. versionchanged:: 1.0.0
+           It no longer sends the request, so the API key never reaches the
+           retired host.
         """
+        del vendor_id  # kept in the signature for compatibility
         _warn_retired("get_vendor", "get_vendor_v5")
-        params = {"api_key": self.api.key, "vendor_id": vendor_id}
-        return self._call_api(TELEMATICS_VENDORS_V4, "get", params)
+        return _retired_reply("get_vendor_v5")
 
     def search_vendor(self, **kwargs):
         """Search the telematics vendors.
 
-        Sends ``GET /api/vendors.php`` to ``telematics.route4me.com``.
+        Sends no request: ``telematics.route4me.com`` is retired.
 
-        :param kwargs: search filters, sent as query parameters as is.
-        :return: the decoded JSON reply: the matching vendors, or the
-            ``{"errors": ...}`` dict on an API error.
+        :param kwargs: search filters; ignored.
+        :return: the ``{"errors": ...}`` dict that names the replacement.
 
         .. deprecated:: 1.0.0
            ``telematics.route4me.com`` is retired. Use :meth:`get_vendors_v5`,
            which takes the same filters.
+
+        .. versionchanged:: 1.0.0
+           It no longer sends the request, so the API key never reaches the
+           retired host.
         """
+        del kwargs  # kept in the signature for compatibility
         _warn_retired("search_vendor", "get_vendors_v5")
-        return self._call_api(TELEMATICS_VENDORS_V4, "get", dict(kwargs, api_key=self.api.key))
+        return _retired_reply("get_vendors_v5")
 
     def compare_vendors(self, vendors_id):
         """Compare several telematics vendors.
 
-        Sends ``GET /api/vendors.php`` to ``telematics.route4me.com`` with
-        ``vendors``.
+        Sends no request: ``telematics.route4me.com`` is retired.
 
         :param vendors_id: the vendor IDs, comma-separated, e.g. ``"55,56"``.
-        :return: the decoded JSON reply: the vendors, or the
-            ``{"errors": ...}`` dict on an API error.
+        :return: the ``{"errors": ...}`` dict that names the replacement.
 
         .. deprecated:: 1.0.0
            ``telematics.route4me.com`` is retired and API V5 has no comparison
            endpoint. Fetch each vendor with :meth:`get_vendor_v5`.
+
+        .. versionchanged:: 1.0.0
+           It no longer sends the request, so the API key never reaches the
+           retired host.
         """
+        del vendors_id  # kept in the signature for compatibility
         _warn_retired("compare_vendors", "get_vendor_v5")
-        params = {"api_key": self.api.key, "vendors": vendors_id}
-        return self._call_api(TELEMATICS_VENDORS_V4, "get", params)
+        return _retired_reply("get_vendor_v5")
 
     def register_member(self, member_id):
         """Register a member with the telematics service.

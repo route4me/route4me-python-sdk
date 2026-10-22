@@ -9,7 +9,7 @@ This is the history of changes of the `route4me` package.
 
 This is the first release since 0.1.7.0, and PyPI still serves 0.0.7.1 from 2020.
 
-It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,369 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
+It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,357 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
 
 ### Breaking changes
 
@@ -68,6 +68,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 - The library logs through `logging` and warns through `warnings` instead of printing.
 
 ### Security
+- **The API key goes only to `api.route4me.com` and `wh.route4me.com`.** A request to any other host carries no key, even if a caller put `api_key` in its parameters. The deprecated vendor methods (`telematics.route4me.com`, retired) and street-data methods (`rapid.route4me.com/street_data`, gone) no longer send a request at all: they warn and return an `{"errors": [...]}` dict. Before, they sent the key in the query string to an endpoint that no longer works, the class of bug behind the PHP SDK's PR #41.
 - **Route IDs in URL paths are percent-encoded.**
   - `RouteStatus` and `Route.export_route_v5` inserted `route_id` raw.
   - `requests` resolves dot segments, so `route-status/../secret` reached `/modules/api/v5.0/secret` with the caller's key.
@@ -79,7 +80,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
   - tracebacks: `APIException` redacts URLs and bodies, including those of the V4 endpoints that echo parameters back;
   - logs.
 - **No request state is shared between calls (#36).** This is the class of bug that sent the PHP SDK's requests to the wrong host.
-- **A guard checks every test request:** https only, Route4Me hosts only, registered endpoints only, and the key only in its expected place.
+- **A guard checks every test request:** https only, Route4Me hosts only, registered endpoints only, and the key only in its expected place and only to the API hosts.
 - **CI hardening.**
   - CI actions are pinned to commit SHAs and use read-only tokens.
   - gitleaks runs in CI and as a pre-commit hook.
@@ -133,9 +134,9 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 - Docstrings on every public module, class and method.
 
 ### Deprecated
-- `Telematics.get_vendors`, `get_vendor`, `search_vendor` and `compare_vendors`: `telematics.route4me.com` is retired. Use `get_vendors_v5` and `get_vendor_v5`.
+- `Telematics.get_vendors`, `get_vendor`, `search_vendor` and `compare_vendors`: `telematics.route4me.com` is retired. They send no request and return an error dict. Use `get_vendors_v5` and `get_vendor_v5`.
 - `Telematics.pp_vendor_comparison`: it prints the features of the retired `compare_vendors` reply, and API V5 vendors have none.
-- `RapidAddress.get_street_data`, `get_street_data_zip` and `get_street_data_service`: the street-data endpoints return 404 and have no replacement.
+- `RapidAddress.get_street_data`, `get_street_data_zip` and `get_street_data_service`: the street-data endpoints return 404 and have no replacement. They still check their arguments, then send no request and return an error dict.
 - `Route.export_route`: the V4 export endpoint returns 404. Use `export_route_v5`.
 - `Members.webinar_registration(webiinar_date=...)`: pass `webinar_date`.
 
@@ -160,7 +161,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 - #38: transport errors in `OrdersGroup` and `OptimizationProfiles` surfaced as `UnboundLocalError`, and so did errors in `RapidAddress`.
 - #39: `Route.delete_route()` raised `AttributeError` from its own error handler. The same pattern is fixed in `Address.get_address()` and `get_address_notes()`.
 - #41: `clean_dict()` dropped `0` and `False`, corrupting time windows such as `[0, 3600]`.
-- #42: `RapidAddress.get_street_data()` sent no request when given `offset` and `limit`, or no arguments.
+- #42: `RapidAddress.get_street_data()` returned `None` when given `offset` and `limit`, or no arguments. It now returns an error dict on every branch, since the endpoint is gone (see **Deprecated**).
 - #43: `Optimization.bundling()` rejected the `Bundling` object its error message asked for.
 - **Optimization:**
   - `update_optimization()` sent its addresses as unreadable form data, and `reoptimize=True` as `"True"`.
@@ -202,7 +203,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 
 ### Internal
 - Packaging moved to `pyproject.toml` (hatchling); `setup.py` is a shim.
-- 1,369 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
+- 1,357 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
 - pylint gives zero messages on the package, the tests and the examples. ruff formats the code. mypy passes, with strict checks on the tier-A modules, and blocks CI.
 - CI runs Python 3.9–3.14 on Linux, and Python 3.12 on macOS and Windows.
 

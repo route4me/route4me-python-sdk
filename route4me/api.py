@@ -14,7 +14,7 @@ from requests.adapters import HTTPAdapter
 from ._params import nested_query
 from ._redact import redact_text
 from ._resilience import CircuitBreaker, execute_with_retry
-from ._url import is_v5_url
+from ._url import is_v5_url, takes_api_key
 from .account_profile import AccountProfile
 from .activity_feed import ActivityFeed
 from .address import Address
@@ -260,8 +260,10 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
 
         API V5 requests (``https://wh.route4me.com/modules/api/v5.x/...``) carry
         the key as an ``Authorization: Bearer`` header, which keeps it out of
-        URLs and therefore out of proxy and server logs. Every other request
-        carries it as the ``api_key`` query parameter, which the V4 API requires.
+        URLs and therefore out of proxy and server logs. Other requests to the
+        API hosts (:data:`~route4me._url.API_KEY_HOSTS`) carry it as the
+        ``api_key`` query parameter, which the V4 API requires. A request to
+        any other host carries no key at all.
 
         :param url: absolute URL of the API endpoint.
         :param params: query parameters. They are copied, and the key is added
@@ -281,7 +283,8 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
            API V5 requests send the key as a bearer token instead of
            ``api_key``, and ask for JSON first (:data:`V5_ACCEPT`), so their
            errors arrive as JSON. Boolean query values are sent as ``1`` and ``0``, and
-           API V5 list and dict query values as bracketed keys.
+           API V5 list and dict query values as bracketed keys. The key is sent
+           only to ``api.route4me.com`` and ``wh.route4me.com``.
         """
         # Copy rather than mutate. Every resource passes its own long-lived
         # `self.params`, so writing api_key in place meant query parameters
@@ -301,8 +304,11 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             if headers.get("Accept", "*/*") == "*/*":
                 headers["Accept"] = V5_ACCEPT
             kwargs["headers"] = headers
-        else:
+        elif takes_api_key(url):
             params["api_key"] = self.key
+        else:
+            # Never send the key to another host, even if a caller put it in.
+            params.pop("api_key", None)
         response = request_method(url, params, **kwargs)
         if not 200 <= response.status_code < 400:
             # Both the URL and the body are scrubbed. `Response.url` carries
