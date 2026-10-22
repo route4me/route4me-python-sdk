@@ -25,6 +25,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 204 API methods for t
   - Pass `timeout=None` for the old unbounded behaviour.
   - The route update methods also take a per-call `timeout=`.
 - **API V5 requests send the key as `Authorization: Bearer <key>`** instead of the `api_key` query parameter, so the key no longer appears in URLs. V4 requests are unchanged.
+- **API V5 requests send `Accept: application/json, */*;q=0.8`.** With `*/*`, API V5 answered errors with an HTML page, so their messages were lost. File exports still work, and an `Accept` you set on the client is kept.
 - **Each client uses one pooled `requests.Session`.**
   - Patching `requests.get`, `post` or `request` no longer intercepts the SDK's calls. Patch `requests.Session.send`, or use `responses`.
   - Cookies now persist for the life of a client.
@@ -43,7 +44,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 204 API methods for t
   - the `message` value;
   - or `["Unexpected server response"]`.
 
-  It used to be a string for a non-JSON reply, and `None` when the reply had no `errors`, so `". ".join(result["errors"])` printed letter by letter or raised.
+  It used to be a string for a non-JSON reply, and `None` when the reply had no `errors`, so `". ".join(result["errors"])` printed letter by letter or raised. The API V5 `error` message (for example "the required feature is not enabled") is read too.
 - `APIException.url` and `.response` are redacted, which changes `str(exc)` and `exc.args`.
 - `re_optimization()` raises `APIException` on an HTTP error.
 - `get_optimization()` and `parse_response()` return the payload; they used to return `None`.
