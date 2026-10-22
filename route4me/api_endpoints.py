@@ -136,3 +136,7 @@ MEMBER_CONFIGURATION_SETTINGS_V5 = f"{API_V5}/member-configuration-settings"
 TEAM_USERS_BULK_INSERT_V5 = f"{API_V5}/team/users/bulk-insert"
 TEAM_USERS_V5 = f"{API_V5}/team/users"
 VIEW_DRIVERS = f"{MAIN_HOST}/api/drivers/view_drivers.php"
+
+# Phase 5: p5-orders-schedules
+ORDER_CUSTOM_USER_FIELDS = f"{MAIN_HOST}/api.v4/order_custom_user_fields.php"
+ORDERS_UPDATES = f"{MAIN_HOST}/api.v4/orders/changes.php"
