@@ -247,3 +247,10 @@ Recurring Routes
 .. automodule:: route4me.recurring_routes
 	:members:
 	:show-inheritance:
+
+Notes
+-----
+
+.. automodule:: route4me.notes
+	:members:
+	:show-inheritance:

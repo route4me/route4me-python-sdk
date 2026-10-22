@@ -34,6 +34,7 @@ from .exceptions import APIException
 from .file_uploading import FileUploading
 from .gps import GPS
 from .members import Members
+from .notes import Notes
 from .optimization import Optimization
 from .optimization_profiles import OptimizationProfiles
 from .orders import Order
@@ -69,11 +70,11 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`auth_history`, :attr:`autocomplete`, :attr:`avoidance_zones`,
     :attr:`configuration_settings`, :attr:`configuration_settings_v5`,
     :attr:`distance`, :attr:`drivers`, :attr:`file_uploading`, :attr:`gps`,
-    :attr:`members`, :attr:`optimization`, :attr:`optimization_profiles`,
-    :attr:`order`, :attr:`orders_group`, :attr:`orders_v5`,
-    :attr:`rapid_address`, :attr:`recurring_routes`, :attr:`route`,
-    :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
-    :attr:`team_v5`, :attr:`telematics`, :attr:`territory`,
+    :attr:`members`, :attr:`notes`, :attr:`optimization`,
+    :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
+    :attr:`orders_v5`, :attr:`rapid_address`, :attr:`recurring_routes`,
+    :attr:`route`, :attr:`route_destinations_v5`, :attr:`route_status`,
+    :attr:`routes_v5`, :attr:`team_v5`, :attr:`telematics`, :attr:`territory`,
     :attr:`vehicle_capacity_profiles`, :attr:`vehicle_profiles`,
     :attr:`vehicles` and :attr:`vehicles_v5`.
 
@@ -207,6 +208,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.configuration_settings_v5 = ConfigurationSettingsV5(self)
         self.distance = Distance(self)
         self.drivers = Drivers(self)
+        self.notes = Notes(self)
         self.orders_v5 = OrdersV5(self)
         self.recurring_routes = RecurringRoutes(self)
         self.route_destinations_v5 = RouteDestinationsV5(self)
