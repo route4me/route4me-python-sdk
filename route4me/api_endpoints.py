@@ -170,3 +170,6 @@ DRIVER_REVIEW_SETTINGS_BY_MEMBER_V5 = f"{API_V5}/driver-reviews/settings/get-by-
 DRIVER_REVIEW_SETTINGS_UPLOAD_V5 = f"{API_V5}/driver-reviews/settings/upload"
 POD_WORKFLOWS_V5 = f"{API_V5}/workflows"
 ROUTE_STATUS_PLANNED_V5 = f"{API_V5}/route-status/planned"
+
+# Phase 5: p7-places-tracking
+CUSTOMERS_V5 = f"{API_V5}/customers"

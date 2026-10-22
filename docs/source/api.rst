@@ -268,3 +268,10 @@ POD Workflows
 .. automodule:: route4me.pod_workflows
 	:members:
 	:show-inheritance:
+
+Customers
+---------
+
+.. automodule:: route4me.customers
+	:members:
+	:show-inheritance:

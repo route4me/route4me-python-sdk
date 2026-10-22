@@ -28,6 +28,7 @@ from .avoidance_zones import AvoidanceZones
 from .config import UNSET, normalize_timeout, resolve, resolve_timeout
 from .configuration_settings import ConfigurationSettings
 from .configuration_settings_v5 import ConfigurationSettingsV5
+from .customers import Customers
 from .distance import Distance
 from .driver_reviews import DriverReviews
 from .drivers import Drivers
@@ -71,13 +72,13 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`address_book`, :attr:`address_book_v5`, :attr:`asset_tracking`,
     :attr:`auth_history`, :attr:`autocomplete`, :attr:`avoidance_zones`,
     :attr:`configuration_settings`, :attr:`configuration_settings_v5`,
-    :attr:`distance`, :attr:`driver_reviews`, :attr:`drivers`,
-    :attr:`file_uploading`, :attr:`gps`, :attr:`members`, :attr:`notes`,
-    :attr:`optimization`, :attr:`optimization_profiles`, :attr:`order`,
-    :attr:`orders_group`, :attr:`orders_v5`, :attr:`pod_workflows`,
-    :attr:`rapid_address`, :attr:`recurring_routes`, :attr:`route`,
-    :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
-    :attr:`team_v5`, :attr:`telematics`, :attr:`territory`,
+    :attr:`customers`, :attr:`distance`, :attr:`driver_reviews`,
+    :attr:`drivers`, :attr:`file_uploading`, :attr:`gps`, :attr:`members`,
+    :attr:`notes`, :attr:`optimization`, :attr:`optimization_profiles`,
+    :attr:`order`, :attr:`orders_group`, :attr:`orders_v5`,
+    :attr:`pod_workflows`, :attr:`rapid_address`, :attr:`recurring_routes`,
+    :attr:`route`, :attr:`route_destinations_v5`, :attr:`route_status`,
+    :attr:`routes_v5`, :attr:`team_v5`, :attr:`telematics`, :attr:`territory`,
     :attr:`vehicle_capacity_profiles`, :attr:`vehicle_profiles`,
     :attr:`vehicles` and :attr:`vehicles_v5`.
 
@@ -209,6 +210,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.autocomplete = Autocomplete(self)
         self.configuration_settings = ConfigurationSettings(self)
         self.configuration_settings_v5 = ConfigurationSettingsV5(self)
+        self.customers = Customers(self)
         self.distance = Distance(self)
         self.driver_reviews = DriverReviews(self)
         self.drivers = Drivers(self)
