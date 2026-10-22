@@ -91,7 +91,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     """
 
     # Public constructor: each keyword mirrors an option of route4me.config.Route4MeConfig.
-    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments,too-many-locals
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments,too-many-locals,too-many-statements
         self,
         key,
         headers=None,
