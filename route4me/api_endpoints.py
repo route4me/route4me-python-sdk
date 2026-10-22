@@ -124,5 +124,6 @@ ROUTE_DESTINATIONS_SORTING_V5 = f"{API_V5}/route-destinations/sorting"
 ROUTE_STOP_STATUS_V5 = f"{API_V5}/route-stop-status"
 
 # Phase 5: p4-team-account
+MEMBER_CAPABILITIES = f"{MAIN_HOST}/api/member/capabilities.php"
 TEAM_USERS_BULK_INSERT_V5 = f"{API_V5}/team/users/bulk-insert"
 TEAM_USERS_V5 = f"{API_V5}/team/users"

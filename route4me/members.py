@@ -5,6 +5,7 @@ import warnings
 from .api_endpoints import (
     GET_USERS_HOST,
     MEMBER_AUTHENTICATE,
+    MEMBER_CAPABILITIES,
     REGISTER_ACTION,
     USER_LICENSE_HOST,
     USER_URL,
@@ -130,6 +131,74 @@ class Members(Base):
             }
         )
         return self._request_decoded(USER_URL, kwargs, "get")
+
+    def create_user(self, **kwargs):
+        """Create a user (a sub-user of the account).
+
+        Sends ``POST /api.v4/user.php`` with the keywords as the JSON body.
+        API V5 does the same with :meth:`TeamV5.create_team_member
+        <route4me.team_v5.TeamV5.create_team_member>`.
+
+        :param kwargs: the user, e.g. ``member_first_name``,
+            ``member_last_name``, ``member_email``, ``member_type`` (such as
+            ``"SUB_ACCOUNT_DRIVER"``), ``member_password`` and
+            ``OWNER_MEMBER_ID``.
+        :return: the decoded JSON reply: the new user, the raw body (``bytes``)
+            when it is not JSON, or the ``{"errors": ...}`` dict on an API
+            error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._request_decoded(USER_URL, {}, "post", json=dict(kwargs))
+
+    def user_update(self, member_id, **kwargs):
+        """Update a user.
+
+        Sends ``PUT /api.v4/user.php`` with ``member_id`` in the query and the
+        keywords as the JSON body. API V5 does the same with
+        :meth:`TeamV5.update_team_member
+        <route4me.team_v5.TeamV5.update_team_member>`.
+
+        :param member_id: ID of the user.
+        :param kwargs: the fields to change, e.g. ``member_phone`` or
+            ``custom_data``.
+        :return: the decoded JSON reply: the updated user, the raw body
+            (``bytes``) when it is not JSON, or the ``{"errors": ...}`` dict on
+            an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._request_decoded(USER_URL, {"member_id": member_id}, "put", json=dict(kwargs))
+
+    def user_delete(self, member_id):
+        """Delete a user.
+
+        Sends ``DELETE /api.v4/user.php`` with ``member_id`` in the query. API
+        V5 does the same with :meth:`TeamV5.remove_team_member
+        <route4me.team_v5.TeamV5.remove_team_member>`.
+
+        :param member_id: ID of the user.
+        :return: the decoded JSON reply, ``{"status": true}`` on success, the
+            raw body (``bytes``) when it is not JSON, or the
+            ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._request_decoded(USER_URL, {"member_id": member_id}, "delete")
+
+    def get_member_capabilities(self):
+        """Get the capabilities of the account.
+
+        Sends ``GET /api/member/capabilities.php``.
+
+        :return: the decoded JSON reply: the enabled ``features``, the
+            ``travelModes``, ``LicensedModules``, whether the account is
+            ``commercial``, and more; the raw body (``bytes``) when it is not
+            JSON, or the ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._request_decoded(MEMBER_CAPABILITIES, {}, "get")
 
     def validate_session(self, **kwargs):
         """Check whether a member's session is valid.
