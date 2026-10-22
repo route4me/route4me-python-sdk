@@ -1,6 +1,5 @@
 """The :class:`GPS` resource: send device positions and read the location history."""
 
-from ._nested_query import nested_query
 from .api_endpoints import DEVICE_LOCATION_URL, SET_GPS_HOST, USER_LOCATIONS_HOST, VEHICLE_LOCATIONS_V5
 from .base import Base
 from .exceptions import ParamValueException
@@ -138,4 +137,4 @@ class GPS(Base):
             raise ParamValueException("vehicle_ids", "At least one vehicle ID is required")
         if isinstance(vehicle_ids, str):
             vehicle_ids = [vehicle_ids]
-        return self._call_api(VEHICLE_LOCATIONS_V5, "get", nested_query({"vehicle_ids": list(vehicle_ids)}))
+        return self._call_api(VEHICLE_LOCATIONS_V5, "get", {"vehicle_ids": list(vehicle_ids)})

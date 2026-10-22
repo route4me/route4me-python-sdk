@@ -91,6 +91,32 @@ class TestQueryValues:
 
         assert query_of(last_request())["flag"] == sent
 
+    def test_v5_lists_and_dicts_use_bracketed_keys(self, client, mocked, query_of, last_request):
+        """requests cannot send a dict or a nested list, and PHP keeps only the
+        last of a repeated plain key."""
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client._make_request(
+            url,
+            {"ids": ["A", "B"], "filters": {"active": True}, "order_by": [["title", "asc"]]},
+            client._request_get,
+        )
+
+        assert query_of(last_request()) == {
+            "ids[]": ["A", "B"],
+            "filters[active]": "1",
+            "order_by[0][]": ["title", "asc"],
+        }
+
+    def test_v4_lists_are_left_as_they_are(self, client, mocked, query_of, last_request):
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+
+        client._make_request(ANY_URL, {"route_id": ["A", "B"], "flags": [True, False]}, client._request_get)
+
+        assert query_of(last_request())["route_id"] == ["A", "B"]
+        assert query_of(last_request())["flags"] == ["1", "0"]
+
     def test_the_callers_params_are_not_changed(self, client, mocked):
         mocked.add(responses.GET, ANY_URL, json={}, status=200)
         params = {"flag": True}

@@ -1,7 +1,7 @@
 """The :class:`OptimizationProfiles` resource (API V5): optimization profiles and their entities."""
 
+from ._params import require
 from ._url import path_segment
-from ._v5_params import require
 from .api_endpoints import (
     OPTIMIZATION_PROFILES_BASE_V5,
     OPTIMIZATION_PROFILES_DELETE_ENTITIES_V5,

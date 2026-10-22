@@ -1,6 +1,5 @@
 """The :class:`Locations` resource (API V5): address book locations and location types."""
 
-from ._nested_query import nested_query
 from ._url import path_segment
 from .api_endpoints import (
     LOCATION_TYPES_V5,
@@ -184,7 +183,7 @@ class Locations(Base):
 
         .. versionadded:: 1.0.0
         """
-        return self._call_api(LOCATION_TYPES_V5, "get", nested_query(kwargs))
+        return self._call_api(LOCATION_TYPES_V5, "get", dict(kwargs))
 
     def get_location_type_by_id(self, location_type_id):
         """Get one location type.

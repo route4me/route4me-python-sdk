@@ -1,6 +1,5 @@
 """The :class:`Facilities` resource (API V5): facilities and facility types."""
 
-from ._nested_query import nested_query
 from ._url import path_int, path_segment
 from .api_endpoints import FACILITIES_V5, FACILITY_TYPES_V5
 from .base import Base
@@ -59,7 +58,7 @@ class Facilities(Base):
 
         .. versionadded:: 1.0.0
         """
-        return self._call_api(FACILITIES_V5, "get", nested_query(kwargs))
+        return self._call_api(FACILITIES_V5, "get", dict(kwargs))
 
     def get_facility(self, facility_id):
         """Get one facility.

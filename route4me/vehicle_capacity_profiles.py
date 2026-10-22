@@ -1,7 +1,7 @@
 """The :class:`VehicleCapacityProfiles` resource (API V5): list, create, read, update and delete capacity profiles."""
 
+from ._params import require
 from ._url import path_segment
-from ._v5_params import query, require
 from .api_endpoints import VEHICLE_CAPACITY_PROFILES_V5
 from .base import Base
 
@@ -50,7 +50,7 @@ class VehicleCapacityProfiles(Base):
 
         .. versionadded:: 1.0.0
         """
-        return self._call_api(VEHICLE_CAPACITY_PROFILES_V5, "get", query(kwargs))
+        return self._call_api(VEHICLE_CAPACITY_PROFILES_V5, "get", dict(kwargs))
 
     def create_vehicle_capacity_profile(self, **kwargs):
         """Create a vehicle capacity profile.

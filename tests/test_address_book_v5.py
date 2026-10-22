@@ -210,12 +210,13 @@ def test_each_method_sends_its_request(
         assert json.loads(request.body) == body
 
 
-def test_a_query_list_is_sent_as_repeated_keys(client, mocked, last_request, query_of):
+def test_a_query_list_is_sent_with_bracketed_keys(client, mocked, last_request, query_of):
+    """PHP keeps only the last of ``display_list=a&display_list=b``."""
     mocked.add(responses.GET, ADDRESS_BOOK_CONTACTS_ALL_V5, json={"results": []}, status=200)
 
     client.address_book_v5.get_address_book_contacts(display_list=["routed", "unrouted"])
 
-    assert query_of(last_request()) == {"display_list": ["routed", "unrouted"]}
+    assert query_of(last_request()) == {"display_list[]": ["routed", "unrouted"]}
 
 
 def test_query_values_do_not_leak_into_the_next_call(client, mocked, last_request, query_of):

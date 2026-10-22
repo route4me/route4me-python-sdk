@@ -1,7 +1,7 @@
 """The :class:`VehiclesV5` resource (API V5): vehicles, their bulk actions and asynchronous jobs."""
 
+from ._params import require
 from ._url import path_segment
-from ._v5_params import query, require
 from .api_endpoints import (
     VEHICLES_ASSIGN_V5,
     VEHICLES_BULK_ACTIVATE_V5,
@@ -101,7 +101,7 @@ class VehiclesV5(Base):
 
         .. versionadded:: 1.0.0
         """
-        return self._call_api(VEHICLES_V5, "get", query(kwargs))
+        return self._call_api(VEHICLES_V5, "get", dict(kwargs))
 
     def create_vehicle(self, **kwargs):
         """Create a vehicle.
@@ -135,7 +135,7 @@ class VehiclesV5(Base):
 
         .. versionadded:: 1.0.0
         """
-        return self._call_api(VEHICLES_PAGINATE_V5, "get", query(kwargs))
+        return self._call_api(VEHICLES_PAGINATE_V5, "get", dict(kwargs))
 
     def get_vehicle_by_id(self, vehicle_id):
         """Get one vehicle.
@@ -179,7 +179,7 @@ class VehiclesV5(Base):
 
         .. versionadded:: 1.0.0
         """
-        return self._call_api(self._vehicle_url(vehicle_id, "/track"), "get", query(kwargs))
+        return self._call_api(self._vehicle_url(vehicle_id, "/track"), "get", dict(kwargs))
 
     def create_temporary_vehicle(self, **kwargs):
         """Assign a vehicle to a member until a given time.
@@ -231,7 +231,7 @@ class VehiclesV5(Base):
         .. versionadded:: 1.0.0
         """
         require(kwargs, ["vehicle_license_plate"])
-        return self._call_api(VEHICLES_LICENSE_V5, "get", query(kwargs))
+        return self._call_api(VEHICLES_LICENSE_V5, "get", dict(kwargs))
 
     def search_vehicles(self, **kwargs):
         """Search the given vehicles around a location.

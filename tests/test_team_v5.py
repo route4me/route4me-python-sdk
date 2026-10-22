@@ -28,7 +28,11 @@ class TestTeamV5:
         request = last_request()
         assert request.method == "GET"
         assert request.url.split("?")[0] == TEAM_USERS_V5
-        assert query_of(request) == {"query": "ada", "drivers_only": "1", "facility_ids": ["FACILITY-1", "FACILITY-2"]}
+        assert query_of(request) == {
+            "query": "ada",
+            "drivers_only": "1",
+            "facility_ids[]": ["FACILITY-1", "FACILITY-2"],
+        }
         assert request.body is None
 
     def test_get_team_members_without_filters_sends_no_query(self, client, mocked, last_request, query_of):
