@@ -275,3 +275,10 @@ Customers
 .. automodule:: route4me.customers
 	:members:
 	:show-inheritance:
+
+Facilities
+----------
+
+.. automodule:: route4me.facilities
+	:members:
+	:show-inheritance:

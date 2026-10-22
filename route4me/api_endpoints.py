@@ -173,3 +173,5 @@ ROUTE_STATUS_PLANNED_V5 = f"{API_V5}/route-status/planned"
 
 # Phase 5: p7-places-tracking
 CUSTOMERS_V5 = f"{API_V5}/customers"
+FACILITIES_V5 = f"{API_V5}/facilities"
+FACILITY_TYPES_V5 = f"{FACILITIES_V5}/types"
