@@ -261,3 +261,10 @@ Driver Reviews
 .. automodule:: route4me.driver_reviews
 	:members:
 	:show-inheritance:
+
+POD Workflows
+-------------
+
+.. automodule:: route4me.pod_workflows
+	:members:
+	:show-inheritance:
