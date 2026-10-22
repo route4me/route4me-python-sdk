@@ -16,6 +16,7 @@ from route4me.api_endpoints import (
     ADDRESS_BOOK_CONTACTS_BATCH_UPDATE_V5,
     ADDRESS_BOOK_CONTACTS_CLUSTERING_V5,
     ADDRESS_BOOK_CONTACTS_CUSTOM_FIELDS_V5,
+    ADDRESS_BOOK_CONTACTS_DELETE_BY_AREAS_V5,
     ADDRESS_BOOK_CONTACTS_DELETE_V5,
     ADDRESS_BOOK_CONTACTS_DEPOTS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREA_IDS_V5,
@@ -142,6 +143,15 @@ CASES = [
         {"filter": AREA_FILTER, "data": {"address_group": "North"}},
     ),
     (
+        "remove_address_book_contacts_by_areas",
+        (),
+        {"filter": AREA_FILTER},
+        "DELETE",
+        ADDRESS_BOOK_CONTACTS_DELETE_BY_AREAS_V5,
+        {},
+        {"filter": AREA_FILTER},
+    ),
+    (
         "remove_address_book_contacts",
         (),
         {"address_ids": [1, 2]},
@@ -253,6 +263,7 @@ def test_an_empty_contact_id_is_rejected_before_any_request(client, mocked, addr
         ("add_address_book_contact", (), {"address_1": "1 Example St"}, "cached_lat, cached_lng"),
         ("update_address_book_contact", (7,), {"cached_lat": 40.1, "cached_lng": -75.2}, "address_1"),
         ("filter_contacts_by_group_rules", ({"limit": 10},), {}, "rules"),
+        ("remove_address_book_contacts_by_areas", (), {}, "filter"),
     ],
 )
 def test_a_missing_required_field_is_named_before_any_request(client, mocked, method, args, kwargs, missing):

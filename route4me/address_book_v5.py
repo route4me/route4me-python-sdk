@@ -12,6 +12,7 @@ from .api_endpoints import (
     ADDRESS_BOOK_CONTACTS_BATCH_UPDATE_V5,
     ADDRESS_BOOK_CONTACTS_CLUSTERING_V5,
     ADDRESS_BOOK_CONTACTS_CUSTOM_FIELDS_V5,
+    ADDRESS_BOOK_CONTACTS_DELETE_BY_AREAS_V5,
     ADDRESS_BOOK_CONTACTS_DELETE_V5,
     ADDRESS_BOOK_CONTACTS_DEPOTS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREA_IDS_V5,
@@ -332,6 +333,27 @@ class AddressBookV5(Base):
         .. versionadded:: 1.0.0
         """
         return self._call_job_api(ADDRESS_BOOK_CONTACTS_DELETE_V5, "delete", kwargs)
+
+    def remove_address_book_contacts_by_areas(self, **kwargs):
+        """Delete the contacts inside some areas.
+
+        Sends ``DELETE /modules/api/v5.0/address-book/addresses/delete-by-areas``
+        with the keywords as the JSON body. It mirrors C#
+        ``RemoveAddressBookContactsByAreas``. The API runs the deletion as a
+        background job; follow it with :meth:`get_contacts_job_status`.
+
+        :param kwargs: the body: ``filter``, the areas, as for
+            :meth:`update_address_book_contact_by_areas`, for example
+            ``{"query": "...", "bounding_box": {...}}``.
+        :return: the decoded JSON reply, the raw body (``bytes``, ``b""`` when
+            the job is queued) when it is not JSON, or the ``{"errors": ...}``
+            dict on an API error.
+        :raise ParamValueException: when ``filter`` is missing.
+
+        .. versionadded:: 1.0.0
+        """
+        self._check_required(kwargs, ["filter"])
+        return self._call_job_api(ADDRESS_BOOK_CONTACTS_DELETE_BY_AREAS_V5, "delete", kwargs)
 
     def export_addresses(self, **kwargs):
         """Export contacts to a file.

@@ -5,13 +5,22 @@ import json
 import pytest
 import responses
 
-from route4me.api_endpoints import CUSTOMERS_V5
+from route4me.api_endpoints import CUSTOMERS_LIST_V5, CUSTOMERS_V5
 from route4me.exceptions import ParamValueException
 
 CUSTOMER_ID = "CUSTOMER-1"
 
 
 class TestCustomers:
+    def test_get_customers_list_posts_the_filters(self, client, mocked, last_request, query_of):
+        mocked.add(responses.POST, CUSTOMERS_LIST_V5, json={"items": []}, status=200)
+        body = {"filters": {"search_query": "Example"}, "page": 1, "per_page": 20}
+
+        assert client.customers.get_customers_list(**body) == {"items": []}
+        assert last_request().method == "POST"
+        assert query_of(last_request()) == {}
+        assert json.loads(last_request().body) == body
+
     def test_create_customer_posts_the_fields(self, client, mocked, last_request, query_of):
         mocked.add(responses.POST, CUSTOMERS_V5, json={"customer_id": CUSTOMER_ID}, status=201)
 

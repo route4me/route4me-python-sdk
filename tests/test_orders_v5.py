@@ -14,10 +14,12 @@ from route4me.api_endpoints import (
     ORDERS_ARCHIVE_V5,
     ORDERS_CUSTOM_FIELDS_V5,
     ORDERS_HISTORY_V5,
+    ORDERS_PLATFORM_BATCH_CREATE_V5,
     ORDERS_PLATFORM_BATCH_DELETE_V5,
     ORDERS_PLATFORM_BATCH_UPDATE_FILTER_V5,
     ORDERS_PLATFORM_BATCH_UPDATE_V5,
     ORDERS_PLATFORM_CUSTOM_USER_FIELDS_V5,
+    ORDERS_PLATFORM_V5,
 )
 from route4me.exceptions import ParamValueException
 
@@ -90,6 +92,31 @@ class TestOrders:
         assert last_request().url.split("?")[0] == url
         assert query_of(last_request()) == {}
         assert body_of(last_request()) == kwargs
+
+
+class TestSearchAndBatchCreate:
+    def test_search_orders_posts_the_filters(self, client, mocked, query_of, last_request):
+        mocked.add(responses.POST, ORDERS_PLATFORM_V5, json={"results": []}, status=200)
+        body = {"filters": {"statuses": [1]}, "order_by": [["created_timestamp", "desc"]], "limit": 10}
+
+        assert client.orders_v5.search_orders(**body) == {"results": []}
+        assert last_request().method == "POST"
+        assert query_of(last_request()) == {}
+        assert body_of(last_request()) == body
+
+    def test_batch_create_orders_wraps_the_orders_in_data(self, client, mocked, last_request):
+        orders = [{"address_1": "1 Example St", "cached_lat": 40.1, "cached_lng": -75.2}]
+        mocked.add(responses.POST, ORDERS_PLATFORM_BATCH_CREATE_V5, json={"status": True}, status=200)
+
+        assert client.orders_v5.batch_create_orders(orders) == {"status": True}
+        assert body_of(last_request()) == {"data": orders}
+
+    @pytest.mark.parametrize("data", [None, []])
+    def test_batch_create_orders_needs_orders(self, client, mocked, data):
+        with pytest.raises(ParamValueException):
+            client.orders_v5.batch_create_orders(data)
+
+        assert not mocked.calls
 
 
 class TestCustomUserFields:

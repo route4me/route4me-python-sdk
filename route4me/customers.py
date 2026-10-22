@@ -1,7 +1,7 @@
 """The :class:`Customers` resource (API V5): create, read, update and delete customers."""
 
 from ._url import path_segment
-from .api_endpoints import CUSTOMERS_V5
+from .api_endpoints import CUSTOMERS_LIST_V5, CUSTOMERS_V5
 from .base import Base
 from .exceptions import ParamValueException
 
@@ -29,6 +29,24 @@ class Customers(Base):
         :raise ParamValueException: when ``customer_id`` is empty.
         """
         return f"{CUSTOMERS_V5}/{path_segment(customer_id, 'customer_id')}"
+
+    def get_customers_list(self, **kwargs):
+        """List customers, a page at a time, with filters and sorting.
+
+        Sends ``POST /modules/api/v5.0/customers/list`` with the keywords as
+        the JSON body. It mirrors C# ``CustomerManagerV5.GetCustomersList``.
+
+        :param kwargs: the body, all optional: ``filters``, a dict such as
+            ``{"search_query": "Example", "status": [1]}``; ``fields``, the
+            fields to return; ``order_by``, a list of ``[field, direction]``
+            pairs; ``page`` and ``per_page``, or ``cursor`` and
+            ``cursor_mode``; and ``show_deleted_ids``.
+        :return: the decoded JSON reply: the customers, or the
+            ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(CUSTOMERS_LIST_V5, "post", {}, body=kwargs)
 
     def create_customer(self, **kwargs):
         """Create a customer.
