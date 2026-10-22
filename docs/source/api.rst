@@ -289,3 +289,10 @@ Locations
 .. automodule:: route4me.locations
 	:members:
 	:show-inheritance:
+
+Route Breaks
+------------
+
+.. automodule:: route4me.route_breaks
+	:members:
+	:show-inheritance:

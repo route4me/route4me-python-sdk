@@ -48,6 +48,7 @@ from .pod_workflows import PodWorkflows
 from .rapid_address import RapidAddress
 from .recurring_routes import RecurringRoutes
 from .route import Route
+from .route_breaks import RouteBreaks
 from .route_destinations_v5 import RouteDestinationsV5
 from .route_status import RouteStatus
 from .routes_v5 import RoutesV5
@@ -79,10 +80,11 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`locations`, :attr:`members`, :attr:`notes`, :attr:`optimization`,
     :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
     :attr:`orders_v5`, :attr:`pod_workflows`, :attr:`rapid_address`,
-    :attr:`recurring_routes`, :attr:`route`, :attr:`route_destinations_v5`,
-    :attr:`route_status`, :attr:`routes_v5`, :attr:`team_v5`,
-    :attr:`telematics`, :attr:`territory`, :attr:`vehicle_capacity_profiles`,
-    :attr:`vehicle_profiles`, :attr:`vehicles` and :attr:`vehicles_v5`.
+    :attr:`recurring_routes`, :attr:`route`, :attr:`route_breaks`,
+    :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
+    :attr:`team_v5`, :attr:`telematics`, :attr:`territory`,
+    :attr:`vehicle_capacity_profiles`, :attr:`vehicle_profiles`,
+    :attr:`vehicles` and :attr:`vehicles_v5`.
 
     The client can be used as a context manager; leaving the block closes the
     pooled session::
@@ -222,6 +224,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.orders_v5 = OrdersV5(self)
         self.pod_workflows = PodWorkflows(self)
         self.recurring_routes = RecurringRoutes(self)
+        self.route_breaks = RouteBreaks(self)
         self.route_destinations_v5 = RouteDestinationsV5(self)
         self.routes_v5 = RoutesV5(self)
         self.team_v5 = TeamV5(self)
