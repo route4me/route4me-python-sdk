@@ -24,7 +24,8 @@ class AccountProfile(Base):
 
         :return: the decoded JSON reply: the profile, with ``member_id``,
             ``root_member_id``, ``email``, ``preferred_units`` and more, or the
-            ``{"errors": ...}`` dict on an API error.
+            ``{"errors": ...}`` dict on an API error. The profile includes the
+            account's ``api_key``: do not log or print the whole reply.
 
         .. versionadded:: 1.0.0
         """

@@ -21,7 +21,7 @@ def _message_list(value):
     :return: the messages, each one a string; empty for ``None`` or an empty
         value.
     """
-    if value is None or value == "":
+    if value is None or value == "" or isinstance(value, bool):
         return []
     if isinstance(value, dict):
         value = list(value.values())
@@ -115,9 +115,9 @@ class APIException(Exception):
         * a V5 error envelope, which has no ``errors`` key at all
 
         :return: ``{"errors": messages}``, a non-empty list of strings: the V4
-            ``errors``, the V5 ``messages`` flattened, or the ``message``
-            value; ``["Unexpected server response"]`` when none of them is
-            present or the body is not a JSON object.
+            ``errors``, the V5 ``messages`` flattened, or the ``message`` or
+            ``error`` value; ``["Unexpected server response"]`` when none of
+            them is present or the body is not a JSON object.
 
         .. versionchanged:: 1.0.0
            ``errors`` is always a list of strings. It used to be a string for a
@@ -134,8 +134,10 @@ class APIException(Exception):
             # V4 replies carry {"errors": [...]}. V5 replies have no "errors"
             # key (DataTypes/V5/ResultResponse.cs):
             #   {"status": false, "code": 422, "messages": {"field": ["..."]}}
+            # and a module the account lacks answers 403 with
+            #   {"status": false, "exit_code": 1, "error": "...feature is not enabled..."}
             # Without the fallbacks every V5 failure lost its message.
-            for key in ("errors", "messages", "message"):
+            for key in ("errors", "messages", "message", "error"):
                 messages = _message_list(payload.get(key))
                 if messages:
                     break
