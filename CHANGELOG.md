@@ -9,7 +9,7 @@ This is the history of changes of the `route4me` package.
 
 This is the first release since 0.1.7.0, and PyPI still serves 0.0.7.1 from 2020.
 
-It fixes every open bug report (#19, #26, #30–#43), adds 204 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,345 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
+It fixes every open bug report (#19, #26, #30–#43), adds 215 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,375 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
 
 ### Breaking changes
 
@@ -86,7 +86,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 204 API methods for t
   - `SECURITY.md` describes how to report a vulnerability.
 
 ### Added
-- **API coverage: 204 new methods (#44–#107).** They cover the Route4Me API V4 and V5 operations the coverage issues list. Every request shape comes from the OpenAPI specs, then the C# SDK; the issues' own paths were often wrong. Each method has a unit test and a runnable example.
+- **API coverage: 215 new methods (#44–#107).** They cover the Route4Me API V4 and V5 operations the coverage issues list. Every request shape comes from the OpenAPI specs, then the C# SDK; the issues' own paths were often wrong. Each method has a unit test and a runnable example.
   - **New resources on the client:**
     - Address book: `address_book_v5`, `address_barcodes`.
     - Vehicles: `vehicles_v5`, `vehicle_profiles`, `vehicle_capacity_profiles`.
@@ -186,7 +186,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 204 API methods for t
 - `Telematics.pp_vendor_comparison()` raised `KeyError` for a vendor without `features`.
 
 ### Examples
-- **327 examples**, one per method, including 204 for the new API coverage. Every example has a docstring saying what it shows, which SDK method it calls, the request it sends, and how to run it. All of them pass pylint.
+- **338 examples**, one per method, including 215 for the new API coverage. Every example has a docstring saying what it shows, which SDK method it calls, the request it sends, and how to run it. All of them pass pylint.
 - The vendor examples use API V5.
 - New examples:
   - `members/get_api_key_users.py` (#112);
@@ -202,7 +202,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 204 API methods for t
 
 ### Internal
 - Packaging moved to `pyproject.toml` (hatchling); `setup.py` is a shim.
-- 1,345 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
+- 1,375 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
 - pylint gives zero messages on the package, the tests and the examples. ruff formats the code. mypy passes, with strict checks on the tier-A modules, and blocks CI.
 - CI runs Python 3.9–3.14 on Linux, and Python 3.12 on macOS and Windows.
 
