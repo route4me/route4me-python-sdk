@@ -285,7 +285,7 @@ class Base:
 
         :param endpoint: absolute URL of the API endpoint.
         :param params: query parameters; the client adds ``api_key`` itself.
-        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param method: ``"get"``, ``"post"``, ``"put"``, ``"patch"`` or ``"delete"``.
         :param kwargs: ``data``, ``json``, ``files`` or ``timeout``, passed through.
         :return: the :class:`requests.Response`.
         :raise APIException: when the API answers outside the 200-399 range.
@@ -299,7 +299,7 @@ class Base:
         """Validate required parameters, send the request and decode the reply.
 
         :param endpoint: absolute URL of the API endpoint.
-        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param method: ``"get"``, ``"post"``, ``"put"``, ``"patch"`` or ``"delete"``.
         :param params: query parameters.
         :param required: names that must be present in ``params``.
         :param body: request body, or ``None`` for no body.
@@ -322,7 +322,7 @@ class Base:
 
         :param endpoint: absolute URL of the API endpoint.
         :param params: query parameters; the client adds ``api_key`` itself.
-        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param method: ``"get"``, ``"post"``, ``"put"``, ``"patch"`` or ``"delete"``.
         :param kwargs: ``data``, ``json``, ``files`` or ``timeout``, passed through.
         :return: the decoded JSON reply, the raw body as bytes when it is not
             JSON, or the error dict from :meth:`APIException.to_dict` when the

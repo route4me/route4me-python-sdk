@@ -137,6 +137,13 @@ class TestRetryEligibility:
         assert not should_retry_response(FakeResponse(503), "POST")
         assert not should_retry_exception(requests.ConnectionError(), "POST")
 
+    @pytest.mark.parametrize("method", ["PUT", "PATCH"])
+    def test_updates_are_never_retried(self, method):
+        """``PUT /api.v4/route.php`` appends the addresses it is given (#19), and
+        a PATCH is no safer to replay."""
+        assert not should_retry_response(FakeResponse(503), method)
+        assert not should_retry_exception(requests.ConnectionError(), method)
+
     def test_method_matching_is_case_insensitive(self):
         assert should_retry_response(FakeResponse(503), "get")
 

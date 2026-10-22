@@ -89,6 +89,7 @@ class TestVerbs:
             ("_request_get", "GET", responses.GET),
             ("_request_post", "POST", responses.POST),
             ("_request_put", "PUT", responses.PUT),
+            ("_request_patch", "PATCH", responses.PATCH),
             ("_request_delete", "DELETE", responses.DELETE),
         ],
     )
@@ -110,6 +111,13 @@ class TestVerbs:
         mocked.add(responses.PUT, TERRITORY_HOST, json={}, status=200)
 
         client._request_put(TERRITORY_HOST, {}, json={"territory_name": "X"})
+
+        assert json.loads(last_request().body) == {"territory_name": "X"}
+
+    def test_patch_sends_a_json_body(self, client, mocked, last_request):
+        mocked.add(responses.PATCH, TERRITORY_HOST, json={}, status=200)
+
+        client._request_patch(TERRITORY_HOST, {}, json={"territory_name": "X"})
 
         assert json.loads(last_request().body) == {"territory_name": "X"}
 
@@ -249,6 +257,7 @@ class TestTimeouts:
             ("_request_get", "GET"),
             ("_request_post", "POST"),
             ("_request_put", "PUT"),
+            ("_request_patch", "PATCH"),
             ("_request_delete", "DELETE"),
         ],
     )

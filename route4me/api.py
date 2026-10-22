@@ -442,6 +442,32 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             timeout=self._timeout(timeout),
         )
 
+    def _request_patch(self, url, request_params, *, json=None, data=None, timeout=UNSET, headers=None):
+        """Send a PATCH request through :meth:`_send`.
+
+        API V5 uses PATCH for partial updates. Like PUT, it is never retried.
+
+        :param url: absolute URL of the API endpoint.
+        :param request_params: query parameters.
+        :param json: body to send as JSON.
+        :param data: form fields, or a pre-encoded body.
+        :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
+        :return: the :class:`requests.Response`.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._send(
+            "PATCH",
+            url,
+            params=request_params,
+            allow_redirects=self.redirects,
+            data=data,
+            json=json,
+            headers=self.headers if headers is None else headers,
+            timeout=self._timeout(timeout),
+        )
+
     def _request_delete(self, url, request_params, *, data=None, json=None, timeout=UNSET, headers=None):
         """Send a DELETE request through :meth:`_send`.
 
