@@ -176,7 +176,7 @@ class TestAddressRequests:
 
         client.address.get_address_notes(ROUTE_ID, DESTINATION_ID)
 
-        assert query_of(last_request())["notes"] == "True"
+        assert query_of(last_request())["notes"] == "1"
 
     def test_get_address_returns_the_error_dict(self, client, mocked):
         mocked.add(responses.GET, ADDRESS_HOST, json={"errors": ["Not found"]}, status=404)

@@ -80,6 +80,26 @@ class TestStatusHandling:
         assert excinfo.value.to_dict() == {"errors": ["Unexpected server response"]}
 
 
+class TestQueryValues:
+    @pytest.mark.parametrize(("value", "sent"), [(True, "1"), (False, "0"), (1, "1"), ("yes", "yes")])
+    def test_booleans_are_sent_as_1_or_0(self, client, mocked, query_of, last_request, value, sent):
+        """requests sends ``True`` as ``"True"``. PHP reads ``"False"`` as true,
+        and the V5 boolean rule rejects both strings."""
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+
+        client._make_request(ANY_URL, {"flag": value}, client._request_get)
+
+        assert query_of(last_request())["flag"] == sent
+
+    def test_the_callers_params_are_not_changed(self, client, mocked):
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+        params = {"flag": True}
+
+        client._make_request(ANY_URL, params, client._request_get)
+
+        assert params == {"flag": True}
+
+
 class TestVerbs:
     """Each ``_request_*`` helper issues the verb it claims."""
 
@@ -292,7 +312,7 @@ class TestTimeouts:
 
         assert captured["timeout"] == (1.0, 2.0)
 
-    def test_none_restores_the_pre_0_2_0_unbounded_behaviour(self, monkeypatch):
+    def test_none_restores_the_unbounded_behaviour(self, monkeypatch):
         """An explicit, greppable opt-out."""
         client = Route4Me("k" * 32, timeout=None)
         captured = self._capture_timeout(monkeypatch)

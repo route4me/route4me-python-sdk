@@ -183,7 +183,8 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
 
         :param url: absolute URL of the API endpoint.
         :param params: query parameters. They are copied, and the key is added
-            to the copy; the caller's dict is not changed.
+            to the copy; the caller's dict is not changed. ``True`` and
+            ``False`` are sent as ``1`` and ``0``.
         :param request_method: one of :meth:`_request_get`,
             :meth:`_request_post`, :meth:`_request_put` or
             :meth:`_request_delete`.
@@ -194,12 +195,15 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             The API key is removed from the stored body and URL.
 
         .. versionchanged:: 1.0.0
-           API V5 requests send the key as a bearer token instead of ``api_key``.
+           API V5 requests send the key as a bearer token instead of
+           ``api_key``. Boolean query values are sent as ``1`` and ``0``.
         """
         # Copy rather than mutate. Every resource passes its own long-lived
         # `self.params`, so writing api_key in place meant query parameters
         # accumulated on that dict across calls and leaked between them.
-        params = dict(params) if params else {}
+        # requests would send True as "True": PHP reads "False" as true, and
+        # the V5 (Laravel) boolean rule accepts only 1, 0, true and false.
+        params = {k: int(v) if isinstance(v, bool) else v for k, v in params.items()} if params else {}
         if is_v5_url(url):
             params.pop("api_key", None)
             kwargs["headers"] = {**self.headers, "Authorization": f"Bearer {self.key}"}
