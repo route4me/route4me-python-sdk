@@ -21,6 +21,8 @@ from route4me.api_endpoints import (
     ADDRESS_BOOK_CONTACTS_DEPOTS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREA_IDS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREAS_V5,
+    ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5,
+    ADDRESS_BOOK_CONTACTS_EXPORT_STATUS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_V5,
     ADDRESS_BOOK_CONTACTS_PAGINATED_V5,
     ADDRESS_BOOK_CONTACTS_SHOW_V5,
@@ -339,3 +341,37 @@ def test_an_empty_job_id_is_rejected_before_any_request(client, mocked, method, 
         getattr(client.address_book_v5, method)(job_id)
 
     assert not mocked.calls
+
+
+def test_an_export_is_followed_by_its_status_and_result(client, mocked, last_request):
+    """The export answers 202 with Location .../export/status/{id}; the result is the file."""
+    status_url = f"{ADDRESS_BOOK_CONTACTS_EXPORT_STATUS_V5}/{JOB_ID}"
+    mocked.add(responses.POST, ADDRESS_BOOK_CONTACTS_EXPORT_V5, body=b"", status=202, headers={"Location": status_url})
+    mocked.add(responses.GET, status_url, json="done", status=200)
+    mocked.add(
+        responses.GET, f"{ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5}/{JOB_ID}", body=b"id,address\n1,x\n", status=200
+    )
+    address_book = client.address_book_v5
+
+    assert address_book.export_addresses(ids=[1], extension="csv") == b""
+    export_id = address_book.response.headers["Location"].rsplit("/", 1)[-1]
+
+    assert address_book.get_export_status(export_id) == "done"
+    assert address_book.get_export_result(export_id) == b"id,address\n1,x\n"
+    assert last_request().method == "GET"
+
+
+@pytest.mark.parametrize("method", ["get_export_status", "get_export_result"])
+def test_an_empty_export_id_is_rejected_before_any_request(client, mocked, method):
+    with pytest.raises(ParamValueException):
+        getattr(client.address_book_v5, method)("")
+
+    assert not mocked.calls
+
+
+def test_an_export_result_error_is_returned_as_a_dict(client, mocked):
+    mocked.add(
+        responses.GET, f"{ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5}/{JOB_ID}", json={"errors": ["Not ready"]}, status=404
+    )
+
+    assert client.address_book_v5.get_export_result(JOB_ID) == {"errors": ["Not ready"]}

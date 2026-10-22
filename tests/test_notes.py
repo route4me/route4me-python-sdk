@@ -197,13 +197,22 @@ class TestCustomNoteTypesV4:
         assert last_request().method == "POST"
         assert last_request().url.split("?")[0] == NOTE_CUSTOM_TYPES_V4
         assert query_of(last_request()) == {"api_key": api_key}
-        assert body_of(last_request()) == {"note_custom_type": "Language", "note_custom_type_values": ["EN", "FR"]}
+        # The endpoint reads type/values; it rejects the spec's names (checked live).
+        assert body_of(last_request()) == {"type": "Language", "values": ["EN", "FR"]}
 
     def test_add_custom_note_type_requires_the_name(self, client, mocked):
         with pytest.raises(ParamValueException) as error:
             client.notes.add_custom_note_type(note_custom_type_values=["EN"])
 
         assert error.value.param == "note_custom_type"
+        assert not mocked.calls
+
+    @pytest.mark.parametrize("values", [None, []])
+    def test_add_custom_note_type_requires_values(self, client, mocked, values):
+        with pytest.raises(ParamValueException) as error:
+            client.notes.add_custom_note_type(note_custom_type="Language", note_custom_type_values=values)
+
+        assert error.value.param == "note_custom_type_values"
         assert not mocked.calls
 
     def test_get_all_custom_note_types(self, client, mocked, last_request, query_of, api_key):

@@ -87,7 +87,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
   - `SECURITY.md` describes how to report a vulnerability.
 
 ### Added
-- **API coverage: 214 new methods (#44–#107).** They cover the Route4Me API V4 and V5 operations the coverage issues list. Every request shape comes from the OpenAPI specs, then the C# SDK; the issues' own paths were often wrong. Each method has a unit test and a runnable example.
+- **API coverage: 216 new methods (#44–#107).** They cover the Route4Me API V4 and V5 operations the coverage issues list. Every request shape comes from the OpenAPI specs, then the C# SDK; the issues' own paths were often wrong. Each method has a unit test and a runnable example.
   - **New resources on the client:**
     - Address book: `address_book_v5`, `address_barcodes`.
     - Vehicles: `vehicles_v5`, `vehicle_profiles`, `vehicle_capacity_profiles`.
@@ -191,7 +191,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 - `Telematics.pp_vendor_comparison()` raised `KeyError` for a vendor without `features`.
 
 ### Examples
-- **337 examples**, one per method, including 214 for the new API coverage. Every example has a docstring saying what it shows, which SDK method it calls, the request it sends, and how to run it. All of them pass pylint.
+- **339 examples**, one per method, including 216 for the new API coverage. Every example has a docstring saying what it shows, which SDK method it calls, the request it sends, and how to run it. All of them pass pylint.
 - The vendor examples use API V5.
 - New examples:
   - `members/get_api_key_users.py` (#112);

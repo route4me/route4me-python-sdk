@@ -1219,6 +1219,16 @@
   {
    "method": "GET",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/export/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/export/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/address-book/addresses/index/all"
   },
   {

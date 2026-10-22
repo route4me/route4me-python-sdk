@@ -2,8 +2,8 @@
 
 Calls :meth:`AddressBookV5.export_addresses <route4me.address_book_v5.AddressBookV5.export_addresses>`,
 which sends ``POST /modules/api/v5.0/address-book/addresses/export`` (API V5, on ``wh.route4me.com``)
-with the contact ``ids``, ``filename`` and ``extension`` as the JSON body, and prints where to follow
-the background job that builds the file.
+with the contact ``ids``, ``filename`` and ``extension`` as the JSON body, and prints the export ID
+that ``get_export_status.py`` and ``get_export_result.py`` take.
 
 Run it with::
 
@@ -30,7 +30,9 @@ def main(api_key, address_ids):
         print(". ".join(response["errors"]))
     elif response == b"":
         reply = address_book.response
-        print(f"Job queued (HTTP {reply.status_code}): {reply.headers.get('Location')}")
+        location = reply.headers.get("Location", "")
+        print(f"Job queued (HTTP {reply.status_code}): {location}")
+        print(f"Export ID for get_export_status.py and get_export_result.py: {location.rsplit('/', 1)[-1]}")
     else:
         print(response)
 

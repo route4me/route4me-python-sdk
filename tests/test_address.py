@@ -78,7 +78,8 @@ class TestDeleteRouteDestinations:
         request = last_request()
         assert request.method == "POST"
         assert query_of(request) == {"api_key": api_key, "format": "json"}
-        assert form_of(request) == {"route_destination_ids": "98765,98766"}
+        # The endpoint reads route_destination_id, comma-separated (checked live).
+        assert form_of(request) == {"route_destination_id": "98765,98766"}
 
     @pytest.mark.parametrize("ids", [DESTINATION_ID, str(DESTINATION_ID)])
     def test_takes_one_id(self, client, mocked, last_request, ids):
@@ -86,7 +87,7 @@ class TestDeleteRouteDestinations:
 
         client.address.delete_route_destinations(ids)
 
-        assert form_of(last_request()) == {"route_destination_ids": "98765"}
+        assert form_of(last_request()) == {"route_destination_id": "98765"}
 
     @pytest.mark.parametrize("ids", [[], ""])
     def test_requires_an_id(self, client, mocked, ids):

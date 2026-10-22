@@ -17,6 +17,8 @@ from .api_endpoints import (
     ADDRESS_BOOK_CONTACTS_DEPOTS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREA_IDS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREAS_V5,
+    ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5,
+    ADDRESS_BOOK_CONTACTS_EXPORT_STATUS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_V5,
     ADDRESS_BOOK_CONTACTS_PAGINATED_V5,
     ADDRESS_BOOK_CONTACTS_SHOW_V5,
@@ -366,11 +368,48 @@ class AddressBookV5(Base):
             and ``tz``, the time zone of the dates.
         :return: the decoded JSON reply, the raw body (``bytes``, ``b""`` when
             the job is queued) when it is not JSON, or the ``{"errors": ...}``
-            dict on an API error.
+            dict on an API error. The API answers ``202 Accepted`` with the
+            export's status URL, ``.../export/status/{id}``, in the
+            ``Location`` header of :attr:`response`; pass its last segment to
+            :meth:`get_export_status`, then :meth:`get_export_result`.
 
         .. versionadded:: 1.0.0
         """
         return self._call_job_api(ADDRESS_BOOK_CONTACTS_EXPORT_V5, "post", kwargs)
+
+    def get_export_status(self, export_id):
+        """Get the status of a contact export.
+
+        Sends ``GET /modules/api/v5.0/address-book/addresses/export/status/{export_id}``.
+
+        :param export_id: the export's ID: the last segment of the
+            ``Location`` header of the export reply.
+        :return: the decoded JSON reply, a status string, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``export_id`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        url = f"{ADDRESS_BOOK_CONTACTS_EXPORT_STATUS_V5}/{path_segment(export_id, 'export_id')}"
+        return self._call_api(url, "get", {})
+
+    def get_export_result(self, export_id):
+        """Download the file of a finished contact export.
+
+        Sends ``GET /modules/api/v5.0/address-book/addresses/export/result/{export_id}``.
+
+        :param export_id: the export's ID, as for :meth:`get_export_status`.
+        :return: the file (``bytes``, for example CSV), or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``export_id`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        url = f"{ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5}/{path_segment(export_id, 'export_id')}"
+        try:
+            return self._request(url, {}, "get").content
+        except APIException as e:
+            return e.to_dict()
 
     def export_addresses_by_areas(self, **kwargs):
         """Export the contacts inside some areas to a file.

@@ -113,8 +113,9 @@ class Route(Base):
 
         :param kwargs: query parameters. Required: ``route_id``, the route to
             copy.
-        :return: the decoded JSON reply, which describes the new route, or the
-            ``{"errors": ...}`` dict on an API error.
+        :return: the decoded JSON reply, ``{"success": true,
+            "optimization_problem_id": ...}`` (it names no route ID; find the
+            copy by its name), or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``route_id`` is missing.
         """
         kwargs.update({"api_key": self.params["api_key"]})
