@@ -109,6 +109,32 @@ class TestQueryValues:
             "order_by[0][]": ["title", "asc"],
         }
 
+    def test_v5_requests_ask_for_json_first(self, client, mocked, last_request):
+        """With Accept: */* API V5 renders its errors as HTML (seen live), so
+        their messages were lost."""
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client._make_request(url, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "application/json, */*;q=0.8"
+
+    def test_v4_requests_keep_the_default_accept(self, client, mocked, last_request):
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+
+        client._make_request(ANY_URL, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "*/*"
+
+    def test_a_custom_accept_is_kept_for_v5(self, mocked, last_request, api_key):
+        client = Route4Me(api_key, headers={"Accept": "text/csv"})
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, body="a,b", status=200)
+
+        client._make_request(url, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "text/csv"
+
     def test_v4_lists_are_left_as_they_are(self, client, mocked, query_of, last_request):
         mocked.add(responses.GET, ANY_URL, json={}, status=200)
 

@@ -63,6 +63,10 @@ from .vehicle_profiles import VehicleProfiles
 from .vehicles import Vehicle
 from .vehicles_v5 import VehiclesV5
 
+#: ``Accept`` header for API V5 requests: JSON first, so the API answers errors
+#: in JSON rather than as an HTML page, but any type still acceptable.
+V5_ACCEPT = "application/json, */*;q=0.8"
+
 HEADERS = {
     "User-Agent": "Route4Me Python SDK",
     "Accept-Encoding": "identity, deflate, compress, gzip",
@@ -275,7 +279,8 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
 
         .. versionchanged:: 1.0.0
            API V5 requests send the key as a bearer token instead of
-           ``api_key``. Boolean query values are sent as ``1`` and ``0``, and
+           ``api_key``, and ask for JSON first (:data:`V5_ACCEPT`), so their
+           errors arrive as JSON. Boolean query values are sent as ``1`` and ``0``, and
            API V5 list and dict query values as bracketed keys.
         """
         # Copy rather than mutate. Every resource passes its own long-lived
@@ -290,7 +295,12 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         params = {k: _query_value(v) for k, v in params.items()}
         if is_v5_url(url):
             params.pop("api_key", None)
-            kwargs["headers"] = {**self.headers, "Authorization": f"Bearer {self.key}"}
+            headers = {**self.headers, "Authorization": f"Bearer {self.key}"}
+            # API V5 (Laravel) renders its errors as an HTML page unless JSON
+            # comes first in Accept. */* stays acceptable for the file exports.
+            if headers.get("Accept", "*/*") == "*/*":
+                headers["Accept"] = V5_ACCEPT
+            kwargs["headers"] = headers
         else:
             params["api_key"] = self.key
         response = request_method(url, params, **kwargs)
