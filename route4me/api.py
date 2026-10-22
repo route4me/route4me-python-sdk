@@ -36,6 +36,7 @@ from .route_status import RouteStatus
 from .telematics import Telematics
 from .territory import Territory
 from .vehicles import Vehicle
+from .vehicles_v5 import VehiclesV5
 
 HEADERS = {
     "User-Agent": "Route4Me Python SDK",
@@ -53,7 +54,8 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`gps`, :attr:`members`, :attr:`optimization`,
     :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
     :attr:`rapid_address`, :attr:`route`, :attr:`route_status`,
-    :attr:`telematics`, :attr:`territory` and :attr:`vehicles`.
+    :attr:`telematics`, :attr:`territory`, :attr:`vehicles` and
+    :attr:`vehicles_v5`.
 
     The client can be used as a context manager; leaving the block closes the
     pooled session::
@@ -177,6 +179,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.optimization_profiles = OptimizationProfiles(self)
         self.address_barcodes = AddressBarcodes(self)
         self.address_book_v5 = AddressBookV5(self)
+        self.vehicles_v5 = VehiclesV5(self)
 
     def _make_request(self, url, params, request_method, **kwargs):
         """Send one request, adding the API key, and raise on an HTTP error.
