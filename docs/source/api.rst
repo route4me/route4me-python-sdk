@@ -282,3 +282,10 @@ Facilities
 .. automodule:: route4me.facilities
 	:members:
 	:show-inheritance:
+
+Locations
+---------
+
+.. automodule:: route4me.locations
+	:members:
+	:show-inheritance:

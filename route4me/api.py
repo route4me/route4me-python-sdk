@@ -36,6 +36,7 @@ from .exceptions import APIException
 from .facilities import Facilities
 from .file_uploading import FileUploading
 from .gps import GPS
+from .locations import Locations
 from .members import Members
 from .notes import Notes
 from .optimization import Optimization
@@ -75,7 +76,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`configuration_settings`, :attr:`configuration_settings_v5`,
     :attr:`customers`, :attr:`distance`, :attr:`driver_reviews`,
     :attr:`drivers`, :attr:`facilities`, :attr:`file_uploading`, :attr:`gps`,
-    :attr:`members`, :attr:`notes`, :attr:`optimization`,
+    :attr:`locations`, :attr:`members`, :attr:`notes`, :attr:`optimization`,
     :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
     :attr:`orders_v5`, :attr:`pod_workflows`, :attr:`rapid_address`,
     :attr:`recurring_routes`, :attr:`route`, :attr:`route_destinations_v5`,
@@ -216,6 +217,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.driver_reviews = DriverReviews(self)
         self.drivers = Drivers(self)
         self.facilities = Facilities(self)
+        self.locations = Locations(self)
         self.notes = Notes(self)
         self.orders_v5 = OrdersV5(self)
         self.pod_workflows = PodWorkflows(self)
