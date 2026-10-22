@@ -1,7 +1,8 @@
-"""The :class:`RouteDestinationsV5` resource (API V5): list, look up, sequence and delete route destinations."""
+"""The :class:`RouteDestinationsV5` resource (API V5): list, get, sequence and delete route destinations."""
 
 from ._url import path_segment
 from .api_endpoints import (
+    ROUTE_DESTINATIONS_BY_ORDER_V5,
     ROUTE_DESTINATIONS_COLUMNS_V5,
     ROUTE_DESTINATIONS_LIST_FIELDS_V5,
     ROUTE_DESTINATIONS_LIST_V5,
@@ -119,6 +120,35 @@ class RouteDestinationsV5(Base):
         if missing:
             raise ParamValueException(", ".join(missing), "Missing required params")
         return self._call_api(ROUTE_DESTINATIONS_COLUMNS_V5, "put", {}, body=kwargs)
+
+    def get_destination(self, route_destination_id):
+        """Get one route destination.
+
+        Sends ``GET /modules/api/v5.0/route-destinations/{route_destination_id}``.
+
+        :param route_destination_id: ID of the destination.
+        :return: the decoded JSON reply: the destination, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``route_destination_id`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        url = f"{ROUTE_DESTINATIONS_V5}/{path_segment(route_destination_id, 'route_destination_id')}"
+        return self._call_api(url, "get", {})
+
+    def get_destinations_by_order(self, order_uuid):
+        """List the route destinations made from an order.
+
+        Sends ``GET /modules/api/v5.0/route-destinations/order/{order_uuid}``.
+
+        :param order_uuid: UUID of the order.
+        :return: the decoded JSON reply: the destinations, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``order_uuid`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(f"{ROUTE_DESTINATIONS_BY_ORDER_V5}/{path_segment(order_uuid, 'order_uuid')}", "get", {})
 
     def get_destination_by_label_code(self, label_code):
         """Find a destination by its label code, with its route and stop context.

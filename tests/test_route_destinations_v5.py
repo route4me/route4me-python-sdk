@@ -6,6 +6,7 @@ import pytest
 import responses
 
 from route4me.api_endpoints import (
+    ROUTE_DESTINATIONS_BY_ORDER_V5,
     ROUTE_DESTINATIONS_COLUMNS_V5,
     ROUTE_DESTINATIONS_LIST_FIELDS_V5,
     ROUTE_DESTINATIONS_LIST_V5,
@@ -17,6 +18,7 @@ from route4me.exceptions import ParamValueException
 
 ROUTE_ID = "C0FFEE00C0FFEE00C0FFEE00C0FFEE00"
 DESTINATION_ID = 98765
+ORDER_UUID = "C0FFEE01C0FFEE01C0FFEE01C0FFEE01"
 COORDINATES = [{"lat": 40.7636197, "lng": -73.9744388}, {"lat": 40.7669692, "lng": -73.9693864}]
 
 
@@ -118,6 +120,39 @@ class TestLookups:
             client.route_destinations_v5.get_destination_sequence(None)
 
         assert not mocked.calls
+
+
+class TestGetDestination:
+    def test_gets_by_id_in_the_path(self, client, mocked, last_request, query_of):
+        mocked.add(
+            responses.GET, f"{ROUTE_DESTINATIONS_V5}/{DESTINATION_ID}", json={"route_destination_id": 1}, status=200
+        )
+
+        assert client.route_destinations_v5.get_destination(DESTINATION_ID) == {"route_destination_id": 1}
+        assert last_request().method == "GET"
+        assert query_of(last_request()) == {}
+
+    def test_gets_the_destinations_of_an_order(self, client, mocked, last_request):
+        url = f"{ROUTE_DESTINATIONS_BY_ORDER_V5}/{ORDER_UUID}"
+        mocked.add(responses.GET, url, json={"data": []}, status=200)
+
+        assert client.route_destinations_v5.get_destinations_by_order(ORDER_UUID) == {"data": []}
+        assert last_request().url == url
+
+    @pytest.mark.parametrize("method", ["get_destination", "get_destinations_by_order"])
+    @pytest.mark.parametrize("value", ["", None])
+    def test_an_empty_id_is_rejected_before_any_request(self, client, mocked, method, value):
+        with pytest.raises(ParamValueException):
+            getattr(client.route_destinations_v5, method)(value)
+
+        assert not mocked.calls
+
+    def test_an_order_uuid_cannot_escape_its_path_segment(self, client, mocked, last_request):
+        mocked.add(responses.GET, f"{ROUTE_DESTINATIONS_BY_ORDER_V5}/a%2Fb", json={}, status=200)
+
+        client.route_destinations_v5.get_destinations_by_order("a/b")
+
+        assert last_request().url == f"{ROUTE_DESTINATIONS_BY_ORDER_V5}/a%2Fb"
 
 
 class TestDeleteRouteDestination:

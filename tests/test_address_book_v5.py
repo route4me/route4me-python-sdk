@@ -27,11 +27,14 @@ from route4me.api_endpoints import (
     ADDRESS_BOOK_CONTACTS_V5,
     ADDRESS_BOOK_GROUPS_FILTER_ALL_V5,
     ADDRESS_BOOK_GROUPS_V5,
+    ADDRESS_BOOK_JOB_RESULT_V5,
+    ADDRESS_BOOK_JOB_STATUS_V5,
 )
 from route4me.exceptions import ParamValueException
 
 CONTACT = {"address_1": "1 Example St, Springfield", "cached_lat": 40.1, "cached_lng": -75.2}
 AREA_FILTER = {"query": "Example", "bounding_box": {"top": 41, "left": -76, "bottom": 40, "right": -75}}
+JOB_ID = "C0FFEE02C0FFEE02C0FFEE02C0FFEE02"
 RULES = {"condition": "AND", "rules": [{"id": "address_1", "field": "address_1", "operator": "contains", "value": "a"}]}
 
 #: (method, args, kwargs, HTTP method, URL, query, JSON body or None).
@@ -304,3 +307,24 @@ def test_a_job_endpoint_returns_an_api_error_as_a_dict(client, mocked):
     result = client.address_book_v5.update_address_book_contact_by_areas(data={"address_group": "North"})
 
     assert result == {"errors": ["The filter is required."]}
+
+
+@pytest.mark.parametrize(
+    ("method", "url"),
+    [("get_contacts_job_status", ADDRESS_BOOK_JOB_STATUS_V5), ("get_contacts_job_result", ADDRESS_BOOK_JOB_RESULT_V5)],
+)
+def test_a_job_is_followed_by_its_id_in_the_path(client, mocked, last_request, query_of, method, url):
+    mocked.add(responses.GET, f"{url}/{JOB_ID}", json={"status": "finished"}, status=200)
+
+    assert getattr(client.address_book_v5, method)(JOB_ID) == {"status": "finished"}
+    assert last_request().method == "GET"
+    assert query_of(last_request()) == {}
+
+
+@pytest.mark.parametrize("method", ["get_contacts_job_status", "get_contacts_job_result"])
+@pytest.mark.parametrize("job_id", ["", None])
+def test_an_empty_job_id_is_rejected_before_any_request(client, mocked, method, job_id):
+    with pytest.raises(ParamValueException):
+        getattr(client.address_book_v5, method)(job_id)
+
+    assert not mocked.calls
