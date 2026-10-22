@@ -6549,6 +6549,11 @@
   {
    "method": "POST",
    "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/datatable"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/routes/destinations/bulk-actions/commit"
   },
   {
