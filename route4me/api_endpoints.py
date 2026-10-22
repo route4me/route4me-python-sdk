@@ -57,3 +57,8 @@ ROUTE_STATUS_V5 = f"{API_V5}/route-status"
 ORDERS_GROUP_V5 = f"{API_V5}/orders/aggregation/combined"
 OPTIMIZATION_PROFILES_V5 = f"{API_V5}/optimization-profiles/data-list"
 ASSIGN_PROFILES_V5 = f"{API_V5}/orders/aggregation/assign-optimization-profile"
+
+# Phase 5: p1-address-book
+ADDRESS_BOOK_GROUP = f"{MAIN_HOST}/api.v4/address_book_group.php"
+ADDRESS_BOOK_GROUP_SEARCH = f"{MAIN_HOST}/api/address_book/get_search_group_addresses.php"
+SAVE_GEOCODED_ADDRESSES = f"{MAIN_HOST}/api/address_book/save_geocoded.php"
