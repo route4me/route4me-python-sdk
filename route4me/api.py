@@ -56,6 +56,7 @@ from .team_v5 import TeamV5
 from .telematics import Telematics
 from .territories_v5 import TerritoriesV5
 from .territory import Territory
+from .tracking_history import TrackingHistory
 from .vehicle_capacity_profiles import VehicleCapacityProfiles
 from .vehicle_profiles import VehicleProfiles
 from .vehicles import Vehicle
@@ -84,8 +85,9 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`recurring_routes`, :attr:`route`, :attr:`route_breaks`,
     :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
     :attr:`team_v5`, :attr:`telematics`, :attr:`territories_v5`,
-    :attr:`territory`, :attr:`vehicle_capacity_profiles`,
-    :attr:`vehicle_profiles`, :attr:`vehicles` and :attr:`vehicles_v5`.
+    :attr:`territory`, :attr:`tracking_history`,
+    :attr:`vehicle_capacity_profiles`, :attr:`vehicle_profiles`,
+    :attr:`vehicles` and :attr:`vehicles_v5`.
 
     The client can be used as a context manager; leaving the block closes the
     pooled session::
@@ -230,6 +232,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.routes_v5 = RoutesV5(self)
         self.team_v5 = TeamV5(self)
         self.territories_v5 = TerritoriesV5(self)
+        self.tracking_history = TrackingHistory(self)
         self.vehicle_capacity_profiles = VehicleCapacityProfiles(self)
         self.vehicle_profiles = VehicleProfiles(self)
         self.vehicles_v5 = VehiclesV5(self)

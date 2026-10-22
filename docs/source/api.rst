@@ -303,3 +303,10 @@ Territories (API V5)
 .. automodule:: route4me.territories_v5
 	:members:
 	:show-inheritance:
+
+Tracking History
+----------------
+
+.. automodule:: route4me.tracking_history
+	:members:
+	:show-inheritance:
