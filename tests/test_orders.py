@@ -19,6 +19,31 @@ def body_of(request):
     return json.loads(request.body)
 
 
+class TestGetOrders:
+    def test_get_orders_sends_the_page_and_filters_in_the_query(self, client, mocked, query_of, last_request, api_key):
+        mocked.add(responses.GET, ORDERS_HOST, json={"results": [], "total": 0}, status=200)
+
+        result = client.order.get_orders(limit=10, offset=0, day_added_YYMMDD="2026-10-22")
+
+        assert result == {"results": [], "total": 0}
+        assert last_request().method == "GET"
+        assert query_of(last_request()) == {
+            "api_key": api_key,
+            "limit": "10",
+            "offset": "0",
+            "day_added_YYMMDD": "2026-10-22",
+        }
+        assert last_request().body is None
+
+    def test_get_orders_keeps_no_state_between_calls(self, client, mocked, query_of, last_request, api_key):
+        mocked.add(responses.GET, ORDERS_HOST, json={"results": []}, status=200)
+        client.order.get_orders(query="Example")
+
+        client.order.get_orders()
+
+        assert query_of(last_request()) == {"api_key": api_key}
+
+
 class TestFilterAndUpdates:
     def test_filter_orders_sends_the_filter_as_the_body_and_the_page_as_the_query(
         self, client, mocked, query_of, last_request, api_key
