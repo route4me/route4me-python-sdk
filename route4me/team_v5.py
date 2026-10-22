@@ -1,7 +1,7 @@
 """The :class:`TeamV5` resource (API V5): the sub-users of the account."""
 
 from ._url import path_segment
-from .api_endpoints import TEAM_USERS_BULK_INSERT_V5, TEAM_USERS_V5
+from .api_endpoints import TEAM_BULK_INSERT_V5, TEAM_USERS_V5
 from .base import Base
 from .exceptions import ParamValueException
 
@@ -98,8 +98,9 @@ class TeamV5(Base):
     def bulk_create_team_members(self, **kwargs):
         """Create up to 100 sub-users in one request.
 
-        Sends ``POST /modules/api/v5.0/team/users/bulk-insert`` with the
-        keywords as the JSON body.
+        Sends ``POST /modules/api/v5.0/team/bulk-insert`` with the
+        keywords as the JSON body, as the C# SDK does. The spec's
+        ``/team/users/bulk-insert`` answers 405.
 
         :param kwargs: required: ``users``, a non-empty list of members, each a
             dict with the fields of :meth:`create_team_member` (a member may
@@ -115,7 +116,7 @@ class TeamV5(Base):
         self._require(kwargs, ("users",))
         if not kwargs["users"]:
             raise ParamValueException("users", "Must hold at least one member")
-        return self._call_api(TEAM_USERS_BULK_INSERT_V5, "post", {}, body=dict(kwargs))
+        return self._call_api(TEAM_BULK_INSERT_V5, "post", {}, body=dict(kwargs))
 
     def update_team_member(self, user_id, **kwargs):
         """Update a sub-user.

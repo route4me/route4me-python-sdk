@@ -138,7 +138,7 @@ DISTANCE = f"{MAIN_HOST}/api/distance.php"
 FAST_GEOCODER = f"{MAIN_HOST}/actions/upload/json-geocode.php"
 MEMBER_CAPABILITIES = f"{MAIN_HOST}/api/member/capabilities.php"
 MEMBER_CONFIGURATION_SETTINGS_V5 = f"{API_V5}/member-configuration-settings"
-TEAM_USERS_BULK_INSERT_V5 = f"{API_V5}/team/users/bulk-insert"
+TEAM_BULK_INSERT_V5 = f"{API_V5}/team/bulk-insert"
 TEAM_USERS_V5 = f"{API_V5}/team/users"
 VIEW_DRIVERS = f"{MAIN_HOST}/api/drivers/view_drivers.php"
 

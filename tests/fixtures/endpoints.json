@@ -1849,11 +1849,6 @@
   {
    "method": "GET",
    "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/api/v5.0/vehicle-capacity-profiles"
-  },
-  {
-   "method": "GET",
-   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/assets/aliases/{}"
   },
   {
@@ -4719,11 +4714,6 @@
   {
    "method": "POST",
    "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/address-book/api/v5.0/address-book/orders"
-  },
-  {
-   "method": "POST",
-   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/address-book/groups"
   },
   {
@@ -6159,11 +6149,6 @@
   {
    "method": "POST",
    "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/preflight-api/api/v5.0/broadcasting/auth"
-  },
-  {
-   "method": "POST",
-   "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/preflight-api/api_access"
   },
   {
@@ -7040,11 +7025,6 @@
    "method": "POST",
    "host": "wh.route4me.com",
    "path": "/modules/api/v5.0/team/users/bulk"
-  },
-  {
-   "method": "POST",
-   "host": "wh.route4me.com",
-   "path": "/modules/api/v5.0/team/users/bulk-insert"
   },
   {
    "method": "POST",
