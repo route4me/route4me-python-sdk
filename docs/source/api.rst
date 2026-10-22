@@ -296,3 +296,10 @@ Route Breaks
 .. automodule:: route4me.route_breaks
 	:members:
 	:show-inheritance:
+
+Territories (API V5)
+--------------------
+
+.. automodule:: route4me.territories_v5
+	:members:
+	:show-inheritance:
