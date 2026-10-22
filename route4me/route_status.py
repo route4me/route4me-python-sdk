@@ -110,7 +110,7 @@ class RouteStatus(Base):
         """Set the status of one or more stops of routes.
 
         Sends ``POST /modules/api/v5.0/route-stop-status`` with ``status`` and
-        the stops as the JSON body. Give the stops by ID, by UUID, or both.
+        the stops as the JSON body. Give the stops either by ID or by UUID.
 
         :param status: the new status: ``"Skipped"``, ``"Completed"``,
             ``"Failed"`` or ``"Empty"``.
@@ -121,15 +121,15 @@ class RouteStatus(Base):
             in seconds. ``None`` (the default) leaves it to the API.
         :return: the decoded JSON reply, with ``status``, or the
             ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when ``status`` is empty, or neither
-            ``destination_ids`` nor ``destination_uuids`` is given.
+        :raise ParamValueException: when ``status`` is empty, or not exactly
+            one of ``destination_ids`` and ``destination_uuids`` is given.
 
         .. versionadded:: 1.0.0
         """
         if not status:
             raise ParamValueException("status", "Missing required params")
-        if destination_ids is None and destination_uuids is None:
-            raise ParamValueException("destination_ids, destination_uuids", "Give one of them")
+        if (destination_ids is None) == (destination_uuids is None):
+            raise ParamValueException("destination_ids, destination_uuids", "Give exactly one of them")
         data = {"status": status}
         if destination_ids is not None:
             data["destination_ids"] = destination_ids

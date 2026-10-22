@@ -37,9 +37,12 @@ class TestSetRouteStopStatus:
             "event_timestamp": 1792600000,
         }
 
-    def test_requires_destinations(self, client, mocked):
+    @pytest.mark.parametrize(
+        "kwargs", [{}, {"destination_ids": [101], "destination_uuids": ["C0FFEE00C0FFEE00C0FFEE00C0FFEE00"]}]
+    )
+    def test_requires_either_ids_or_uuids(self, client, mocked, kwargs):
         with pytest.raises(ParamValueException) as raised:
-            client.route_status.set_route_stop_status("Failed")
+            client.route_status.set_route_stop_status("Failed", **kwargs)
 
         assert raised.value.param == "destination_ids, destination_uuids"
         assert not mocked.calls
