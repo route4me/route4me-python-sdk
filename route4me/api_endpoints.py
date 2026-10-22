@@ -140,3 +140,6 @@ VIEW_DRIVERS = f"{MAIN_HOST}/api/drivers/view_drivers.php"
 # Phase 5: p5-orders-schedules
 ORDER_CUSTOM_USER_FIELDS = f"{MAIN_HOST}/api.v4/order_custom_user_fields.php"
 ORDERS_UPDATES = f"{MAIN_HOST}/api.v4/orders/changes.php"
+HYBRID_OPTIMIZATION = f"{MAIN_HOST}/api.v4/hybrid_date_optimization.php"
+HYBRID_OPTIMIZATION_DEPOTS = f"{MAIN_HOST}/api/change_hybrid_optimization_depot.php"
+OPTIMIZATION_TIME_PREDICTION = f"{MAIN_HOST}/api.v4/predict-optimization-time.php"
