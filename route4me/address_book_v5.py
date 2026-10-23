@@ -12,10 +12,13 @@ from .api_endpoints import (
     ADDRESS_BOOK_CONTACTS_BATCH_UPDATE_V5,
     ADDRESS_BOOK_CONTACTS_CLUSTERING_V5,
     ADDRESS_BOOK_CONTACTS_CUSTOM_FIELDS_V5,
+    ADDRESS_BOOK_CONTACTS_DELETE_BY_AREAS_V5,
     ADDRESS_BOOK_CONTACTS_DELETE_V5,
     ADDRESS_BOOK_CONTACTS_DEPOTS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREA_IDS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREAS_V5,
+    ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5,
+    ADDRESS_BOOK_CONTACTS_EXPORT_STATUS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_V5,
     ADDRESS_BOOK_CONTACTS_PAGINATED_V5,
     ADDRESS_BOOK_CONTACTS_SHOW_V5,
@@ -23,6 +26,8 @@ from .api_endpoints import (
     ADDRESS_BOOK_CONTACTS_V5,
     ADDRESS_BOOK_GROUPS_FILTER_ALL_V5,
     ADDRESS_BOOK_GROUPS_V5,
+    ADDRESS_BOOK_JOB_RESULT_V5,
+    ADDRESS_BOOK_JOB_STATUS_V5,
 )
 from .base import Base
 from .exceptions import APIException, ParamValueException
@@ -331,6 +336,27 @@ class AddressBookV5(Base):
         """
         return self._call_job_api(ADDRESS_BOOK_CONTACTS_DELETE_V5, "delete", kwargs)
 
+    def remove_address_book_contacts_by_areas(self, **kwargs):
+        """Delete the contacts inside some areas.
+
+        Sends ``DELETE /modules/api/v5.0/address-book/addresses/delete-by-areas``
+        with the keywords as the JSON body. It mirrors C#
+        ``RemoveAddressBookContactsByAreas``. The API runs the deletion as a
+        background job; follow it with :meth:`get_contacts_job_status`.
+
+        :param kwargs: the body: ``filter``, the areas, as for
+            :meth:`update_address_book_contact_by_areas`, for example
+            ``{"query": "...", "bounding_box": {...}}``.
+        :return: the decoded JSON reply, the raw body (``bytes``, ``b""`` when
+            the job is queued) when it is not JSON, or the ``{"errors": ...}``
+            dict on an API error.
+        :raise ParamValueException: when ``filter`` is missing.
+
+        .. versionadded:: 1.0.0
+        """
+        self._check_required(kwargs, ["filter"])
+        return self._call_job_api(ADDRESS_BOOK_CONTACTS_DELETE_BY_AREAS_V5, "delete", kwargs)
+
     def export_addresses(self, **kwargs):
         """Export contacts to a file.
 
@@ -342,11 +368,48 @@ class AddressBookV5(Base):
             and ``tz``, the time zone of the dates.
         :return: the decoded JSON reply, the raw body (``bytes``, ``b""`` when
             the job is queued) when it is not JSON, or the ``{"errors": ...}``
-            dict on an API error.
+            dict on an API error. The API answers ``202 Accepted`` with the
+            export's status URL, ``.../export/status/{id}``, in the
+            ``Location`` header of :attr:`response`; pass its last segment to
+            :meth:`get_export_status`, then :meth:`get_export_result`.
 
         .. versionadded:: 1.0.0
         """
         return self._call_job_api(ADDRESS_BOOK_CONTACTS_EXPORT_V5, "post", kwargs)
+
+    def get_export_status(self, export_id):
+        """Get the status of a contact export.
+
+        Sends ``GET /modules/api/v5.0/address-book/addresses/export/status/{export_id}``.
+
+        :param export_id: the export's ID: the last segment of the
+            ``Location`` header of the export reply.
+        :return: the decoded JSON reply, a status string, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``export_id`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        url = f"{ADDRESS_BOOK_CONTACTS_EXPORT_STATUS_V5}/{path_segment(export_id, 'export_id')}"
+        return self._call_api(url, "get", {})
+
+    def get_export_result(self, export_id):
+        """Download the file of a finished contact export.
+
+        Sends ``GET /modules/api/v5.0/address-book/addresses/export/result/{export_id}``.
+
+        :param export_id: the export's ID, as for :meth:`get_export_status`.
+        :return: the file (``bytes``, for example CSV), or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``export_id`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        url = f"{ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5}/{path_segment(export_id, 'export_id')}"
+        try:
+            return self._request(url, {}, "get").content
+        except APIException as e:
+            return e.to_dict()
 
     def export_addresses_by_areas(self, **kwargs):
         """Export the contacts inside some areas to a file.
@@ -382,6 +445,39 @@ class AddressBookV5(Base):
         .. versionadded:: 1.0.0
         """
         return self._call_job_api(ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREA_IDS_V5, "post", kwargs)
+
+    # ----------------------------------------------------------------- jobs
+
+    def get_contacts_job_status(self, job_id):
+        """Get the status of a background address book job.
+
+        Sends ``GET /modules/api/v5.0/address-book/job-tracker/status/{job_id}``.
+        A method that starts a job, such as :meth:`export_addresses` or
+        :meth:`update_address_book_contact_by_areas`, returns ``b""``; the job
+        ID is the last segment of the ``Location`` header of its reply.
+
+        :param job_id: ID of the job.
+        :return: the decoded JSON reply, with the job ``status``, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``job_id`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(f"{ADDRESS_BOOK_JOB_STATUS_V5}/{path_segment(job_id, 'job_id')}", "get", {})
+
+    def get_contacts_job_result(self, job_id):
+        """Get the result of a finished background address book job.
+
+        Sends ``GET /modules/api/v5.0/address-book/job-tracker/result/{job_id}``.
+
+        :param job_id: ID of the job, as for :meth:`get_contacts_job_status`.
+        :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
+            API error.
+        :raise ParamValueException: when ``job_id`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(f"{ADDRESS_BOOK_JOB_RESULT_V5}/{path_segment(job_id, 'job_id')}", "get", {})
 
     # --------------------------------------------------------------- groups
 

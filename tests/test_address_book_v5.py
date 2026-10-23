@@ -16,10 +16,13 @@ from route4me.api_endpoints import (
     ADDRESS_BOOK_CONTACTS_BATCH_UPDATE_V5,
     ADDRESS_BOOK_CONTACTS_CLUSTERING_V5,
     ADDRESS_BOOK_CONTACTS_CUSTOM_FIELDS_V5,
+    ADDRESS_BOOK_CONTACTS_DELETE_BY_AREAS_V5,
     ADDRESS_BOOK_CONTACTS_DELETE_V5,
     ADDRESS_BOOK_CONTACTS_DEPOTS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREA_IDS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_BY_AREAS_V5,
+    ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5,
+    ADDRESS_BOOK_CONTACTS_EXPORT_STATUS_V5,
     ADDRESS_BOOK_CONTACTS_EXPORT_V5,
     ADDRESS_BOOK_CONTACTS_PAGINATED_V5,
     ADDRESS_BOOK_CONTACTS_SHOW_V5,
@@ -27,11 +30,14 @@ from route4me.api_endpoints import (
     ADDRESS_BOOK_CONTACTS_V5,
     ADDRESS_BOOK_GROUPS_FILTER_ALL_V5,
     ADDRESS_BOOK_GROUPS_V5,
+    ADDRESS_BOOK_JOB_RESULT_V5,
+    ADDRESS_BOOK_JOB_STATUS_V5,
 )
 from route4me.exceptions import ParamValueException
 
 CONTACT = {"address_1": "1 Example St, Springfield", "cached_lat": 40.1, "cached_lng": -75.2}
 AREA_FILTER = {"query": "Example", "bounding_box": {"top": 41, "left": -76, "bottom": 40, "right": -75}}
+JOB_ID = "C0FFEE02C0FFEE02C0FFEE02C0FFEE02"
 RULES = {"condition": "AND", "rules": [{"id": "address_1", "field": "address_1", "operator": "contains", "value": "a"}]}
 
 #: (method, args, kwargs, HTTP method, URL, query, JSON body or None).
@@ -139,6 +145,15 @@ CASES = [
         {"filter": AREA_FILTER, "data": {"address_group": "North"}},
     ),
     (
+        "remove_address_book_contacts_by_areas",
+        (),
+        {"filter": AREA_FILTER},
+        "DELETE",
+        ADDRESS_BOOK_CONTACTS_DELETE_BY_AREAS_V5,
+        {},
+        {"filter": AREA_FILTER},
+    ),
+    (
         "remove_address_book_contacts",
         (),
         {"address_ids": [1, 2]},
@@ -210,12 +225,13 @@ def test_each_method_sends_its_request(
         assert json.loads(request.body) == body
 
 
-def test_a_query_list_is_sent_as_repeated_keys(client, mocked, last_request, query_of):
+def test_a_query_list_is_sent_with_bracketed_keys(client, mocked, last_request, query_of):
+    """PHP keeps only the last of ``display_list=a&display_list=b``."""
     mocked.add(responses.GET, ADDRESS_BOOK_CONTACTS_ALL_V5, json={"results": []}, status=200)
 
     client.address_book_v5.get_address_book_contacts(display_list=["routed", "unrouted"])
 
-    assert query_of(last_request()) == {"display_list": ["routed", "unrouted"]}
+    assert query_of(last_request()) == {"display_list[]": ["routed", "unrouted"]}
 
 
 def test_query_values_do_not_leak_into_the_next_call(client, mocked, last_request, query_of):
@@ -249,6 +265,7 @@ def test_an_empty_contact_id_is_rejected_before_any_request(client, mocked, addr
         ("add_address_book_contact", (), {"address_1": "1 Example St"}, "cached_lat, cached_lng"),
         ("update_address_book_contact", (7,), {"cached_lat": 40.1, "cached_lng": -75.2}, "address_1"),
         ("filter_contacts_by_group_rules", ({"limit": 10},), {}, "rules"),
+        ("remove_address_book_contacts_by_areas", (), {}, "filter"),
     ],
 )
 def test_a_missing_required_field_is_named_before_any_request(client, mocked, method, args, kwargs, missing):
@@ -303,3 +320,58 @@ def test_a_job_endpoint_returns_an_api_error_as_a_dict(client, mocked):
     result = client.address_book_v5.update_address_book_contact_by_areas(data={"address_group": "North"})
 
     assert result == {"errors": ["The filter is required."]}
+
+
+@pytest.mark.parametrize(
+    ("method", "url"),
+    [("get_contacts_job_status", ADDRESS_BOOK_JOB_STATUS_V5), ("get_contacts_job_result", ADDRESS_BOOK_JOB_RESULT_V5)],
+)
+def test_a_job_is_followed_by_its_id_in_the_path(client, mocked, last_request, query_of, method, url):
+    mocked.add(responses.GET, f"{url}/{JOB_ID}", json={"status": "finished"}, status=200)
+
+    assert getattr(client.address_book_v5, method)(JOB_ID) == {"status": "finished"}
+    assert last_request().method == "GET"
+    assert query_of(last_request()) == {}
+
+
+@pytest.mark.parametrize("method", ["get_contacts_job_status", "get_contacts_job_result"])
+@pytest.mark.parametrize("job_id", ["", None])
+def test_an_empty_job_id_is_rejected_before_any_request(client, mocked, method, job_id):
+    with pytest.raises(ParamValueException):
+        getattr(client.address_book_v5, method)(job_id)
+
+    assert not mocked.calls
+
+
+def test_an_export_is_followed_by_its_status_and_result(client, mocked, last_request):
+    """The export answers 202 with Location .../export/status/{id}; the result is the file."""
+    status_url = f"{ADDRESS_BOOK_CONTACTS_EXPORT_STATUS_V5}/{JOB_ID}"
+    mocked.add(responses.POST, ADDRESS_BOOK_CONTACTS_EXPORT_V5, body=b"", status=202, headers={"Location": status_url})
+    mocked.add(responses.GET, status_url, json="done", status=200)
+    mocked.add(
+        responses.GET, f"{ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5}/{JOB_ID}", body=b"id,address\n1,x\n", status=200
+    )
+    address_book = client.address_book_v5
+
+    assert address_book.export_addresses(ids=[1], extension="csv") == b""
+    export_id = address_book.response.headers["Location"].rsplit("/", 1)[-1]
+
+    assert address_book.get_export_status(export_id) == "done"
+    assert address_book.get_export_result(export_id) == b"id,address\n1,x\n"
+    assert last_request().method == "GET"
+
+
+@pytest.mark.parametrize("method", ["get_export_status", "get_export_result"])
+def test_an_empty_export_id_is_rejected_before_any_request(client, mocked, method):
+    with pytest.raises(ParamValueException):
+        getattr(client.address_book_v5, method)("")
+
+    assert not mocked.calls
+
+
+def test_an_export_result_error_is_returned_as_a_dict(client, mocked):
+    mocked.add(
+        responses.GET, f"{ADDRESS_BOOK_CONTACTS_EXPORT_RESULT_V5}/{JOB_ID}", json={"errors": ["Not ready"]}, status=404
+    )
+
+    assert client.address_book_v5.get_export_result(JOB_ID) == {"errors": ["Not ready"]}

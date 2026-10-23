@@ -27,7 +27,8 @@ class Autocomplete(Base):
 
         Without the address the API answers ``No address specified``.
 
-        :param kwargs: query parameters, sent as is: the partial address.
+        :param kwargs: query parameters, sent as is. ``address``, the partial
+            address, is the one that matters (checked against the live API).
         :return: the decoded JSON reply, the raw body (``bytes``) when it is
             not JSON, or the ``{"errors": ...}`` dict on an API error.
 

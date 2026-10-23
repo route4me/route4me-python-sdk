@@ -61,6 +61,18 @@ class TestAPIException:
 
         assert exc.to_dict() == {"errors": ["Unexpected server response"]}
 
+    def test_to_dict_reads_a_v5_error_key(self):
+        """A V5 module the account lacks answers 403 with a singular ``error``,
+        seen live; it used to come back as "Unexpected server response"."""
+        body = json.dumps({"status": False, "exit_code": 1, "error": "The required feature is not enabled."})
+
+        assert APIException(403, body, "u").to_dict() == {"errors": ["The required feature is not enabled."]}
+
+    def test_to_dict_ignores_a_boolean_error_flag(self):
+        body = json.dumps({"status": False, "error": False})
+
+        assert APIException(500, body, "u").to_dict() == {"errors": ["Unexpected server response"]}
+
     def test_to_dict_errors_always_join(self):
         """Every example prints ``". ".join(result["errors"])``. A string value
         printed letter by letter; a non-string list item raised ``TypeError``."""

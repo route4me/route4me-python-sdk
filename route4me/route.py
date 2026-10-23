@@ -113,8 +113,9 @@ class Route(Base):
 
         :param kwargs: query parameters. Required: ``route_id``, the route to
             copy.
-        :return: the decoded JSON reply, which describes the new route, or the
-            ``{"errors": ...}`` dict on an API error.
+        :return: the decoded JSON reply, ``{"success": true,
+            "optimization_problem_id": ...}`` (it names no route ID; find the
+            copy by its name), or the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``route_id`` is missing.
         """
         kwargs.update({"api_key": self.params["api_key"]})
@@ -335,14 +336,18 @@ class Route(Base):
         """Share a route by email.
 
         Sends ``POST /actions/route/share_route.php`` with ``route_id`` and
-        ``response_format`` in the query and the other keywords as the JSON
-        body.
+        ``response_format`` in the query and the other keywords as a form
+        body, as the C#, PHP and Java SDKs send it.
 
         :param kwargs: required: ``route_id``; ``response_format``, e.g.
             ``"json"``; and ``recipient_email``, the address to share with.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
         :raise ParamValueException: when a required parameter is missing.
+
+        .. versionchanged:: 1.0.0
+           The body is a form, not JSON: the endpoint reads form fields, so a
+           JSON ``recipient_email`` did not reach it.
         """
         if self.check_required_params(kwargs, ["recipient_email", "route_id", "response_format"]):
             params = {
@@ -351,7 +356,7 @@ class Route(Base):
                 "response_format": kwargs.pop("response_format"),
             }
             try:
-                self.response = self._request(SHARE_ROUTE_HOST, params, "post", json=kwargs)
+                self.response = self._request(SHARE_ROUTE_HOST, params, "post", data=kwargs)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -442,7 +447,17 @@ class Route(Base):
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
         :raise ParamValueException: when a required parameter is missing.
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`update_route` with ``reoptimize=1``.
         """
+        warnings.warn(
+            "Route.resequence_route_all is deprecated: the C# SDK marks it obsolete. "
+            "Use Route.update_route with reoptimize=1.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         kwargs.update({"api_key": self.params["api_key"]})
         return self._call_api(
             RESEQUENCE_ROUTE, "get", kwargs, required=["disable_optimization", "route_id", "optimize"]
@@ -532,9 +547,7 @@ class Route(Base):
            ``all_custom_fields=True`` arrived as the string ``"True"``.
         """
         url = EXPORTER_V5.format(route_id=path_segment(route_id, "route_id"))
-        params = {
-            "api_key": self.params["api_key"],
-        }
+        params = {}  # API V5: the client sends the key as a bearer token
         data = {"all_custom_fields": all_custom_fields, "format": output_format}
         if columns is not None:
             data["columns"] = columns

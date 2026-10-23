@@ -72,12 +72,12 @@ class TestQueries:
         assert query_of(request) == expected
         assert request.body is None
 
-    def test_list_values_are_repeated_in_the_query(self, client, mocked, last_request, query_of):
+    def test_list_values_are_sent_with_bracketed_keys(self, client, mocked, last_request, query_of):
         mocked.add(responses.GET, VEHICLES_V5, json=[], status=200)
 
         client.vehicles_v5.get_vehicles(facility_ids=["FACILITY-1", "FACILITY-2"])
 
-        assert query_of(last_request()) == {"facility_ids": ["FACILITY-1", "FACILITY-2"]}
+        assert query_of(last_request()) == {"facility_ids[]": ["FACILITY-1", "FACILITY-2"]}
 
     def test_no_query_value_is_kept_between_calls(self, client, mocked, last_request, query_of):
         mocked.add(responses.GET, VEHICLES_V5, json=[], status=200)
@@ -106,6 +106,24 @@ class TestPathIds:
         assert path_of(request.url) == path_of(url)
         assert query_of(request) == {}
         assert request.body is None
+
+    def test_update_vehicle_patches_the_given_fields(self, client, mocked, last_request, query_of):
+        mocked.add(responses.PATCH, f"{VEHICLES_V5}/{VEHICLE_ID}", json={"vehicle_id": VEHICLE_ID}, status=200)
+
+        result = client.vehicles_v5.update_vehicle(VEHICLE_ID, vehicle_alias="Van 2")
+
+        assert result == {"vehicle_id": VEHICLE_ID}
+        request = last_request()
+        assert request.method == "PATCH"
+        assert path_of(request.url) == path_of(f"{VEHICLES_V5}/{VEHICLE_ID}")
+        assert query_of(request) == {}
+        assert json.loads(request.body) == {"vehicle_alias": "Van 2"}
+
+    def test_update_vehicle_needs_a_field(self, client, mocked):
+        with pytest.raises(ParamValueException):
+            client.vehicles_v5.update_vehicle(VEHICLE_ID)
+
+        assert not mocked.calls
 
     def test_get_vehicle_track_sends_the_period_as_the_query(self, client, mocked, last_request, query_of):
         mocked.add(responses.GET, f"{VEHICLES_V5}/{VEHICLE_ID}/track", json={"data": []}, status=200)
@@ -170,6 +188,7 @@ class TestPathIds:
         [
             "get_vehicle_by_id",
             "delete_vehicle",
+            "update_vehicle",
             "get_vehicle_track",
             "get_vehicle_job_status",
             "get_vehicle_job_result",

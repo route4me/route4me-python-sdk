@@ -2,11 +2,12 @@
 
 Calls :meth:`Autocomplete.autocomplete_address <route4me.autocomplete.Autocomplete.autocomplete_address>`,
 which sends ``GET /autocomplete.php`` with the ``--param`` values as the query, and prints the reply.
-The endpoint's parameter names are not documented, so the example passes on whatever you give it.
+The endpoint's parameters are not documented; ``address``, the partial address, is the one that matters.
+The example passes on whatever you give it.
 
 Run it with::
 
-    python examples/autocomplete/autocomplete_address.py --api_key <your key> --param <name>=<partial address>
+    python examples/autocomplete/autocomplete_address.py --api_key <your key> --param "address=754 5th Ave"
 """
 
 import argparse

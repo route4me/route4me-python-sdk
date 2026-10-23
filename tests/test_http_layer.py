@@ -18,11 +18,12 @@ import responses
 
 from route4me import Route4Me
 from route4me.api import HEADERS
-from route4me.api_endpoints import ROUTE_HOST, TERRITORY_HOST
+from route4me.api_endpoints import ROUTE_HOST, TERRITORY_HOST, VEHICLES_V5
 from route4me.config import DEFAULT_TIMEOUT, Route4MeConfig
 from route4me.exceptions import APIException
 
 ANY_URL = ROUTE_HOST
+PATCH_URL = f"{VEHICLES_V5}/C0FFEE00C0FFEE00C0FFEE00C0FFEE00"
 
 
 class _StopSend(Exception):
@@ -91,6 +92,58 @@ class TestQueryValues:
 
         assert query_of(last_request())["flag"] == sent
 
+    def test_v5_lists_and_dicts_use_bracketed_keys(self, client, mocked, query_of, last_request):
+        """requests cannot send a dict or a nested list, and PHP keeps only the
+        last of a repeated plain key."""
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client._make_request(
+            url,
+            {"ids": ["A", "B"], "filters": {"active": True}, "order_by": [["title", "asc"]]},
+            client._request_get,
+        )
+
+        assert query_of(last_request()) == {
+            "ids[]": ["A", "B"],
+            "filters[active]": "1",
+            "order_by[0][]": ["title", "asc"],
+        }
+
+    def test_v5_requests_ask_for_json_first(self, client, mocked, last_request):
+        """With Accept: */* API V5 renders its errors as HTML (seen live), so
+        their messages were lost."""
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client._make_request(url, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "application/json, */*;q=0.8"
+
+    def test_v4_requests_keep_the_default_accept(self, client, mocked, last_request):
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+
+        client._make_request(ANY_URL, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "*/*"
+
+    def test_a_custom_accept_is_kept_for_v5(self, mocked, last_request, api_key):
+        client = Route4Me(api_key, headers={"Accept": "text/csv"})
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, body="a,b", status=200)
+
+        client._make_request(url, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "text/csv"
+
+    def test_v4_lists_are_left_as_they_are(self, client, mocked, query_of, last_request):
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+
+        client._make_request(ANY_URL, {"route_id": ["A", "B"], "flags": [True, False]}, client._request_get)
+
+        assert query_of(last_request())["route_id"] == ["A", "B"]
+        assert query_of(last_request())["flags"] == ["1", "0"]
+
     def test_the_callers_params_are_not_changed(self, client, mocked):
         mocked.add(responses.GET, ANY_URL, json={}, status=200)
         params = {"flag": True}
@@ -114,9 +167,11 @@ class TestVerbs:
         ],
     )
     def test_verb(self, client, mocked, last_request, helper, expected, registered):
-        mocked.add(registered, ANY_URL, json={}, status=200)
+        # PATCH exists only on API V5 endpoints, such as a vehicle update.
+        url = PATCH_URL if expected == "PATCH" else ANY_URL
+        mocked.add(registered, url, json={}, status=200)
 
-        getattr(client, helper)(ANY_URL, {"api_key": "k"})
+        client._make_request(url, {}, getattr(client, helper))
 
         assert last_request().method == expected
 
@@ -135,11 +190,11 @@ class TestVerbs:
         assert json.loads(last_request().body) == {"territory_name": "X"}
 
     def test_patch_sends_a_json_body(self, client, mocked, last_request):
-        mocked.add(responses.PATCH, TERRITORY_HOST, json={}, status=200)
+        mocked.add(responses.PATCH, PATCH_URL, json={}, status=200)
 
-        client._request_patch(TERRITORY_HOST, {}, json={"territory_name": "X"})
+        client._make_request(PATCH_URL, {}, client._request_patch, json={"alias": "X"})
 
-        assert json.loads(last_request().body) == {"territory_name": "X"}
+        assert json.loads(last_request().body) == {"alias": "X"}
 
 
 class TestClientConfiguration:

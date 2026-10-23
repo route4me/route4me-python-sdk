@@ -1,5 +1,7 @@
 """The :class:`AddressBook` resource: address book contacts and groups (API V4)."""
 
+import warnings
+
 from .api_endpoints import ADDRESS_BOOK_GROUP, ADDRESS_BOOK_GROUP_SEARCH, ADDRESSBOOK, SAVE_GEOCODED_ADDRESSES
 from .base import Base
 from .exceptions import ParamValueException
@@ -39,7 +41,17 @@ class AddressBook(Base):
         :return: the decoded JSON reply: the new contact, or the
             ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required field is missing.
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`~route4me.address_book_v5.AddressBookV5.add_address_book_contact`.
         """
+        warnings.warn(
+            "AddressBook.create_contact is deprecated: the C# SDK marks it obsolete. "
+            "Use AddressBookV5.add_address_book_contact.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self.json_data = kwargs
         if not self.check_required_params(self.json_data, self.REQUIRED_FIELDS):
             raise ParamValueException("params", "Params are not complete")
@@ -54,7 +66,17 @@ class AddressBook(Base):
             ``offset``.
         :return: the decoded JSON reply: the contacts, or the
             ``{"errors": ...}`` dict on an API error.
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`~route4me.address_book_v5.AddressBookV5.get_address_book_contacts`.
         """
+        warnings.warn(
+            "AddressBook.get_addressbook_contacts is deprecated: the C# SDK marks it obsolete. "
+            "Use AddressBookV5.get_address_book_contacts.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         kwargs.update({"api_key": self.params["api_key"]})
         return self._call_api(ADDRESSBOOK, "get", kwargs, required=["api_key"])
 
@@ -82,7 +104,17 @@ class AddressBook(Base):
         :return: the decoded JSON reply: the updated contact, or the
             ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``address_id`` is missing.
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`~route4me.address_book_v5.AddressBookV5.update_address_book_contact`.
         """
+        warnings.warn(
+            "AddressBook.update_contact is deprecated: the C# SDK marks it obsolete. "
+            "Use AddressBookV5.update_address_book_contact.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if not self.check_required_params(kwargs, ["address_id"]):
             raise ParamValueException("params", "Params are not complete")
         return self._call_api(ADDRESSBOOK, "put", self.params, body=kwargs)
@@ -97,7 +129,17 @@ class AddressBook(Base):
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
         :raise ParamValueException: when ``address_ids`` is missing.
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`~route4me.address_book_v5.AddressBookV5.remove_address_book_contacts`.
         """
+        warnings.warn(
+            "AddressBook.delete_addressbook_contact is deprecated: the C# SDK marks it obsolete. "
+            "Use AddressBookV5.remove_address_book_contacts.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if not self.check_required_params(kwargs, ["address_ids"]):
             raise ParamValueException("params", "Params are not complete")
         return self._call_api(ADDRESSBOOK, "delete", self.params, body=kwargs)

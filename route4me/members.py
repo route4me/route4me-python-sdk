@@ -24,7 +24,7 @@ class Members(Base):
 
     Every method returns the decoded JSON reply, the raw body (``bytes``) when
     it is not JSON, or on an API error the ``{"errors": ...}`` dict from
-    :meth:`APIException.to_dict <route4me.exceptions.APIException.to_dict>`
+    :meth:`~route4me.exceptions.APIException.to_dict`
     instead of raising.
     """
 
@@ -124,7 +124,18 @@ class Members(Base):
         :param kwargs: query parameters, sent as is.
         :return: the decoded JSON reply, the raw body (``bytes``) when it is
             not JSON, or the ``{"errors": ...}`` dict on an API error.
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`~route4me.team_v5.TeamV5.get_team_members`,
+           or :meth:`~route4me.team_v5.TeamV5.get_team_member_by_id` for one
+           member.
         """
+        warnings.warn(
+            "Members.get_api_key_users is deprecated: the C# SDK marks it obsolete. Use TeamV5.get_team_members.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         kwargs.update(
             {
                 "api_key": self.params["api_key"],
@@ -148,7 +159,16 @@ class Members(Base):
             error.
 
         .. versionadded:: 1.0.0
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`~route4me.team_v5.TeamV5.create_team_member`.
         """
+        warnings.warn(
+            "Members.create_user is deprecated: the C# SDK marks it obsolete. Use TeamV5.create_team_member.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._request_decoded(USER_URL, {}, "post", json=dict(kwargs))
 
     def user_update(self, member_id, **kwargs):
@@ -167,7 +187,16 @@ class Members(Base):
             an API error.
 
         .. versionadded:: 1.0.0
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`~route4me.team_v5.TeamV5.update_team_member`.
         """
+        warnings.warn(
+            "Members.user_update is deprecated: the C# SDK marks it obsolete. Use TeamV5.update_team_member.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._request_decoded(USER_URL, {"member_id": member_id}, "put", json=dict(kwargs))
 
     def user_delete(self, member_id):
@@ -183,7 +212,16 @@ class Members(Base):
             ``{"errors": ...}`` dict on an API error.
 
         .. versionadded:: 1.0.0
+
+        .. deprecated:: 1.0.0
+           The C# SDK marks this operation obsolete. Use
+           :meth:`~route4me.team_v5.TeamV5.remove_team_member`.
         """
+        warnings.warn(
+            "Members.user_delete is deprecated: the C# SDK marks it obsolete. Use TeamV5.remove_team_member.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._request_decoded(USER_URL, {"member_id": member_id}, "delete")
 
     def get_member_capabilities(self):

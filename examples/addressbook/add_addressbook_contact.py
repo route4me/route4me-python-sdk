@@ -5,6 +5,9 @@ Calls :meth:`AddressBook.create_contact <route4me.address_book.AddressBook.creat
 ``cached_lng`` are required), and prints the new contact. The contact stays in the address book;
 delete_addressbook_contact.py shows how to remove one.
 
+Deprecated: AddressBook.create_contact is deprecated, because the C# SDK marks the operation obsolete.
+The API V5 replacement is shown in ``examples/addressbook/add_address_book_contact.py``.
+
 Run it with::
 
     python examples/addressbook/add_addressbook_contact.py --api_key <your key>

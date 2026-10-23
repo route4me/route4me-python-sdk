@@ -1,7 +1,7 @@
 """Create several sub-users in one request with API V5.
 
 Calls :meth:`TeamV5.bulk_create_team_members <route4me.team_v5.TeamV5.bulk_create_team_members>`,
-which sends ``POST /modules/api/v5.0/team/users/bulk-insert`` (API V5, on ``wh.route4me.com``) with
+which sends ``POST /modules/api/v5.0/team/bulk-insert`` (API V5, on ``wh.route4me.com``) with
 ``users`` and ``conflicts`` (``skip``: leave existing members alone) as the JSON body, and prints the
 reply. Running it creates two drivers with sample ``example.com`` email addresses; change the values
 first.

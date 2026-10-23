@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+from ._params import compact
 from ._url import path_segment
 from .api_endpoints import ROUTE_STATUS_PLANNED_V5, ROUTE_STATUS_V5, ROUTE_STOP_STATUS_V5
 from .base import Base
@@ -69,11 +70,14 @@ class RouteStatus(Base):
         """
         return self._call_api(self._status_url(route_id, "/history"), "get", self.params)
 
-    def set_route_status(self, route_id, status, lat, lng, event_timestamp=None):
+    def set_route_status(  # pylint: disable=too-many-arguments
+        self, route_id, status, lat, lng, event_timestamp=None, *, reason=None, reason_code=None, device_id=None
+    ):
         """Set the status of a route.
 
         Sends ``POST /modules/api/v5.0/route-status/{route_id}`` with
-        ``status``, ``lat``, ``lng`` and ``event_timestamp`` as the JSON body.
+        ``status``, ``lat``, ``lng``, ``event_timestamp`` and the cancel reason
+        as the JSON body, and ``device_id`` in the query.
 
         :param route_id: ID of the route.
         :param status: the new status, a :data:`~route4me.constants.ROUTE_STATUS`
@@ -82,10 +86,23 @@ class RouteStatus(Base):
         :param lng: longitude where the status changed.
         :param event_timestamp: when the status changed, as a Unix timestamp
             in seconds. ``None`` (the default) uses the current time.
+        :param reason: for ``"canceled"``: the ``status_reason_id`` of a cancel
+            reason from the account's reasons list.
+        :param reason_code: for ``"canceled"``: the 3-character code of a cancel
+            reason, instead of ``reason``.
+        :param device_id: ID of the device that reports the status.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
-        :raise ParamValueException: when ``route_id`` is empty.
+        :raise ParamValueException: when ``route_id`` is empty, or both
+            ``reason`` and ``reason_code`` are given.
+
+        .. versionchanged:: 1.0.0
+           Takes ``reason``, ``reason_code`` and ``device_id``, so a route can
+           be canceled.
         """
+        url = self._status_url(route_id)
+        if reason is not None and reason_code is not None:
+            raise ParamValueException("reason, reason_code", "Give one of them, not both")
         if event_timestamp is None:
             event_timestamp = int(datetime.now().timestamp())
         data = {
@@ -94,7 +111,8 @@ class RouteStatus(Base):
             "lng": lng,
             "event_timestamp": event_timestamp,
         }
-        return self._call_api(self._status_url(route_id), "post", self.params, body=data)
+        data.update(compact(reason=reason, reason_code=reason_code))
+        return self._call_api(url, "post", compact(device_id=device_id), body=data)
 
     def rollback_route_status(self, route_id):
         """Roll the status of a route back to the previous one.

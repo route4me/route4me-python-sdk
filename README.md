@@ -86,7 +86,11 @@ Keep the API key out of your code: read it from an environment variable or a sec
 
 ### The client
 
-`Route4Me(api_key)` gives access to every part of the API through its attributes, for example `r4m.optimization`, `r4m.route`, `r4m.address`, `r4m.address_book`, `r4m.members`, `r4m.order`, `r4m.vehicles`, `r4m.territory`, `r4m.telematics` and `r4m.gps`. The [examples](https://github.com/route4me/route4me-python-sdk/tree/master/examples) show each one.
+`Route4Me(api_key)` gives access to every part of the API through its attributes, for example `r4m.optimization`, `r4m.route`, `r4m.address`, `r4m.address_book`, `r4m.members`, `r4m.order`, `r4m.vehicles`, `r4m.territory`, `r4m.telematics` and `r4m.gps`.
+
+API V5 resources have their own attributes. Where an area also has a V4 resource, the V5 one ends in `_v5`: `r4m.address_book_v5`, `r4m.vehicles_v5`, `r4m.routes_v5`, `r4m.route_destinations_v5`, `r4m.orders_v5`, `r4m.team_v5` and `r4m.territories_v5`. Areas that exist only in V5 use their plain name, for example `r4m.notes`, `r4m.facilities`, `r4m.customers`, `r4m.locations`, `r4m.pod_workflows`, `r4m.driver_reviews`, `r4m.recurring_routes`, `r4m.vehicle_profiles` and `r4m.tracking_history`.
+
+The [examples](https://github.com/route4me/route4me-python-sdk/tree/master/examples) show every method.
 
 Each client reuses one HTTP connection pool. Close it when you are done, or use the client as a context manager:
 
@@ -148,6 +152,14 @@ The V5 methods take and return plain dicts. For example, list the telematics ven
 vendors = r4m.telematics.get_vendors_v5(search="geotab")
 for vendor in vendors["data"]:
     print(vendor["id"], vendor["name"])
+```
+
+IDs that go in the URL path are positional arguments, and they are percent-encoded. Query values may be lists or dicts: the SDK sends them with bracketed keys, which is how API V5 reads them (`filters[status][]=1`):
+
+```python
+facilities = r4m.facilities.get_facilities(page=1, per_page=20, filters={"status": [1]})
+for facility in facilities["data"]:
+    print(facility["facility_id"], facility["facility_alias"])
 ```
 
 ### Deprecated methods

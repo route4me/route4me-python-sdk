@@ -1,19 +1,21 @@
-"""The :class:`TerritoriesV5` resource (API V5): generate territories automatically."""
+"""The :class:`TerritoriesV5` resource (API V5): list territories and generate them automatically."""
 
 from ._url import path_segment
 from .api_endpoints import (
     AUTOMATIC_TERRITORIES_JOB_RESULT_V5,
     AUTOMATIC_TERRITORIES_JOB_STATUS_V5,
     AUTOMATIC_TERRITORIES_V5,
+    TERRITORIES_V5,
 )
 from .base import Base
 from .exceptions import APIException, ParamValueException
 
 
 class TerritoriesV5(Base):
-    """Territories with API V5: group addresses into territories automatically.
+    """Territories with API V5: list them, and group addresses into territories automatically.
 
     Use it as ``route4me.territories_v5``. The methods send requests to
+    ``/modules/api/v5.0/territories`` and
     ``/modules/api/v5.0/automatic-territories`` on ``wh.route4me.com``. The
     V4 territory methods are on :class:`~route4me.territory.Territory`.
 
@@ -28,6 +30,26 @@ class TerritoriesV5(Base):
 
     .. versionadded:: 1.0.0
     """
+
+    def get_territories(self, **kwargs):
+        """List the territories of the account, with API V5.
+
+        Sends ``GET /modules/api/v5.0/territories`` with the keywords in the
+        query. The V4 list is :meth:`Territory.get_territories
+        <route4me.territory.Territory.get_territories>`.
+
+        :param kwargs: query parameters, all optional: ``lat`` and ``lng``,
+            only the territories that contain this point; ``date``,
+            ``scheduled_start`` and ``scheduled_end`` (``YYYY-MM-DD``), to
+            filter the orders counted; ``search_query``; and the booleans
+            ``addresses``, ``orders``, ``addresses_count`` and
+            ``orders_count``, sent as ``1`` or ``0``.
+        :return: the decoded JSON reply: the territories, or the
+            ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(TERRITORIES_V5, "get", dict(kwargs))
 
     def create_automatic_territories_job(self, **kwargs):
         """Start a job that groups addresses into territories.

@@ -369,7 +369,9 @@ class Address(Base):
         ids = ",".join(str(destination_id) for destination_id in route_destination_ids)
         if not ids:
             raise ParamValueException("route_destination_ids", "Missing required params")
-        data = {"route_destination_ids": ids}
+        # The endpoint reads route_destination_id, comma-separated; it rejects
+        # route_destination_ids (checked live on 2026-10-22).
+        data = {"route_destination_id": ids}
         return self._call_api(DELETE_ROUTE_DESTINATION, "post", {"format": "json"}, body=data, body_key="data")
 
     def mark_address_departed(self, route_id, address_id, is_departed=True, **kwargs):

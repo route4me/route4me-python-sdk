@@ -5,7 +5,7 @@ import json
 import pytest
 import responses
 
-from route4me.api_endpoints import TEAM_USERS_BULK_INSERT_V5, TEAM_USERS_V5
+from route4me.api_endpoints import TEAM_BULK_INSERT_V5, TEAM_USERS_V5
 from route4me.exceptions import ParamValueException
 
 USER_ID = 4321
@@ -28,7 +28,11 @@ class TestTeamV5:
         request = last_request()
         assert request.method == "GET"
         assert request.url.split("?")[0] == TEAM_USERS_V5
-        assert query_of(request) == {"query": "ada", "drivers_only": "1", "facility_ids": ["FACILITY-1", "FACILITY-2"]}
+        assert query_of(request) == {
+            "query": "ada",
+            "drivers_only": "1",
+            "facility_ids[]": ["FACILITY-1", "FACILITY-2"],
+        }
         assert request.body is None
 
     def test_get_team_members_without_filters_sends_no_query(self, client, mocked, last_request, query_of):
@@ -65,11 +69,11 @@ class TestTeamV5:
         assert not mocked.calls
 
     def test_bulk_create_team_members_posts_the_users_and_the_conflict_rule(self, client, mocked, last_request):
-        mocked.add(responses.POST, TEAM_USERS_BULK_INSERT_V5, json={}, status=200)
+        mocked.add(responses.POST, TEAM_BULK_INSERT_V5, json={}, status=200)
 
         assert client.team_v5.bulk_create_team_members(users=[MEMBER], conflicts="skip") == {}
         assert last_request().method == "POST"
-        assert last_request().url == TEAM_USERS_BULK_INSERT_V5
+        assert last_request().url == TEAM_BULK_INSERT_V5
         assert json.loads(last_request().body) == {"users": [MEMBER], "conflicts": "skip"}
 
     @pytest.mark.parametrize("kwargs", [{}, {"users": []}, {"conflicts": "fail"}])

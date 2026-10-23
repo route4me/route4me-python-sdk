@@ -4,6 +4,9 @@ Calls :meth:`Members.user_delete <route4me.members.Members.user_delete>`, which 
 ``DELETE /api.v4/user.php`` with ``member_id`` in the query, and prints the reply. Running it
 deletes the user. API V5 does the same with ``examples/team/remove_team_member.py``.
 
+Deprecated: Members.user_delete is deprecated, because the C# SDK marks the operation obsolete.
+The API V5 replacement is shown in ``examples/team/remove_team_member.py``.
+
 Run it with::
 
     python examples/members/user_delete.py --api_key <your key> --member_id <member ID>

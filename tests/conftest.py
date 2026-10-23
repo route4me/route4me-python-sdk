@@ -167,6 +167,12 @@ def check_request(method, url, headers):
     problems = []
     if parts.scheme != "https":
         problems.append(f"{method} {url}: scheme is {parts.scheme!r}, not https")
+    # Checked before the deprecated-endpoint shortcut: the key must never
+    # reach any other host, retired ones included.
+    if parts.hostname not in ("api.route4me.com", "wh.route4me.com") and (
+        API_KEY in url or any(API_KEY in str(v) for v in headers.values())
+    ):
+        problems.append(f"{method} {url}: the API key is sent to {parts.hostname!r}, which is not an API host")
     for host, pattern, reason in DEPRECATED:
         if parts.hostname == host and pattern.match(path):
             DEPRECATED_HITS[f"{method} {host}{path} ({reason})"] += 1

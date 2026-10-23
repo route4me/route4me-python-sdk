@@ -9,11 +9,30 @@ from route4me.api_endpoints import (
     AUTOMATIC_TERRITORIES_JOB_RESULT_V5,
     AUTOMATIC_TERRITORIES_JOB_STATUS_V5,
     AUTOMATIC_TERRITORIES_V5,
+    TERRITORIES_V5,
 )
 from route4me.exceptions import ParamValueException
 
 JOB_ID = "JOB-1"
 ADDRESSES = [{"id": 1, "lat": 40.7, "lng": -73.9}, {"id": 2, "lat": 40.8, "lng": -74.0}]
+
+
+class TestTerritories:
+    def test_get_territories_sends_the_filters_in_the_query(self, client, mocked, last_request, query_of):
+        mocked.add(responses.GET, TERRITORIES_V5, json=[{"territory_id": "T1"}], status=200)
+
+        result = client.territories_v5.get_territories(lat=40.1, lng=-75.2, addresses=True, orders_count=False)
+
+        assert result == [{"territory_id": "T1"}]
+        assert last_request().method == "GET"
+        assert query_of(last_request()) == {"lat": "40.1", "lng": "-75.2", "addresses": "1", "orders_count": "0"}
+
+    def test_get_territories_without_filters_sends_no_query(self, client, mocked, last_request, query_of):
+        mocked.add(responses.GET, TERRITORIES_V5, json=[], status=200)
+
+        client.territories_v5.get_territories()
+
+        assert query_of(last_request()) == {}
 
 
 class TestAutomaticTerritories:

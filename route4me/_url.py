@@ -10,7 +10,7 @@ V5 is REST-style, so every one of its ~200 endpoints has this same surface.
 Use these helpers for anything that lands in a path; they are not optional.
 """
 
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 
 from .exceptions import ParamValueException
 
@@ -94,6 +94,9 @@ def join_path(base, *segments):
 #: URL prefix of every API V5 endpoint.
 API_V5_PREFIX = "https://wh.route4me.com/modules/api/v5."
 
+#: The only hosts the API key is ever sent to, over https.
+API_KEY_HOSTS = ("api.route4me.com", "wh.route4me.com")
+
 
 def is_v5_url(url):
     """Tell whether ``url`` is an API V5 endpoint, which takes a bearer token.
@@ -107,3 +110,22 @@ def is_v5_url(url):
     :return: ``True`` for ``https://wh.route4me.com/modules/api/v5.*`` URLs.
     """
     return str(url).startswith(API_V5_PREFIX)
+
+
+def takes_api_key(url):
+    """Tell whether a request to ``url`` may carry the API key.
+
+    Only https requests to the Route4Me API hosts (:data:`API_KEY_HOSTS`) do.
+    A retired host or any other host gets no key, so a dead or wrong endpoint
+    can never collect it (the PHP SDK once sent its key to a retired host).
+
+    >>> takes_api_key("https://api.route4me.com/api.v4/route.php")
+    True
+    >>> takes_api_key("https://telematics.route4me.com/api/vendors.php")
+    False
+
+    :param url: absolute URL of the endpoint.
+    :return: ``True`` when the key may be sent.
+    """
+    parts = urlsplit(str(url))
+    return parts.scheme == "https" and parts.hostname in API_KEY_HOSTS

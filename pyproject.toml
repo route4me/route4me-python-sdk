@@ -241,6 +241,11 @@ addopts = [
     "--disable-socket",
     "--allow-unix-socket",
 ]
+# The methods the C# SDK marks obsolete are deprecated but still tested; their
+# warning itself is asserted in tests/test_obsolete_methods.py.
+filterwarnings = [
+    "ignore:.*the C# SDK marks it obsolete.*:DeprecationWarning",
+]
 
 # ---------------------------------------------------------------- coverage --
 

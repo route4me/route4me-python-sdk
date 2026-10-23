@@ -9,6 +9,7 @@ from route4me.api_endpoints import (
     ROUTES_CUSTOM_DATA_BULK_V5,
     ROUTES_CUSTOM_DATA_KEYS_V5,
     ROUTES_DATATABLE_CONFIG_V5,
+    ROUTES_DATATABLE_V5,
     ROUTES_DELETE_V5,
     ROUTES_LIST_V5,
     ROUTES_LOOKUP_FOR_NEW_DESTINATION_V5,
@@ -109,6 +110,21 @@ class TestDeleteRoutes:
 
         assert raised.value.param == missing
         assert not mocked.calls
+
+
+class TestDataTable:
+    def test_posts_the_filters_as_the_json_body(self, client, mocked, last_request, query_of):
+        mocked.add(responses.POST, ROUTES_DATATABLE_V5, json=[{"route_id": "R1"}], status=200)
+        body = {
+            "filters": {"schedule_date": ["2026-10-01", "2026-10-31"]},
+            "order_by": [["route_name", "asc"]],
+            "per_page": 20,
+        }
+
+        assert client.routes_v5.get_route_datatable(**body) == [{"route_id": "R1"}]
+        assert last_request().method == "POST"
+        assert query_of(last_request()) == {}
+        assert json.loads(last_request().body) == body
 
 
 class TestDataTableConfig:

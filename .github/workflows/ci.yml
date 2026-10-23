@@ -130,10 +130,14 @@ jobs:
       # so the V5 managers cannot land untested while the backfill continues.
       - name: Patch coverage
         if: github.event_name == 'pull_request'
+        # The base branch name reaches the script as an environment variable, never
+        # spliced into it: pull requests may target any branch of the stack.
+        env:
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
+          git fetch --no-tags --depth=1 origin "$BASE_REF"
           diff-cover coverage.xml \
-            --compare-branch=origin/${{ github.base_ref }} \
+            --compare-branch="origin/$BASE_REF" \
             --fail-under=90
 
   build:

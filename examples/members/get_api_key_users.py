@@ -4,6 +4,9 @@ Calls :meth:`Members.get_api_key_users <route4me.members.Members.get_api_key_use
 ``GET /api.v4/user.php``. The users come back under ``results``; each is printed with its member ID,
 name, email and type.
 
+Deprecated: Members.get_api_key_users is deprecated, because the C# SDK marks the operation obsolete.
+The API V5 replacement is shown in ``examples/team/get_team_members.py``.
+
 Run it with::
 
     python examples/members/get_api_key_users.py --api_key <your key>

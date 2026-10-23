@@ -39,6 +39,26 @@ class Order(Base):
             raise ParamValueException("order", "Missing required params")
         return self._request_decoded(ORDERS_HOST, self.params, "post", json=kwargs)
 
+    def get_orders(self, **kwargs):
+        """List orders, a page at a time, optionally searched or filtered by date.
+
+        Sends ``GET /api.v4/order.php`` with the keywords in the query. It
+        mirrors C# ``Route4MeManager.GetOrders``; to get one order, use
+        :meth:`get_order`.
+
+        :param kwargs: query parameters, all optional: ``limit`` and
+            ``offset``; ``query``, text to search for; ``fields``, the fields
+            to return, comma-separated; ``display``; ``day_added_YYMMDD`` or
+            ``scheduled_for_YYMMDD``, a date such as ``"2026-10-22"``.
+        :return: the decoded JSON reply: ``results`` and ``total``, the raw
+            body (``bytes``) when it is not JSON, or the ``{"errors": ...}``
+            dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        params = dict(kwargs, api_key=self.params["api_key"])
+        return self._request_decoded(ORDERS_HOST, params, "get")
+
     def get_order(self, **kwargs):
         """Get an order by ID.
 

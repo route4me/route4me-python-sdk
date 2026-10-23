@@ -213,22 +213,28 @@ class Notes(Base):
 
     # ---------------------------------------------- V4 note custom types --
 
-    def add_custom_note_type(self, **fields):
-        """Add a custom note type (API V4).
+    def add_custom_note_type(self, note_custom_type=None, note_custom_type_values=None):
+        """Add a custom note type, a list of values a driver picks from (API V4).
 
-        Sends ``POST /api.v4/note_custom_types.php`` with the keywords as the
-        JSON body.
+        Sends ``POST /api.v4/note_custom_types.php`` with ``type`` and
+        ``values`` as the JSON body, the names the endpoint reads (as the C#
+        and PHP SDKs send them; it rejects the spec's ``note_custom_type`` and
+        ``note_custom_type_values``).
 
-        :param fields: required: ``note_custom_type``, the name. Optional:
-            ``note_custom_type_values``, a list of strings.
+        :param note_custom_type: the name of the type.
+        :param note_custom_type_values: the values, a non-empty list of strings.
         :return: the decoded JSON reply, e.g. ``{"result": "OK", "affected":
-            1, ...}``, or the ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when ``note_custom_type`` is missing.
+            1}``, or the ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when the name or the values are missing.
 
         .. versionadded:: 1.0.0
         """
-        require(fields, ["note_custom_type"])
-        return self._call_api(NOTE_CUSTOM_TYPES_V4, "post", {}, body=fields)
+        if not note_custom_type:
+            raise ParamValueException("note_custom_type", "Missing required params")
+        if not note_custom_type_values:
+            raise ParamValueException("note_custom_type_values", "Missing required params")
+        body = {"type": note_custom_type, "values": list(note_custom_type_values)}
+        return self._call_api(NOTE_CUSTOM_TYPES_V4, "post", {}, body=body)
 
     def get_all_custom_note_types(self):
         """List the custom note types of the account (API V4).

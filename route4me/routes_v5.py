@@ -5,6 +5,7 @@ from .api_endpoints import (
     ROUTES_CUSTOM_DATA_BULK_V5,
     ROUTES_CUSTOM_DATA_KEYS_V5,
     ROUTES_DATATABLE_CONFIG_V5,
+    ROUTES_DATATABLE_V5,
     ROUTES_DELETE_V5,
     ROUTES_LIST_V5,
     ROUTES_LOOKUP_FOR_NEW_DESTINATION_V5,
@@ -128,6 +129,25 @@ class RoutesV5(Base):
         if missing:
             raise ParamValueException(", ".join(missing), "Missing required params")
         return self._call_api(ROUTES_DELETE_V5, "delete", {}, body=kwargs)
+
+    def get_route_datatable(self, **kwargs):
+        """List routes as rows of the route data table, with filters and sorting.
+
+        Sends ``POST /modules/api/v5.0/routes/datatable`` with the keywords as
+        the JSON body. It mirrors C# ``GetRouteDatatableWithElasticSearch``;
+        :meth:`get_route_data_table_config` describes the columns.
+
+        :param kwargs: the body, all optional: ``filters``, a dict such as
+            ``{"schedule_date": ["2026-10-01", "2026-10-31"]}``, ``route_id``,
+            ``vehicle_ids``, ``member_ids`` or ``route_status``;
+            ``search_query``; ``order_by``, a list of ``[field, direction]``
+            pairs; ``page``; ``per_page``; and ``timezone``.
+        :return: the decoded JSON reply: the routes, or the ``{"errors": ...}``
+            dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(ROUTES_DATATABLE_V5, "post", {}, body=kwargs)
 
     def get_route_data_table_config(self):
         """Get the configuration of the route data table: its columns and filters.

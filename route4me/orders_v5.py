@@ -5,10 +5,12 @@ from .api_endpoints import (
     ORDERS_ARCHIVE_V5,
     ORDERS_CUSTOM_FIELDS_V5,
     ORDERS_HISTORY_V5,
+    ORDERS_PLATFORM_BATCH_CREATE_V5,
     ORDERS_PLATFORM_BATCH_DELETE_V5,
     ORDERS_PLATFORM_BATCH_UPDATE_FILTER_V5,
     ORDERS_PLATFORM_BATCH_UPDATE_V5,
     ORDERS_PLATFORM_CUSTOM_USER_FIELDS_V5,
+    ORDERS_PLATFORM_V5,
 )
 from .base import Base
 from .exceptions import ParamValueException
@@ -105,6 +107,46 @@ class OrdersV5(Base):
         .. versionadded:: 1.0.0
         """
         return self._call_api(ORDERS_HISTORY_V5, "get", dict(kwargs))
+
+    def search_orders(self, **kwargs):
+        """Search the orders of the orders platform, or filter them.
+
+        Sends ``POST /modules/api/v5.0/orders-platform`` with the keywords as
+        the JSON body. It mirrors C# ``OrderManagerV5.SearchOrders``.
+
+        :param kwargs: the body, all optional: ``order_ids`` or
+            ``order_uuids``, lists of orders to return; ``filters``, a dict
+            such as ``{"created_timestamp": [start, end]}`` or
+            ``{"statuses": [1]}``; ``search``, text to search for; ``fields``,
+            the fields to return; ``order_by``, a list of
+            ``[field, direction]`` pairs; ``limit`` and ``offset``;
+            ``addition``; and ``return_provided_fields_as_map``.
+        :return: the decoded JSON reply: the matching orders, or the
+            ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(ORDERS_PLATFORM_V5, "post", {}, body=dict(kwargs))
+
+    def batch_create_orders(self, data):
+        """Create several orders in one request.
+
+        Sends ``POST /modules/api/v5.0/orders-platform/batch-create`` with
+        ``{"data": data}`` as the JSON body. It mirrors C#
+        ``OrderManagerV5.BatchCreateOrders``.
+
+        :param data: the orders, a list of order dicts, each with at least
+            ``address_1`` and, to skip geocoding, ``cached_lat`` and
+            ``cached_lng``.
+        :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
+            API error.
+        :raise ParamValueException: when ``data`` is ``None`` or empty.
+
+        .. versionadded:: 1.0.0
+        """
+        if not data:
+            raise ParamValueException("data", "Missing required params")
+        return self._call_api(ORDERS_PLATFORM_BATCH_CREATE_V5, "post", {}, body={"data": list(data)})
 
     def batch_delete(self, **kwargs):
         """Delete several orders.

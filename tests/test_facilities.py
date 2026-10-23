@@ -5,7 +5,7 @@ import json
 import pytest
 import responses
 
-from route4me._nested_query import nested_query
+from route4me._params import nested_query
 from route4me.api_endpoints import FACILITIES_V5, FACILITY_TYPES_V5
 from route4me.exceptions import ParamValueException
 

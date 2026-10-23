@@ -4,6 +4,9 @@ Calls :meth:`AddressBook.get_addressbook_contacts
 <route4me.address_book.AddressBook.get_addressbook_contacts>` with ``limit=10`` and ``offset=5``, which
 sends ``GET /api.v4/address_book.php``, and prints the ID, name and address of each contact.
 
+Deprecated: AddressBook.get_addressbook_contacts is deprecated, because the C# SDK marks the operation obsolete.
+The API V5 replacement is shown in ``examples/addressbook/get_address_book_contacts.py``.
+
 Run it with::
 
     python examples/addressbook/get_addressbook_contacts.py --api_key <your key>

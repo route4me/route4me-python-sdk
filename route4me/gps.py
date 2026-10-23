@@ -1,6 +1,5 @@
 """The :class:`GPS` resource: send device positions and read the location history."""
 
-from ._nested_query import nested_query
 from .api_endpoints import DEVICE_LOCATION_URL, SET_GPS_HOST, USER_LOCATIONS_HOST, VEHICLE_LOCATIONS_V5
 from .base import Base
 from .exceptions import ParamValueException
@@ -124,7 +123,9 @@ class GPS(Base):
         """Get the latest known location of one or more vehicles (API V5).
 
         Sends ``GET /modules/api/v5.0/vehicles/location`` on ``wh.route4me.com``
-        with ``vehicle_ids[]`` in the query, once per vehicle.
+        with ``ids[]`` in the query, once per vehicle. The spec names the
+        parameter ``vehicle_ids``, but the API reads ``ids`` (it validates
+        ``ids.0`` as a hex UUID), as the C# and Java SDKs send it.
 
         :param vehicle_ids: the vehicle IDs, as a list. A single ID string is
             sent as a list of one.
@@ -138,4 +139,4 @@ class GPS(Base):
             raise ParamValueException("vehicle_ids", "At least one vehicle ID is required")
         if isinstance(vehicle_ids, str):
             vehicle_ids = [vehicle_ids]
-        return self._call_api(VEHICLE_LOCATIONS_V5, "get", nested_query({"vehicle_ids": list(vehicle_ids)}))
+        return self._call_api(VEHICLE_LOCATIONS_V5, "get", {"ids": list(vehicle_ids)})

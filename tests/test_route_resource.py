@@ -288,7 +288,8 @@ class TestShareAndMerge:
 
         assert last_request().method == "POST"
         assert query_of(last_request())["response_format"] == "json"
-        assert body_of(last_request()) == {"recipient_email": "ops@example.com"}
+        assert last_request().headers["Content-Type"] == "application/x-www-form-urlencoded"
+        assert parse_qs(last_request().body) == {"recipient_email": ["ops@example.com"]}
 
     def test_merge_routes_posts_form_data(self, client, mocked, last_request):
         mocked.add(responses.POST, MERGE_ROUTES_HOST, json={"status": True}, status=200)
