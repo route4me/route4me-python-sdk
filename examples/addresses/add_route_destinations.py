@@ -1,3 +1,17 @@
+"""Add destinations to an existing route.
+
+Creates a route by running a TSP optimization of seven New York addresses, one of them the depot with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then adds two more addresses with
+:meth:`Route.insert_address_into_route <route4me.route.Route.insert_address_into_route>`, which sends
+``PUT /api.v4/route.php`` with ``route_id`` in the query and the addresses as the JSON body. Prints the
+addresses before and after.
+
+Run it with::
+
+    python examples/addresses/add_route_destinations.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +25,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Create a route, add two destinations and print the addresses.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     optimization = r4m.optimization
@@ -66,7 +84,7 @@ def main(api_key):
     print("Current Addresses")
     for i, address in enumerate(response["addresses"]):
         print(f"Number {i}:")
-        print("\taddress: {}".format(address["address"]))
+        print(f"\taddress: {address['address']}")
         print("\t")
     addresses = {
         "addresses": [
@@ -99,7 +117,7 @@ def main(api_key):
         print("Addresses after insert")
         for i, address in enumerate(response["addresses"]):
             print(f"Number {i}:")
-            print("\taddress: {}".format(address["address"]))
+            print(f"\taddress: {address['address']}")
             print("\t")
 
 

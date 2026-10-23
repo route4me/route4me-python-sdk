@@ -89,3 +89,21 @@ def join_path(base, *segments):
     for segment in segments:
         url = f"{url}/{str(segment).strip('/')}"
     return url + "/"
+
+
+#: URL prefix of every API V5 endpoint.
+API_V5_PREFIX = "https://wh.route4me.com/modules/api/v5."
+
+
+def is_v5_url(url):
+    """Tell whether ``url`` is an API V5 endpoint, which takes a bearer token.
+
+    >>> is_v5_url("https://wh.route4me.com/modules/api/v5.0/route-status/X")
+    True
+    >>> is_v5_url("https://api.route4me.com/api.v4/route.php")
+    False
+
+    :param url: absolute URL of the endpoint.
+    :return: ``True`` for ``https://wh.route4me.com/modules/api/v5.*`` URLs.
+    """
+    return str(url).startswith(API_V5_PREFIX)

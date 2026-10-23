@@ -55,24 +55,24 @@ class OrdersGroup(Base):
         :raise ParamValueException: when a date is not ``YYYY-MM-DD``.
         """
         if not self._check_scheduled_for_range(scheduled_for_range):
-            raise ParamValueException("Invalid Scheduled Range")
+            raise ParamValueException("scheduled_for_range", "Invalid Scheduled Range")
         data = {
             "filters": {
                 "scheduled_for_range": scheduled_for_range,
                 "statuses": statuses,
             }
         }
-        items = []
         try:
             response = self._request(ORDERS_GROUP_V5, self.params, "post", json=data)
-            data = response.json()
-            if "data" in data.keys():
-                items = data["data"].get("items", [])
-            return items
         except APIException as e:
             return e.to_dict()
+        try:
+            payload = response.json()
         except ValueError:
             return response.content
+        if not isinstance(payload, dict):
+            return payload
+        return payload["data"].get("items", []) if "data" in payload else []
 
     def assign_optimization_profile(self, optimization_profile_id, group_id):
         """Assign an optimization profile to a group of orders.
@@ -91,11 +91,4 @@ class OrdersGroup(Base):
             "group_id": group_id,
             "optimization_profile_id": optimization_profile_id,
         }
-        try:
-            response = self._request(ASSIGN_PROFILES_V5, self.params, "post", json=data)
-            data = response.json()
-            return data
-        except APIException as e:
-            return e.to_dict()
-        except ValueError:
-            return response.content
+        return self._request_decoded(ASSIGN_PROFILES_V5, self.params, "post", json=data)

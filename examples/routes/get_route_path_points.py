@@ -1,9 +1,26 @@
+"""Get the path points of the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` and
+:meth:`Route.get_route <route4me.route.Route.get_route>` (``GET /api.v4/route.php``) to read the latest
+route, then :meth:`Route.get_route_path_points <route4me.route.Route.get_route_path_points>` with
+``route_path_output="Points"``, which sends ``GET /api.v4/route.php``, and prints each destination and
+the points of the path to the next one.
+
+Run it with::
+
+    python examples/routes/get_route_path_points.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the destinations and path points of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     route = r4m.route
@@ -14,19 +31,19 @@ def main(api_key):
         route_id = response[0]["route_id"]
         print(f"Route ID: {route_id}")
         response = route.get_route(route_id=route_id)
-        if hasattr(response, "errors"):
-            print(". ".join(response.errors))
+        if isinstance(response, dict) and "errors" in response.keys():
+            print(". ".join(response["errors"]))
         else:
             data = {"route_path_output": "Points", "route_id": route_id}
             response = route.get_route_path_points(**data)
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
             for i, address in enumerate(response["addresses"]):
                 print(f"Address #{i + 1}")
-                print("\tAddress: {}".format(address["address"]))
-                print("\tRoute Destination ID: {}".format(address["route_destination_id"]))
+                print(f"\tAddress: {address['address']}")
+                print(f"\tRoute Destination ID: {address['route_destination_id']}")
                 if "path_to_next" in address.keys():
-                    for i, path in enumerate(address["path_to_next"]):
-                        print("\t{} - \tlat: {} \tlng: {}".format(i + 1, path["lat"], path["lng"]))
+                    for j, path in enumerate(address["path_to_next"]):
+                        print(f"\t{j + 1} - \tlat: {path['lat']} \tlng: {path['lng']}")
 
 
 if __name__ == "__main__":

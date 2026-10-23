@@ -1,4 +1,9 @@
-# pylint settings for the examples:  pylint examples --rcfile=examples/pylintrc
+# pylint settings for the examples:
+#
+#     pylint --rcfile=examples/pylintrc $(git ls-files 'examples/*.py')
+#
+# Pass the files, not the directory: the example subfolders have no
+# __init__.py, so `pylint examples` checks only the top-level scripts.
 #
 # Same rules as the package (pyproject.toml), except duplicate-code: every
 # example is a self-contained script, so the setup lines repeat on purpose.

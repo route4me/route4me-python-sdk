@@ -87,7 +87,7 @@ class Territory(Base):
             ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when a required parameter is missing.
         """
-        self.params.update({"territory_id": territory_id})
         if not self.check_required_params(kwargs, ["territory_name", "territory_color", "territory"]):
             raise ParamValueException("params", "Params are not complete")
-        return self._call_api(TERRITORY_HOST, "put", self.params, body=kwargs)
+        params = {"api_key": self.api.key, "territory_id": territory_id}
+        return self._call_api(TERRITORY_HOST, "put", params, body=kwargs)

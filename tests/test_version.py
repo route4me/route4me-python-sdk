@@ -46,7 +46,9 @@ class VersionTests(unittest.TestCase):
         self.assertRegex(version.__version__, PEP440)
 
     def test_numeric_tuple_is_derived_from_the_string(self):
-        self.assertEqual(version.VERSION, (0, 3, 1, 0))
+        numeric = re.match(r"\d+(?:\.\d+)*", version.__version__).group(0)
+
+        self.assertEqual(version.VERSION, tuple(int(part) for part in numeric.split(".")))
         self.assertTrue(all(isinstance(part, int) for part in version.VERSION))
 
     def test_suffix_completes_the_string(self):
@@ -54,7 +56,7 @@ class VersionTests(unittest.TestCase):
         self.assertEqual(numeric + version.RELEASE_SUFFIX, version.__version__)
 
     def test_release_string_is_tag_shaped(self):
-        """Git tags in this repo are `v` + the version, e.g. `v0.1.7.0`."""
+        """Git tags in this repo are `v` + the version, e.g. `v1.0.0`."""
         self.assertEqual(version.RELEASE_STRING, "v" + version.__version__)
 
 

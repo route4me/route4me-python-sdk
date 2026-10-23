@@ -1,3 +1,20 @@
+"""Advanced constraints: some addresses without tags.
+
+Builds an ADVANCED_CVRP_TW optimization of nine New York addresses, one of them the depot, optimized for
+time, and sets two :class:`~route4me.advanced_constraint.AdvancedConstraint` groups with
+:meth:`Optimization.advanced_constraints <route4me.base.Base.advanced_constraints>`: 10 drivers tagged
+``TAG001`` and ``TAG002``, available from 25200 to 75000 seconds after midnight (07:00 to 20:50), and 10
+drivers tagged ``TAG003``, available from 45200 to 95000 (12:33 to 02:23 the next day). Five stops carry
+the tags of the drivers who may serve them; the last three have no tags.
+
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php``. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/advanced_constraints/advanced_constraint_test_case_2.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import AdvancedConstraint, Route4Me
@@ -11,6 +28,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization with tagged and untagged stops and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization
@@ -25,10 +46,8 @@ def main(api_key):
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
 
-    """
-    Advanced Constraints
-    """
-
+    # Advanced constraints: two groups of 10 drivers each. A driver serves only the stops
+    # whose tags match the group's, inside the group's time windows (seconds from midnight).
     advanced_constraint_1 = AdvancedConstraint()
     advanced_constraint_1.tags = ["TAG001", "TAG002"]
     advanced_constraint_1.members_count = 10
@@ -107,11 +126,11 @@ def main(api_key):
     )
 
     response = route4me.run_optimization()
-    print("Optimization Link: {}".format(response["links"]["view"]))
+    print(f"Optimization Link: {response['links']['view']}")
     for i, route in enumerate(response["routes"]):
-        print("\t{}\tRoute Link: {}".format(i + 1, route["links"]["route"]))
+        print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
-            print("\t\t\tAddress: {}".format(address["address"]))
+            print(f"\t\t\tAddress: {address['address']}")
 
 
 if __name__ == "__main__":

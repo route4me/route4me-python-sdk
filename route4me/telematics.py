@@ -1,13 +1,30 @@
 """The :class:`Telematics` resource: telematics vendors and the connections to them."""
 
+import warnings
+
 from .api_endpoints import (
     TELEMATICS_CONNECTIONS_V4,
     TELEMATICS_REGISTER_V4,
+    TELEMATICS_VENDORS_ALL_V5,
     TELEMATICS_VENDORS_INFO_V4,
     TELEMATICS_VENDORS_V4,
+    TELEMATICS_VENDORS_V5,
 )
 from .base import Base
 from .exceptions import APIException, ParamValueException
+
+
+def _warn_retired(method, replacement):
+    """Warn that a vendor method calls the retired ``telematics.route4me.com`` host.
+
+    :param method: name of the deprecated method.
+    :param replacement: name of the method to use instead.
+    """
+    warnings.warn(
+        f"Telematics.{method} is deprecated: telematics.route4me.com is retired. Use Telematics.{replacement}.",
+        DeprecationWarning,
+        stacklevel=3,
+    )
 
 
 class Telematics(Base):
@@ -61,10 +78,51 @@ class Telematics(Base):
 
         :param vendor: one vendor, as decoded from a reply.
         :param file: destination stream; defaults to stdout.
+
+        .. deprecated:: 1.0.0
+           Only the retired :meth:`compare_vendors` reply lists ``features``;
+           API V5 vendors have none. Print the fields of the
+           :meth:`get_vendor_v5` reply instead.
         """
+        warnings.warn(
+            "Telematics.pp_vendor_comparison is deprecated: it prints the features of the retired "
+            "compare_vendors reply, and API V5 vendors have none.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if isinstance(vendor, dict):
             features = [x["name"] for x in vendor.get("features", [])]
             print(f"{vendor.get('id')}\t{vendor.get('name')}\t{', '.join(features)}", file=file)
+
+    def get_vendors_v5(self, **kwargs):
+        """List the telematics vendors with API V5.
+
+        Sends ``GET /modules/api/v5.0/telematics/vendors/all``.
+
+        :param kwargs: optional filters, sent as query parameters: ``search``,
+            ``country``, ``feature``, ``features``, ``size``, ``is_integrated``,
+            ``display_hidden``, ``page`` and ``per_page``.
+        :return: the decoded JSON reply, with the vendors under ``data``, or
+            the ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+           Replaces :meth:`get_vendors` and :meth:`search_vendor`.
+        """
+        return self._call_api(TELEMATICS_VENDORS_ALL_V5, "get", dict(kwargs, api_key=self.api.key))
+
+    def get_vendor_v5(self, vendor_id):
+        """Get one telematics vendor with API V5.
+
+        Sends ``GET /modules/api/v5.0/telematics/vendors`` with ``vendor_id``.
+
+        :param vendor_id: ID of the vendor.
+        :return: the decoded JSON reply: the vendor, or the ``{"errors": ...}``
+            dict on an API error.
+
+        .. versionadded:: 1.0.0
+           Replaces :meth:`get_vendor`.
+        """
+        return self._call_api(TELEMATICS_VENDORS_V5, "get", {"api_key": self.api.key, "vendor_id": vendor_id})
 
     def get_vendors(self):
         """List the telematics vendors.
@@ -73,21 +131,13 @@ class Telematics(Base):
 
         :return: the decoded JSON reply: the vendors, or the
             ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when the resource has no API key.
+
+        .. deprecated:: 1.0.0
+           ``telematics.route4me.com`` is retired and redirects to the website,
+           so this call cannot succeed. Use :meth:`get_vendors_v5`.
         """
-        if self.check_required_params(
-            self.params,
-            [
-                "api_key",
-            ],
-        ):
-            try:
-                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException("params", "Missing API KEY")
+        _warn_retired("get_vendors", "get_vendors_v5")
+        return self._call_api(TELEMATICS_VENDORS_V4, "get", {"api_key": self.api.key})
 
     def get_vendor(self, vendor_id):
         """Get one telematics vendor.
@@ -98,19 +148,13 @@ class Telematics(Base):
         :param vendor_id: ID of the vendor.
         :return: the decoded JSON reply: the vendor, or the ``{"errors": ...}``
             dict on an API error.
-        :raise ParamValueException: when the resource has no API key.
+
+        .. deprecated:: 1.0.0
+           ``telematics.route4me.com`` is retired. Use :meth:`get_vendor_v5`.
         """
-
-        self.params.update({"vendor_id": vendor_id})
-
-        if self.check_required_params(self.params, ["api_key"]):
-            try:
-                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException("params", "Missing API KEY")
+        _warn_retired("get_vendor", "get_vendor_v5")
+        params = {"api_key": self.api.key, "vendor_id": vendor_id}
+        return self._call_api(TELEMATICS_VENDORS_V4, "get", params)
 
     def search_vendor(self, **kwargs):
         """Search the telematics vendors.
@@ -120,23 +164,13 @@ class Telematics(Base):
         :param kwargs: search filters, sent as query parameters as is.
         :return: the decoded JSON reply: the matching vendors, or the
             ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when the resource has no API key.
+
+        .. deprecated:: 1.0.0
+           ``telematics.route4me.com`` is retired. Use :meth:`get_vendors_v5`,
+           which takes the same filters.
         """
-
-        kwargs.update(
-            {
-                "api_key": self.params["api_key"],
-            }
-        )
-
-        if self.check_required_params(kwargs, ["api_key"]):
-            try:
-                self.response = self._request(TELEMATICS_VENDORS_V4, kwargs, "get")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException("params", "Missing API KEY")
+        _warn_retired("search_vendor", "get_vendors_v5")
+        return self._call_api(TELEMATICS_VENDORS_V4, "get", dict(kwargs, api_key=self.api.key))
 
     def compare_vendors(self, vendors_id):
         """Compare several telematics vendors.
@@ -147,19 +181,14 @@ class Telematics(Base):
         :param vendors_id: the vendor IDs, comma-separated, e.g. ``"55,56"``.
         :return: the decoded JSON reply: the vendors, or the
             ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when the resource has no API key.
+
+        .. deprecated:: 1.0.0
+           ``telematics.route4me.com`` is retired and API V5 has no comparison
+           endpoint. Fetch each vendor with :meth:`get_vendor_v5`.
         """
-
-        self.params.update({"vendors": vendors_id})
-
-        if self.check_required_params(self.params, ["api_key"]):
-            try:
-                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException("params", "Missing API KEY")
+        _warn_retired("compare_vendors", "get_vendor_v5")
+        params = {"api_key": self.api.key, "vendors": vendors_id}
+        return self._call_api(TELEMATICS_VENDORS_V4, "get", params)
 
     def register_member(self, member_id):
         """Register a member with the telematics service.
@@ -169,18 +198,9 @@ class Telematics(Base):
         :param member_id: ID of the member.
         :return: the decoded JSON reply, with the member's ``api_token``, or
             the ``{"errors": ...}`` dict on an API error.
-        :raise ParamValueException: when the resource has no API key.
         """
-        self.params.update({"member_id": member_id})
-
-        if self.check_required_params(self.params, ["api_key"]):
-            try:
-                self.response = self._request(TELEMATICS_REGISTER_V4, self.params, "get")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException("params", "Missing API KEY")
+        params = {"api_key": self.api.key, "member_id": member_id}
+        return self._call_api(TELEMATICS_REGISTER_V4, "get", params)
 
     def get_connections(self, api_token, **kwargs):
         """List a member's telematics connections.

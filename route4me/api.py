@@ -13,6 +13,7 @@ from requests.adapters import HTTPAdapter
 
 from ._redact import redact_text
 from ._resilience import CircuitBreaker, execute_with_retry
+from ._url import is_v5_url
 from .activity_feed import ActivityFeed
 from .address import Address
 from .address_book import AddressBook
@@ -97,7 +98,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param verify_ssl: verify TLS certificates. Leave this on.
         :param proxies: ``requests``-style proxy mapping.
         :param timeout: per-request timeout in seconds. Accepts ``None`` (wait
-            forever -- the pre-0.2.0 behaviour), a number, or a
+            forever -- the behaviour before 1.0.0), a number, or a
             ``(connect, read)`` pair. Defaults to
             :data:`route4me.config.DEFAULT_TIMEOUT`, i.e. ``(6.05, 30.0)``.
         :param retry_count: retries after the first attempt. 0 (the default)
@@ -118,12 +119,12 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :class:`route4me.config.Route4MeConfig`, so a whole process can be tuned
         in one place.
 
-        .. versionchanged:: 0.2.0
+        .. versionchanged:: 1.0.0
            Requests now time out after 30s by default; previously there was no
            timeout at all and a stalled socket blocked the calling thread
            indefinitely. Pass ``timeout=None`` to restore the old behaviour.
 
-        .. versionadded:: 0.3.0
+        .. versionadded:: 1.0.0
            Connection pooling, opt-in retry with exponential backoff, and an
            opt-in circuit breaker.
         """
@@ -175,9 +176,15 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     def _make_request(self, url, params, request_method, **kwargs):
         """Send one request, adding the API key, and raise on an HTTP error.
 
+        API V5 requests (``https://wh.route4me.com/modules/api/v5.x/...``) carry
+        the key as an ``Authorization: Bearer`` header, which keeps it out of
+        URLs and therefore out of proxy and server logs. Every other request
+        carries it as the ``api_key`` query parameter, which the V4 API requires.
+
         :param url: absolute URL of the API endpoint.
-        :param params: query parameters. They are copied, and ``api_key`` is
-            set on the copy; the caller's dict is not changed.
+        :param params: query parameters. They are copied, and the key is added
+            to the copy; the caller's dict is not changed. ``True`` and
+            ``False`` are sent as ``1`` and ``0``.
         :param request_method: one of :meth:`_request_get`,
             :meth:`_request_post`, :meth:`_request_put` or
             :meth:`_request_delete`.
@@ -186,12 +193,22 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :return: the :class:`requests.Response`.
         :raise APIException: when the API answers outside the 200-399 range.
             The API key is removed from the stored body and URL.
+
+        .. versionchanged:: 1.0.0
+           API V5 requests send the key as a bearer token instead of
+           ``api_key``. Boolean query values are sent as ``1`` and ``0``.
         """
         # Copy rather than mutate. Every resource passes its own long-lived
         # `self.params`, so writing api_key in place meant query parameters
         # accumulated on that dict across calls and leaked between them.
-        params = dict(params) if params else {}
-        params["api_key"] = self.key
+        # requests would send True as "True": PHP reads "False" as true, and
+        # the V5 (Laravel) boolean rule accepts only 1, 0, true and false.
+        params = {k: int(v) if isinstance(v, bool) else v for k, v in params.items()} if params else {}
+        if is_v5_url(url):
+            params.pop("api_key", None)
+            kwargs["headers"] = {**self.headers, "Authorization": f"Bearer {self.key}"}
+        else:
+            params["api_key"] = self.key
         response = request_method(url, params, **kwargs)
         if not 200 <= response.status_code < 400:
             # Both the URL and the body are scrubbed. `Response.url` carries
@@ -343,7 +360,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.close()
         return False
 
-    def get(self, request_method):
+    def get(self, request_method, params=None):
         """Send the optimization built on :attr:`optimization`.
 
         Sends a request to ``/api.v4/optimization_problem.php`` with the query
@@ -353,19 +370,17 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
 
         :param request_method: :meth:`_request_post` to create an optimization,
             :meth:`_request_get` to fetch one.
+        :param params: the query to send; ``None`` (the default) uses a copy of
+            the query parameters of :attr:`optimization`.
         :return: the :class:`requests.Response`.
         :raise APIException: when the API answers outside the 200-399 range.
         """
-        params = self.optimization.get_params()
+        params = dict(self.optimization.get_params() if params is None else params)
         if not self.redirects:
-            params.update(
-                {
-                    "redirect": 0,
-                }
-            )
+            params["redirect"] = 0
         return self._make_request(API_HOST, params, request_method, data=dumps(self.optimization.data))
 
-    def _request_post(self, url, request_params, *, data=None, json=None, files=None, timeout=UNSET):
+    def _request_post(self, url, request_params, *, data=None, json=None, files=None, timeout=UNSET, headers=None):
         """Send a POST request through :meth:`_send`.
 
         :param url: absolute URL of the API endpoint.
@@ -374,6 +389,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param json: body to send as JSON.
         :param files: files for a multipart upload.
         :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
         :return: the :class:`requests.Response`.
         """
         return self._send(
@@ -383,18 +399,19 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             allow_redirects=self.redirects,
             files=files,
             data=data,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             json=json,
             timeout=self._timeout(timeout),
         )
 
-    def _request_get(self, url, request_params, *, data=None, timeout=UNSET):
+    def _request_get(self, url, request_params, *, data=None, timeout=UNSET, headers=None):
         """Send a GET request through :meth:`_send`.
 
         :param url: absolute URL of the API endpoint.
         :param request_params: query parameters.
         :param data: request body, if any.
         :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
         :return: the :class:`requests.Response`.
         """
         return self._send(
@@ -403,11 +420,11 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             params=request_params,
             allow_redirects=self.redirects,
             data=data,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 
-    def _request_put(self, url, request_params, *, json=None, data=None, timeout=UNSET):
+    def _request_put(self, url, request_params, *, json=None, data=None, timeout=UNSET, headers=None):
         """Send a PUT request through :meth:`_send`.
 
         :param url: absolute URL of the API endpoint.
@@ -415,19 +432,47 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param json: body to send as JSON.
         :param data: form fields, or a pre-encoded body.
         :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
         :return: the :class:`requests.Response`.
         """
         return self._send(
             "PUT",
             url,
             params=request_params,
+            allow_redirects=self.redirects,
             data=data,
             json=json,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 
-    def _request_delete(self, url, request_params, *, data=None, json=None, timeout=UNSET):
+    def _request_patch(self, url, request_params, *, json=None, data=None, timeout=UNSET, headers=None):
+        """Send a PATCH request through :meth:`_send`.
+
+        API V5 uses PATCH for partial updates. Like PUT, it is never retried.
+
+        :param url: absolute URL of the API endpoint.
+        :param request_params: query parameters.
+        :param json: body to send as JSON.
+        :param data: form fields, or a pre-encoded body.
+        :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
+        :return: the :class:`requests.Response`.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._send(
+            "PATCH",
+            url,
+            params=request_params,
+            allow_redirects=self.redirects,
+            data=data,
+            json=json,
+            headers=self.headers if headers is None else headers,
+            timeout=self._timeout(timeout),
+        )
+
+    def _request_delete(self, url, request_params, *, data=None, json=None, timeout=UNSET, headers=None):
         """Send a DELETE request through :meth:`_send`.
 
         :param url: absolute URL of the API endpoint.
@@ -435,15 +480,17 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param data: form fields, or a pre-encoded body.
         :param json: body to send as JSON.
         :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
         :return: the :class:`requests.Response`.
         """
         return self._send(
             "DELETE",
             url,
             params=request_params,
+            allow_redirects=self.redirects,
             data=data,
             json=json,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 
@@ -475,7 +522,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :raise ParamValueException: when ``optimization_id`` is not a string.
         :raise APIException: when the API answers outside the 200-399 range.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Routed through ``_make_request``. It previously called
            ``_request_put`` directly and so never raised on an HTTP error --
            callers got ``response.json()`` of an error body, or a
@@ -483,10 +530,9 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         """
         if data is None:
             data = {}
-        self.optimization.optimization_problem_id(optimization_id)
-        self.optimization.reoptimize(1)
+        params = self.optimization.validated_params(optimization_problem_id=optimization_id, reoptimize=1)
         data = {"parameters": data}
-        self.response = self._make_request(API_HOST, self.optimization.get_params(), self._request_put, json=data)
+        self.response = self._make_request(API_HOST, params, self._request_put, json=data)
         return self.response.json()
 
     def get_optimization(self, optimization_problem_id):
@@ -501,13 +547,13 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             string.
         :raise APIException: when the API answers outside the 200-399 range.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Now returns the payload. It previously returned ``None`` always, and
            raised ``TypeError`` for any response containing ``addresses`` --
            which is every real optimization response -- via ``parse_response``.
         """
-        self.optimization.optimization_problem_id(optimization_problem_id)
-        self.response = self.get(self._request_get)
+        params = self.optimization.validated_params(optimization_problem_id=optimization_problem_id)
+        self.response = self.get(self._request_get, params)
         return self.parse_response()
 
     def parse_response(self):
@@ -519,7 +565,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
 
         :return: the decoded JSON of :attr:`response`.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Reads the decoded payload. It previously subscripted
            ``self.response`` -- a :class:`requests.Response`, which is not
            subscriptable -- raising ``TypeError``.
@@ -537,14 +583,14 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         :param file_name: path of the file to write; an existing file is
             overwritten.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Serialises the decoded payload. It previously passed
            ``Response.content`` (``bytes``) to ``json.dump``, which raises
            ``TypeError: Object of type bytes is not JSON serializable`` -- so
            this method had never worked.
         """
         if self.response:
-            with open(file_name, "w") as f:
+            with open(file_name, "w", encoding="utf-8") as f:
                 dump(
                     self.response.json(),
                     f,
@@ -560,7 +606,7 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
             overwritten.
         """
         if self.optimization.data:
-            with open(file_name, "w") as f:
+            with open(file_name, "w", encoding="utf-8") as f:
                 dump(
                     self.optimization.data,
                     f,

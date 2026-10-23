@@ -5,6 +5,7 @@ the GitHub issue that tracks it. A fix makes the test pass, strict xfail turns
 that into a failure, and the marker has to be removed with the fix.
 """
 
+import dataclasses
 import json
 
 import pytest
@@ -15,13 +16,11 @@ from route4me.api import Route4Me
 from route4me.api_endpoints import API_HOST
 from route4me.bundling import BUNDLING_FIRST_ITEM_MODE, Bundling, ServiceTimeRules
 from route4me.exceptions import ParamValueException
-from route4me.utils import clean_dict
+from route4me.slowdowns import Slowdowns
+from route4me.utils import clean_dict, json2obj
 
 
 class TestServiceTimeRules:
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#33: list defaults are class attributes shared by every instance"
-    )
     def test_instances_do_not_share_their_param_lists(self):
         first = ServiceTimeRules()
         second = ServiceTimeRules()
@@ -30,9 +29,6 @@ class TestServiceTimeRules:
 
         assert second.first_item_mode_params == []
 
-    @pytest.mark.xfail(
-        strict=True, raises=KeyError, reason="#40: the rules serialise as {} because values live in attributes"
-    )
     def test_the_rules_reach_the_request_body(self):
         rules = ServiceTimeRules()
         rules.first_item_mode = BUNDLING_FIRST_ITEM_MODE.USE_CUSTOM_SERVICE_TIME
@@ -43,24 +39,24 @@ class TestServiceTimeRules:
         assert payload["rules"]["first_item_mode"] == BUNDLING_FIRST_ITEM_MODE.USE_CUSTOM_SERVICE_TIME
         assert payload["rules"]["first_item_mode_params"] == [300]
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#40: to_dict returns the instance __dict__, not the rules"
-    )
-    def test_to_dict_returns_every_rule(self):
+    def test_to_dict_sends_the_first_item_mode_and_any_rule_that_is_set(self):
         rules = ServiceTimeRules()
+        assert rules.to_dict() == {"first_item_mode": None}
 
-        assert set(rules.to_dict()) == {
-            "first_item_mode",
-            "first_item_mode_params",
-            "additional_items_mode",
-            "additional_items_mode_params",
+        rules.additional_items_mode = 3
+        rules.additional_items_mode_params = [60]
+
+        assert rules.to_dict() == {
+            "first_item_mode": None,
+            "additional_items_mode": 3,
+            "additional_items_mode_params": [60],
         }
+
+    def test_it_round_trips_through_dataclasses_asdict(self):
+        assert dataclasses.asdict(Bundling())["service_time_rules"]["first_item_mode_params"] == []
 
 
 class TestBundling:
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#40: Bundling.to_dict returns the live __dict__, not a copy"
-    )
     def test_to_dict_is_a_snapshot(self):
         bundling = Bundling()
         snapshot = bundling.to_dict()
@@ -69,13 +65,23 @@ class TestBundling:
 
         assert snapshot["mode_params"] == []
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=ParamValueException,
-        reason="#43: bundling() rejects the Bundling object its error message asks for",
-    )
     def test_a_bundling_object_is_accepted(self):
         Route4Me("1" * 32).optimization.bundling(Bundling())
+
+    def test_a_bundling_object_is_sent_as_its_dict(self):
+        client = Route4Me("1" * 32)
+
+        client.optimization.bundling(Bundling(mode_params=["zip"]))
+
+        assert client.optimization.data["parameters"]["bundling"]["mode_params"] == ["zip"]
+
+    def test_advanced_constraint_objects_are_converted(self):
+        client = Route4Me("1" * 32)
+
+        client.optimization.advanced_constraints([AdvancedConstraint(max_cargo_weight=1000, members_count=2)])
+
+        constraint = client.optimization.data["parameters"]["advanced_constraints"][0]
+        assert (constraint["max_cargo_weight"], constraint["members_count"]) == (1000, 2)
 
     def test_a_plain_dict_is_accepted(self):
         client = Route4Me("1" * 32)
@@ -90,15 +96,12 @@ class TestBundling:
 
 
 class TestCleanDict:
-    @pytest.mark.xfail(strict=True, raises=AssertionError, reason="#41: clean_dict drops 0, corrupting time windows")
     def test_a_time_window_starting_at_zero_survives(self):
         assert clean_dict({"available_time_windows": [[0, 3600]]}) == {"available_time_windows": [[0, 3600]]}
 
-    @pytest.mark.xfail(strict=True, raises=AssertionError, reason="#41: clean_dict drops 0.0 coordinates")
     def test_zero_coordinates_survive(self):
         assert clean_dict({"lat": 0.0, "lng": 0.0}) == {"lat": 0.0, "lng": 0.0}
 
-    @pytest.mark.xfail(strict=True, raises=AssertionError, reason="#41: clean_dict drops False")
     def test_false_survives(self):
         assert clean_dict({"is_depot": False}) == {"is_depot": False}
 
@@ -110,7 +113,6 @@ class TestCleanDict:
 
 
 class TestAdvancedConstraintSerialisation:
-    @pytest.mark.xfail(strict=True, raises=KeyError, reason="#41: a constraint with capacity 0 loses the field")
     def test_a_zero_capacity_is_sent(self):
         constraint = AdvancedConstraint(max_capacity=0, members_count=1)
 
@@ -120,9 +122,6 @@ class TestAdvancedConstraintSerialisation:
 class TestClientState:
     """Issue #26 and the leftover from #30: one client reused for two optimizations."""
 
-    @pytest.mark.xfail(
-        strict=True, raises=AttributeError, reason="#26: a reused client keeps the previous optimization's addresses"
-    )
     def test_a_second_optimization_starts_without_the_first_ones_addresses(self, mocked):
         mocked.add(responses.POST, API_HOST, json={"optimization_problem_id": "A"}, status=200)
         client = Route4Me("1" * 32)
@@ -133,3 +132,22 @@ class TestClientState:
         client.address.add_address(address="second", lat=2.0, lng=2.0)
 
         assert [a["address"] for a in client.optimization.data["addresses"]] == ["second"]
+
+
+class TestSmallFixes:
+    def test_slowdowns_reject_booleans(self):
+        with pytest.raises(ValueError):
+            Slowdowns(True, 10)
+
+    def test_json2obj_tolerates_keys_that_are_not_identifiers(self):
+        obj = json2obj('{"ok": 1, "class": 2, "": 3, "a-b": 4, "7days": 5}')
+
+        assert obj.ok == 1
+        assert obj.d_7days == 5
+        assert obj[1:4] == (2, 3, 4)
+
+    def test_the_speed_message_says_integer(self):
+        with pytest.raises(ParamValueException) as excinfo:
+            Route4Me("1" * 32).optimization.speed("fast")
+
+        assert excinfo.value.msg == "Must be integer"

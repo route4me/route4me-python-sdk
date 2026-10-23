@@ -1,3 +1,16 @@
+"""Optimize a round trip for one driver, without following redirects.
+
+Builds a TSP optimization of nine New York addresses, one of them the depot, as a round trip (``rt``)
+optimized for time. The client is created with ``redirects=False``: :meth:`Route4Me.run_optimization
+<route4me.api.Route4Me.run_optimization>` adds ``redirect=0`` to
+``POST /api.v4/optimization_problem.php`` and the client does not follow redirects. Prints the
+optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/single_driver_round_trip_redirects_false.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +24,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization and print the route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key, redirects=False)
     optimization = route4me.optimization
     address = route4me.address
@@ -68,11 +85,11 @@ def main(api_key):
     )
 
     response = route4me.run_optimization()
-    print("Optimization Link: {}".format(response["links"]["view"]))
+    print(f"Optimization Link: {response['links']['view']}")
     for i, route in enumerate(response["routes"]):
-        print("\t{}\tRoute Link: {}".format(i + 1, route["links"]["route"]))
+        print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
-            print("\t\t\tAddress: {}".format(address["address"]))
+            print(f"\t\t\tAddress: {address['address']}")
 
 
 if __name__ == "__main__":

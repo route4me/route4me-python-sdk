@@ -2,9 +2,9 @@
 
 from datetime import datetime
 
+from ._url import path_segment
 from .api_endpoints import ROUTE_STATUS_V5
 from .base import Base
-from .exceptions import APIException
 
 
 class RouteStatus(Base):
@@ -30,6 +30,17 @@ class RouteStatus(Base):
         }
         Base.__init__(self, api)
 
+    @staticmethod
+    def _status_url(route_id, suffix=""):
+        """Build a route-status URL with ``route_id`` encoded as one path segment.
+
+        :param route_id: ID of the route.
+        :param suffix: path after the route ID, e.g. ``"/history"``.
+        :return: the absolute URL.
+        :raise ParamValueException: when ``route_id`` is empty.
+        """
+        return f"{ROUTE_STATUS_V5}/{path_segment(route_id, 'route_id')}{suffix}"
+
     def get_route_status(self, route_id):
         """Get the current status of a route.
 
@@ -38,12 +49,9 @@ class RouteStatus(Base):
         :param route_id: ID of the route.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
+        :raise ParamValueException: when ``route_id`` is empty.
         """
-        try:
-            response = self._request(f"{ROUTE_STATUS_V5}/{route_id}", self.params, "get")
-            return response.json()
-        except APIException as e:
-            return e.to_dict()
+        return self._call_api(self._status_url(route_id), "get", self.params)
 
     def get_route_status_history(self, route_id):
         """Get the status history of a route.
@@ -53,12 +61,9 @@ class RouteStatus(Base):
         :param route_id: ID of the route.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
+        :raise ParamValueException: when ``route_id`` is empty.
         """
-        try:
-            response = self._request(f"{ROUTE_STATUS_V5}/{route_id}/history", self.params, "get")
-            return response.json()
-        except APIException as e:
-            return e.to_dict()
+        return self._call_api(self._status_url(route_id, "/history"), "get", self.params)
 
     def set_route_status(self, route_id, status, lat, lng, event_timestamp=None):
         """Set the status of a route.
@@ -75,6 +80,7 @@ class RouteStatus(Base):
             in seconds. ``None`` (the default) uses the current time.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
+        :raise ParamValueException: when ``route_id`` is empty.
         """
         if event_timestamp is None:
             event_timestamp = int(datetime.now().timestamp())
@@ -84,11 +90,7 @@ class RouteStatus(Base):
             "lng": lng,
             "event_timestamp": event_timestamp,
         }
-        try:
-            response = self._request(f"{ROUTE_STATUS_V5}/{route_id}", self.params, "post", json=data)
-            return response.json()
-        except APIException as e:
-            return e.to_dict()
+        return self._call_api(self._status_url(route_id), "post", self.params, body=data)
 
     def rollback_route_status(self, route_id):
         """Roll the status of a route back to the previous one.
@@ -98,9 +100,6 @@ class RouteStatus(Base):
         :param route_id: ID of the route.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
+        :raise ParamValueException: when ``route_id`` is empty.
         """
-        try:
-            response = self._request(f"{ROUTE_STATUS_V5}/{route_id}/rollback", self.params, "get")
-            return response.json()
-        except APIException as e:
-            return e.to_dict()
+        return self._call_api(self._status_url(route_id, "/rollback"), "get", self.params)

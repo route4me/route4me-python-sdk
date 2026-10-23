@@ -185,6 +185,24 @@ class TestExporters:
 
         assert not target.exists()
 
+    @pytest.mark.parametrize("exporter", ["export_result_to_json", "export_request_to_json"])
+    def test_exports_are_written_as_utf8(self, prepared, mocked, tmp_path, monkeypatch, exporter):
+        """#37: without an explicit encoding, non-ASCII addresses fail on Windows."""
+        mocked.add(responses.POST, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)
+        prepared.run_optimization()
+        encodings = []
+        real_open = open
+
+        def spy(file, *args, **kwargs):
+            encodings.append(kwargs.get("encoding"))
+            return real_open(file, *args, **kwargs)
+
+        monkeypatch.setattr("route4me.api.open", spy, raising=False)
+
+        getattr(prepared, exporter)(str(tmp_path / "out.json"))
+
+        assert encodings == ["utf-8"]
+
     def test_export_result_writes_after_a_call(self, prepared, mocked, tmp_path):
         mocked.add(responses.POST, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)
         prepared.run_optimization()

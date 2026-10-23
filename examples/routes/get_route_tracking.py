@@ -1,9 +1,25 @@
+"""Get the GPS tracking history of the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`Route.get_route_tracking <route4me.route.Route.get_route_tracking>`, which
+sends ``GET /api.v4/route.php`` with ``device_tracking_history=1``, and prints the destinations and each
+tracked point.
+
+Run it with::
+
+    python examples/routes/get_route_tracking.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the destinations and tracking history of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     route = r4m.route
@@ -14,15 +30,17 @@ def main(api_key):
         route_id = response[0]["route_id"]
         print(f"Route ID: {route_id}")
         response = route.get_route_tracking(route_id=route_id)
-        if hasattr(response, "errors"):
-            print(". ".join(response.errors))
+        if isinstance(response, dict) and "errors" in response.keys():
+            print(". ".join(response["errors"]))
         else:
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
             for i, address in enumerate(response["addresses"]):
                 print(f"Address #{i + 1}")
-                print("\tAddress: {}".format(address["address"]))
-                print("\tRoute Destination ID: {}".format(address["route_destination_id"]))
-            print("Tracking History: {}".format(",".join(response["tracking_history"])))
+                print(f"\tAddress: {address['address']}")
+                print(f"\tRoute Destination ID: {address['route_destination_id']}")
+            print("Tracking History:")
+            for point in response.get("tracking_history", []):
+                print(f"\tlat: {point['lt']} lng: {point['lg']} time: {point['ts_friendly']} speed: {point['s']}")
 
 
 if __name__ == "__main__":

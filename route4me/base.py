@@ -1,10 +1,13 @@
 """Base class of every resource: validated parameter setters and request helpers."""
 
+import copy
 import json
 
 from route4me.utils import is_valid_datetime
 
 from ._fields import ValidatedField
+from .advanced_constraint import AdvancedConstraint
+from .bundling import Bundling
 from .constants import (
     DEVICE_TYPE,
     DISTANCE_UNIT,
@@ -61,15 +64,15 @@ class Base:
     remote_ip = ValidatedField("remote_ip", int, "data", "Must be integer")
 
     # Float (int|float) → data body
-    limited_weight_t = ValidatedField("limited_weight_t", "numeric", "data", "Must be integer")
-    weight_per_axle_t = ValidatedField("weight_per_axle_t", "numeric", "data", "Must be integer")
-    truck_height = ValidatedField("truck_height", "numeric", "data", "Must be integer")
-    truck_width = ValidatedField("truck_width", "numeric", "data", "Must be integer")
-    truck_length = ValidatedField("truck_length", "numeric", "data", "Must be integer")
+    limited_weight_t = ValidatedField("limited_weight_t", "numeric", "data", "Must be a number")
+    weight_per_axle_t = ValidatedField("weight_per_axle_t", "numeric", "data", "Must be a number")
+    truck_height = ValidatedField("truck_height", "numeric", "data", "Must be a number")
+    truck_width = ValidatedField("truck_width", "numeric", "data", "Must be a number")
+    truck_length = ValidatedField("truck_length", "numeric", "data", "Must be a number")
 
     # Int → query params
     course = ValidatedField("course", int, "param", "Must be integer")
-    speed = ValidatedField("speed", int, "param", "Must be Float")
+    speed = ValidatedField("speed", int, "param", "Must be integer")
     limit = ValidatedField("limit", int, "param", "Must be integer")
     offset = ValidatedField("offset", int, "param", "Must be integer")
 
@@ -91,7 +94,7 @@ class Base:
     )
     distance_unit = ValidatedField("distance_unit", "enum", "data", "Must be MI or KM", enum_cls=DISTANCE_UNIT)
     truck_hazardous_goods = ValidatedField(
-        "truck_hazardous_goods", "enum", "data", "Must be MI or KM", enum_cls=TRUCK_HAZARDOUS_GOODS
+        "truck_hazardous_goods", "enum", "data", "Must be a TRUCK_HAZARDOUS_GOODS value", enum_cls=TRUCK_HAZARDOUS_GOODS
     )
 
     # Enum → query params
@@ -120,16 +123,16 @@ class Base:
         "data",
         "Must be ALGORITHM_TYPE: TSP(1), VRP(2), CVRP_TW_SD(3), "
         "CVRP_TW_MD(4), TSP_TW(5), TSP_TW_CR(6), BBCVRP(7), "
-        "NO OPTIMIZATION(100) or LEGACY_DISTRIBUTED(101)",
+        "ADVANCED_CVRP_TW(9), NO OPTIMIZATION(100) or LEGACY_DISTRIBUTED(101)",
         valid_values=[1, 2, 3, 4, 5, 6, 7, 9, 100, 101],
     )
     metric = ValidatedField(
         "metric",
         "range",
         "data",
-        "Must be METRIC: ROUTE4ME_METRIC_EUCLIDEAN , "
-        "ROUTE4ME_METRIC_MANHATTAN, ROUTE4ME_METRIC_GEODESIC"
-        "ROUTE4ME_METRIC_MATRIXROUTE4ME_METRIC_EXACT_2D",
+        "Must be METRIC: ROUTE4ME_METRIC_EUCLIDEAN, "
+        "ROUTE4ME_METRIC_MANHATTAN, ROUTE4ME_METRIC_GEODESIC, "
+        "ROUTE4ME_METRIC_MATRIX or ROUTE4ME_METRIC_EXACT_2D",
         valid_range=(1, 7),
     )
     optimization_quality = ValidatedField(
@@ -153,7 +156,11 @@ class Base:
         valid_values=[1, 3, 6],
     )
     dirm = ValidatedField(
-        "dirm", "oneof", "data", "Must be : R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM orTRUCKING", valid_values=[1, 3]
+        "dirm",
+        "oneof",
+        "data",
+        "Must be R4M_PROPRIETARY_INTERNAL_NAVIGATION_SYSTEM (1) or TRUCKING (3)",
+        valid_values=[1, 3],
     )
 
     def __init__(self, api):
@@ -185,7 +192,7 @@ class Base:
         if set_format in FORMAT.reverse_mapping:
             self._copy_param({"format": set_format})
         else:
-            raise ParamValueException("format", "Must be CSV, SERIALIZED, XML")
+            raise ParamValueException("format", "Must be CSV, SERIALIZED, XML or JSON")
 
     def member_id(self, member_id, target="data"):
         """Set ``member_id``.
@@ -232,30 +239,41 @@ class Base:
     def advanced_constraints(self, advanced_constraints):
         """Set the ``advanced_constraints`` route parameter.
 
-        :param advanced_constraints: a list of constraints, e.g.
-            ``[constraint.to_dict()]`` for
-            :class:`~route4me.advanced_constraint.AdvancedConstraint` objects.
+        :param advanced_constraints: a list of constraints:
+            :class:`~route4me.advanced_constraint.AdvancedConstraint` objects,
+            or dicts such as ``constraint.to_dict()``.
         :raise ParamValueException: when the value is not a list.
+
+        .. versionchanged:: 1.0.0
+           :class:`~route4me.advanced_constraint.AdvancedConstraint` objects are
+           converted with ``to_dict()``; they used to fail when the request was
+           serialised.
         """
         if not isinstance(advanced_constraints, list):
             raise ParamValueException(
                 "advanced_constraints",
                 "Must be: List of Advanced Constraints",
             )
-        self._copy_data({"advanced_constraints": advanced_constraints})
+        constraints = [c.to_dict() if isinstance(c, AdvancedConstraint) else c for c in advanced_constraints]
+        self._copy_data({"advanced_constraints": constraints})
 
     def bundling(self, bundling):
         """Set the ``bundling`` route parameter.
 
-        :param bundling: the bundling settings, e.g.
-            ``Bundling().to_dict()`` (see :class:`~route4me.bundling.Bundling`).
-        :raise ParamValueException: when the value is not valid bundling
-            settings.
+        :param bundling: the bundling settings: a
+            :class:`~route4me.bundling.Bundling` object, or a dict such as
+            ``Bundling().to_dict()``.
+        :raise ParamValueException: when the value is neither.
+
+        .. versionchanged:: 1.0.0
+           A :class:`~route4me.bundling.Bundling` object is accepted (#43).
         """
+        if isinstance(bundling, Bundling):
+            bundling = bundling.to_dict()
         if not isinstance(bundling, dict):
             raise ParamValueException(
                 "bundling",
-                "Must be: Bundling Object",
+                "Must be: Bundling object or dict",
             )
         self._copy_data({"bundling": bundling})
 
@@ -267,7 +285,7 @@ class Base:
 
         :param endpoint: absolute URL of the API endpoint.
         :param params: query parameters; the client adds ``api_key`` itself.
-        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param method: ``"get"``, ``"post"``, ``"put"``, ``"patch"`` or ``"delete"``.
         :param kwargs: ``data``, ``json``, ``files`` or ``timeout``, passed through.
         :return: the :class:`requests.Response`.
         :raise APIException: when the API answers outside the 200-399 range.
@@ -281,7 +299,7 @@ class Base:
         """Validate required parameters, send the request and decode the reply.
 
         :param endpoint: absolute URL of the API endpoint.
-        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param method: ``"get"``, ``"post"``, ``"put"``, ``"patch"`` or ``"delete"``.
         :param params: query parameters.
         :param required: names that must be present in ``params``.
         :param body: request body, or ``None`` for no body.
@@ -304,7 +322,7 @@ class Base:
 
         :param endpoint: absolute URL of the API endpoint.
         :param params: query parameters; the client adds ``api_key`` itself.
-        :param method: ``"get"``, ``"post"``, ``"put"`` or ``"delete"``.
+        :param method: ``"get"``, ``"post"``, ``"put"``, ``"patch"`` or ``"delete"``.
         :param kwargs: ``data``, ``json``, ``files`` or ``timeout``, passed through.
         :return: the decoded JSON reply, the raw body as bytes when it is not
             JSON, or the error dict from :meth:`APIException.to_dict` when the
@@ -362,6 +380,16 @@ class Base:
             requirements = []
         return set(requirements).issubset(set(params.keys()))
 
+    @staticmethod
+    def _missing(params, requirements):
+        """Return the names in ``requirements`` that ``params`` lacks.
+
+        :param params: the parameters given.
+        :param requirements: the names that must be present.
+        :return: the missing names, in the order of ``requirements``.
+        """
+        return [name for name in requirements if name not in params]
+
     def validate_params(self, **kwargs):
         """Validate and apply each ``name=value`` via its field setter.
 
@@ -371,7 +399,7 @@ class Base:
         :raise ParamValueException: for an unknown parameter name, a name that
             does not resolve to a setter, or a value the setter rejects.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
            Only the attribute *lookup* is guarded. The previous version wrapped
            the setter call too, so an ``AttributeError`` raised by a bug *inside*
            a setter was reported as ``ParamValueException(name, "Not supported")``
@@ -390,6 +418,26 @@ class Base:
             # surface as themselves.
             setter(v)
         return True
+
+    def validated_params(self, **kwargs):
+        """Validate keywords with the field setters and return the query they produce.
+
+        Works like :meth:`validate_params`, but on a copy: the resource itself is
+        left unchanged, so one call's values can never leak into the next request.
+
+        :param kwargs: parameter names mapped to values, as for :meth:`validate_params`.
+        :return: a new dict holding this resource's query parameters plus the
+            validated keywords.
+        :raise ParamValueException: when a keyword is not a supported parameter
+            or has an invalid value.
+        """
+        saved_params, saved_data = self.params, self.data
+        self.params, self.data = dict(saved_params), copy.deepcopy(saved_data)
+        try:
+            self.validate_params(**kwargs)
+            return self.params
+        finally:
+            self.params, self.data = saved_params, saved_data
 
     def add(self, params=None, data=None):
         """Validate and apply several parameters at once.

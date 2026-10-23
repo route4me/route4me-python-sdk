@@ -13,8 +13,10 @@ from route4me.api_endpoints import (
     FILE_UPLOAD_PREVIEW_HOST,
     TELEMATICS_CONNECTIONS_V4,
     TELEMATICS_REGISTER_V4,
+    TELEMATICS_VENDORS_ALL_V5,
     TELEMATICS_VENDORS_INFO_V4,
     TELEMATICS_VENDORS_V4,
+    TELEMATICS_VENDORS_V5,
 )
 from route4me.exceptions import ParamValueException
 from route4me.telematics import Telematics
@@ -24,6 +26,7 @@ CONNECTION_TOKEN = "connection-token"
 UPLOAD_ID = "upload-0001"
 
 
+@pytest.mark.filterwarnings("ignore::DeprecationWarning")
 class TestTelematicsVendors:
     """The vendor directory lives on telematics.route4me.com, which is retired."""
 
@@ -55,9 +58,6 @@ class TestTelematicsVendors:
 
         assert query_of(last_request())["vendors"] == "55,56,57"
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#36: get_vendor leaves vendor_id in Telematics.params"
-    )
     def test_get_vendor_does_not_leak_into_get_vendors(self, client, mocked, query_of, last_request):
         mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
         client.telematics.get_vendor(55)
@@ -66,9 +66,6 @@ class TestTelematicsVendors:
 
         assert "vendor_id" not in query_of(last_request())
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="#36: compare_vendors leaves vendors in Telematics.params"
-    )
     def test_compare_vendors_does_not_leak_into_get_vendors(self, client, mocked, query_of, last_request):
         mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
         client.telematics.compare_vendors("55,56")
@@ -76,6 +73,40 @@ class TestTelematicsVendors:
         client.telematics.get_vendors()
 
         assert "vendors" not in query_of(last_request())
+
+
+class TestVendorDeprecation:
+    @pytest.mark.parametrize(
+        ("method", "args", "replacement"),
+        [
+            ("get_vendors", (), "get_vendors_v5"),
+            ("get_vendor", (55,), "get_vendor_v5"),
+            ("search_vendor", (), "get_vendors_v5"),
+            ("compare_vendors", ("55,56",), "get_vendor_v5"),
+        ],
+    )
+    def test_the_retired_host_methods_warn(self, client, mocked, method, args, replacement):
+        mocked.add(responses.GET, TELEMATICS_VENDORS_V4, json={}, status=200)
+
+        with pytest.warns(DeprecationWarning, match=replacement):
+            getattr(client.telematics, method)(*args)
+
+
+class TestTelematicsVendorsV5:
+    def test_get_vendors_v5_lists_with_filters(self, client, mocked, query_of, last_request):
+        mocked.add(responses.GET, TELEMATICS_VENDORS_ALL_V5, json={"data": [{"id": 1}]}, status=200)
+
+        result = client.telematics.get_vendors_v5(search="geotab", per_page=2)
+
+        assert result == {"data": [{"id": 1}]}
+        query = query_of(last_request())
+        assert (query["search"], query["per_page"]) == ("geotab", "2")
+
+    def test_get_vendor_v5_sends_the_vendor_id(self, client, mocked, query_of, last_request):
+        mocked.add(responses.GET, TELEMATICS_VENDORS_V5, json={"id": 1, "name": "tomtom"}, status=200)
+
+        assert client.telematics.get_vendor_v5(1)["name"] == "tomtom"
+        assert query_of(last_request())["vendor_id"] == "1"
 
 
 class TestTelematicsConnections:
@@ -152,7 +183,8 @@ class TestPrettyPrinters:
     def test_pp_vendor_comparison_writes_a_tab_separated_row(self):
         out = io.StringIO()
 
-        Telematics.pp_vendor_comparison({"id": 55, "name": "Geotab", "features": [{"name": "GPS"}]}, file=out)
+        with pytest.warns(DeprecationWarning, match="pp_vendor_comparison"):
+            Telematics.pp_vendor_comparison({"id": 55, "name": "Geotab", "features": [{"name": "GPS"}]}, file=out)
 
         assert out.getvalue() == "55\tGeotab\tGPS\n"
 

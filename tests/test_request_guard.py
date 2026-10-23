@@ -36,7 +36,26 @@ def test_an_unregistered_path_is_rejected():
 def test_the_key_in_a_header_is_rejected():
     problems = check_request("GET", V4_ROUTES, {"X-Api-Key": API_KEY})
 
-    assert any("outside the api_key query parameter" in p for p in problems)
+    assert any("outside its expected place" in p for p in problems)
+
+
+V5_STATUS = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+
+
+def test_a_v5_request_with_a_bearer_token_passes():
+    assert check_request("GET", V5_STATUS, {"Authorization": f"Bearer {API_KEY}"}) == []
+
+
+def test_a_v5_request_with_the_key_in_the_url_is_rejected():
+    problems = check_request("GET", f"{V5_STATUS}?api_key={API_KEY}", {"Authorization": f"Bearer {API_KEY}"})
+
+    assert any("instead of a bearer token" in p for p in problems)
+
+
+def test_a_v5_request_without_a_bearer_token_is_rejected():
+    problems = check_request("GET", V5_STATUS, {})
+
+    assert any("lacks the bearer token" in p for p in problems)
 
 
 def test_the_key_in_another_query_parameter_is_rejected():

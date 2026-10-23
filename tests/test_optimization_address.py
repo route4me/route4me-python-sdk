@@ -57,11 +57,6 @@ class TestOptimizationWrites:
 
         assert last_request().method == "PUT"
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=json.JSONDecodeError,
-        reason="update_optimization sends form data instead of JSON (same class as #19)",
-    )
     def test_update_optimization_sends_the_addresses_as_json(self, client, mocked, last_request):
         mocked.add(responses.PUT, API_HOST, json={}, status=200)
 
@@ -69,11 +64,18 @@ class TestOptimizationWrites:
             optimization_problem_id=OPTIMIZATION_ID, addresses=[ADDRESS], reoptimize=1
         )
 
-        assert json.loads(last_request().body)["addresses"] == [ADDRESS]
+        assert json.loads(last_request().body) == {"addresses": [ADDRESS]}
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="security: update_optimization copies api_key into the request body"
-    )
+    def test_update_optimization_sends_the_problem_id_in_the_query(self, client, mocked, query_of, last_request):
+        mocked.add(responses.PUT, API_HOST, json={}, status=200)
+
+        client.optimization.update_optimization(
+            optimization_problem_id=OPTIMIZATION_ID, addresses=[ADDRESS], reoptimize=1
+        )
+
+        query = query_of(last_request())
+        assert (query["optimization_problem_id"], query["reoptimize"]) == (OPTIMIZATION_ID, "1")
+
     def test_update_optimization_keeps_the_key_out_of_the_body(self, client, mocked, last_request, api_key):
         mocked.add(responses.PUT, API_HOST, json={}, status=200)
 
@@ -81,7 +83,20 @@ class TestOptimizationWrites:
             optimization_problem_id=OPTIMIZATION_ID, addresses=[ADDRESS], reoptimize=1
         )
 
-        assert api_key not in (last_request().body or "")
+        assert api_key not in last_request().body.decode()
+
+    @pytest.mark.parametrize(("reoptimize", "sent"), [(True, "1"), (False, "0"), (1, "1")])
+    def test_update_optimization_sends_reoptimize_as_0_or_1(
+        self, client, mocked, query_of, last_request, reoptimize, sent
+    ):
+        """``True`` used to reach the API as ``reoptimize=True``."""
+        mocked.add(responses.PUT, API_HOST, json={}, status=200)
+
+        client.optimization.update_optimization(
+            optimization_problem_id=OPTIMIZATION_ID, addresses=[ADDRESS], reoptimize=reoptimize
+        )
+
+        assert query_of(last_request())["reoptimize"] == sent
 
     def test_delete_optimization_sends_the_ids_as_json(self, client, mocked, last_request):
         mocked.add(responses.DELETE, API_HOST, json={"status": True}, status=200)
@@ -141,11 +156,6 @@ class TestAddressCollection:
         with pytest.raises(ParamValueException):
             client.address.add_address(address="nowhere")
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=AttributeError,
-        reason="Address.get_route_id calls a get_response method that does not exist",
-    )
     def test_get_route_id_reads_the_last_response(self, client):
         client.address.response = {"route_id": ROUTE_ID}
 
@@ -166,11 +176,8 @@ class TestAddressRequests:
 
         client.address.get_address_notes(ROUTE_ID, DESTINATION_ID)
 
-        assert query_of(last_request())["notes"] == "True"
+        assert query_of(last_request())["notes"] == "1"
 
-    @pytest.mark.xfail(
-        strict=True, raises=AttributeError, reason="#39 sibling: get_address calls .json() on the error dict"
-    )
     def test_get_address_returns_the_error_dict(self, client, mocked):
         mocked.add(responses.GET, ADDRESS_HOST, json={"errors": ["Not found"]}, status=404)
 
@@ -200,9 +207,6 @@ class TestAddressRequests:
         assert query_of(last_request())["route_id"] == ROUTE_ID
         assert parse_qs(last_request().body) == {"strUpdateType": ["dropoff"], "strNoteContents": ["Left at door"]}
 
-    @pytest.mark.xfail(
-        strict=True, raises=KeyError, reason="add_address_notes raises KeyError when activity_type is missing"
-    )
     def test_add_address_notes_without_an_activity_type(self, client, mocked):
         mocked.add(responses.POST, ADD_ROUTE_NOTES_HOST, json={"status": True}, status=200)
 
@@ -215,6 +219,7 @@ class TestGeocoding:
 
         assert client.address.get_geocode({"format": "json", "address": ADDRESS["address"]}) == [ADDRESS]
         assert query_of(last_request())["address"] == ADDRESS["address"]
+        assert not last_request().body
 
     def test_batch_geocodes_posts_the_addresses_as_a_form(self, client, mocked, last_request):
         mocked.add(responses.POST, BATCH_GEOCODER, json=[], status=200)
@@ -245,11 +250,6 @@ class TestGeocoding:
         assert errors == []
         assert addresses[0]["lat"] == 1.0
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=KeyError,
-        reason="batch_fix_geocodes catches IndexError/ValueError but the lookup raises KeyError",
-    )
     def test_batch_fix_geocodes_reports_an_unmatched_address(self, client, mocked):
         mocked.add(
             responses.POST,
@@ -262,11 +262,6 @@ class TestGeocoding:
 
         assert len(errors) == 1
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=AssertionError,
-        reason="geocode() puts the address list in the URL query instead of the body",
-    )
     def test_geocode_sends_the_addresses_in_the_body(self, client, mocked, query_of, last_request):
         mocked.add(responses.POST, BATCH_GEOCODER, body=b"csv", status=200)
 
@@ -277,3 +272,79 @@ class TestGeocoding:
     def test_geocode_requires_addresses(self, client):
         with pytest.raises(ParamValueException):
             client.address.geocode()
+
+
+class TestGeocodingReplies:
+    """The geocoder answers with a list of results, or the error dict."""
+
+    def test_fix_geocode_takes_the_first_result_of_a_list(self, client, mocked):
+        mocked.add(
+            responses.GET,
+            SINGLE_GEOCODER,
+            json=[{"address": "x", "lat": 1.5, "lng": 2.5, "type": "street"}, {"lat": 9.0, "lng": 9.0}],
+            status=200,
+        )
+        stop = {"address": "x"}
+
+        error, address = client.address.fix_geocode(stop)
+
+        assert error is None
+        assert address == {"address": "x", "lat": 1.5, "lng": 2.5}
+
+    def test_fix_geocode_reports_an_api_error_as_a_failure(self, client, mocked):
+        mocked.add(responses.GET, SINGLE_GEOCODER, json={"errors": ["Invalid API key"]}, status=401)
+        stop = {"address": "x"}
+
+        error, address = client.address.fix_geocode(stop)
+
+        assert error is stop
+        assert address == {"address": "x"}
+
+    def test_batch_fix_geocodes_reports_every_address_on_an_api_error(self, client, mocked):
+        mocked.add(responses.POST, BATCH_GEOCODER, json={"errors": ["Invalid API key"]}, status=401)
+        stops = [{"address": "1 Main St"}, {"address": "2 Main St"}]
+
+        errors, addresses = client.address.batch_fix_geocodes(stops)
+
+        assert errors == stops
+        assert addresses is stops
+
+    def test_geocode_keeps_the_format_in_the_query(self, client, mocked, query_of, last_request):
+        mocked.add(responses.POST, BATCH_GEOCODER, body=b"csv", status=200)
+
+        client.address.geocode(addresses="1 Main St||2 Main St")
+
+        assert query_of(last_request())["format"] == "csv"
+        assert parse_qs(last_request().body) == {"addresses": ["1 Main St||2 Main St"]}
+
+
+class TestAddressLookups:
+    def test_get_address_notes_returns_the_error_dict(self, client, mocked):
+        mocked.add(responses.GET, ADDRESS_HOST, json={"errors": ["Not found"]}, status=404)
+
+        assert client.address.get_address_notes(ROUTE_ID, DESTINATION_ID) == {"errors": ["Not found"]}
+
+    def test_request_address_leaves_the_callers_dict_alone(self, client, mocked):
+        mocked.add(responses.GET, ADDRESS_HOST, json={}, status=200)
+        params = {"route_id": ROUTE_ID, "route_destination_id": DESTINATION_ID}
+
+        client.address.request_address(params)
+
+        assert params == {"route_id": ROUTE_ID, "route_destination_id": DESTINATION_ID}
+
+    def test_route_ids_come_from_the_last_lookup(self, client, mocked):
+        mocked.add(
+            responses.GET,
+            ADDRESS_HOST,
+            json={"route_id": ROUTE_ID, "route_destination_id": DESTINATION_ID},
+            status=200,
+        )
+
+        client.address.get_address(ROUTE_ID, DESTINATION_ID)
+
+        assert client.address.get_route_id() == ROUTE_ID
+        assert client.address.get_route_destination_id() == DESTINATION_ID
+
+    def test_route_ids_before_any_request_raise(self, client):
+        with pytest.raises(ParamValueException):
+            client.address.get_route_id()

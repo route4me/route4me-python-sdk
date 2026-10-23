@@ -59,6 +59,15 @@ class TestRedactUrl:
 
         assert KEY not in result
 
+    @pytest.mark.parametrize("param", ["organization_api_key", "device_token", "client_secret", "new_password"])
+    def test_credential_like_names_are_redacted(self, param):
+        """V5 member-configuration-settings takes ``organization_api_key`` in
+        the query; a name is redacted by its ending as well as by the list."""
+        result = redact_url(f"https://h/x?{param}=secretvalue123&config_key=visible")
+
+        assert "secretvalue123" not in result
+        assert "config_key=visible" in result
+
     def test_repeated_params_are_all_redacted(self):
         result = redact_url(f"https://h/x?api_key={KEY}&api_key={KEY}")
 
@@ -137,6 +146,11 @@ class TestRedactParams:
         result = redact_params({"api_key": KEY, "limit": 1})
 
         assert result == {"api_key": REDACTED, "limit": 1}
+
+    def test_redacts_credential_like_names(self):
+        result = redact_params({"organization_api_key": KEY, "limit": 1})
+
+        assert result == {"organization_api_key": REDACTED, "limit": 1}
 
     def test_empty_input_yields_an_empty_dict(self):
         assert redact_params(None) == {}

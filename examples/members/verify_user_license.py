@@ -1,9 +1,25 @@
+"""Verify the license of a device.
+
+Calls :meth:`Members.verify_device_license <route4me.members.Members.verify_device_license>` with
+``device_id``, ``device_type`` and ``format``, which sends
+``POST /api/device/verify_device_license.php`` with them as the JSON body, and prints the reply. The
+device values are samples.
+
+Run it with::
+
+    python examples/members/verify_user_license.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Verify the sample device and print the reply.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     members = route4me.members

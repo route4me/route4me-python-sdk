@@ -1,9 +1,26 @@
+"""Get information on the telematics vendors a member is connected to.
+
+Calls :meth:`Telematics.register_member <route4me.telematics.Telematics.register_member>`
+(``GET /api.v4/telematics/register.php``) to get the member's telematics API token, then
+:meth:`Telematics.get_vendors_info <route4me.telematics.Telematics.get_vendors_info>` with it, which
+sends ``GET /api.v4/telematics/vendors.php``, and prints each vendor connection.
+
+Run it with::
+
+    python examples/telematics/get_vendors_connection_info.py --api_key <your key> --member_id <member ID>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key, member_id):
+    """Print the vendor connections of the member.
+
+    :param api_key: Route4Me API key.
+    :param member_id: ID of the member.
+    """
     route4me = Route4Me(api_key)
 
     telematics = route4me.telematics

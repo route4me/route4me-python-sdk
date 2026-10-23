@@ -12,6 +12,7 @@ from urllib.parse import parse_qs
 import pytest
 import responses
 
+from route4me import Route4Me
 from route4me.api_endpoints import (
     ADDRESS_HOST,
     DUPLICATE_ROUTE,
@@ -50,9 +51,6 @@ class TestGetRoute:
         with pytest.raises(ParamValueException):
             client.route.get_route()
 
-    @pytest.mark.xfail(
-        strict=True, raises=pytest.fail.Exception, reason="#36: route_id persists in Route.params between calls"
-    )
     def test_a_later_call_does_not_reuse_the_previous_route_id(self, client, mocked):
         mocked.add(responses.GET, ROUTE_HOST, json={}, status=200)
         client.route.get_route(route_id=ROUTE_ID)
@@ -60,11 +58,6 @@ class TestGetRoute:
         with pytest.raises(ParamValueException):
             client.route.get_route()
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=AssertionError,
-        reason="#36: get_route_tracking leaves device_tracking_history in Route.params",
-    )
     def test_tracking_does_not_leak_into_the_next_get_route(self, client, mocked, query_of, last_request):
         mocked.add(responses.GET, ROUTE_HOST, json={}, status=200)
         client.route.get_route_tracking(route_id=ROUTE_ID)
@@ -142,9 +135,6 @@ class TestDeleteRoutes:
         assert last_request().method == "DELETE"
         assert query_of(last_request())["route_id"] == f"{ROUTE_ID},{OTHER_ROUTE_ID}"
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="a single route_id string is split into one id per character"
-    )
     def test_a_single_route_id_string_is_sent_as_is(self, client, mocked, query_of, last_request):
         mocked.add(responses.DELETE, ROUTE_HOST, json={"deleted": True}, status=200)
 
@@ -189,16 +179,13 @@ class TestRouteUpdates:
         assert last_request().method == "PUT"
         assert query_of(last_request())["route_id"] == ROUTE_ID
 
-    @pytest.mark.xfail(
-        strict=True,
-        raises=json.JSONDecodeError,
-        reason="#19: _update_route sends form data instead of JSON since 6283680",
-    )
     @pytest.mark.parametrize(
         ("method", "payload"),
         [
             ("insert_address_into_route", {"addresses": ADDRESSES}),
+            ("move_addresses_from_route", {"addresses": [{"route_destination_id": DESTINATION_ID}]}),
             ("update_route_parameters", {"parameters": {"route_name": "Renamed"}}),
+            ("update_route", {"parameters": {"route_name": "Renamed"}}),
         ],
     )
     def test_sends_the_payload_as_json(self, client, mocked, last_request, method, payload):
@@ -207,6 +194,36 @@ class TestRouteUpdates:
         getattr(client.route, method)(payload, ROUTE_ID)
 
         assert body_of(last_request()) == payload
+
+    def test_a_per_call_timeout_reaches_the_transport(self, client, monkeypatch):
+        seen = {}
+
+        def capture(url, params, request_method, **kwargs):
+            seen.update(kwargs)
+            raise RuntimeError("stop before sending")
+
+        monkeypatch.setattr(client, "_make_request", capture)
+
+        with pytest.raises(RuntimeError):
+            client.route.insert_address_into_route({"addresses": ADDRESSES}, ROUTE_ID, timeout=(5, 120))
+
+        assert seen["timeout"] == (5, 120)
+
+    def test_a_put_is_never_retried_even_with_retries_on(self, mocked):
+        client = Route4Me("1" * 32, retry_count=3, retry_initial_delay=0)
+        mocked.add(responses.PUT, ROUTE_HOST, json={"errors": ["timeout"]}, status=524)
+
+        client.route.insert_address_into_route({"addresses": ADDRESSES}, ROUTE_ID)
+
+        assert len(mocked.calls) == 1
+
+    def test_a_cloudflare_timeout_on_a_get_is_retried(self, mocked):
+        client = Route4Me("1" * 32, retry_count=2, retry_initial_delay=0)
+        mocked.add(responses.GET, ROUTE_HOST, json={"errors": ["timeout"]}, status=524)
+
+        client.route.get_routes(limit=1, offset=0)
+
+        assert len(mocked.calls) == 3
 
     def test_optimal_position_insert_sends_json(self, client, mocked, query_of, last_request):
         mocked.add(responses.PUT, ROUTE_HOST, json={}, status=200)
@@ -280,6 +297,14 @@ class TestShareAndMerge:
 
         assert parse_qs(last_request().body) == {"route_ids": [f"{ROUTE_ID},{OTHER_ROUTE_ID}"]}
 
+    def test_merge_routes_joins_a_list_of_ids(self, client, mocked, last_request):
+        """A list used to be form-encoded as one ``route_ids`` field per ID."""
+        mocked.add(responses.POST, MERGE_ROUTES_HOST, json={"status": True}, status=200)
+
+        client.route.merge_routes(route_ids=[ROUTE_ID, OTHER_ROUTE_ID])
+
+        assert parse_qs(last_request().body) == {"route_ids": [f"{ROUTE_ID},{OTHER_ROUTE_ID}"]}
+
 
 class TestExport:
     def test_v5_export_posts_to_the_route_export_endpoint(self, client, mocked, last_request):
@@ -288,6 +313,21 @@ class TestExport:
 
         assert client.route.export_route_v5(ROUTE_ID) == b"csv,data"
         assert last_request().method == "POST"
+        assert json.loads(last_request().body) == {"all_custom_fields": True, "format": "csv"}
+
+    def test_v5_export_encodes_the_route_id(self, client, monkeypatch):
+        urls = []
+
+        def capture(url, params, request_method, **kwargs):
+            urls.append(url)
+            raise RuntimeError("stop before sending")
+
+        monkeypatch.setattr(client, "_make_request", capture)
+
+        with pytest.raises(RuntimeError):
+            client.route.export_route_v5("../../secret")
+
+        assert urls == [EXPORTER_V5.format(route_id="..%2F..%2Fsecret")]
 
     def test_the_legacy_export_is_deprecated(self, client, mocked):
         mocked.add(responses.POST, EXPORTER, body=b"csv", status=200)

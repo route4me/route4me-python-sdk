@@ -1,3 +1,17 @@
+"""Create an optimization, then delete it.
+
+Runs a TSP optimization of nine New York addresses, one of them the depot with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then :meth:`Optimization.delete_optimization
+<route4me.optimization.Optimization.delete_optimization>` with its ID in ``optimization_problem_ids``,
+which sends ``DELETE /api.v4/optimization_problem.php`` with them as the JSON body, and prints the
+status.
+
+Run it with::
+
+    python examples/optimizations/delete_optimization.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -5,6 +19,10 @@ from route4me.constants import ALGORITHM_TYPE, DEVICE_TYPE, DISTANCE_UNIT, OPTIM
 
 
 def main(api_key):
+    """Create an optimization, delete it and print the status.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization
@@ -69,8 +87,8 @@ def main(api_key):
             optimization_id,
         ]
     )
-    print("Status: {}".format(response["status"]))
-    print("Removed: {}".format(response["removed"]))
+    print(f"Status: {response['status']}")
+    print(f"Removed: {response['removed']}")
 
 
 if __name__ == "__main__":

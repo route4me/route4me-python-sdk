@@ -100,9 +100,11 @@ class ActivityFeed(Base):
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
         :raise ParamValueException: when a required parameter is missing.
+
+        .. versionchanged:: 1.0.0
+           The API key is no longer copied into the request body.
         """
-        self.json_data = kwargs
-        kwargs.update({"api_key": self.params["api_key"], "activity_type": "user_message"})
-        if not self.check_required_params(self.json_data, ["api_key", "activity_message", "route_id"]):
+        if not self.check_required_params(kwargs, ["activity_message", "route_id"]):
             raise ParamValueException("params", "Params are not complete")
+        self.json_data = dict(kwargs, activity_type="user_message")
         return self._call_api(ACTIVITY_FEED, "post", self.params, body=self.json_data)

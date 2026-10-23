@@ -1,9 +1,24 @@
+"""Check whether a member's session is valid.
+
+Calls :meth:`Members.validate_session <route4me.members.Members.validate_session>` with
+``session_guid``, ``member_id`` and ``format``, which sends
+``GET /datafeed/session/validate_session.php``, and prints the reply. The session values are samples.
+
+Run it with::
+
+    python examples/members/validate_session.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Validate the sample session and print the reply.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     members = route4me.members

@@ -59,14 +59,25 @@ class Address(Base):
 
         :return: the ``route_id`` of the last decoded response.
         """
-        return self.get_response()["route_id"]
+        return self._last_payload()["route_id"]
 
     def get_route_destination_id(self):
         """Return the route destination ID of the last response.
 
         :return: the ``route_destination_id`` of the last decoded response.
         """
-        return self.get_response()["route_destination_id"]
+        return self._last_payload()["route_destination_id"]
+
+    def _last_payload(self):
+        """Return the decoded body of the last response this resource received.
+
+        :return: the decoded JSON of :attr:`response`, or :attr:`response`
+            itself when it is already decoded.
+        :raise ParamValueException: when no request has been made yet.
+        """
+        if self.response is None:
+            raise ParamValueException("response", "No request has been made yet")
+        return self.response.json() if hasattr(self.response, "json") else self.response
 
     def get_addresses(self):
         """Return the addresses of the optimization being built.
@@ -133,19 +144,15 @@ class Address(Base):
             # addresses in the error variable and an empty list of addresses.
             # The whole batch failed, so every address is an error.
             return list(addresses), addresses
-        geocoded_addresses = []
+        if not isinstance(json_data, list):
+            # An API error comes back as the {"errors": ...} dict: nothing was geocoded.
+            return list(addresses), addresses
         for address in json_data:
-            try:
-                original_address = addresses_map[address["original"]]
-                original_address.update(
-                    {
-                        "lat": address["lat"],
-                        "lng": address["lng"],
-                    }
-                )
-                geocoded_addresses.append(original_address)
-            except (IndexError, ValueError):
+            original_address = addresses_map.get(address.get("original")) if isinstance(address, dict) else None
+            if original_address is None or "lat" not in address or "lng" not in address:
                 geocoding_error.append(address)
+                continue
+            original_address.update({"lat": address["lat"], "lng": address["lng"]})
         return geocoding_error, addresses
 
     def get_geocode(self, params):
@@ -159,7 +166,7 @@ class Address(Base):
             API error.
         """
         try:
-            self.response = self._request(SINGLE_GEOCODER, params, "get", data=[])
+            self.response = self._request(SINGLE_GEOCODER, params, "get")
             return self.response.json()
         except APIException as e:
             return e.to_dict()
@@ -184,16 +191,23 @@ class Address(Base):
     def fix_geocode(self, address, max_attempts=MAX_GEOCODE_ATTEMPTS):
         """Geocode one address, retrying transient failures.
 
-        Calls :meth:`get_geocode` with the item's ``address`` and merges the
-        reply into the dict. A connection error is retried with exponential
-        backoff, up to ``max_attempts`` attempts in all.
+        Calls :meth:`get_geocode` with the item's ``address`` and copies the
+        ``lat`` and ``lng`` of the first result into the dict. A connection
+        error is retried with exponential backoff, up to ``max_attempts``
+        attempts in all. An API error or a reply without coordinates is a
+        failure and is not retried.
 
         :param address: a dict with an ``address`` string, updated in place.
         :param max_attempts: attempts in all, including the first.
         :return: ``(geocoding_error, address)`` -- ``geocoding_error`` is
             ``None`` on success, or the address itself when every attempt failed.
 
-        .. versionchanged:: 0.3.1
+        .. versionchanged:: 1.0.0
+           The geocoder answers with a list of results; only the first one's
+           coordinates are copied. The whole reply used to be merged into the
+           dict, which raised ``ValueError``, corrupted the address, or merged
+           an API error and reported success.
+
            Backoff now comes from :func:`route4me._resilience.backoff_delay`,
            the same exponential-with-jitter policy the transport uses. The
            previous loop slept ``random.randrange(1, 5) * 0.5`` -- uniform, not
@@ -203,12 +217,16 @@ class Address(Base):
         for attempt in range(1, max_attempts + 1):
             try:
                 json_data = self.get_geocode(params)
-                address.update(json_data)
-                return None, address
-            except (AttributeError, requests.exceptions.ConnectionError):
+            except requests.exceptions.ConnectionError:
                 if attempt >= max_attempts:
                     return address, address
                 time.sleep(backoff_delay(attempt, GEOCODE_RETRY_INITIAL_DELAY))
+                continue
+            result = json_data[0] if isinstance(json_data, list) and json_data else json_data
+            if not isinstance(result, dict) or "lat" not in result or "lng" not in result:
+                return address, address
+            address.update({"lat": result["lat"], "lng": result["lng"]})
+            return None, address
         # Unreachable: the loop either returns or exhausts max_attempts above.
         return address, address
 
@@ -216,14 +234,14 @@ class Address(Base):
         """Send ``GET /api.v4/address.php``.
 
         :param params: query parameters, e.g. ``route_id`` and
-            ``route_destination_id``. ``api_key`` is added to this dict.
+            ``route_destination_id``. The caller's dict is not changed.
         :return: the :class:`requests.Response`, or the ``{"errors": ...}``
             dict on an API error.
         """
-        params.update({"api_key": self.api.key})
+        params = dict(params, api_key=self.api.key)
         try:
-            response = self._request(ADDRESS_HOST, params, "get")
-            return response
+            self.response = self._request(ADDRESS_HOST, params, "get")
+            return self.response
         except APIException as e:
             return e.to_dict()
 
@@ -239,7 +257,7 @@ class Address(Base):
         """
         params = {"route_id": route_id, "route_destination_id": route_destination_id}
         response = self.request_address(params)
-        return response.json()
+        return response if isinstance(response, dict) else response.json()
 
     def get_address_notes(self, route_id, route_destination_id):
         """Get one destination of a route, with its notes.
@@ -257,7 +275,7 @@ class Address(Base):
             "notes": True,
         }
         response = self.request_address(params)
-        return response.json()
+        return response if isinstance(response, dict) else response.json()
 
     def update_address(self, data, route_id, route_destination_id):
         """Update one destination of a route.
@@ -311,25 +329,19 @@ class Address(Base):
         :raise ParamValueException: when ``route_id`` or ``address_id`` is
             missing.
         """
-        if self.check_required_params(kwargs, ["address_id", "route_id"]):
-            data = {"strUpdateType": kwargs.pop("activity_type"), "strNoteContents": note}
-            kwargs.update(
-                {
-                    "api_key": self.params["api_key"],
-                }
-            )
-            try:
-                self.response = self._request(ADD_ROUTE_NOTES_HOST, kwargs, "post", data=data)
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, ["address_id", "route_id"]):
             raise ParamValueException("params", "Params are not complete")
+        data = {"strNoteContents": note}
+        if "activity_type" in kwargs:
+            data["strUpdateType"] = kwargs.pop("activity_type")
+        kwargs["api_key"] = self.params["api_key"]
+        return self._call_api(ADD_ROUTE_NOTES_HOST, "post", kwargs, body=data, body_key="data")
 
     def geocode(self, **kwargs):
         """Geocode several addresses in one request.
 
-        Sends ``POST /api/geocoder.php``.
+        Sends ``POST /api/geocoder.php`` with ``addresses`` as a form field in
+        the body and the other keywords in the query.
 
         :param kwargs: required: ``addresses``, the addresses separated by
             ``||``. ``format`` is the response format, ``"csv"`` by default.
@@ -350,8 +362,9 @@ class Address(Base):
                 "addresses",
             ],
         ):
+            body = {"addresses": kwargs.pop("addresses")}
             try:
-                response = self._request(BATCH_GEOCODER, kwargs, "post")
+                response = self._request(BATCH_GEOCODER, kwargs, "post", data=body)
                 return response.content
             except APIException as e:
                 return e.to_dict()

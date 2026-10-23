@@ -1,3 +1,15 @@
+"""Optimize 48 stops for up to three drivers from two depots.
+
+Builds a CVRP_TW_MD (multiple depot) optimization in Louisville, Kentucky: two depots and 48 stops with
+five minutes of service each, split into up to three routes (``parts``) that start at 07:00, optimized
+for distance. :meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php``. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/multiple_depot_multiple_driver.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -10,11 +22,11 @@ from route4me.constants import (
 )
 
 
-def main(api_key):
-    route4me = Route4Me(api_key)
+def _set_parameters(optimization):
+    """Set the route parameters of the optimization.
 
-    optimization = route4me.optimization
-    address = route4me.address
+    :param optimization: the client's :class:`~route4me.optimization.Optimization` resource.
+    """
     optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_MD)
     optimization.share_route(0)
     optimization.store_route(0)
@@ -27,6 +39,12 @@ def main(api_key):
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
 
+
+def _add_depots(address):
+    """Add the two depots the routes start from.
+
+    :param address: the client's :class:`~route4me.address.Address` resource.
+    """
     address.add_address(
         address="455 S 4th St, Louisville, KY 40202",
         lat=38.251698,
@@ -41,6 +59,13 @@ def main(api_key):
         is_depot=1,
         time=300,
     )
+
+
+def _add_stops(address):
+    """Add the 48 stops to visit.
+
+    :param address: the client's :class:`~route4me.address.Address` resource.
+    """
     address.add_address(
         address="1407 MCCOY, Louisville, KY, 40215",
         lat=38.202496,
@@ -379,12 +404,31 @@ def main(api_key):
         is_depot=0,
         time=300,
     )
-    response = route4me.run_optimization()
-    print("Optimization Link: {}".format(response["links"]["view"]))
+
+
+def _print_routes(response):
+    """Print the optimization link and the addresses of each route.
+
+    :param response: the reply of :meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`.
+    """
+    print(f"Optimization Link: {response['links']['view']}")
     for i, route in enumerate(response["routes"]):
-        print("\t{}\tRoute Link: {}".format(i + 1, route["links"]["route"]))
+        print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
-            print("\t\t\tAddress: {}".format(address["address"]))
+            print(f"\t\t\tAddress: {address['address']}")
+
+
+def main(api_key):
+    """Run the optimization and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
+    route4me = Route4Me(api_key)
+    _set_parameters(route4me.optimization)
+    _add_depots(route4me.address)
+    _add_stops(route4me.address)
+    response = route4me.run_optimization()
+    _print_routes(response)
 
 
 if __name__ == "__main__":

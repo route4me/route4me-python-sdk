@@ -5,15 +5,17 @@ e.g. ``TRAVEL_MODE.DRIVING == "Driving"``, and ``reverse_mapping`` maps each
 value back to its name.
 """
 
+from typing import Any
+
 
 class _EnumBase:
     """Base of every type built by :func:`enum`; declares the shared attribute."""
 
     #: Maps each value back to its member name, e.g. ``{1: "DRIVING"}``.
-    reverse_mapping: dict = {}
+    reverse_mapping: dict[Any, str] = {}
 
 
-def enum(**enums):
+def enum(**enums: Any) -> Any:
     """Create an enum-like type whose attributes are the given members.
 
     :param enums: member names mapped to their API values.
@@ -25,7 +27,7 @@ def enum(**enums):
     return type("Enum", (_EnumBase,), enums)
 
 
-def auto_enum(*sequential, **named):
+def auto_enum(*sequential: str, **named: Any) -> Any:
     """Create an enum-like type whose positional members are numbered from 1.
 
     :param sequential: member names, given the values 1, 2, 3, ... in order.

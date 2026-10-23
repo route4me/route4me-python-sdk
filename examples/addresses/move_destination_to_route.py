@@ -1,3 +1,18 @@
+"""Move destinations of a route to new positions.
+
+Creates a route by running a TSP optimization of nine New York addresses, one of them the depot with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then calls :meth:`Route.move_addresses_from_route
+<route4me.route.Route.move_addresses_from_route>` with every destination of the route and a new
+``sequence_no`` for each stop, which sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
+the destinations as the JSON body. The depot keeps its place and the eight stops are reordered; the same
+call moves a destination of another route into this one. Prints the addresses before and after.
+
+Run it with::
+
+    python examples/addresses/move_destination_to_route.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +26,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Create a route, reorder its stops and print the addresses.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     optimization = r4m.optimization
@@ -62,7 +81,9 @@ def main(api_key):
         address="57 W 57th St New York, NY 10019", lat=40.7558695, lng=-73.9862019, alias="Verizon Wireless", time=0
     )
 
-    new_sequence = [8, 5, 1, 7, 2, 6, 0, 3, 4]
+    # New position of each destination, in the order the route visits them. The depot comes first
+    # and keeps position 0; the eight stops are shuffled.
+    new_sequence = [0, 8, 5, 1, 7, 2, 6, 3, 4]
 
     addresses = {"addresses": []}
     response = r4m.run_optimization()
@@ -72,9 +93,9 @@ def main(api_key):
         print(f"Number {i}:")
         if address["is_depot"]:
             print("\t This is a Depot")
-        print("\taddress: {}".format(address["address"]))
+        print(f"\taddress: {address['address']}")
         print("\t")
-        if new_sequence[i] == 0:
+        if address["is_depot"]:
             addresses["addresses"].append({"route_destination_id": address["route_destination_id"], "is_depot": True})
         else:
             addresses["addresses"].append(
@@ -99,12 +120,12 @@ def main(api_key):
             print(f"Number {i}:")
             if address["is_depot"]:
                 print("\t This is a Depot")
-            print("\taddress: {}".format(address["address"]))
+            print(f"\taddress: {address['address']}")
             print("\t")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Move a Destination to other Route")
+    parser = argparse.ArgumentParser(description="Move the Destinations of a Route to New Positions")
     parser.add_argument("--api_key", dest="api_key", help="Route4Me API KEY", type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)

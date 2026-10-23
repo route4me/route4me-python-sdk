@@ -22,6 +22,13 @@ repos:
       # Keeps a real key from ever being committed in an example or fixture.
       - id: detect-private-key
 
+  # Blocks API keys and other secrets before they reach a commit; the
+  # detect-private-key hook above only catches PEM private keys.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.6
     hooks:
@@ -39,6 +46,9 @@ repos:
         language: system
         types: [python]
         files: ^route4me/
+      # Runs per file: pre-commit passes each changed example file, or every
+      # example file with --all-files. Never pass the examples directory: its
+      # subfolders have no __init__.py, so pylint would skip them.
       - id: pylint-examples
         name: pylint (examples)
         entry: pylint --rcfile=examples/pylintrc

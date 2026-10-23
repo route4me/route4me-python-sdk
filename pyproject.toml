@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "route4me"
-version = "0.3.1.0"
+version = "1.0.0"
 description = "Route4Me Python SDK"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
@@ -38,10 +38,17 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# 2.25.0 is the floor for modern urllib3 interop and predates none of the
-# security fixes we rely on; 2.31.0 carries the CVE-2023-32681 fix for the
-# proxy-Authorization leak, which matters because this SDK accepts `proxies`.
-dependencies = ["requests>=2.31.0"]
+# Floors are set by security fixes, not by features:
+#   requests 2.33.0  CVE-2024-35195, CVE-2024-47081 (.netrc leak), CVE-2026-25645
+#   urllib3  2.8.0   CVE-2024-37891 .. CVE-2026-97689 (redirects, decompression, proxy TLS)
+# Those releases need Python 3.10+. On 3.9 the newest available versions are
+# the floor instead; the advisories still open there are listed in SECURITY.md.
+dependencies = [
+    "requests>=2.33.0; python_version >= '3.10'",
+    "urllib3>=2.8.0; python_version >= '3.10'",
+    "requests>=2.32.5; python_version < '3.10'",
+    "urllib3>=2.6.3; python_version < '3.10'",
+]
 
 [project.urls]
 Homepage = "https://github.com/route4me/route4me-python-sdk"
@@ -153,9 +160,13 @@ known-first-party = ["route4me"]
 
 # ------------------------------------------------------------------ pylint --
 #
-# The package and the examples must pass with zero messages:
-#     pylint route4me examples --rcfile=pyproject.toml
-# Tests use tests/pylintrc, which relaxes only the checks that fight pytest.
+# The package, the tests and the examples must pass with zero messages:
+#     pylint route4me --rcfile=pyproject.toml
+#     pylint tests --rcfile=tests/pylintrc
+#     pylint --rcfile=examples/pylintrc $(git ls-files 'examples/*.py')
+# tests/pylintrc relaxes only the checks that fight pytest; examples/pylintrc
+# only drops duplicate-code. The examples are passed as files because their
+# subfolders have no __init__.py.
 
 [tool.pylint.main]
 py-version = "3.9"
@@ -259,7 +270,8 @@ output = "coverage.xml"
 # -------------------------------------------------------------------- mypy --
 
 [tool.mypy]
-python_version = "3.9"
+# No python_version: current mypy releases only target 3.10 and later, so it
+# checks against the interpreter it runs on. The 3.9 test job covers runtime.
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
@@ -285,10 +297,6 @@ warn_return_any = true
 # [[tool.mypy.overrides]]
 # module = ["route4me._fields", "route4me.base"]
 # disallow_untyped_defs = true
-
-[[tool.mypy.overrides]]
-module = ["tests.*", "examples.*"]
-ignore_errors = true
 
 # ------------------------------------------------------------------ bandit --
 

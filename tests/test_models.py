@@ -86,7 +86,7 @@ class TestServiceTimeRules:
         """Load-bearing: payload code relies on ServiceTimeRules being a dict."""
         assert isinstance(ServiceTimeRules(), dict)
 
-    def test_defaults_are_class_attributes(self):
+    def test_defaults_are_unset(self):
         rules = ServiceTimeRules()
         assert rules.first_item_mode is None
         assert rules.additional_items_mode is None

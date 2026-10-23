@@ -63,9 +63,6 @@ class TestRouteStatus:
 
         assert "errors" in result
 
-    @pytest.mark.xfail(
-        strict=True, raises=AssertionError, reason="security: route_id is put in the URL path without encoding"
-    )
     def test_a_route_id_cannot_escape_its_path_segment(self, client, monkeypatch):
         urls = []
 
@@ -79,6 +76,13 @@ class TestRouteStatus:
             client.route_status.get_route_status("../secret")
 
         assert urls == [f"{ROUTE_STATUS_V5}/..%2Fsecret"]
+
+    @pytest.mark.parametrize("method", ["get_route_status", "get_route_status_history", "rollback_route_status"])
+    def test_an_empty_route_id_is_rejected_before_any_request(self, client, mocked, method):
+        with pytest.raises(ParamValueException):
+            getattr(client.route_status, method)("")
+
+        assert not mocked.calls
 
 
 class TestOrdersGroup:
@@ -97,12 +101,19 @@ class TestOrdersGroup:
 
         assert client.orders_group.get_orders_group(["2026-10-01"], []) == []
 
-    @pytest.mark.xfail(
-        strict=True, raises=TypeError, reason="#35: ParamValueException is raised with a missing argument (TypeError)"
-    )
     def test_an_invalid_range_raises_param_value_exception(self, client):
         with pytest.raises(ParamValueException):
             client.orders_group.get_orders_group(["10/01/2026"], [])
+
+    def test_a_non_json_reply_is_returned_raw(self, client, mocked):
+        mocked.add(responses.POST, ORDERS_GROUP_V5, body=b"maintenance", status=200)
+
+        assert client.orders_group.get_orders_group(["2026-10-01"], []) == b"maintenance"
+
+    def test_an_api_error_is_returned_as_a_dict(self, client, mocked):
+        mocked.add(responses.POST, ORDERS_GROUP_V5, json={"errors": ["bad filter"]}, status=422)
+
+        assert client.orders_group.get_orders_group(["2026-10-01"], []) == {"errors": ["bad filter"]}
 
     def test_assign_optimization_profile(self, client, mocked, last_request):
         mocked.add(responses.POST, ASSIGN_PROFILES_V5, json={"status": True}, status=200)
@@ -111,9 +122,6 @@ class TestOrdersGroup:
 
         assert json.loads(last_request().body) == {"group_id": 42, "optimization_profile_id": "profile-1"}
 
-    @pytest.mark.xfail(
-        strict=True, raises=UnboundLocalError, reason="#38: a ValueError from the transport becomes UnboundLocalError"
-    )
     def test_a_transport_value_error_is_not_turned_into_unbound_local_error(self, client, monkeypatch):
         def boom(*args, **kwargs):
             raise requests.exceptions.InvalidHeader("bad header")
@@ -136,9 +144,6 @@ class TestOptimizationProfiles:
 
         assert "errors" in client.optimization_profiles.get_optimization_profiles()
 
-    @pytest.mark.xfail(
-        strict=True, raises=UnboundLocalError, reason="#38: a ValueError from the transport becomes UnboundLocalError"
-    )
     def test_a_transport_value_error_is_not_turned_into_unbound_local_error(self, client, monkeypatch):
         def boom(*args, **kwargs):
             raise requests.exceptions.InvalidURL("bad url")

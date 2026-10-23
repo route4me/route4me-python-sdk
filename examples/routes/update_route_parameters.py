@@ -1,3 +1,17 @@
+"""Rename a route through its parameters.
+
+Creates a route by running a TSP optimization of seven New York addresses, one of them the depot with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then :meth:`Route.update_route_parameters
+<route4me.route.Route.update_route_parameters>` with ``{"parameters": {"route_name": ...}}``, which
+sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and the parameters as the JSON body, and
+prints the new name.
+
+Run it with::
+
+    python examples/routes/update_route_parameters.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -5,6 +19,10 @@ from route4me.constants import ALGORITHM_TYPE, DEVICE_TYPE, DISTANCE_UNIT, OPTIM
 
 
 def main(api_key):
+    """Create a route, rename it and print the new name.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     optimization = r4m.optimization
@@ -64,7 +82,6 @@ def main(api_key):
 
         parameters = {
             "parameters": {
-                "member_id": 1,
                 "route_name": "Route name updated",
             }
         }
@@ -73,7 +90,7 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Route Name: {}".format(response["parameters"]["route_name"]))
+            print(f"Route Name: {response['parameters']['route_name']}")
 
 
 if __name__ == "__main__":

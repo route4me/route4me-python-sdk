@@ -158,8 +158,9 @@ def check_request(method, url, headers):
     """Return a list of problems with one outgoing request (empty when it is fine).
 
     Every request the SDK sends must go over https to a Route4Me host, to an
-    endpoint in the registry, and must carry the API key only as the
-    ``api_key`` query parameter. A deprecated endpoint is allowed but recorded.
+    endpoint in the registry, and must carry the API key in one place only: an
+    ``Authorization: Bearer`` header for API V5, the ``api_key`` query
+    parameter for everything else. A deprecated endpoint is allowed but recorded.
     """
     parts = urlsplit(url)
     path = parts.path.rstrip("/") or "/"
@@ -176,11 +177,17 @@ def check_request(method, url, headers):
         host == parts.hostname and m in ("*", method) and pattern.match(path) for m, host, pattern in ENDPOINTS
     ):
         problems.append(f"{method} {parts.hostname}{path}: endpoint is not in tests/fixtures/endpoints.json")
-    if API_KEY in parts.path or any(API_KEY in str(v) for v in headers.values()):
-        problems.append(f"{method} {url}: the API key appears outside the api_key query parameter")
     query = parse_qs(parts.query)
+    v5 = url.startswith("https://wh.route4me.com/modules/api/v5.")
+    other_headers = {k: v for k, v in headers.items() if not (v5 and k.lower() == "authorization")}
+    if API_KEY in parts.path or any(API_KEY in str(v) for v in other_headers.values()):
+        problems.append(f"{method} {url}: the API key appears outside its expected place")
     if any(API_KEY in v for k, values in query.items() if k != "api_key" for v in values):
         problems.append(f"{method} {url}: the API key appears in a query parameter other than api_key")
+    if v5 and "api_key" in query:
+        problems.append(f"{method} {url}: an API V5 request carries the key in the URL instead of a bearer token")
+    if v5 and headers.get("Authorization") != f"Bearer {API_KEY}":
+        problems.append(f"{method} {url}: an API V5 request lacks the bearer token")
     return problems
 
 

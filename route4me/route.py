@@ -2,6 +2,7 @@
 
 import warnings
 
+from ._url import path_segment
 from .api_endpoints import (
     ADDRESS_HOST,
     DUPLICATE_ROUTE,
@@ -14,6 +15,7 @@ from .api_endpoints import (
     SHARE_ROUTE_HOST,
 )
 from .base import Base
+from .config import UNSET
 from .exceptions import APIException, ParamValueException
 
 
@@ -55,9 +57,9 @@ class Route(Base):
         :raise ParamValueException: when ``route_id`` is missing, or a keyword
             is not a supported parameter or has an invalid value.
         """
-        if self.validate_params(**kwargs):
-            self.params.update(kwargs)
-        return self._call_api(ROUTE_HOST, "get", self.params, required=self.requirements)
+        params = self.validated_params(**kwargs)
+        params.update(kwargs)
+        return self._call_api(ROUTE_HOST, "get", params, required=self.requirements)
 
     def get_route_tracking(self, **kwargs):
         """Get a route with its GPS tracking history.
@@ -71,10 +73,10 @@ class Route(Base):
         :raise ParamValueException: when ``route_id`` is missing, or a keyword
             is not a supported parameter or has an invalid value.
         """
-        if self.validate_params(**kwargs):
-            self.params.update(kwargs)
-        self.params.update({"device_tracking_history": 1})
-        return self._call_api(ROUTE_HOST, "get", self.params, required=self.requirements)
+        params = self.validated_params(**kwargs)
+        params.update(kwargs)
+        params["device_tracking_history"] = 1
+        return self._call_api(ROUTE_HOST, "get", params, required=self.requirements)
 
     def get_routes(self, **kwargs):
         """List routes, a page at a time.
@@ -124,21 +126,18 @@ class Route(Base):
         as ``route_id`` in the query.
 
         :param kwargs: query parameters. Required: ``route_id``, the IDs of the
-            routes to delete as a list, e.g. ``route_id=[id_1, id_2]``.
+            routes to delete as a list, e.g. ``route_id=[id_1, id_2]``, or one
+            ID or a comma-separated string of IDs.
         :return: the decoded JSON reply, which lists the deleted route IDs, or
             the ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``route_id`` is missing.
         """
-        kwargs.update({"api_key": self.params["api_key"]})
-        if self.check_required_params(kwargs, ["route_id"]):
-            kwargs["route_id"] = ",".join(kwargs["route_id"])
-            try:
-                self.response = self._request(ROUTE_HOST, kwargs, "delete")
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
+        if not self.check_required_params(kwargs, ["route_id"]):
             raise ParamValueException("params", "Params are not complete")
+        route_ids = kwargs["route_id"]
+        kwargs["route_id"] = route_ids if isinstance(route_ids, str) else ",".join(route_ids)
+        kwargs["api_key"] = self.params["api_key"]
+        return self._call_api(ROUTE_HOST, "delete", kwargs)
 
     def delete_route(self, **kwargs):
         """Delete one route.
@@ -167,7 +166,7 @@ class Route(Base):
             return payload["deleted"]
         return payload
 
-    def insert_address_into_route(self, addresses, route_id):
+    def insert_address_into_route(self, addresses, route_id, *, timeout=UNSET):
         """Add addresses to an existing route.
 
         Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
@@ -177,13 +176,16 @@ class Route(Base):
             dict with at least ``address``, ``lat`` and ``lng``. An address
             with a ``sequence_no`` is placed at that position.
         :param route_id: ID of the route.
+        :param timeout: read timeout for this call, in seconds, or a
+            ``(connect, read)`` pair. Inserting into a long route can take
+            longer than the 30-second default. Unset uses the client's timeout.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
         """
         params = {"route_id": route_id}
-        return self._update_route(params, addresses)
+        return self._update_route(params, addresses, timeout=timeout)
 
-    def move_addresses_from_route(self, addresses, route_id):
+    def move_addresses_from_route(self, addresses, route_id, *, timeout=UNSET):
         """Move existing destinations into a route, at the given positions.
 
         Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
@@ -193,13 +195,16 @@ class Route(Base):
         :param addresses: the body: ``{"addresses": [...]}``, each address a
             dict with its ``route_destination_id`` and new ``sequence_no``.
         :param route_id: ID of the route the destinations go to.
+        :param timeout: read timeout for this call, in seconds, or a
+            ``(connect, read)`` pair. Inserting into a long route can take
+            longer than the 30-second default. Unset uses the client's timeout.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
         """
         params = {"route_id": route_id}
-        return self._update_route(params, addresses)
+        return self._update_route(params, addresses, timeout=timeout)
 
-    def update_route_parameters(self, data, route_id):
+    def update_route_parameters(self, data, route_id, *, timeout=UNSET):
         """Update the parameters of a route.
 
         Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
@@ -207,13 +212,16 @@ class Route(Base):
 
         :param data: the body, e.g. ``{"parameters": {"route_name": "Monday"}}``.
         :param route_id: ID of the route.
+        :param timeout: read timeout for this call, in seconds, or a
+            ``(connect, read)`` pair. Inserting into a long route can take
+            longer than the 30-second default. Unset uses the client's timeout.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
         """
         params = {"route_id": route_id}
-        return self._update_route(params, data)
+        return self._update_route(params, data, timeout=timeout)
 
-    def update_route(self, data, route_id):
+    def update_route(self, data, route_id, *, timeout=UNSET):
         """Update the fields of a route.
 
         Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
@@ -221,11 +229,14 @@ class Route(Base):
 
         :param data: the body: the route fields to change.
         :param route_id: ID of the route.
+        :param timeout: read timeout for this call, in seconds, or a
+            ``(connect, read)`` pair. Inserting into a long route can take
+            longer than the 30-second default. Unset uses the client's timeout.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
         """
         params = {"route_id": route_id}
-        return self._update_route(params, data)
+        return self._update_route(params, data, timeout=timeout)
 
     def insert_address_into_route_optimal_position(self, **kwargs):
         """Insert addresses into a route, each at its optimal position.
@@ -363,14 +374,21 @@ class Route(Base):
         fields.
 
         :param kwargs: form fields. Required: ``route_ids``, the IDs of the
-            routes to merge, comma-separated.
+            routes to merge: a comma-separated string or a list of IDs.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
         :raise ParamValueException: when ``route_ids`` is missing.
+
+        .. versionchanged:: 1.0.0
+           ``route_ids`` may be a list. It used to be form-encoded as one field
+           per ID, which the API does not read.
         """
         if not self.check_required_params(kwargs, ["route_ids"]):
             raise ParamValueException("params", "Params are not complete")
-        return self._call_api(MERGE_ROUTES_HOST, "post", self.params, body=kwargs, body_key="data")
+        body = dict(kwargs)
+        if not isinstance(body["route_ids"], str):
+            body["route_ids"] = ",".join(str(route_id) for route_id in body["route_ids"])
+        return self._call_api(MERGE_ROUTES_HOST, "post", self.params, body=body, body_key="data")
 
     def resequence_route_all(self, **kwargs):
         """Resequence all the stops of a route.
@@ -422,23 +440,32 @@ class Route(Base):
         :param output_format: export format, ``"csv"`` by default.
         :return: the raw response body (``bytes``).
         :raise APIException: when the API answers outside the 200-399 range.
+
+        .. deprecated:: 1.0.0
+           ``/actions/route/export_current_route.php`` returns 404. Use
+           :meth:`export_route_v5`.
         """
         warnings.warn("export_route is deprecated. Please use export_route_v5", DeprecationWarning, stacklevel=2)
         data = {"route_id": route_id, "strExportFormat": output_format}
         self.response = self._request(EXPORTER, {}, "post", data=data)
         return self.response.content
 
-    def _update_route(self, params, data):
-        """Send ``PUT /api.v4/route.php`` with ``data`` as the body.
+    def _update_route(self, params, data, *, timeout=UNSET):
+        """Send ``PUT /api.v4/route.php`` with ``data`` as the JSON body.
 
         :param params: query parameters, including ``route_id``.
         :param data: the request body.
+        :param timeout: read timeout for this call; unset uses the client's.
         :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
             API error.
+
+        .. versionchanged:: 1.0.0
+           The body is JSON again. Since 0.1.6.0 it had been sent as form data,
+           which the API cannot read for nested addresses or parameters (#19).
         """
         params.update({"api_key": self.api.key})
         try:
-            response = self._request(ROUTE_HOST, params, "put", data=data)
+            response = self._request(ROUTE_HOST, params, "put", json=data, timeout=timeout)
             return response.json()
         except APIException as e:
             return e.to_dict()
@@ -448,7 +475,7 @@ class Route(Base):
 
         Sends ``POST /modules/api/v5.0/route-export/{route_id}/export`` to
         ``wh.route4me.com`` with ``format``, ``all_custom_fields`` and
-        ``columns`` in the body.
+        ``columns`` as the JSON body.
 
         :param route_id: ID of the route.
         :param output_format: export format, ``"csv"`` by default.
@@ -457,7 +484,13 @@ class Route(Base):
             the API.
         :return: the raw response body (``bytes``), or the ``{"errors": ...}``
             dict on an API error.
+        :raise ParamValueException: when ``route_id`` is empty.
+
+        .. versionchanged:: 1.0.0
+           The body is JSON, as the API documents. As form data,
+           ``all_custom_fields=True`` arrived as the string ``"True"``.
         """
+        url = EXPORTER_V5.format(route_id=path_segment(route_id, "route_id"))
         params = {
             "api_key": self.params["api_key"],
         }
@@ -465,7 +498,7 @@ class Route(Base):
         if columns is not None:
             data["columns"] = columns
         try:
-            self.response = self._request(EXPORTER_V5.format(route_id=route_id), params, "post", data=data)
+            self.response = self._request(url, params, "post", json=data)
             return self.response.content
         except APIException as e:
             return e.to_dict()
