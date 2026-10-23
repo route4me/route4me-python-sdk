@@ -128,3 +128,31 @@ Address Barcodes
 .. automodule:: route4me.address_barcodes
 	:members:
 	:show-inheritance:
+
+Vehicles (API V5)
+-----------------
+
+.. automodule:: route4me.vehicles_v5
+	:members:
+	:show-inheritance:
+
+Vehicle Profiles
+----------------
+
+.. automodule:: route4me.vehicle_profiles
+	:members:
+	:show-inheritance:
+
+Vehicle Capacity Profiles
+-------------------------
+
+.. automodule:: route4me.vehicle_capacity_profiles
+	:members:
+	:show-inheritance:
+
+Optimization Profiles
+---------------------
+
+.. automodule:: route4me.optimization_profiles
+	:members:
+	:show-inheritance:
