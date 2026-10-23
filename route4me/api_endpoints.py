@@ -157,3 +157,16 @@ RECURRING_ROUTE_SCHEDULES_REPLACE_V5 = f"{API_V5}/recurring-routes/route-schedul
 RECURRING_MASTER_ROUTES_V5 = f"{API_V5}/recurring-routes/master-routes"
 RECURRING_SCHEDULED_ROUTES_IS_COPY_V5 = f"{API_V5}/recurring-routes/scheduled-routes/is-copy"
 RECURRING_SCHEDULED_ROUTES_GET_COPIES_V5 = f"{API_V5}/recurring-routes/scheduled-routes/get-copies"
+
+# Phase 5: p6-notes-pod-reviews
+NOTE_CUSTOM_TYPES_V4 = f"{MAIN_HOST}/api.v4/note_custom_types.php"
+NOTES_V5 = f"{API_V5}/notes"
+NOTES_BULK_CREATE_V5 = f"{API_V5}/notes/bulk-create"
+NOTES_BY_DESTINATION_V5 = f"{API_V5}/notes/destination"
+NOTES_BY_ROUTE_V5 = f"{API_V5}/notes/route"
+NOTES_CUSTOM_TYPES_V5 = f"{API_V5}/notes/custom-types"
+DRIVER_REVIEWS_V5 = f"{API_V5}/driver-reviews"
+DRIVER_REVIEW_SETTINGS_BY_MEMBER_V5 = f"{API_V5}/driver-reviews/settings/get-by-member"
+DRIVER_REVIEW_SETTINGS_UPLOAD_V5 = f"{API_V5}/driver-reviews/settings/upload"
+POD_WORKFLOWS_V5 = f"{API_V5}/workflows"
+ROUTE_STATUS_PLANNED_V5 = f"{API_V5}/route-status/planned"

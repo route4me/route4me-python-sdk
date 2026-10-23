@@ -247,3 +247,24 @@ Recurring Routes
 .. automodule:: route4me.recurring_routes
 	:members:
 	:show-inheritance:
+
+Notes
+-----
+
+.. automodule:: route4me.notes
+	:members:
+	:show-inheritance:
+
+Driver Reviews
+--------------
+
+.. automodule:: route4me.driver_reviews
+	:members:
+	:show-inheritance:
+
+POD Workflows
+-------------
+
+.. automodule:: route4me.pod_workflows
+	:members:
+	:show-inheritance:

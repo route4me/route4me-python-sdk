@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from ._url import path_segment
-from .api_endpoints import ROUTE_STATUS_V5, ROUTE_STOP_STATUS_V5
+from .api_endpoints import ROUTE_STATUS_PLANNED_V5, ROUTE_STATUS_V5, ROUTE_STOP_STATUS_V5
 from .base import Base
 from .exceptions import ParamValueException
 
@@ -15,7 +15,9 @@ class RouteStatus(Base):
     in :data:`~route4me.constants.ROUTE_STATUS`. Use it as
     ``route4me.route_status``. Every method sends a request to
     ``/modules/api/v5.0/route-status/{route_id}`` on ``wh.route4me.com``,
-    except :meth:`set_route_stop_status`, which sets the status of stops.
+    except :meth:`set_route_stop_status`, which sets the status of stops, and
+    :meth:`update_route_status_as_planned`, which sends one to
+    ``/modules/api/v5.0/route-status/planned``.
 
     Unless stated otherwise, a method returns the decoded JSON reply, or on an
     API error the ``{"errors": ...}`` dict from :meth:`APIException.to_dict
@@ -138,3 +140,21 @@ class RouteStatus(Base):
         if event_timestamp is not None:
             data["event_timestamp"] = event_timestamp
         return self._call_api(ROUTE_STOP_STATUS_V5, "post", {}, body=data)
+
+    def update_route_status_as_planned(self, route_ids):
+        """Set the status of several routes to planned.
+
+        Sends ``POST /modules/api/v5.0/route-status/planned`` with
+        ``{"route_ids": [...]}`` as the JSON body.
+
+        :param route_ids: IDs of the routes, a list of strings.
+        :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
+            API error.
+        :raise ParamValueException: when ``route_ids`` is empty, or is a single
+            string instead of a list.
+
+        .. versionadded:: 1.0.0
+        """
+        if not route_ids or isinstance(route_ids, str):
+            raise ParamValueException("route_ids", "Must be a non-empty list of route IDs")
+        return self._call_api(ROUTE_STATUS_PLANNED_V5, "post", {}, body={"route_ids": list(route_ids)})
