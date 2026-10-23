@@ -1,15 +1,40 @@
+# Editors / OS
 .idea/*
+.vscode/
+.DS_Store
+
+# Python bytecode & caches
 *.py[co]
-Route4Me_SDK.egg-info/
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Packaging & build artifacts
 /build/
 /dist/
-/docs_source
-/cover-html/
+*.egg-info/
+Route4Me_SDK.egg-info/
+
+# Test & coverage artifacts
 .coverage
+.coverage.*
+coverage.xml
+/cover-html/
+/htmlcov/
+.tox
+.nox
+
+# Environments
+.venv
+venv/
+.env
+
+# Docs
+/docs_source
+docs/html/*
+
+# Scratch
 /.cache/
 /tmp/
 /development/
-.venv
-docs/html/*
-.tox
-.DS_Store

@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
+from .api_endpoints import ASSIGN_PROFILES_V5, ORDERS_GROUP_V5
 from .base import Base
-from .exceptions import ParamValueException, APIException
+from .exceptions import APIException, ParamValueException
 from .utils import is_valid_datetime
-
-from .api_endpoints import ORDERS_GROUP_V5, ASSIGN_PROFILES_V5
 
 
 class OrdersGroup(Base):
-
     def __init__(self, api):
         """
         Order Groups Instance
@@ -33,9 +30,7 @@ class OrdersGroup(Base):
         }
         items = []
         try:
-            response = self.api._make_request(
-                ORDERS_GROUP_V5, self.params, self.api._request_post, json=data
-            )
+            response = self.api._make_request(ORDERS_GROUP_V5, self.params, self.api._request_post, json=data)
             data = response.json()
             if "data" in data.keys():
                 items = data["data"].get("items", [])
@@ -51,9 +46,7 @@ class OrdersGroup(Base):
             "optimization_profile_id": optimization_profile_id,
         }
         try:
-            response = self.api._make_request(
-                ASSIGN_PROFILES_V5, self.params, self.api._request_post, json=data
-            )
+            response = self.api._make_request(ASSIGN_PROFILES_V5, self.params, self.api._request_post, json=data)
             data = response.json()
             return data
         except APIException as e:

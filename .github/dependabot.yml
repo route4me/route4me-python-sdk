@@ -1,0 +1,45 @@
+version: 2
+
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    open-pull-requests-limit: 5
+    commit-message:
+      # Conventional commits are enforced by commit-validation.yml, and
+      # Dependabot PRs are not exempt.
+      prefix: "fix"
+      prefix-development: "chore"
+      include: scope
+    groups:
+      dev-dependencies:
+        patterns:
+          - "pytest*"
+          - "responses"
+          - "ruff"
+          - "mypy"
+          - "types-*"
+          - "bandit"
+          - "pip-audit"
+          - "diff-cover"
+          - "sphinx*"
+          - "myst-parser"
+          - "build"
+          - "twine"
+          - "pre-commit"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+    commit-message:
+      prefix: "chore"
+      include: scope
+    groups:
+      github-actions:
+        patterns: ["*"]

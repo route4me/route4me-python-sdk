@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import json
 from collections import namedtuple
 from datetime import datetime
@@ -14,7 +12,7 @@ def _json_object_hook(d):
     keys = []
     for k in d.keys():
         if k[0].isdigit():
-            k = "d_{}".format(k)
+            k = f"d_{k}"
         keys.append(k)
 
     return namedtuple("X", keys)(*d.values())

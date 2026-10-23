@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import argparse
 
 from route4me import Route4Me
@@ -16,26 +14,26 @@ def main(api_key):
         cached_lat=38.024654,
         cached_lng=-77.338814,
     )
-    if isinstance(response, dict) and 'errors' in response.keys():
-        print('. '.join(response['errors']))
+    if isinstance(response, dict) and "errors" in response.keys():
+        print(". ".join(response["errors"]))
     else:
-        print('Address ID: {0}'.format(response['address_id']))
-        print('First Name: {0}'.format(response['first_name']))
-        print('Last Name: {0}'.format(response['last_name']))
-        print('Address: {0}'.format(response['address_1']))
-        print('Deleting this Contact')
-        address_ids = [response['address_id'], ]
-        response = address_book.delete_addressbook_contact(
-            address_ids=address_ids)
-        if isinstance(response, dict) and 'errors' in response.keys():
-            print('. '.join(response['errors']))
+        print("Address ID: {}".format(response["address_id"]))
+        print("First Name: {}".format(response["first_name"]))
+        print("Last Name: {}".format(response["last_name"]))
+        print("Address: {}".format(response["address_1"]))
+        print("Deleting this Contact")
+        address_ids = [
+            response["address_id"],
+        ]
+        response = address_book.delete_addressbook_contact(address_ids=address_ids)
+        if isinstance(response, dict) and "errors" in response.keys():
+            print(". ".join(response["errors"]))
         else:
-            print('Deleted: {}'.format(response['status']))
+            print("Deleted: {}".format(response["status"]))
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Delete Address Book Contact')
-    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
-                        type=str, required=True)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Delete Address Book Contact")
+    parser.add_argument("--api_key", dest="api_key", help="Route4Me API KEY", type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)

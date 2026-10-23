@@ -1,0 +1,41 @@
+# Install once per clone:
+#     pip install pre-commit && pre-commit install
+#
+# Run against everything:
+#     pre-commit run --all-files
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: debug-statements
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-added-large-files
+        args: [--maxkb=512]
+      # Keeps a real key from ever being committed in an example or fixture.
+      - id: detect-private-key
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.6
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      # pyproject.toml and route4me/version.py both carry the version string.
+      # Catching drift at commit time is cheaper than at release time.
+      - id: version-consistency
+        name: pyproject and route4me/version.py agree
+        entry: python -m pytest tests/test_version.py -q --no-header --no-cov
+        language: system
+        pass_filenames: false
+        files: ^(pyproject\.toml|route4me/version\.py)$

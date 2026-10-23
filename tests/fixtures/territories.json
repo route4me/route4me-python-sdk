@@ -1,0 +1,26 @@
+[
+  {
+    "territory_id": "0F3B8C2D5E7A419B6C8D0E2F4A6B8C1D",
+    "territory_name": "Manhattan Midtown",
+    "territory_color": "ff0000",
+    "territory": {
+      "type": "circle",
+      "data": [
+        "40.7636197,-73.9744388",
+        "5000"
+      ]
+    }
+  },
+  {
+    "territory_id": "9E8D7C6B5A4F3E2D1C0B9A8F7E6D5C4B",
+    "territory_name": "Brooklyn North",
+    "territory_color": "00ff00",
+    "territory": {
+      "type": "rect",
+      "data": [
+        "40.6,-74.0",
+        "40.7,-73.9"
+      ]
+    }
+  }
+]

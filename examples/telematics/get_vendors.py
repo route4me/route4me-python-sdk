@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import argparse
 
 from route4me import Route4Me
@@ -9,13 +8,12 @@ def main(api_key):
 
     telematics = route4me.telematics
     vendors = telematics.get_vendors()
-    for vendor in vendors.get('vendors', []):
+    for vendor in vendors.get("vendors", []):
         telematics.pp_response(vendor)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Get Telematics Vendors')
-    parser.add_argument('--api_key', dest='api_key', help='Route4Me API KEY',
-                        type=str, required=True)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Get Telematics Vendors")
+    parser.add_argument("--api_key", dest="api_key", help="Route4Me API KEY", type=str, required=True)
     args = parser.parse_args()
     main(args.api_key)

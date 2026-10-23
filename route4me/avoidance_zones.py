@@ -1,118 +1,40 @@
-# -*- coding: utf-8 -*-
-# codebeat:disable[SIMILARITY, ABC]
-
-
+from ._api_method import make_request
 from .api_endpoints import AVOIDANCE
 from .base import Base
-from .exceptions import ParamValueException, APIException
+from .exceptions import ParamValueException
 
 
-class AvoindanceZones(Base):
+class AvoidanceZones(Base):
     """
     Avoidance Zones Management
     """
 
     def __init__(self, api):
-        """
-        Avoidance Zones Instance
-        :param api:
-        :return:
-        """
         self.json_data = {}
         Base.__init__(self, api)
 
     def get_avoidance_zones(self):
-        """
-        Get avoidance zones using GET request
-        :return: API response
-        :raise: ParamValueException if required params are not present.
-        """
-        if self.check_required_params(self.params, ['api_key', ]):
-            try:
-                self.response = self.api._make_request(AVOIDANCE,
-                                                       self.params,
-                                                       self.api._request_get)
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException('params', 'Params are not complete')
+        return make_request(self, AVOIDANCE, "get", self.params, required=["api_key"])
 
     def get_avoidance_zone(self, **kwargs):
-        """
-        Get avoidance zones using GET request
-        :return: API response
-        :raise: ParamValueException if required params are not present.
-        """
-        kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['api_key', 'territory_id']):
-            try:
-                self.response = self.api._make_request(AVOIDANCE,
-                                                       kwargs,
-                                                       self.api._request_get)
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException('params', 'Params are not complete')
+        kwargs.update({"api_key": self.params["api_key"]})
+        return make_request(self, AVOIDANCE, "get", kwargs, required=["api_key", "territory_id"])
 
     def add_avoidance_zone(self, **kwargs):
-        """
-        Add avoidance zone using POST request
-        :return: API response
-        :raise: ParamValueException if required params are not present.
-        """
-        if self.check_required_params(kwargs, ['territory_name',
-                                               'territory_color',
-                                               'territory']):
-            try:
-                self.response = self.api._make_request(AVOIDANCE,
-                                                       self.params,
-                                                       self.api._request_post,
-                                                       json=kwargs)
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException('params', 'Params are not complete')
+        if not self.check_required_params(kwargs, ["territory_name", "territory_color", "territory"]):
+            raise ParamValueException("params", "Params are not complete")
+        return make_request(self, AVOIDANCE, "post", self.params, body=kwargs)
 
     def delete_avoidance_zone(self, **kwargs):
-        """
-        Delete avoidance zone using DELETE request
-        :return: API response
-        :raise: ParamValueException if required params are not present.
-        """
-        kwargs.update({'api_key': self.params['api_key'], })
-        if self.check_required_params(kwargs, ['territory_id']):
-            try:
-                self.response = self.api._make_request(AVOIDANCE,
-                                                       kwargs,
-                                                       self.api._request_delete)
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException('params', 'Params are not complete')
+        kwargs.update({"api_key": self.params["api_key"]})
+        return make_request(self, AVOIDANCE, "delete", kwargs, required=["territory_id"])
 
     def update_avoidance_zone(self, territory_id, **kwargs):
-        """
-        Delete avoidance zone using DELETE request
-        :return: API response
-        :raise: ParamValueException if required params are not present.
-        """
-        self.params.update({'territory_id': territory_id})
-        if self.check_required_params(kwargs, ['territory_name',
-                                               'territory_color',
-                                               'territory']):
-            try:
-                self.response = self.api._make_request(AVOIDANCE,
-                                                       self.params,
-                                                       self.api._request_put,
-                                                       json=kwargs)
-                return self.response.json()
-            except APIException as e:
-                return e.to_dict()
-        else:
-            raise ParamValueException('params', 'Params are not complete')
+        self.params.update({"territory_id": territory_id})
+        if not self.check_required_params(kwargs, ["territory_name", "territory_color", "territory"]):
+            raise ParamValueException("params", "Params are not complete")
+        return make_request(self, AVOIDANCE, "put", self.params, body=kwargs)
 
-# codebeat:enable[SIMILARITY, ABC]
+
+# Backward-compatible alias for the old misspelled name
+AvoindanceZones = AvoidanceZones

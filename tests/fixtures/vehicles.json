@@ -1,0 +1,28 @@
+[
+  {
+    "vehicle_id": "B4E1E0F8C6D24A3B9F1E5C7A2D8B0E43",
+    "vehicle_alias": "Ford Transit 250",
+    "member_id": "1",
+    "created_time": "2024-01-15 09:00:00",
+    "vehicle_vin": "1FTBW2CM0JKA00000",
+    "vehicle_reg_state_id": 36,
+    "vehicle_reg_country_id": 223,
+    "vehicle_make": "Ford",
+    "vehicle_model_year": 2018,
+    "vehicle_type_id": "cargo_van",
+    "fuel_type": "unleaded 87"
+  },
+  {
+    "vehicle_id": "A2C9D7E5B1F34862A0D3E9C4F7B6A158",
+    "vehicle_alias": "Freightliner M2",
+    "member_id": "1",
+    "created_time": "2024-02-02 11:30:00",
+    "vehicle_vin": "3ALACWDT0FDGL0000",
+    "vehicle_reg_state_id": 36,
+    "vehicle_reg_country_id": 223,
+    "vehicle_make": "Freightliner",
+    "vehicle_model_year": 2015,
+    "vehicle_type_id": "24ft_truck",
+    "fuel_type": "diesel"
+  }
+]
