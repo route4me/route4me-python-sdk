@@ -51,7 +51,9 @@ jobs:
         run: python -m pip install -e ".[security]"
 
       - name: pip-audit
-        run: pip-audit --strict --progress-spinner=off
+        # Audit the project's declared dependencies, the ones users install. The
+        # installed SDK itself is not on PyPI at this version, which --strict rejects.
+        run: pip-audit --strict --progress-spinner=off .
 
   secrets:
     name: Secret scan (gitleaks)
