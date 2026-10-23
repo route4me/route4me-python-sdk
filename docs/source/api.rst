@@ -233,3 +233,17 @@ Team (API V5)
 .. automodule:: route4me.team_v5
 	:members:
 	:show-inheritance:
+
+Orders (API V5)
+---------------
+
+.. automodule:: route4me.orders_v5
+	:members:
+	:show-inheritance:
+
+Recurring Routes
+----------------
+
+.. automodule:: route4me.recurring_routes
+	:members:
+	:show-inheritance:

@@ -1,6 +1,12 @@
 """The :class:`Optimization` resource: build, list, update and delete optimization problems."""
 
-from .api_endpoints import ADDRESS_HOST, API_HOST
+from .api_endpoints import (
+    ADDRESS_HOST,
+    API_HOST,
+    HYBRID_OPTIMIZATION,
+    HYBRID_OPTIMIZATION_DEPOTS,
+    OPTIMIZATION_TIME_PREDICTION,
+)
 from .base import Base
 from .exceptions import ParamValueException
 from .slowdowns import Slowdowns
@@ -116,6 +122,54 @@ class Optimization(Base):
         return self._call_api(
             ADDRESS_HOST, "delete", kwargs, required=["optimization_problem_id", "route_destination_id"]
         )
+
+    def get_hybrid_optimization(self, **kwargs):
+        """Get the hybrid optimization of a date.
+
+        Sends ``GET /api.v4/hybrid_date_optimization.php`` with the keywords
+        as the query.
+
+        :param kwargs: query parameters: ``target_date_string``, the date as
+            ``YYYY-MM-DD``, and ``timezone_offset_minutes``.
+        :return: the decoded JSON reply: the optimization problem, or the
+            ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(HYBRID_OPTIMIZATION, "get", dict(kwargs))
+
+    def add_depots_to_hybrid_optimization(self, **kwargs):
+        """Add depots to a hybrid optimization, or replace its depots.
+
+        Sends ``POST /api/change_hybrid_optimization_depot.php`` with the
+        keywords as the JSON body.
+
+        :param kwargs: the body: ``optimization_problem_id``, the hybrid
+            optimization; ``new_depots``, a list of address dicts; and
+            ``delete_old_depots``, ``True`` to remove the current depots first.
+        :return: the decoded JSON reply, e.g. ``{"status": true}``, or the
+            ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(HYBRID_OPTIMIZATION_DEPOTS, "post", {}, body=dict(kwargs))
+
+    def get_optimization_prediction(self, **kwargs):
+        """Predict how long an optimization will take.
+
+        Sends ``POST /api.v4/predict-optimization-time.php`` with the
+        keywords as the JSON body: the same ``parameters`` and ``addresses``
+        an optimization is created with.
+
+        :param kwargs: the body: ``parameters``, the route parameters dict,
+            and ``addresses``, a list of address dicts.
+        :return: the decoded JSON reply, with the predictions under
+            ``time-prediction``, or the ``{"errors": ...}`` dict on an API
+            error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(OPTIMIZATION_TIME_PREDICTION, "post", {}, body=dict(kwargs))
 
     def reset(self):
         """Clear everything staged on this optimization, so the client can build another one.
