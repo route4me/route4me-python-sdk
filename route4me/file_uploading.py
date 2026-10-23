@@ -1,6 +1,6 @@
 """The :class:`FileUploading` resource: upload CSV and XLS(X) files of addresses, preview and geocode them."""
 
-from .api_endpoints import FILE_UPLOAD_GEOCODE_HOST, FILE_UPLOAD_HOST, FILE_UPLOAD_PREVIEW_HOST
+from .api_endpoints import FAST_GEOCODER, FILE_UPLOAD_GEOCODE_HOST, FILE_UPLOAD_HOST, FILE_UPLOAD_PREVIEW_HOST
 from .base import Base
 from .exceptions import APIException, ParamValueException
 
@@ -8,9 +8,9 @@ from .exceptions import APIException, ParamValueException
 class FileUploading(Base):
     """File uploading: send data files of addresses to Route4Me.
 
-    Use it as ``route4me.file_uploading``. Every method returns the raw
-    response body (``bytes``), or on an API error the ``{"errors": ...}`` dict
-    from :meth:`APIException.to_dict
+    Use it as ``route4me.file_uploading``. Unless stated otherwise, a method
+    returns the raw response body (``bytes``), or on an API error the
+    ``{"errors": ...}`` dict from :meth:`APIException.to_dict
     <route4me.exceptions.APIException.to_dict>` instead of raising.
     """
 
@@ -111,3 +111,22 @@ class FileUploading(Base):
                 return e.to_dict()
         else:
             raise ParamValueException("params", "Params are not complete")
+
+    def upload_addresses_to_temporary_storage(self, rows):
+        """Upload addresses as JSON to temporary storage, for fast bulk geocoding.
+
+        Sends ``POST /actions/upload/json-geocode.php`` with
+        ``{"rows": rows}`` as the JSON body. The reply identifies the stored
+        batch of addresses.
+
+        :param rows: the addresses, a list of dicts with one key per column,
+            e.g. ``{"ADDRESS": "1 Example Way", "CITY": "Springfield",
+            "STATE": "IL", "ZIP": "62701"}``.
+        :return: the decoded JSON reply, with ``optimization_problem_id``
+            (the storage ID), ``temporary_addresses_storage_id``,
+            ``address_count`` and ``status``, or the ``{"errors": ...}`` dict on
+            an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        return self._call_api(FAST_GEOCODER, "post", {}, body={"rows": rows})

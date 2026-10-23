@@ -170,3 +170,66 @@ Routes V5
 .. automodule:: route4me.routes_v5
 	:members:
 	:show-inheritance:
+
+Account Profile (API V5)
+------------------------
+
+.. automodule:: route4me.account_profile
+	:members:
+	:show-inheritance:
+
+Asset Tracking
+--------------
+
+.. automodule:: route4me.asset_tracking
+	:members:
+	:show-inheritance:
+
+Auth History (API V5)
+---------------------
+
+.. automodule:: route4me.auth_history
+	:members:
+	:show-inheritance:
+
+Autocomplete
+------------
+
+.. automodule:: route4me.autocomplete
+	:members:
+	:show-inheritance:
+
+Configuration Settings
+----------------------
+
+.. automodule:: route4me.configuration_settings
+	:members:
+	:show-inheritance:
+
+Configuration Settings (API V5)
+-------------------------------
+
+.. automodule:: route4me.configuration_settings_v5
+	:members:
+	:show-inheritance:
+
+Distance
+--------
+
+.. automodule:: route4me.distance
+	:members:
+	:show-inheritance:
+
+Drivers
+-------
+
+.. automodule:: route4me.drivers
+	:members:
+	:show-inheritance:
+
+Team (API V5)
+-------------
+
+.. automodule:: route4me.team_v5
+	:members:
+	:show-inheritance:
