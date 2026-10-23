@@ -28,12 +28,15 @@ from .avoidance_zones import AvoidanceZones
 from .config import UNSET, normalize_timeout, resolve, resolve_timeout
 from .configuration_settings import ConfigurationSettings
 from .configuration_settings_v5 import ConfigurationSettingsV5
+from .customers import Customers
 from .distance import Distance
 from .driver_reviews import DriverReviews
 from .drivers import Drivers
 from .exceptions import APIException
+from .facilities import Facilities
 from .file_uploading import FileUploading
 from .gps import GPS
+from .locations import Locations
 from .members import Members
 from .notes import Notes
 from .optimization import Optimization
@@ -45,12 +48,15 @@ from .pod_workflows import PodWorkflows
 from .rapid_address import RapidAddress
 from .recurring_routes import RecurringRoutes
 from .route import Route
+from .route_breaks import RouteBreaks
 from .route_destinations_v5 import RouteDestinationsV5
 from .route_status import RouteStatus
 from .routes_v5 import RoutesV5
 from .team_v5 import TeamV5
 from .telematics import Telematics
+from .territories_v5 import TerritoriesV5
 from .territory import Territory
+from .tracking_history import TrackingHistory
 from .vehicle_capacity_profiles import VehicleCapacityProfiles
 from .vehicle_profiles import VehicleProfiles
 from .vehicles import Vehicle
@@ -71,13 +77,15 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     :attr:`address_book`, :attr:`address_book_v5`, :attr:`asset_tracking`,
     :attr:`auth_history`, :attr:`autocomplete`, :attr:`avoidance_zones`,
     :attr:`configuration_settings`, :attr:`configuration_settings_v5`,
-    :attr:`distance`, :attr:`driver_reviews`, :attr:`drivers`,
-    :attr:`file_uploading`, :attr:`gps`, :attr:`members`, :attr:`notes`,
-    :attr:`optimization`, :attr:`optimization_profiles`, :attr:`order`,
-    :attr:`orders_group`, :attr:`orders_v5`, :attr:`pod_workflows`,
-    :attr:`rapid_address`, :attr:`recurring_routes`, :attr:`route`,
+    :attr:`customers`, :attr:`distance`, :attr:`driver_reviews`,
+    :attr:`drivers`, :attr:`facilities`, :attr:`file_uploading`, :attr:`gps`,
+    :attr:`locations`, :attr:`members`, :attr:`notes`, :attr:`optimization`,
+    :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
+    :attr:`orders_v5`, :attr:`pod_workflows`, :attr:`rapid_address`,
+    :attr:`recurring_routes`, :attr:`route`, :attr:`route_breaks`,
     :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
-    :attr:`team_v5`, :attr:`telematics`, :attr:`territory`,
+    :attr:`team_v5`, :attr:`telematics`, :attr:`territories_v5`,
+    :attr:`territory`, :attr:`tracking_history`,
     :attr:`vehicle_capacity_profiles`, :attr:`vehicle_profiles`,
     :attr:`vehicles` and :attr:`vehicles_v5`.
 
@@ -209,16 +217,22 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.autocomplete = Autocomplete(self)
         self.configuration_settings = ConfigurationSettings(self)
         self.configuration_settings_v5 = ConfigurationSettingsV5(self)
+        self.customers = Customers(self)
         self.distance = Distance(self)
         self.driver_reviews = DriverReviews(self)
         self.drivers = Drivers(self)
+        self.facilities = Facilities(self)
+        self.locations = Locations(self)
         self.notes = Notes(self)
         self.orders_v5 = OrdersV5(self)
         self.pod_workflows = PodWorkflows(self)
         self.recurring_routes = RecurringRoutes(self)
+        self.route_breaks = RouteBreaks(self)
         self.route_destinations_v5 = RouteDestinationsV5(self)
         self.routes_v5 = RoutesV5(self)
         self.team_v5 = TeamV5(self)
+        self.territories_v5 = TerritoriesV5(self)
+        self.tracking_history = TrackingHistory(self)
         self.vehicle_capacity_profiles = VehicleCapacityProfiles(self)
         self.vehicle_profiles = VehicleProfiles(self)
         self.vehicles_v5 = VehiclesV5(self)

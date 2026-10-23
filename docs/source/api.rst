@@ -268,3 +268,45 @@ POD Workflows
 .. automodule:: route4me.pod_workflows
 	:members:
 	:show-inheritance:
+
+Customers
+---------
+
+.. automodule:: route4me.customers
+	:members:
+	:show-inheritance:
+
+Facilities
+----------
+
+.. automodule:: route4me.facilities
+	:members:
+	:show-inheritance:
+
+Locations
+---------
+
+.. automodule:: route4me.locations
+	:members:
+	:show-inheritance:
+
+Route Breaks
+------------
+
+.. automodule:: route4me.route_breaks
+	:members:
+	:show-inheritance:
+
+Territories (API V5)
+--------------------
+
+.. automodule:: route4me.territories_v5
+	:members:
+	:show-inheritance:
+
+Tracking History
+----------------
+
+.. automodule:: route4me.tracking_history
+	:members:
+	:show-inheritance:
