@@ -1,4 +1,4 @@
-"""The :class:`Route` resource: get, update, resequence, share, merge, export and delete routes."""
+"""The :class:`Route` resource: get, update, resequence, rename, share, merge, export and delete routes."""
 
 import warnings
 
@@ -10,6 +10,7 @@ from .api_endpoints import (
     EXPORTER_V5,
     GET_ACTIVITIES_HOST,
     MERGE_ROUTES_HOST,
+    RENAME_ROUTE,
     RESEQUENCE_ROUTE,
     ROUTE_HOST,
     SHARE_ROUTE_HOST,
@@ -221,22 +222,62 @@ class Route(Base):
         params = {"route_id": route_id}
         return self._update_route(params, data, timeout=timeout)
 
-    def update_route(self, data, route_id, *, timeout=UNSET):
-        """Update the fields of a route.
+    def update_route(self, data, route_id, *, timeout=UNSET, **params):
+        """Update the fields of a route, or re-optimize it.
 
-        Sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and
-        ``data`` as the body.
+        Sends ``PUT /api.v4/route.php`` with ``route_id`` and the other
+        keywords in the query and ``data`` as the body.
 
-        :param data: the body: the route fields to change.
+        The same request adds orders to a route (``addresses`` with an
+        ``order_id`` each), re-optimizes it, or recomputes its directions::
+
+            route4me.route.update_route({}, route_id, reoptimize=1, remaining=1)
+            route4me.route.update_route({}, route_id, recompute_directions=1)
+
+        :param data: the body: the route fields to change, e.g.
+            ``{"parameters": {...}}`` or ``{"addresses": [...]}``; ``{}``
+            for none.
         :param route_id: ID of the route.
         :param timeout: read timeout for this call, in seconds, or a
             ``(connect, read)`` pair. Inserting into a long route can take
             longer than the 30-second default. Unset uses the client's timeout.
+        :param params: more query parameters: ``reoptimize``, ``1`` to
+            re-optimize the route after the update; ``remaining``, ``1`` with
+            ``reoptimize=1`` to re-optimize only the stops not visited yet;
+            ``prioritize_by``, the attribute the remaining stops are ordered
+            by; ``recompute_directions``, ``1`` to recompute the directions;
+            and ``recompute_actual_distance``, ``1`` to recompute the actual
+            distance.
         :return: the decoded JSON reply: the updated route, or the
             ``{"errors": ...}`` dict on an API error.
+
+        .. versionchanged:: 1.0.0
+           Takes the query parameters of the API as keywords, so the method
+           also re-optimizes a route and recomputes its directions.
         """
-        params = {"route_id": route_id}
+        params["route_id"] = route_id
         return self._update_route(params, data, timeout=timeout)
+
+    def rename_route(self, route_id, route_name):
+        """Rename a route.
+
+        Sends ``POST /actions/route/rename_route.php`` with ``format=json`` in
+        the query and ``route_id`` and ``route_name`` as form fields.
+
+        :param route_id: ID of the route.
+        :param route_name: the new name.
+        :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
+            API error.
+        :raise ParamValueException: when ``route_id`` or ``route_name`` is
+            empty.
+
+        .. versionadded:: 1.0.0
+        """
+        missing = [name for name, value in (("route_id", route_id), ("route_name", route_name)) if not value]
+        if missing:
+            raise ParamValueException(", ".join(missing), "Missing required params")
+        body = {"route_id": route_id, "route_name": route_name}
+        return self._call_api(RENAME_ROUTE, "post", {"format": "json"}, body=body, body_key="data")
 
     def insert_address_into_route_optimal_position(self, **kwargs):
         """Insert addresses into a route, each at its optimal position.

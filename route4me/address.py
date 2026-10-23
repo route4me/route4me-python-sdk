@@ -1,4 +1,7 @@
-"""The :class:`Address` resource: the stops of routes and optimizations, their notes, and geocoding."""
+"""The :class:`Address` resource: the stops of routes and optimizations, their notes, and geocoding.
+
+It also moves, deletes and marks the stops of routes.
+"""
 
 import json
 import logging
@@ -11,6 +14,10 @@ from .api_endpoints import (
     ADD_ROUTE_NOTES_HOST,
     ADDRESS_HOST,
     BATCH_GEOCODER,
+    DELETE_ROUTE_DESTINATION,
+    MARK_ADDRESS_DEPARTED,
+    MARK_ADDRESS_VISITED,
+    MOVE_ROUTE_DESTINATION,
     SINGLE_GEOCODER,
 )
 from .base import Base
@@ -313,6 +320,99 @@ class Address(Base):
             return response.json()
         except APIException as e:
             return e.to_dict()
+
+    def move_destination_to_route(self, to_route_id, route_destination_id, after_destination_id=None):
+        """Move a destination to another route.
+
+        Sends ``POST /actions/route/move_route_destination.php`` with
+        ``to_route_id``, ``route_destination_id`` and ``after_destination_id``
+        as form fields.
+
+        :param to_route_id: ID of the route the destination moves to.
+        :param route_destination_id: ID of the destination to move.
+        :param after_destination_id: ID of the destination of ``to_route_id``
+            after which the moved one is inserted. ``None`` (the default)
+            leaves the position to the API.
+        :return: the decoded JSON reply, with ``success``, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``to_route_id`` or
+            ``route_destination_id`` is empty.
+
+        .. versionadded:: 1.0.0
+        """
+        required = (("to_route_id", to_route_id), ("route_destination_id", route_destination_id))
+        missing = [name for name, value in required if value is None or value == ""]
+        if missing:
+            raise ParamValueException(", ".join(missing), "Missing required params")
+        data = {"to_route_id": to_route_id, "route_destination_id": route_destination_id}
+        if after_destination_id is not None:
+            data["after_destination_id"] = after_destination_id
+        return self._call_api(MOVE_ROUTE_DESTINATION, "post", {}, body=data, body_key="data")
+
+    def delete_route_destinations(self, route_destination_ids):
+        """Delete one or more destinations from their routes.
+
+        Sends ``POST /actions/route/delete_route_destination.php`` with
+        ``format=json`` in the query and ``route_destination_ids``,
+        comma-separated, as a form field.
+
+        :param route_destination_ids: the IDs of the destinations: a list, or
+            one ID or a comma-separated string of IDs.
+        :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
+            API error.
+        :raise ParamValueException: when no ID is given.
+
+        .. versionadded:: 1.0.0
+        """
+        if isinstance(route_destination_ids, (str, int)):
+            route_destination_ids = [route_destination_ids]
+        ids = ",".join(str(destination_id) for destination_id in route_destination_ids)
+        if not ids:
+            raise ParamValueException("route_destination_ids", "Missing required params")
+        data = {"route_destination_ids": ids}
+        return self._call_api(DELETE_ROUTE_DESTINATION, "post", {"format": "json"}, body=data, body_key="data")
+
+    def mark_address_departed(self, route_id, address_id, is_departed=True, **kwargs):
+        """Mark a destination of a route as departed, or clear the mark.
+
+        Sends ``GET /api/route/mark_address_departed.php`` with the arguments
+        in the query.
+
+        :param route_id: ID of the route.
+        :param address_id: ID of the destination in that route.
+        :param is_departed: ``True`` (the default) to mark it, ``False`` to
+            clear the mark. Sent as ``1`` or ``0``.
+        :param kwargs: optional query parameters: ``member_id``, the member
+            who departed; ``utc_time``, when, as a Unix timestamp; and ``lat``
+            and ``lng``, where.
+        :return: the decoded JSON reply, with ``status``, or the
+            ``{"errors": ...}`` dict on an API error.
+
+        .. versionadded:: 1.0.0
+        """
+        params = dict(kwargs, route_id=route_id, address_id=address_id, is_departed=int(bool(is_departed)))
+        return self._call_api(MARK_ADDRESS_DEPARTED, "get", params)
+
+    def mark_address_visited(self, route_id, address_id, is_visited=True, **kwargs):
+        """Mark a destination of a route as visited, or clear the mark.
+
+        Sends ``PUT /api/route/mark_address_visited.php`` with the arguments
+        in the query.
+
+        :param route_id: ID of the route.
+        :param address_id: ID of the destination in that route.
+        :param is_visited: ``True`` (the default) to mark it, ``False`` to
+            clear the mark. Sent as ``1`` or ``0``.
+        :param kwargs: optional query parameters: ``member_id``, the member
+            who visited; ``utc_time``, when, as a Unix timestamp; and ``lat``
+            and ``lng``, where.
+        :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
+            API error.
+
+        .. versionadded:: 1.0.0
+        """
+        params = dict(kwargs, route_id=route_id, address_id=address_id, is_visited=int(bool(is_visited)))
+        return self._call_api(MARK_ADDRESS_VISITED, "put", params)
 
     def add_address_notes(self, note, **kwargs):
         """Add a note to one destination of a route.
