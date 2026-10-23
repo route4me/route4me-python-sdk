@@ -16,7 +16,9 @@ from ._resilience import CircuitBreaker, execute_with_retry
 from ._url import is_v5_url
 from .activity_feed import ActivityFeed
 from .address import Address
+from .address_barcodes import AddressBarcodes
 from .address_book import AddressBook
+from .address_book_v5 import AddressBookV5
 from .api_endpoints import API_HOST
 from .avoidance_zones import AvoidanceZones
 from .config import UNSET, normalize_timeout, resolve, resolve_timeout
@@ -46,8 +48,9 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
     """Client for the Route4Me API.
 
     Each API area is a resource attribute: :attr:`activity_feed`,
-    :attr:`address`, :attr:`address_book`, :attr:`avoidance_zones`,
-    :attr:`file_uploading`, :attr:`gps`, :attr:`members`, :attr:`optimization`,
+    :attr:`address`, :attr:`address_barcodes`, :attr:`address_book`,
+    :attr:`address_book_v5`, :attr:`avoidance_zones`, :attr:`file_uploading`,
+    :attr:`gps`, :attr:`members`, :attr:`optimization`,
     :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
     :attr:`rapid_address`, :attr:`route`, :attr:`route_status`,
     :attr:`telematics`, :attr:`territory` and :attr:`vehicles`.
@@ -172,6 +175,8 @@ class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute
         self.route_status = RouteStatus(self)
         self.orders_group = OrdersGroup(self)
         self.optimization_profiles = OptimizationProfiles(self)
+        self.address_barcodes = AddressBarcodes(self)
+        self.address_book_v5 = AddressBookV5(self)
 
     def _make_request(self, url, params, request_method, **kwargs):
         """Send one request, adding the API key, and raise on an HTTP error.

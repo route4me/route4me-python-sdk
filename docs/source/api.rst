@@ -114,3 +114,17 @@ Vehicles
 .. automodule:: route4me.vehicles
 	:members:
 	:show-inheritance:
+
+Address Book V5
+---------------
+
+.. automodule:: route4me.address_book_v5
+	:members:
+	:show-inheritance:
+
+Address Barcodes
+----------------
+
+.. automodule:: route4me.address_barcodes
+	:members:
+	:show-inheritance:
