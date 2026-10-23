@@ -276,7 +276,8 @@ class Telematics(Base):
         """Create a connection to a telematics vendor.
 
         Sends ``POST /api.v4/telematics/connections.php`` with the keywords
-        and ``validate_remote_credentials="true"`` as the JSON body.
+        as the JSON body. ``validate_remote_credentials`` is ``"true"`` unless
+        the keywords set it.
 
         :param api_token: the member's telematics API token.
         :param kwargs: the connection fields, e.g. the vendor credentials.
@@ -284,9 +285,13 @@ class Telematics(Base):
         :return: the decoded JSON reply: the new connection, or the
             ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``vendor_id`` is missing.
+
+        .. versionchanged:: 1.0.0
+           A ``validate_remote_credentials`` given in the keywords is kept; it
+           was always overwritten with ``"true"`` (#135).
         """
         params = {"api_token": api_token}
-        kwargs.update({"validate_remote_credentials": "true"})
+        kwargs.setdefault("validate_remote_credentials", "true")
         if self.check_required_params(kwargs, ["vendor_id"]):
             try:
                 self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "post", json=kwargs)
@@ -333,8 +338,9 @@ class Telematics(Base):
     def update_connection(self, api_token, connection_token, **kwargs):
         """Update a telematics connection.
 
-        Sends ``PUT /api.v4/telematics/connections.php`` with the keywords and
-        ``validate_remote_credentials="true"`` as the JSON body.
+        Sends ``PUT /api.v4/telematics/connections.php`` with the keywords as
+        the JSON body. ``validate_remote_credentials`` is ``"true"`` unless the
+        keywords set it.
 
         :param api_token: the member's telematics API token.
         :param connection_token: token of the connection.
@@ -342,9 +348,13 @@ class Telematics(Base):
         :return: the decoded JSON reply: the updated connection, or the
             ``{"errors": ...}`` dict on an API error.
         :raise ParamValueException: when ``vendor_id`` is missing.
+
+        .. versionchanged:: 1.0.0
+           A ``validate_remote_credentials`` given in the keywords is kept; it
+           was always overwritten with ``"true"`` (#135).
         """
         params = {"api_token": api_token, "connection_token": connection_token}
-        kwargs.update({"validate_remote_credentials": "true"})
+        kwargs.setdefault("validate_remote_credentials", "true")
         if self.check_required_params(kwargs, ["vendor_id"]):
             try:
                 self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "put", json=kwargs)

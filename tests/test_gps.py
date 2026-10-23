@@ -144,3 +144,35 @@ class TestVehicleLocations:
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCoordinateSetters:
+    """The coordinate and altitude setters of every resource (#126, #129)."""
+
+    @pytest.mark.parametrize("value", [10, 0, -73, 40.7636197])
+    @pytest.mark.parametrize("setter", ["lat", "lng", "altitude", "cached_lat", "cached_lng"])
+    def test_whole_and_decimal_numbers_are_accepted(self, client, setter, value):
+        getattr(client.gps, setter)(value)
+
+        assert client.gps.params[setter] == value
+
+    @pytest.mark.parametrize("value", [True, "40.7", None])
+    @pytest.mark.parametrize("setter", ["lat", "lng", "altitude", "cached_lat", "cached_lng"])
+    def test_booleans_and_text_are_rejected(self, client, setter, value):
+        with pytest.raises(ParamValueException):
+            getattr(client.gps, setter)(value)
+
+    def test_cached_coordinates_keep_their_own_keys(self, client):
+        """cached_lat and cached_lng wrote lat and lng, overwriting them."""
+        gps = client.gps
+        gps.lat(12.3)
+        gps.lng(45.6)
+        gps.cached_lat(78.9)
+        gps.cached_lng(10.1)
+
+        assert {key: gps.params[key] for key in ("lat", "lng", "cached_lat", "cached_lng")} == {
+            "lat": 12.3,
+            "lng": 45.6,
+            "cached_lat": 78.9,
+            "cached_lng": 10.1,
+        }

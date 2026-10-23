@@ -114,6 +114,19 @@ class TestTelematicsConnections:
         assert last_request().method == "PUT"
         assert json.loads(last_request().body)["metadata"] == "x"
 
+    @pytest.mark.parametrize(
+        ("method", "verb"),
+        [("register_connection", responses.POST), ("update_connection", responses.PUT)],
+    )
+    def test_a_given_validate_remote_credentials_is_kept(self, client, mocked, last_request, method, verb):
+        """#135: the caller's value was always overwritten with "true"."""
+        mocked.add(verb, TELEMATICS_CONNECTIONS_V4, json={}, status=200)
+        args = (API_TOKEN,) if method == "register_connection" else (API_TOKEN, CONNECTION_TOKEN)
+
+        getattr(client.telematics, method)(*args, vendor_id=55, validate_remote_credentials="false")
+
+        assert json.loads(last_request().body)["validate_remote_credentials"] == "false"
+
     @pytest.mark.parametrize("method", ["register_connection", "update_connection"])
     def test_a_vendor_id_is_required(self, client, method):
         args = (API_TOKEN,) if method == "register_connection" else (API_TOKEN, CONNECTION_TOKEN)

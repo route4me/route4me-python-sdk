@@ -185,6 +185,23 @@ class TestExporters:
 
         assert not target.exists()
 
+    def test_a_failed_export_closes_its_file(self, client, tmp_path, monkeypatch):
+        """#132: a value JSON cannot encode left the file open."""
+        handles = []
+
+        def recording_dump(obj, handle, **kwargs):
+            handles.append(handle)
+            return json.dump(obj, handle, **kwargs)
+
+        monkeypatch.setattr("route4me.api.dump", recording_dump)
+        client.optimization.data = {"invalid": {1, 2}}
+
+        with pytest.raises(TypeError):
+            client.export_request_to_json(str(tmp_path / "out.json"))
+
+        assert len(handles) == 1
+        assert handles[0].closed
+
     @pytest.mark.parametrize("exporter", ["export_result_to_json", "export_request_to_json"])
     def test_exports_are_written_as_utf8(self, prepared, mocked, tmp_path, monkeypatch, exporter):
         """#37: without an explicit encoding, non-ASCII addresses fail on Windows."""

@@ -9,7 +9,7 @@ This is the history of changes of the `route4me` package.
 
 This is the first release since 0.1.7.0, and PyPI still serves 0.0.7.1 from 2020.
 
-It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,366 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
+It fixes every open bug report (#19, #26, #30–#43, #124–#135), adds 216 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,422 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
 
 ### Breaking changes
 
@@ -154,7 +154,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 ### Fixed
 - #19: four route methods sent their body as form data from 0.1.6.0 on, which the API cannot read for nested values. They send JSON again. The methods are `insert_address_into_route`, `move_addresses_from_route`, `update_route_parameters` and `update_route`. A slow insert no longer risks a duplicating retry.
 - #26: a reused client accumulated addresses. Use `Optimization.reset()`.
-- #30: `get_optimization()` raised `TypeError` for every real response.
+- #30, #125: `get_optimization()` raised `TypeError` for every real response, so it never returned the optimization.
 - #31: `route_start_date_local()` silently accepted an invalid date (a missing `raise`).
 - #32: `Telematics.delete_connection()` swallowed errors (a missing `return`).
 - #33, #40: `ServiceTimeRules` shared its lists between instances, and its rules never reached the API.
@@ -167,6 +167,11 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 - #41: `clean_dict()` dropped `0` and `False`, corrupting time windows such as `[0, 3600]`.
 - #42: `RapidAddress.get_street_data()` returned `None` when given `offset` and `limit`, or no arguments. It now returns an error dict on every branch, since the endpoint is gone (see **Deprecated**).
 - #43: `Optimization.bundling()` rejected the `Bundling` object its error message asked for.
+- #126: the `lat`, `lng`, `altitude`, `cached_lat` and `cached_lng` setters rejected whole numbers such as `10`. They take any number except a boolean.
+- #127: `RapidAddress` put its arguments into the URL unescaped. Its methods now send no request at all (see **Deprecated**).
+- #128: PUT and DELETE ignored `redirects=False`, and DELETE ignored `proxies`.
+- #129: `cached_lat` and `cached_lng` wrote `lat` and `lng`, overwriting the coordinates. They write `cached_lat` and `cached_lng`.
+- #135: `Telematics.register_connection()` and `update_connection()` overwrote a `validate_remote_credentials` given by the caller with `"true"`. `"true"` is now only the default.
 - **Optimization:**
   - `update_optimization()` sent its addresses as unreadable form data, and `reoptimize=True` as `"True"`.
   - `re_optimization()` never raised on an HTTP error.
@@ -176,18 +181,18 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
   - `export_route_v5()` sent form data where the API takes JSON.
 - **Address:**
   - `get_route_id()` and `get_route_destination_id()` called a method that did not exist.
-  - `add_address_notes()` raised `KeyError` without `activity_type`.
+  - #124: `add_address_notes()` raised `KeyError` without `activity_type`.
   - `geocode()` sent the address list in the URL.
   - `batch_fix_geocodes()` returned its two values swapped.
   - `request_address()` changed the caller's dict.
 - `Members.webinar_registration()` required and sent the misspelled `webiinar_date`.
-- `export_request_to_json()` had the same encoding problem as #37.
-- `APIException.to_dict()` raised on `None`, bytes or list bodies, and discarded V5 error messages.
+- #132: `export_request_to_json()` had the same encoding problem as #37, and both exporters left the file open when serialisation failed.
+- #134: `APIException.to_dict()` raised on `None`, bytes or list bodies, and discarded V5 error messages.
 - The circuit breaker's half-open state let every request through, and a failed probe did not re-open the breaker.
 - `Slowdowns` accepted `True` and `False` as integers.
-- `json2obj` raised on keys that are not identifiers.
-- Several setter error messages named the wrong type or values.
-- `Base.validate_params()` reported SDK bugs as "Not supported".
+- #130: `json2obj` raised on empty keys and on keys that are not identifiers.
+- #133: several setter error messages named the wrong type or values; `truck_hazardous_goods` said "Must be MI or KM".
+- #131: `Base.validate_params()` raised `TypeError` for a name that is not a setter, such as `data`, and reported SDK bugs as "Not supported".
 - `Telematics.pp_vendor_comparison()` raised `KeyError` for a vendor without `features`.
 
 ### Examples
@@ -207,7 +212,7 @@ It fixes every open bug report (#19, #26, #30–#43), adds 214 API methods for t
 
 ### Internal
 - Packaging moved to `pyproject.toml` (hatchling); `setup.py` is a shim.
-- 1,366 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
+- 1,422 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
 - pylint gives zero messages on the package, the tests and the examples. ruff formats the code. mypy passes, with strict checks on the tier-A modules, and blocks CI.
 - CI runs Python 3.9–3.14 on Linux, and Python 3.12 on macOS and Windows.
 
