@@ -1,3 +1,17 @@
+"""Update the address and alias of route destinations.
+
+Creates a route by running a TSP optimization of nine New York addresses, one of them the depot with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then, for each destination, calls
+:meth:`Address.update_address <route4me.address.Address.update_address>` with a new ``address`` and
+``alias``, which sends ``PUT /api.v4/address.php`` with ``route_id`` and ``route_destination_id`` in the
+query and the fields as the JSON body. Prints each destination before and after.
+
+Run it with::
+
+    python examples/addresses/update_address_attributes.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -5,6 +19,10 @@ from route4me.constants import ALGORITHM_TYPE, DEVICE_TYPE, DISTANCE_UNIT, OPTIM
 
 
 def main(api_key):
+    """Create a route and update the address and alias of each destination.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     optimization = r4m.optimization
@@ -65,24 +83,24 @@ def main(api_key):
 
     for i, address in enumerate(response["addresses"]):
         print(f"Number {i}:")
-        print("\taddress: {}".format(address["address"]))
-        print("\troute_id: {}".format(address["route_id"]))
-        print("\troute_destination_id: {}".format(address["route_destination_id"]))
+        print(f"\taddress: {address['address']}")
+        print(f"\troute_id: {address['route_id']}")
+        print(f"\troute_destination_id: {address['route_destination_id']}")
         print("\t")
         if address["route_id"]:
             print("Modifying Address and Alias")
             print("Current Address and Alias")
             data = {
-                "address": "{} - Modified".format(address["address"]),
-                "alias": "{} - {}".format(address["alias"], address["address"]),
+                "address": f"{address['address']} - Modified",
+                "alias": f"{address['alias']} - {address['address']}",
             }
-            print("\taddress: {}".format(address["address"]))
-            print("\talias: {}".format(address["alias"]))
+            print(f"\taddress: {address['address']}")
+            print(f"\talias: {address['alias']}")
             print("Updating Address")
             response = r4m.address.update_address(data, address["route_id"], address["route_destination_id"])
             print("New Address and Alias")
-            print("\taddress: {}".format(response["address"]))
-            print("\talias: {}".format(response["alias"]))
+            print(f"\taddress: {response['address']}")
+            print(f"\talias: {response['alias']}")
 
 
 if __name__ == "__main__":

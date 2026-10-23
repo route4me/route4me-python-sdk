@@ -1,208 +1,220 @@
 # CHANGELOG
 
-This is the history of changes of the `route4me-python` package
+This is the history of changes of the `route4me` package.
 
 > This file should be filled by maintainers, using pull requests
 > Please, follow this [guide](https://keepachangelog.com/en/1.0.0/)
 
-## [0.3.1.0] - 2026-07-28
+## [1.0.0] - Unreleased
 
-Correctness release. Several of these had never worked at all.
+This is the first release since 0.1.7.0, and PyPI still serves 0.0.7.1 from 2020.
 
-### Fixed
+It fixes every open bug report (#19, #26, #30–#43, #124–#135), adds 216 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,422 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
 
--   **`get_optimization()` raised `TypeError` for any realistic response.**
-    `parse_response` subscripted `self.response` — a `requests.Response`, which
-    is not subscriptable — instead of the decoded body, and every real
-    optimization payload contains `addresses`. `get_optimization()` also
-    returned `None` unconditionally; it now returns the payload.
--   **`export_result_to_json()` had never worked.** It passed
-    `Response.content` (`bytes`) to `json.dump`, which raises
-    `TypeError: Object of type bytes is not JSON serializable`.
--   **`re_optimization()` never raised on an HTTP error.** It called
-    `_request_put` directly instead of going through `_make_request`, so
-    callers got `response.json()` of an error body — or a `JSONDecodeError`
-    when the server returned HTML.
--   **`Route.delete_route()`'s error handler raised from inside itself.** It
-    had `except AttributeError: return response.errors`, but a `dict` has no
-    `.errors` attribute, so any payload other than `{"deleted": ...}` produced
-    an `AttributeError` from the SDK in place of the API's response.
--   **`Address.batch_fix_geocodes()` returned its two values swapped on
-    error.** The success path returns `(geocoding_error, addresses)`; the
-    JSON-decode-failure path returned `(addresses, [])`. A caller unpacking
-    `errors, addresses = ...` silently got its addresses bound to `errors` and
-    an empty address list.
--   **`Base.validate_params()` disguised SDK bugs as user errors.** It wrapped
-    the setter *call* in `except AttributeError`, so an `AttributeError` raised
-    by a bug inside a setter was reported as
-    `ParamValueException(name, "Not supported")`. Only the attribute lookup is
-    guarded now; a name that resolves to a non-callable reports
-    `"Not a settable parameter"`.
--   `Telematics.pp_vendor_comparison()` raised `KeyError` for a vendor with no
-    `features` key.
--   `_api_method.make_request()` had a no-op ternary
-    (`params if body is None else params`) left over from a refactor.
+### Breaking changes
 
-### Changed
+**Requirements**
+- **Python 3.9 or later.** Python 2 and the `six` dependency are gone.
+- The dependency floors follow security fixes:
+  - Python 3.10 and later: `requests>=2.33.0` and `urllib3>=2.8.0`.
+  - Python 3.9: `requests>=2.32.5` and `urllib3>=2.6.3`. See `SECURITY.md`.
 
--   `Address.fix_geocode()` now backs off using the same
-    exponential-with-jitter policy as the transport. It previously slept
-    `random.randrange(1, 5) * 0.5` — uniform, so it did not actually back off
-    under sustained failure. The attempt count is now a `max_attempts`
-    parameter.
--   `Telematics.pp_response()` and `pp_vendor_comparison()` accept a `file`
-    argument. They still print, deliberately: they are display helpers (`pp_`
-    = pretty print) and twelve scripts under `examples/telematics/` depend on
-    stdout. Routing them through `logging` would have silently produced no
-    output for all of them.
+**Transport**
+- **Requests time out after `(6.05, 30.0)` seconds** (connect, read) by default.
+  - A long call now raises `requests.ReadTimeout` or `ConnectTimeout`, which resource methods do not catch.
+  - Pass `timeout=None` for the old unbounded behaviour.
+  - The route update methods also take a per-call `timeout=`.
+- **API V5 requests send the key as `Authorization: Bearer <key>`** instead of the `api_key` query parameter, so the key no longer appears in URLs. V4 requests are unchanged.
+- **API V5 requests send `Accept: application/json, */*;q=0.8`.** With `*/*`, API V5 answered errors with an HTML page, so their messages were lost. File exports still work, and an `Accept` you set on the client is kept.
+- **Each client uses one pooled `requests.Session`.**
+  - Patching `requests.get`, `post` or `request` no longer intercepts the SDK's calls. Patch `requests.Session.send`, or use `responses`.
+  - Cookies now persist for the life of a client.
+- **Retries stay off by default.**
+  - With `retry_count` set, only GET, HEAD, OPTIONS and DELETE are retried.
+  - POST and PUT are never retried, because replaying them can create or insert things twice.
+  - Cloudflare's 520–524 errors now count as retryable.
+- `redirects=False` now also applies to PUT and DELETE.
+- **Boolean query values are sent as `1` and `0`.** `requests` sent them as `"True"` and `"False"`; PHP reads `"False"` as true, and the API V5 validation rejects both strings. `get_address_notes()` now sends `notes=1`.
+- **API V5 list and dict query values are sent with bracketed keys**, for example `ids[]=1&ids[]=2` and `filters[status]=1`. PHP keeps only the last value of a repeated plain key, and `requests` could not send a dict or a nested list at all.
 
-### Internal
+**Errors and return values**
+- **`APIException.to_dict()["errors"]` is always a non-empty list of strings.** It holds:
+  - the V4 `errors`;
+  - the flattened V5 `messages`;
+  - the `message` value;
+  - or `["Unexpected server response"]`.
 
--   All per-file lint suppressions for library code are gone, together with
-    their causes. `ruff check` and `bandit` now pass over `route4me/` with no
-    rule disabled anywhere — the two remaining bandit reports are genuine false
-    positives (it only recognises a *literal* `timeout` value) and carry a
-    scoped `# nosec` each.
+  It used to be a string for a non-JSON reply, and `None` when the reply had no `errors`, so `". ".join(result["errors"])` printed letter by letter or raised. The API V5 `error` message (for example "the required feature is not enabled") is read too.
+- `APIException.url` and `.response` are redacted, which changes `str(exc)` and `exc.args`.
+- `re_optimization()` raises `APIException` on an HTTP error.
+- `get_optimization()` and `parse_response()` return the payload; they used to return `None`.
+- `route_start_date_local()` raises on an invalid date, including a date with a time part.
+- `Members` validation errors name the missing parameters; they used to always name `"order"`.
+- `Address.fix_geocode()` copies only `lat` and `lng` from the first geocoder result. An API error, or a reply without coordinates, is reported as a failure.
+- `Address.batch_fix_geocodes()` returns `(geocoding_error, addresses)` in the documented order, and reports unmatched results instead of raising `KeyError`.
 
-## [0.3.0.0] - 2026-07-28
-
-Resilience release. Brings the transport to parity with the C# SDK's Polly
-policy, and makes connection reuse the default.
-
-### Added
-
--   **Connection pooling.** Each client now reuses one `requests.Session`, so
-    calls no longer pay a fresh TCP and TLS handshake each time. This is the
-    largest latency improvement available here. Disable with
-    `Route4Me(key, use_session=False)`, or inject your own with
-    `session=...`.
--   **Retry with exponential backoff**, mirroring the C# `RetryCount` /
-    `RetryInitialDelay`. Off by default (`retry_count=0`), matching the C#
-    default so upgrading cannot silently multiply the requests a service
-    emits. Backoff is `initial_delay * 2 ** (attempt - 1)` with ±20% jitter;
-    retryable statuses are 408, 429 and 5xx.
-    -   **Only idempotent verbs are retried** (GET, HEAD, OPTIONS, PUT,
-        DELETE). POST is deliberately excluded: replaying
-        `POST /orders-platform/batch-create` after a 503 can create the orders
-        twice, since the server may have processed the first request and failed
-        only while responding. The C# Polly policy does retry POST; this SDK
-        does not reproduce that hazard.
-    -   `Retry-After` is honoured on 429 and clamped to 120s. The C# SDK
-        ignores the header.
--   **Circuit breaker**, mirroring the C# `CircuitBreakerFailureThreshold` (5)
-    and `CircuitBreakerDuration` (30s). Off by default; enable with
-    `enable_circuit_breaker=True`. Opens after a run of consecutive failures,
-    then half-opens and admits a single probe. `CircuitBreakerOpen` subclasses
-    `requests.RequestException` so existing transport-error handling catches
-    it. A 4xx does not count as a failure — that is the server working.
--   `Route4Me.close()` and context-manager support
-    (`with Route4Me(key) as client:`) to release pooled connections.
--   `on_retry` and `on_circuit_breaker_open` callbacks. An exception raised
-    inside either is logged and swallowed — a user callback cannot turn a
-    recoverable failure into a crash.
--   Config resolution is now layered end to end: per-call > constructor >
-    `Route4MeConfig` > shipped default.
-
-### Fixed
-
--   `_make_request` no longer mutates the `params` dict it is given. Every
-    resource passes its own long-lived `self.params`, so query parameters
-    accumulated on that dict across calls and leaked between them.
-
-## [0.2.0.0] - 2026-07-28
-
-Security and infrastructure release. Two defects here are urgent for anyone
-embedding the SDK in a service.
+**API surface**
+- **Setters on resources take one positional value.** `opt.route_name(...)` and similar are now descriptors.
+  - `opt.route_name(route_name=...)` now raises `TypeError`.
+  - The 0/1 fields reject floats such as `1.0`.
+- `from route4me.api import AvoindanceZones` no longer works. Import `AvoidanceZones`, or the alias `AvoindanceZones`, from `route4me.avoidance_zones`.
+- `AdvancedConstraint` and `Bundling` are dataclasses: they compare by value and are no longer hashable.
+- `ServiceTimeRules` keeps its rules as dict items instead of class attributes. Attribute access still works.
+- `Bundling.to_dict()` returns a snapshot, not the live `__dict__`. Its `service_time_rules` holds only the rules that are set.
+- `clean_dict()`, and so `AdvancedConstraint.to_dict()`, keeps `0`, `0.0` and `False`.
+- **Per-call values no longer stick to a resource (#36).** A `route_id` passed to `get_route()`, a vendor ID, or `redirect=0` used to stay in the resource's `params` and travel with later requests. Code that relied on that must pass the value on every call.
+- The internal `_request_get`, `_request_post`, `_request_put` and `_request_delete` helpers take keyword-only options. The `route4me._api_method` module is gone; `Base._call_api` replaces it.
+- `Route4Me(headers=...)` defaults to `None`, which still means `HEADERS`.
+- The library logs through `logging` and warns through `warnings` instead of printing.
 
 ### Security
-
--   **Requests now time out.** Previously no `timeout` was passed to `requests`
-    at all, so a stalled socket blocked the calling thread indefinitely. The
-    default is `(6.05, 30.0)` — `(connect, read)` in seconds. The 30s read
-    matches the C# SDK's `Route4MeConfig.HttpTimeout`; the 6.05s connect clears
-    two TCP SYN retransmits so a blackholed host fails in ~6s rather than 30.
-    Configure per call, per client (`Route4Me(key, timeout=...)`), or globally
-    (`Route4MeConfig.timeout`). Pass `timeout=None` for the old unbounded
-    behaviour.
--   **The API key no longer leaks into tracebacks.** `requests` resolves
-    `Response.url` to the fully expanded URL, which for the V4 API carries
-    `?api_key=<plaintext>`. That string was stored on `APIException` and
-    appeared in `str(exc)`, `repr(exc)`, `exc.args` and every traceback frame —
-    and was forwarded verbatim to any error reporter that serialises exception
-    attributes. `APIException.url` is now redacted, and the raw URL is not
-    retained on the instance at all. Response bodies are scrubbed too, since
-    several V4 endpoints echo request parameters back inside error payloads.
-    Opt out with `Route4MeConfig.redact_urls = False` (debugging only).
--   **Path injection in `rapid_address`.** `zipcode`, `housenumber`, `pk`,
-    `offset` and `limit` were interpolated raw into URL paths, so a value
-    containing `/`, `?`, `#` or `..` rewrote the request path against
-    `rapid.route4me.com`. Path components are now percent-encoded with
-    `safe=""` and validated. New internal helpers `route4me/_url.py`
-    (`path_segment`, `path_int`, `join_path`) — mandatory for anything that
-    lands in a URL path.
+- **The API key goes only to `api.route4me.com` and `wh.route4me.com`.** A request to any other host carries no key, even if a caller put `api_key` in its parameters. The deprecated vendor methods (`telematics.route4me.com`, retired) and street-data methods (`rapid.route4me.com/street_data`, gone) no longer send a request at all: they warn and return an `{"errors": [...]}` dict. Before, they sent the key in the query string to an endpoint that no longer works, the class of bug behind the PHP SDK's PR #41.
+- **Route IDs in URL paths are percent-encoded.**
+  - `RouteStatus` and `Route.export_route_v5` inserted `route_id` raw.
+  - `requests` resolves dot segments, so `route-status/../secret` reached `/modules/api/v5.0/secret` with the caller's key.
+  - The `rapid_address` path components are now encoded the same way.
+- **The API key stays out of request bodies.** `Optimization.update_optimization` and `ActivityFeed.log_specific_message` copied it there.
+- **Credential-like query parameters are redacted by name**, not only the known list. Any name ending in `api_key`, `apikey`, `_token`, `_secret` or `password` is redacted, so `organization_api_key` (API V5 member configuration settings) never reaches a traceback.
+- **The API key stays out of URLs, tracebacks and logs:**
+  - URLs, for API V5, which now uses a bearer token;
+  - tracebacks: `APIException` redacts URLs and bodies, including those of the V4 endpoints that echo parameters back;
+  - logs.
+- **No request state is shared between calls (#36).** This is the class of bug that sent the PHP SDK's requests to the wrong host.
+- **A guard checks every test request:** https only, Route4Me hosts only, registered endpoints only, and the key only in its expected place and only to the API hosts.
+- **CI hardening.**
+  - CI actions are pinned to commit SHAs and use read-only tokens.
+  - gitleaks runs in CI and as a pre-commit hook.
+  - `SECURITY.md` describes how to report a vulnerability.
 
 ### Added
+- **API coverage: 216 new methods (#44–#107).** They cover the Route4Me API V4 and V5 operations the coverage issues list. Every request shape comes from the OpenAPI specs, then the C# SDK; the issues' own paths were often wrong. Each method has a unit test and a runnable example.
+  - **New resources on the client:**
+    - Address book: `address_book_v5`, `address_barcodes`.
+    - Vehicles: `vehicles_v5`, `vehicle_profiles`, `vehicle_capacity_profiles`.
+    - Routes: `routes_v5`, `route_destinations_v5`.
+    - Team and account: `team_v5`, `account_profile`, `auth_history`, `configuration_settings`, `configuration_settings_v5`.
+    - Orders and schedules: `orders_v5`, `recurring_routes`.
+    - Notes and proof of delivery: `notes`, `driver_reviews`, `pod_workflows`.
+    - Places: `customers`, `facilities`, `locations` (with location types), `territories_v5`.
+    - Tracking: `tracking_history`, `route_breaks`, `asset_tracking`.
+    - Lookups: `distance`, `drivers`, `autocomplete`.
+  - **Existing resources gain methods:**
+    - `AddressBook`: groups, search by filter, saving geocoded addresses.
+    - `Address`: move a destination to another route, delete destinations, mark visited or departed.
+    - `Route.rename_route`.
+    - `RouteStatus`: `set_route_stop_status`, `update_route_status_as_planned`, and cancel reasons in `set_route_status`.
+    - `Members`: create, update and delete users, and member capabilities.
+    - `Order`: filter, updates and custom user fields.
+    - `Optimization`: hybrid optimizations and time prediction.
+    - `OptimizationProfiles`: CRUD and entities.
+    - `GPS`: batch pings, user locations and vehicle locations.
+    - `FileUploading`: the JSON upload for bulk geocoding.
+  - **Not implemented, with the reason recorded on each issue:**
+    - operations on retired hosts or 404 endpoints;
+    - the MyQ and OCR operations, which are not Route4Me APIs;
+    - `expire_session.php`, which ends a browser session and is not an API-key call.
+- PATCH requests (`Base._call_api(..., "patch", ...)`), used by API V5 partial updates. Like PUT, they are never retried.
+- `Telematics.get_vendors_v5(**filters)` and `Telematics.get_vendor_v5(vendor_id)`, on `GET /modules/api/v5.0/telematics/vendors(/all)`.
+- `Optimization.reset()` clears a staged optimization, so one client can build another (#26).
+- `Base.validated_params(**kwargs)` runs the field setters on a copy.
+- A `timeout=` argument on `Route.insert_address_into_route`, `move_addresses_from_route`, `update_route_parameters` and `update_route`.
+- `Optimization.bundling()` accepts a `Bundling` object (#43), and `advanced_constraints()` accepts `AdvancedConstraint` objects.
+- `Route.merge_routes(route_ids=...)` accepts a list of IDs.
+- **Connection pooling, plus opt-in retry and an opt-in circuit breaker, mirroring the C# SDK.**
+  - Retry uses exponential backoff.
+  - Options: `retry_count`, `retry_initial_delay`, `enable_circuit_breaker`, `circuit_breaker_failure_threshold`, `circuit_breaker_duration`, `on_retry`, `on_circuit_breaker_open`, `use_session` and `session`.
+  - `Retry-After` is honoured, capped at 120 s.
+- `Route4Me.close()`, and use as a context manager (`with Route4Me(key) as r4m:`).
+- `CircuitBreaker.state`: `"closed"`, `"open"` or `"half-open"`.
+- `route4me.config.Route4MeConfig` for process-wide defaults. Precedence: per call, then constructor, then global, then default.
+- `route4me/_redact.py` and `route4me/_url.py`, the redaction and URL helpers.
+- `APIException.get_url()`.
+- `Telematics.pp_response()` takes a `file=` stream.
+- `AvoidanceZones`, the correctly spelled name. `AvoindanceZones` remains as an alias.
+- Docstrings on every public module, class and method.
 
--   `route4me/config.py` — `Route4MeConfig`, mirroring the C# SDK's config
-    class. Resolution order: per-call > constructor > global > default.
--   `route4me/_redact.py` — total (never-raising) redaction helpers for URLs,
-    headers, query parameters and response bodies.
--   `APIException.get_url()`.
-
-### Fixed
-
--   `RapidAddress.get_street_data` never made a request when `offset` and
-    `limit` were supplied: it built the URL and then fell off the end of the
-    function, returning `None`. It also returned `None` when called with no
-    arguments. Both branches now issue the request.
--   `UnboundLocalError` in the `rapid_address` error handlers, where
-    `except ValueError: return response.content` wrapped the request itself and
-    so referenced `response` before assignment — masking the real error.
--   `APIException.to_dict()` raised out of the error path on three inputs: a
-    `None` or non-`str` body (`TypeError`, not covered by `JSONDecodeError`), and
-    a body that is valid JSON but not an object such as `[1, 2]`
-    (`AttributeError` from `.get`).
--   `APIException.to_dict()` now understands the API V5 error envelope
-    (`{"status": false, "code": …, "messages": {…}}`), which has no `errors`
-    key. Every V5 failure previously returned `{"errors": None}` and discarded
-    the message.
--   `Route4Me(headers=...)` no longer shares one dict between every client.
-    `HEADERS` was a module-level dict used as a default argument, so mutating
-    one client's headers mutated every other client's and the module constant.
-
-### Changed
-
--   `APIException.to_dict()` on valid JSON with no `errors` key now returns
-    `{"errors": "Unexpected server response"}` rather than `{"errors": None}`.
-    An explicit `{"errors": null}` still round-trips as `{"errors": None}`.
-
-## [Unreleased]
+### Deprecated
+- `Telematics.get_vendors`, `get_vendor`, `search_vendor` and `compare_vendors`: `telematics.route4me.com` is retired. They send no request and return an error dict. Use `get_vendors_v5` and `get_vendor_v5`.
+- `Telematics.pp_vendor_comparison`: it prints the features of the retired `compare_vendors` reply, and API V5 vendors have none.
+- `RapidAddress.get_street_data`, `get_street_data_zip` and `get_street_data_service`: the street-data endpoints return 404 and have no replacement. They still check their arguments, then send no request and return an error dict.
+- `Route.export_route`: the V4 export endpoint returns 404. Use `export_route_v5`.
+- Operations the C# SDK marks obsolete. They still work, but warn, and will be removed in the next major version:
+  - `Members.get_api_key_users`, `create_user`, `user_update` and `user_delete` (`/api.v4/user.php`): use `TeamV5.get_team_members` or `get_team_member_by_id`, `create_team_member`, `update_team_member` and `remove_team_member`;
+  - `AddressBook.get_addressbook_contacts`, `create_contact`, `update_contact` and `delete_addressbook_contact` (`/api.v4/address_book.php`): use `AddressBookV5.get_address_book_contacts`, `add_address_book_contact`, `update_address_book_contact` and `remove_address_book_contacts`. `get_addressbook_contact` and `search_address_book_contacts_by_filter` are not deprecated;
+  - `Route.resequence_route_all` (`/api.v3/route/reoptimize_2.php`): use `Route.update_route` with `reoptimize=1`.
+- `Members.webinar_registration(webiinar_date=...)`: pass `webinar_date`.
 
 ### Removed
-
--   Python 2 compatibility shims and the `six` dependency
--   Dead service configuration: `.scrutinizer.yml`, `.codebeatignore`, and all
-    115 `# codebeat:disable/enable[...]` pragmas across the package and examples
-
-### Added
-
--   `AvoidanceZones` — correctly spelled class name. `AvoindanceZones` is kept
-    as a permanent backwards-compatible alias
--   `clean_dict()`-backed `to_dict()` on `AdvancedConstraint` and `Bundling`
--   Shared `make_request()` CRUD helper (`route4me/_api_method.py`)
--   `ValidatedField` descriptor system (`route4me/_fields.py`), replacing 46
-    boilerplate setter methods on `Base`
-
-### Changed
-
--   `print()` calls in library code replaced with the `logging` and `warnings`
-    modules
--   `AdvancedConstraint` and `Bundling` converted to dataclasses
+- Python 2 support and `six`.
+- The `route4me._api_method` module.
+- Configs for dead services: Travis, AppVeyor, Scrutinizer, Codebeat (115 pragmas) and Codecov.
+- Tests that called the live API. The suite is offline; `pytest-socket` blocks any connection.
+- The seven `examples/rapid_address` examples, whose endpoints are gone.
 
 ### Fixed
+- #19: four route methods sent their body as form data from 0.1.6.0 on, which the API cannot read for nested values. They send JSON again. The methods are `insert_address_into_route`, `move_addresses_from_route`, `update_route_parameters` and `update_route`. A slow insert no longer risks a duplicating retry.
+- #26: a reused client accumulated addresses. Use `Optimization.reset()`.
+- #30, #125: `get_optimization()` raised `TypeError` for every real response, so it never returned the optimization.
+- #31: `route_start_date_local()` silently accepted an invalid date (a missing `raise`).
+- #32: `Telematics.delete_connection()` swallowed errors (a missing `return`).
+- #33, #40: `ServiceTimeRules` shared its lists between instances, and its rules never reached the API.
+- #34: `Route4Me(proxies=...)` and `Route4Me(headers=...)` shared one dict between clients.
+- #35: `OrdersGroup.get_orders_group()` raised `TypeError` instead of `ParamValueException`.
+- #36: per-call parameters leaked into later requests, at nine sites. `_make_request` also changed the `params` dict it was given.
+- #37: `export_result_to_json()` had never worked, and both JSON exporters failed on non-ASCII text on Windows.
+- #38: transport errors in `OrdersGroup` and `OptimizationProfiles` surfaced as `UnboundLocalError`, and so did errors in `RapidAddress`.
+- #39: `Route.delete_route()` raised `AttributeError` from its own error handler. The same pattern is fixed in `Address.get_address()` and `get_address_notes()`.
+- #41: `clean_dict()` dropped `0` and `False`, corrupting time windows such as `[0, 3600]`.
+- #42: `RapidAddress.get_street_data()` returned `None` when given `offset` and `limit`, or no arguments. It now returns an error dict on every branch, since the endpoint is gone (see **Deprecated**).
+- #43: `Optimization.bundling()` rejected the `Bundling` object its error message asked for.
+- #126: the `lat`, `lng`, `altitude`, `cached_lat` and `cached_lng` setters rejected whole numbers such as `10`. They take any number except a boolean.
+- #127: `RapidAddress` put its arguments into the URL unescaped. Its methods now send no request at all (see **Deprecated**).
+- #128: PUT and DELETE ignored `redirects=False`, and DELETE ignored `proxies`.
+- #129: `cached_lat` and `cached_lng` wrote `lat` and `lng`, overwriting the coordinates. They write `cached_lat` and `cached_lng`.
+- #135: `Telematics.register_connection()` and `update_connection()` overwrote a `validate_remote_credentials` given by the caller with `"true"`. `"true"` is now only the default.
+- **Optimization:**
+  - `update_optimization()` sent its addresses as unreadable form data, and `reoptimize=True` as `"True"`.
+  - `re_optimization()` never raised on an HTTP error.
+- **Routes:**
+  - `delete_routes()` split a single route ID string into one ID per character.
+  - `merge_routes()` form-encoded a list of IDs as one field per ID.
+  - `export_route_v5()` sent form data where the API takes JSON.
+- **Address:**
+  - `get_route_id()` and `get_route_destination_id()` called a method that did not exist.
+  - #124: `add_address_notes()` raised `KeyError` without `activity_type`.
+  - `geocode()` sent the address list in the URL.
+  - `batch_fix_geocodes()` returned its two values swapped.
+  - `request_address()` changed the caller's dict.
+- `Members.webinar_registration()` required and sent the misspelled `webiinar_date`.
+- #132: `export_request_to_json()` had the same encoding problem as #37, and both exporters left the file open when serialisation failed.
+- #134: `APIException.to_dict()` raised on `None`, bytes or list bodies, and discarded V5 error messages.
+- The circuit breaker's half-open state let every request through, and a failed probe did not re-open the breaker.
+- `Slowdowns` accepted `True` and `False` as integers.
+- #130: `json2obj` raised on empty keys and on keys that are not identifiers.
+- #133: several setter error messages named the wrong type or values; `truck_hazardous_goods` said "Must be MI or KM".
+- #131: `Base.validate_params()` raised `TypeError` for a name that is not a setter, such as `data`, and reported SDK bugs as "Not supported".
+- `Telematics.pp_vendor_comparison()` raised `KeyError` for a vendor without `features`.
 
--   Missing `raise`, an undefined variable, a missing `return`, mutable default
-    arguments, resource leaks, and pointless re-raises
+### Examples
+- **339 examples**, one per method, including 216 for the new API coverage. Every example has a docstring saying what it shows, which SDK method it calls, the request it sends, and how to run it. All of them pass pylint.
+- The vendor examples use API V5.
+- New examples:
+  - `members/get_api_key_users.py` (#112);
+  - `geocoding/get_geocode.py` (#111);
+  - `tracking/get_device_locations.py` (#109, #110).
+- Broken examples are fixed:
+  - wrong argument names or shapes;
+  - the sixth item picked instead of the first;
+  - a depot moved out of first place;
+  - `update_route_parameters` reassigning the route to member 1;
+  - error checks that could never be true.
+- The member and share-route examples use `example.com` addresses.
+
+### Internal
+- Packaging moved to `pyproject.toml` (hatchling); `setup.py` is a shim.
+- 1,422 offline tests with 97% line and branch coverage, and a 90% floor. Every request is checked against an endpoint registry built from the Route4Me OpenAPI specs.
+- pylint gives zero messages on the package, the tests and the examples. ruff formats the code. mypy passes, with strict checks on the tier-A modules, and blocks CI.
+- CI runs Python 3.9–3.14 on Linux, and Python 3.12 on macOS and Windows.
 
 ## [0.1.7.0] - 2024-06-24
 

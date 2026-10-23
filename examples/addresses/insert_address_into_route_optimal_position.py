@@ -1,9 +1,28 @@
+"""Insert an address into a route at its optimal position.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` and
+:meth:`Route.get_route <route4me.route.Route.get_route>` (``GET /api.v4/route.php``) to read the latest
+route, then :meth:`Route.insert_address_into_route_optimal_position
+<route4me.route.Route.insert_address_into_route_optimal_position>` with one address and
+``optimal_position=True``, which sends ``PUT /api.v4/route.php`` with ``route_id`` in the query and the
+rest as the JSON body; the API chooses where the stop goes. Prints the route's addresses. This changes
+the latest route of the account.
+
+Run it with::
+
+    python examples/addresses/insert_address_into_route_optimal_position.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Insert an address into the latest route and print its addresses.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     route = r4m.route
@@ -35,12 +54,12 @@ def main(api_key):
                 "route_id": route_id,
             }
             response = route.insert_address_into_route_optimal_position(**data)
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
-            print("Route ID: {}".format(response["route_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
+            print(f"Route ID: {response['route_id']}")
             for i, address in enumerate(response["addresses"]):
                 print(f"Address #{i + 1}")
-                print("\tAddress: {}".format(address["address"]))
-                print("\tRoute Destination ID: {}".format(address["route_destination_id"]))
+                print(f"\tAddress: {address['address']}")
+                print(f"\tRoute Destination ID: {address['route_destination_id']}")
 
 
 if __name__ == "__main__":

@@ -37,6 +37,11 @@ class Route4MeUtilsTests(Route4MeAPITestSuite):
         """An empty dict yields a zero-field namedtuple, not an error."""
         self.assertEqual(len(json2obj(json.dumps({}))._fields), 0)
 
+    def test_json2obj_empty_and_underscore_keys(self):
+        """#130: an empty key raised IndexError, and a key such as "_id" raised ValueError."""
+        self.assertEqual(json2obj(json.dumps({"_id": 1}))[0], 1)
+        self.assertEqual(json2obj(json.dumps({"": 1}))[0], 1)
+
     def test_json2obj_passes_scalars_and_arrays_through(self):
         self.assertEqual(json2obj(json.dumps([1, 2, 3])), [1, 2, 3])
         self.assertEqual(json2obj(json.dumps("plain")), "plain")

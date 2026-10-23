@@ -1,9 +1,25 @@
+"""Get a territory by ID.
+
+Calls :meth:`Territory.get_territories <route4me.territory.Territory.get_territories>`
+(``GET /api.v4/territory.php``) to pick the first territory, then :meth:`Territory.get_territory
+<route4me.territory.Territory.get_territory>` with its ``territory_id``, which sends the same request
+with ``territory_id`` in the query, and prints the territory.
+
+Run it with::
+
+    python examples/territory/get_territory.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the first territory of the account.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     territories = route4me.territory
@@ -18,11 +34,11 @@ def main(api_key):
             print(". ".join(response["errors"]))
         else:
             territory = response
-            print("Territory ID: {}".format(territory["territory_id"]))
-            print("\tTerritory Name: {}".format(territory["territory_name"]))
-            print("\tTerritory Color: {}".format(territory["territory_color"]))
-            print("\tMember ID: {}".format(territory["member_id"]))
-            print("\tTerritory Type: {}".format(territory["territory"]["type"]))
+            print(f"Territory ID: {territory['territory_id']}")
+            print(f"\tTerritory Name: {territory['territory_name']}")
+            print(f"\tTerritory Color: {territory['territory_color']}")
+            print(f"\tMember ID: {territory['member_id']}")
+            print(f"\tTerritory Type: {territory['territory']['type']}")
             if territory["territory"]["data"]:
                 print("\tData:")
                 for data in territory["territory"]["data"]:

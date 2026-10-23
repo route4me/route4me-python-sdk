@@ -1,3 +1,15 @@
+"""Optimize ten addresses for one driver.
+
+Sets the route parameters in one call with :meth:`Optimization.add <route4me.base.Base.add>` (TSP,
+optimized for distance) and adds ten addresses in Milledgeville, Georgia, one of them the depot.
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php``. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/single_driver_route_10_stops.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -10,6 +22,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization and print the route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization
@@ -52,11 +68,11 @@ def main(api_key):
     )
 
     response = route4me.run_optimization()
-    print("Optimization Link: {}".format(response["links"]["view"]))
+    print(f"Optimization Link: {response['links']['view']}")
     for i, route in enumerate(response["routes"]):
-        print("\t{}\tRoute Link: {}".format(i + 1, route["links"]["route"]))
+        print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
-            print("\t\t\tAddress: {}".format(address["address"]))
+            print(f"\t\t\tAddress: {address['address']}")
 
 
 if __name__ == "__main__":

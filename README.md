@@ -1,19 +1,220 @@
 # Route4Me Route Optimization Python SDK
 
-[![Build Status](https://travis-ci.org/route4me/route4me-python-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-python-sdk)
-[![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?label=GitHub)](https://github.com/route4me/route4me-python-sdk)
-[![codebeat badge](https://codebeat.co/badges/d83fbf08-b87c-470a-b781-5a1815475e00)](https://codebeat.co/projects/github-com-route4me-route4me-python-sdk)
-[![codecov](https://codecov.io/gh/route4me/route4me-python-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/route4me/route4me-python-sdk)
+[![CI](https://github.com/route4me/route4me-python-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/route4me/route4me-python-sdk/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/route4me.svg)](https://pypi.org/project/route4me/)
+[![Python versions](https://img.shields.io/pypi/pyversions/route4me.svg)](https://pypi.org/project/route4me/)
 
-[pypi]: https://pypi.python.org/pypi/route4me
+The official Python client for the [Route4Me](https://route4me.com) API: route optimization, routes, orders, address book, members, tracking, telematics and more.
+
+## Requirements
+
+- Python 3.9 or later. On Python 3.9 some fixed `requests` and `urllib3` releases are not available; see [SECURITY.md](https://github.com/route4me/route4me-python-sdk/blob/master/SECURITY.md).
+- A Route4Me API key, from **Settings → API** in your Route4Me account.
+
+## Installation
+
+```bash
+pip install route4me
+```
+
+To install the development version from GitHub:
+
+```bash
+pip install git+https://github.com/route4me/route4me-python-sdk.git
+```
+
+## Quick start
+
+Plan and optimize a round trip for one driver:
+
+```python
+import os
+
+from route4me import Route4Me
+from route4me.constants import ALGORITHM_TYPE, DISTANCE_UNIT, OPTIMIZE, TRAVEL_MODE
+from route4me.exceptions import APIException
+
+# The demo key 11111111111111111111111111111111 works with these sample addresses.
+r4m = Route4Me(os.environ["ROUTE4ME_API_KEY"])
+
+optimization = r4m.optimization
+optimization.algorithm_type(ALGORITHM_TYPE.TSP)
+optimization.route_name("Single Driver Round Trip")
+optimization.rt(1)
+optimization.optimize(OPTIMIZE.TIME)
+optimization.distance_unit(DISTANCE_UNIT.MI)
+optimization.travel_mode(TRAVEL_MODE.DRIVING)
+optimization.route_max_duration(86400)
+
+address = r4m.address
+address.add_address(
+    address="754 5th Ave New York, NY 10019",
+    lat=40.7636197,
+    lng=-73.9744388,
+    alias="Bergdorf Goodman",
+    is_depot=1,
+    time=0,
+)
+address.add_address(
+    address="717 5th Ave New York, NY 10022",
+    lat=40.7669692,
+    lng=-73.9693864,
+    alias="Giorgio Armani",
+    time=60,
+)
+address.add_address(
+    address="888 Madison Ave New York, NY 10014",
+    lat=40.7715154,
+    lng=-73.9669241,
+    alias="Ralph Lauren Women's and Home",
+    time=60,
+)
+
+try:
+    response = r4m.run_optimization()
+except APIException as error:
+    print(". ".join(error.to_dict()["errors"]))
+else:
+    print(f"Optimization problem ID: {response['optimization_problem_id']}")
+    for stop in response["addresses"]:
+        print(f"{stop['sequence_no']} - {stop['alias']} - {stop['address']}")
+```
+
+Keep the API key out of your code: read it from an environment variable or a secrets store, as above.
+
+## Usage
+
+### The client
+
+`Route4Me(api_key)` gives access to every part of the API through its attributes, for example `r4m.optimization`, `r4m.route`, `r4m.address`, `r4m.address_book`, `r4m.members`, `r4m.order`, `r4m.vehicles`, `r4m.territory`, `r4m.telematics` and `r4m.gps`.
+
+API V5 resources have their own attributes. Where an area also has a V4 resource, the V5 one ends in `_v5`: `r4m.address_book_v5`, `r4m.vehicles_v5`, `r4m.routes_v5`, `r4m.route_destinations_v5`, `r4m.orders_v5`, `r4m.team_v5` and `r4m.territories_v5`. Areas that exist only in V5 use their plain name, for example `r4m.notes`, `r4m.facilities`, `r4m.customers`, `r4m.locations`, `r4m.pod_workflows`, `r4m.driver_reviews`, `r4m.recurring_routes`, `r4m.vehicle_profiles` and `r4m.tracking_history`.
+
+The [examples](https://github.com/route4me/route4me-python-sdk/tree/master/examples) show every method.
+
+Each client reuses one HTTP connection pool. Close it when you are done, or use the client as a context manager:
+
+```python
+with Route4Me(api_key) as r4m:
+    routes = r4m.route.get_routes(limit=10, offset=0)
+```
+
+### Authentication
+
+The SDK sends the key the way each API expects it:
+
+- **API V4** (`api.route4me.com`): as the `api_key` query parameter.
+- **API V5** (`wh.route4me.com/modules/api/v5.0`): as an `Authorization: Bearer` header, so the key never appears in a URL.
+
+The key is never put in a request body, and it is removed from the URLs and bodies stored on exceptions.
+
+### Errors
+
+- **Resource methods** such as `r4m.route.get_route()` do not raise on an API error. They return `{"errors": [...]}`, a non-empty list of messages:
+
+  ```python
+  result = r4m.route.get_route(route_id=route_id)
+  if "errors" in result:
+      print(". ".join(result["errors"]))
+  ```
+
+- **Client methods** such as `r4m.run_optimization()` raise `route4me.exceptions.APIException`. Its `to_dict()` returns the same `{"errors": [...]}` dict.
+- **A missing or invalid parameter** raises `route4me.exceptions.ParamValueException` before any request is sent.
+- **Network errors and timeouts** raise the `requests` exception, for example `requests.ConnectionError` or `requests.ReadTimeout`.
+
+### Timeouts, retries and the circuit breaker
+
+- **Timeouts.** Requests time out after 6.05 seconds to connect and 30 seconds to read. Pass `timeout=` to the client: a number, a `(connect, read)` pair, or `None` to wait forever.
+- **Retries** are off by default. Set `retry_count=` to retry failed GET, HEAD, OPTIONS and DELETE requests with exponential backoff.
+  - Only connection errors, timeouts, and the statuses 408, 429, 500, 502–504 and Cloudflare's 520–524 are retried.
+  - POST and PUT are never retried, since replaying them can create something twice.
+  - A `Retry-After` header is honoured, up to 120 seconds.
+- **The circuit breaker** is opt-in: `enable_circuit_breaker=True` stops sending requests for a while after repeated failures.
+
+```python
+from route4me import Route4Me
+from route4me.config import Route4MeConfig
+
+# For one client:
+r4m = Route4Me(api_key, timeout=(5, 60), retry_count=3, enable_circuit_breaker=True)
+
+# For every client in the process:
+Route4MeConfig.timeout = (5, 60)
+```
+
+A value passed to a call wins over one passed to the client, which wins over `Route4MeConfig`.
+
+### API V5
+
+The V5 methods take and return plain dicts. For example, list the telematics vendors:
+
+```python
+vendors = r4m.telematics.get_vendors_v5(search="geotab")
+for vendor in vendors["data"]:
+    print(vendor["id"], vendor["name"])
+```
+
+IDs that go in the URL path are positional arguments, and they are percent-encoded. Query values may be lists or dicts: the SDK sends them with bracketed keys, which is how API V5 reads them (`filters[status][]=1`):
+
+```python
+facilities = r4m.facilities.get_facilities(page=1, per_page=20, filters={"status": [1]})
+for facility in facilities["data"]:
+    print(facility["facility_id"], facility["facility_alias"])
+```
+
+### Deprecated methods
+
+The methods that call retired Route4Me hosts still exist, but they emit a `DeprecationWarning` and will be removed in 2.0. Each warning names its replacement where there is one. See the [CHANGELOG](https://github.com/route4me/route4me-python-sdk/blob/master/CHANGELOG.md).
+
+## Upgrading from 0.x
+
+1.0.0 fixes many long-standing bugs, and some of those fixes change behaviour. Read **Breaking changes** in the [CHANGELOG](https://github.com/route4me/route4me-python-sdk/blob/master/CHANGELOG.md) before upgrading. The changes most likely to affect existing code:
+
+- Requests now time out.
+- Setters take one positional value: `opt.route_name("Monday")`, not `opt.route_name(route_name="Monday")`.
+- Values passed to one call no longer leak into later calls on the same resource.
+- `errors` is always a list of strings.
+
+## Examples
+
+The [examples](https://github.com/route4me/route4me-python-sdk/tree/master/examples) folder has a runnable script for almost every method. Each takes the API key on the command line:
+
+```bash
+python examples/routes/get_routes.py --api_key <your key>
+```
+
+## Development
+
+```bash
+pip install -e ".[dev]"
+
+pytest                                   # offline unit tests, with coverage
+pylint route4me --rcfile=pyproject.toml  # library lint
+pylint tests --rcfile=tests/pylintrc
+pylint --rcfile=examples/pylintrc $(git ls-files 'examples/*.py')
+ruff format --check route4me tests examples
+mypy route4me
+```
+
+The test suite never touches the network: `pytest-socket` blocks connections and `responses` fakes the API. A guard also checks every request a test sends: https only, Route4Me hosts only, endpoints from the OpenAPI specs only, and the API key only in its expected place.
+
+## Security
+
+See [SECURITY.md](https://github.com/route4me/route4me-python-sdk/blob/master/SECURITY.md) to report a vulnerability. Never commit an API key; if one leaks, rotate it in your Route4Me account.
+
+## License
+
+See [LICENSE.md](https://github.com/route4me/route4me-python-sdk/blob/master/LICENSE.md).
+
+## FAQ
 
 ### What does Route4Me do?
 
-In layman's terms Route4Me solves complex variations of the [traveling salesman problem](https://blog.route4me.com/traveling-salesman-problem/) and the [vehicle routing problem](https://blog.route4me.com/vehicle-routing-problems-real-life-solutions/). In more technical terms, Route4Me solves NP-hard logistics problems that span several mathematical and scientific disciplines such as industrial engineering, operations research, algorithmic graph theory, computational geometry, combinatorial optimization, fleet management, field service management, [telematics](https://telematics.route4me.com/).
+In layman's terms Route4Me solves complex variations of the [traveling salesman problem](https://blog.route4me.com/traveling-salesman-problem/) and the [vehicle routing problem](https://blog.route4me.com/vehicle-routing-problems-real-life-solutions/). In more technical terms, Route4Me solves NP-hard logistics problems that span several mathematical and scientific disciplines such as industrial engineering, operations research, algorithmic graph theory, computational geometry, combinatorial optimization, fleet management, field service management, [telematics](https://route4me.com/integrations/telematics).
 
 ### What does the Route4Me SDK permit me to do?
 
-This SDK makes it easier for you use the Route4Me API. The API has many features, including [route optimization](https://route4me.io/), and the primary features are related to creating orders and then [creating optimally sequenced driving routes](https://route4me.com) for many drivers.
+This SDK makes it easier for you to use the Route4Me API. The API has many features, including [route optimization](https://route4me.io/), and the primary features are related to creating orders and then [creating optimally sequenced driving routes](https://route4me.com) for many drivers.
 
 ### Who can use the Route4Me SDK (and API)?
 
@@ -26,7 +227,7 @@ The Route4Me SDK and API cannot be resold or used in a product or system that co
 ### How does the API/SDK Integration Work?
 
 A Route4Me customer, integrator, or partner incorporates the Route4Me SDK or API into their code base.
-Route4Me permits any paying subscriber to interact with every part of its system using it’s API.
+Route4Me permits any paying subscriber to interact with every part of its system using its API.
 The API is RESTful, which means that it’s web based and can be accessed by other programs and machines
 The API/SDK should be used to automate the route planning process, or to generate many routes with minimal manual intervention
 
@@ -68,9 +269,9 @@ Yes. You can send routes with optimization disabled if you want to conveniently 
 
 Yes. The API can accept lat/lng and an unlimited amount metadata per destination (e.g. altitude, weight, pieces, cubic dimension). The metadata will be preserved as passthrough data by our API, so that the receiving service or device will have access to critical data when our API invokes a webhook callback to the device.
 
-### Are all my optimized routes stored permanently stored in the Route4Me database?
+### Are all my optimized routes permanently stored in the Route4Me database?
 
-Yes. Unless your contract specificies otherwise, all routes are permanently stored in the database and are no longer accessible to you after your subscription is terminated. Route4Me auto-prunes route data
+Yes. Unless your contract specifies otherwise, all routes are permanently stored in the database and are no longer accessible to you after your subscription is terminated. Route4Me auto-prunes route data
 based on your subscription plan, with more expensive plans typically permitting a longer archival period.
 
 ### Can I incorporate your API into my mobile application that requires routing, navigation, or route planning?
@@ -114,107 +315,3 @@ Route4Me does not currently lease or sell servers, and does not have on-premise 
 ### Does the Route4Me API/SDK require me to have my own programmers?
 
 The time required to integrate the SDK can be as little as 1 hour or may take several weeks, depending on the number of features being incorporated into the customer’s application and how much integration testing will be done by the client. A programmer’s involvement is almost always required to use Route4Me’s technology when accessing it through the API.
-
-## Examples
-
-Route4Me examples can be found [here](https://github.com/route4me/route4me-python-sdk/tree/master/examples)
-
-## Installing requirements
-
-pip install -r requirements.txt
-
-## Installing SDK
-
-pip install git+https://github.com/route4me/route4me-python-sdk.git
-
-## Creating a Simple Route
-
-```python
-
-    from route4me import Route4Me
-    from route4me.constants import ALGORITHM_TYPE, DISTANCE_UNIT, TRAVEL_MODE, OPTIMIZE
-
-    API_KEY = "11111111111111111111111111111111"
-    r4m = Route4Me(API_KEY)
-    optimization = r4m.optimization
-    address = r4m.address
-    optimization.algorithm_type(ALGORITHM_TYPE.TSP)
-    optimization.share_route(0)
-    optimization.store_route(0)
-    optimization.route_time(7 * 600)
-    optimization.rt(True)
-    optimization.route_max_duration(86400)
-    optimization.route_name('Single Driver Round Trip')
-    optimization.optimize(OPTIMIZE.TIME)
-    optimization.distance_unit(DISTANCE_UNIT.MI)
-    optimization.travel_mode(TRAVEL_MODE.DRIVING)
-    address.add_address(
-        address='754 5th Ave New York, NY 10019',
-        lat=40.7636197,
-        lng=-73.9744388,
-        alias='Bergdorf Goodman',
-        is_depot=True,
-        time=0
-    )
-    address.add_address(
-        address='717 5th Ave New York, NY 10022',
-        lat=40.7669692,
-        lng=-73.9693864,
-        alias='Giorgio Armani',
-        time=60
-    )
-    address.add_address(
-        address='888 Madison Ave New York, NY 10014',
-        lat=40.7715154,
-        lng=-73.9669241,
-        alias='Ralph Lauren Women\'s and Home',
-        time=60
-    )
-    address.add_address(
-        address='1011 Madison Ave New York, NY 10075',
-        lat=40.7772129,
-        lng=-73.9669,
-        alias='Yigal Azrou\u00ebl',
-        time=60
-    )
-    address.add_address(
-        address='440 Columbus Ave New York, NY 10024',
-        lat=40.7808364,
-        lng=-73.9732729,
-        alias='Frank Stella Clothier',
-        time=60
-    )
-    address.add_address(
-        address='324 Columbus Ave #1 New York, NY 10023',
-        lat=40.7803123,
-        lng=-73.9793079,
-        alias='Liana',
-        time=60
-    )
-    address.add_address(
-        address='110 W End Ave New York, NY 10023',
-        lat=40.7753077,
-        lng=-73.9861529,
-        alias='Toga Bike Shop',
-        time=60
-    )
-    address.add_address(
-        address='555 W 57th St New York, NY 10019',
-        lat=40.7718005,
-        lng=-73.9897716,
-        alias='BMW of Manhattan',
-        time=60
-    )
-    address.add_address(
-        address='57 W 57th St New York, NY 10019',
-        lat=40.7558695,
-        lng=-73.9862019,
-        alias='Verizon Wireless',
-        time=60
-    )
-
-    response = r4m.run_optimization()
-    print("Optimization Problem ID: {}".format(response.get("optimization_problem_id")))
-    for a in response.get("addresses", []):
-        print('{} - {} - {}'.format(a.get("sequence_no"), a.get("alias"), a.get("address")))
-```

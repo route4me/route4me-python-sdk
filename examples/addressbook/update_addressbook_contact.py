@@ -1,31 +1,54 @@
+"""Update an address book contact.
+
+Calls :meth:`AddressBook.get_addressbook_contacts
+<route4me.address_book.AddressBook.get_addressbook_contacts>` and
+:meth:`AddressBook.get_addressbook_contact <route4me.address_book.AddressBook.get_addressbook_contact>`
+(``GET /api.v4/address_book.php``) to read the first contact, appends " Updated" to its first name and
+sends the whole contact back with :meth:`AddressBook.update_contact
+<route4me.address_book.AddressBook.update_contact>` (``PUT /api.v4/address_book.php``, the contact as
+the JSON body). This changes a contact of the account.
+
+Deprecated: AddressBook.get_addressbook_contacts and AddressBook.update_contact are deprecated,
+because the C# SDK marks the operations obsolete.
+The API V5 replacement is shown in ``examples/addressbook/update_address_book_contact.py``.
+
+Run it with::
+
+    python examples/addressbook/update_addressbook_contact.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Rename the first contact and print it.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     address_book = route4me.address_book
-    response = address_book.get_addressbook_contacts(limit=10, offset=5)
+    response = address_book.get_addressbook_contacts(limit=1, offset=0)
     if "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
-        address_id = "'{}'".format(response["results"][0]["address_id"])
+        address_id = response["results"][0]["address_id"]
         response = address_book.get_addressbook_contact(address_id=address_id)
         if "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
             contact = response["results"][0]
-            contact["first_name"] = "{} Updated".format(contact["first_name"])
+            contact["first_name"] = f"{contact['first_name']} Updated"
             response = address_book.update_contact(**contact)
             if "errors" in response.keys():
                 print(". ".join(response["errors"]))
             else:
-                print("Address ID: {}".format(response["address_id"]))
-                print("First Name: {}".format(response["first_name"]))
-                print("Last Name: {}".format(response["last_name"]))
-                print("Address: {}".format(response["address_1"]))
+                print(f"Address ID: {response['address_id']}")
+                print(f"First Name: {response['first_name']}")
+                print(f"Last Name: {response['last_name']}")
+                print(f"Address: {response['address_1']}")
 
 
 if __name__ == "__main__":

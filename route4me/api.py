@@ -1,31 +1,71 @@
-import json
+"""The :class:`Route4Me` client.
+
+The client owns the HTTP session, the timeout, retry and circuit-breaker
+settings, and one attribute per API resource (``route4me.route``,
+``route4me.optimization``, ...). Every request a resource sends goes through it.
+"""
+
 import threading
+from json import dump, dumps
 
 import requests
 from requests.adapters import HTTPAdapter
 
+from ._params import nested_query
 from ._redact import redact_text
 from ._resilience import CircuitBreaker, execute_with_retry
+from ._url import is_v5_url, takes_api_key
+from .account_profile import AccountProfile
 from .activity_feed import ActivityFeed
 from .address import Address
+from .address_barcodes import AddressBarcodes
 from .address_book import AddressBook
+from .address_book_v5 import AddressBookV5
 from .api_endpoints import API_HOST
+from .asset_tracking import AssetTracking
+from .auth_history import AuthHistory
+from .autocomplete import Autocomplete
 from .avoidance_zones import AvoidanceZones
 from .config import UNSET, normalize_timeout, resolve, resolve_timeout
+from .configuration_settings import ConfigurationSettings
+from .configuration_settings_v5 import ConfigurationSettingsV5
+from .customers import Customers
+from .distance import Distance
+from .driver_reviews import DriverReviews
+from .drivers import Drivers
 from .exceptions import APIException
+from .facilities import Facilities
 from .file_uploading import FileUploading
 from .gps import GPS
+from .locations import Locations
 from .members import Members
+from .notes import Notes
 from .optimization import Optimization
 from .optimization_profiles import OptimizationProfiles
 from .orders import Order
 from .orders_group import OrdersGroup
+from .orders_v5 import OrdersV5
+from .pod_workflows import PodWorkflows
 from .rapid_address import RapidAddress
+from .recurring_routes import RecurringRoutes
 from .route import Route
+from .route_breaks import RouteBreaks
+from .route_destinations_v5 import RouteDestinationsV5
 from .route_status import RouteStatus
+from .routes_v5 import RoutesV5
+from .team_v5 import TeamV5
 from .telematics import Telematics
+from .territories_v5 import TerritoriesV5
 from .territory import Territory
+from .tracking_history import TrackingHistory
+from .vehicle_capacity_profiles import VehicleCapacityProfiles
+from .vehicle_profiles import VehicleProfiles
 from .vehicles import Vehicle
+from .vehicles_v5 import VehiclesV5
+
+#: ``Accept`` header for API V5 requests: JSON first, so the API answers errors
+#: in JSON rather than as an HTML page, but any type still acceptable.
+V5_ACCEPT = "application/json, */*;q=0.8"
 
 HEADERS = {
     "User-Agent": "Route4Me Python SDK",
@@ -34,15 +74,60 @@ HEADERS = {
 }
 
 
-class Route4Me:
+def _query_value(value):
+    """Convert one query value for sending: ``True`` and ``False`` become ``1`` and ``0``.
+
+    :param value: a query value, or a list of them.
+    :return: the value to send.
     """
-    Route4Me Python SDK
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, list):
+        return [int(item) if isinstance(item, bool) else item for item in value]
+    return value
+
+
+class Route4Me:  # pylint: disable=too-many-instance-attributes  # one attribute per API resource
+    """Client for the Route4Me API.
+
+    Each API area is a resource attribute: :attr:`account_profile`,
+    :attr:`activity_feed`, :attr:`address`, :attr:`address_barcodes`,
+    :attr:`address_book`, :attr:`address_book_v5`, :attr:`asset_tracking`,
+    :attr:`auth_history`, :attr:`autocomplete`, :attr:`avoidance_zones`,
+    :attr:`configuration_settings`, :attr:`configuration_settings_v5`,
+    :attr:`customers`, :attr:`distance`, :attr:`driver_reviews`,
+    :attr:`drivers`, :attr:`facilities`, :attr:`file_uploading`, :attr:`gps`,
+    :attr:`locations`, :attr:`members`, :attr:`notes`, :attr:`optimization`,
+    :attr:`optimization_profiles`, :attr:`order`, :attr:`orders_group`,
+    :attr:`orders_v5`, :attr:`pod_workflows`, :attr:`rapid_address`,
+    :attr:`recurring_routes`, :attr:`route`, :attr:`route_breaks`,
+    :attr:`route_destinations_v5`, :attr:`route_status`, :attr:`routes_v5`,
+    :attr:`team_v5`, :attr:`telematics`, :attr:`territories_v5`,
+    :attr:`territory`, :attr:`tracking_history`,
+    :attr:`vehicle_capacity_profiles`, :attr:`vehicle_profiles`,
+    :attr:`vehicles` and :attr:`vehicles_v5`.
+
+    The client can be used as a context manager; leaving the block closes the
+    pooled session::
+
+        from route4me import Route4Me
+
+        with Route4Me("11111111111111111111111111111111") as route4me:
+            routes = route4me.route.get_routes(limit=10, offset=0)
+
+    Resource methods return the decoded JSON reply, or on an API error the
+    ``{"errors": ...}`` dict from :meth:`APIException.to_dict
+    <route4me.exceptions.APIException.to_dict>`. The optimization methods of
+    this class (:meth:`run_optimization`, :meth:`re_optimization`,
+    :meth:`get_optimization`) raise :class:`~route4me.exceptions.APIException`
+    instead.
     """
 
-    def __init__(
+    # Public constructor: each keyword mirrors an option of route4me.config.Route4MeConfig.
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments,too-many-locals,too-many-statements
         self,
         key,
-        headers=HEADERS,
+        headers=None,
         redirects=True,
         verify_ssl=True,
         proxies=None,
@@ -57,15 +142,18 @@ class Route4Me:
         use_session=UNSET,
         session=None,
     ):
-        """
+        """Create a client for one API key.
+
         :param key: Route4Me API key.
-        :param headers: request headers; copied, never shared between clients.
-        :param redirects: follow redirects (also sent to the API as
-            ``redirect=0`` when disabled).
+        :param headers: request headers, copied per client. ``None`` (the default)
+            uses :data:`HEADERS`.
+        :param redirects: follow redirects. When disabled, the optimization
+            requests (:meth:`run_optimization`, :meth:`get_optimization`) also
+            send ``redirect=0`` to the API.
         :param verify_ssl: verify TLS certificates. Leave this on.
         :param proxies: ``requests``-style proxy mapping.
         :param timeout: per-request timeout in seconds. Accepts ``None`` (wait
-            forever -- the pre-0.2.0 behaviour), a number, or a
+            forever -- the behaviour before 1.0.0), a number, or a
             ``(connect, read)`` pair. Defaults to
             :data:`route4me.config.DEFAULT_TIMEOUT`, i.e. ``(6.05, 30.0)``.
         :param retry_count: retries after the first attempt. 0 (the default)
@@ -86,12 +174,12 @@ class Route4Me:
         :class:`route4me.config.Route4MeConfig`, so a whole process can be tuned
         in one place.
 
-        .. versionchanged:: 0.2.0
+        .. versionchanged:: 1.0.0
            Requests now time out after 30s by default; previously there was no
            timeout at all and a stalled socket blocked the calling thread
            indefinitely. Pass ``timeout=None`` to restore the old behaviour.
 
-        .. versionadded:: 0.3.0
+        .. versionadded:: 1.0.0
            Connection pooling, opt-in retry with exponential backoff, and an
            opt-in circuit breaker.
         """
@@ -139,22 +227,88 @@ class Route4Me:
         self.route_status = RouteStatus(self)
         self.orders_group = OrdersGroup(self)
         self.optimization_profiles = OptimizationProfiles(self)
+        self.account_profile = AccountProfile(self)
+        self.address_barcodes = AddressBarcodes(self)
+        self.address_book_v5 = AddressBookV5(self)
+        self.asset_tracking = AssetTracking(self)
+        self.auth_history = AuthHistory(self)
+        self.autocomplete = Autocomplete(self)
+        self.configuration_settings = ConfigurationSettings(self)
+        self.configuration_settings_v5 = ConfigurationSettingsV5(self)
+        self.customers = Customers(self)
+        self.distance = Distance(self)
+        self.driver_reviews = DriverReviews(self)
+        self.drivers = Drivers(self)
+        self.facilities = Facilities(self)
+        self.locations = Locations(self)
+        self.notes = Notes(self)
+        self.orders_v5 = OrdersV5(self)
+        self.pod_workflows = PodWorkflows(self)
+        self.recurring_routes = RecurringRoutes(self)
+        self.route_breaks = RouteBreaks(self)
+        self.route_destinations_v5 = RouteDestinationsV5(self)
+        self.routes_v5 = RoutesV5(self)
+        self.team_v5 = TeamV5(self)
+        self.territories_v5 = TerritoriesV5(self)
+        self.tracking_history = TrackingHistory(self)
+        self.vehicle_capacity_profiles = VehicleCapacityProfiles(self)
+        self.vehicle_profiles = VehicleProfiles(self)
+        self.vehicles_v5 = VehiclesV5(self)
 
     def _make_request(self, url, params, request_method, **kwargs):
-        """
-        Make request to API
-        :param url:
-        :param params:
-        :param request_method:
-        :param kwargs: additional arguments
-        :return: response
-        :raise: APIException
+        """Send one request, adding the API key, and raise on an HTTP error.
+
+        API V5 requests (``https://wh.route4me.com/modules/api/v5.x/...``) carry
+        the key as an ``Authorization: Bearer`` header, which keeps it out of
+        URLs and therefore out of proxy and server logs. Other requests to the
+        API hosts (:data:`~route4me._url.API_KEY_HOSTS`) carry it as the
+        ``api_key`` query parameter, which the V4 API requires. A request to
+        any other host carries no key at all.
+
+        :param url: absolute URL of the API endpoint.
+        :param params: query parameters. They are copied, and the key is added
+            to the copy; the caller's dict is not changed. ``True`` and
+            ``False`` are sent as ``1`` and ``0``. For API V5, list and dict
+            values are sent as bracketed keys (``ids[]=1``, ``filters[status]=1``).
+        :param request_method: one of :meth:`_request_get`,
+            :meth:`_request_post`, :meth:`_request_put` or
+            :meth:`_request_delete`.
+        :param kwargs: ``data``, ``json``, ``files`` or ``timeout``, passed
+            through to ``request_method``.
+        :return: the :class:`requests.Response`.
+        :raise APIException: when the API answers outside the 200-399 range.
+            The API key is removed from the stored body and URL.
+
+        .. versionchanged:: 1.0.0
+           API V5 requests send the key as a bearer token instead of
+           ``api_key``, and ask for JSON first (:data:`V5_ACCEPT`), so their
+           errors arrive as JSON. Boolean query values are sent as ``1`` and ``0``, and
+           API V5 list and dict query values as bracketed keys. The key is sent
+           only to ``api.route4me.com`` and ``wh.route4me.com``.
         """
         # Copy rather than mutate. Every resource passes its own long-lived
         # `self.params`, so writing api_key in place meant query parameters
         # accumulated on that dict across calls and leaked between them.
         params = dict(params) if params else {}
-        params["api_key"] = self.key
+        if is_v5_url(url):
+            # API V5 (PHP) reads lists and dicts only from bracketed keys.
+            params = nested_query(params)
+        # requests would send True as "True": PHP reads "False" as true, and
+        # the V5 (Laravel) boolean rule accepts only 1, 0, true and false.
+        params = {k: _query_value(v) for k, v in params.items()}
+        if is_v5_url(url):
+            params.pop("api_key", None)
+            headers = {**self.headers, "Authorization": f"Bearer {self.key}"}
+            # API V5 (Laravel) renders its errors as an HTML page unless JSON
+            # comes first in Accept. */* stays acceptable for the file exports.
+            if headers.get("Accept", "*/*") == "*/*":
+                headers["Accept"] = V5_ACCEPT
+            kwargs["headers"] = headers
+        elif takes_api_key(url):
+            params["api_key"] = self.key
+        else:
+            # Never send the key to another host, even if a caller put it in.
+            params.pop("api_key", None)
         response = request_method(url, params, **kwargs)
         if not 200 <= response.status_code < 400:
             # Both the URL and the body are scrubbed. `Response.url` carries
@@ -171,10 +325,21 @@ class Route4Me:
     # ------------------------------------------------------------- transport
 
     def _timeout(self, per_call=UNSET):
-        """Resolve the effective timeout: per-call > constructor > global."""
+        """Resolve the effective timeout: per-call > constructor > global.
+
+        :param per_call: timeout given for this call, or ``UNSET``.
+        :return: the normalised timeout to pass to ``requests``.
+        """
         return resolve_timeout(per_call, self.timeout)
 
     def _setting(self, per_call, per_client, name):
+        """Resolve one layered setting: per-call > constructor > global.
+
+        :param per_call: value given for this call, or ``UNSET``.
+        :param per_client: value given to the constructor, or ``UNSET``.
+        :param name: attribute name on :class:`~route4me.config.Route4MeConfig`.
+        :return: the effective value.
+        """
         return resolve(per_call, per_client, name)
 
     @property
@@ -194,6 +359,10 @@ class Route4Me:
         return self._session
 
     def _build_session(self):
+        """Build the pooled session, with retries disabled in the adapter.
+
+        :return: a new :class:`requests.Session`.
+        """
         session = requests.Session()
         pool = self._setting(UNSET, UNSET, "pool_maxsize")
         # Retries are handled in `_resilience`, not by urllib3 -- see that
@@ -228,6 +397,14 @@ class Route4Me:
         All four ``_request_*`` helpers funnel through here, so pooling, retry,
         the breaker and the timeout apply uniformly -- including to every API V5
         manager added later, which need not know any of this exists.
+
+        :param method: HTTP verb, e.g. ``"GET"``.
+        :param url: absolute URL of the API endpoint.
+        :param kwargs: keyword arguments for :meth:`requests.Session.request`.
+        :return: the final :class:`requests.Response`, whatever its status.
+        :raise CircuitBreakerOpen: when the circuit breaker is open.
+        :raise requests.RequestException: when the last attempt fails at the
+            transport level (connection error, timeout, ...).
         """
         kwargs.setdefault("verify", self.verify_ssl)
         proxies = self.proxies or None
@@ -238,6 +415,10 @@ class Route4Me:
         caller = session.request if session is not None else requests.request
 
         def send():
+            """Perform one attempt.
+
+            :return: the :class:`requests.Response`.
+            """
             return caller(method, url, **kwargs)
 
         return execute_with_retry(
@@ -262,35 +443,54 @@ class Route4Me:
                 self._session = None
 
     def __enter__(self):
+        """Enter a ``with`` block.
+
+        :return: this client.
+        """
         return self
 
     def __exit__(self, exc_type, exc, tb):
+        """Close the pooled session when the ``with`` block ends.
+
+        :param exc_type: type of the exception raised in the block, if any.
+        :param exc: the exception raised in the block, if any.
+        :param tb: its traceback, if any.
+        :return: ``False``, so an exception raised in the block propagates.
+        """
         self.close()
         return False
 
-    def get(self, request_method):
-        """
-        Execute optimization
-        :param request_method:
-        :return: JSON
-        """
-        params = self.optimization.get_params()
-        if not self.redirects:
-            params.update(
-                {
-                    "redirect": 0,
-                }
-            )
-        return self._make_request(API_HOST, params, request_method, data=json.dumps(self.optimization.data))
+    def get(self, request_method, params=None):
+        """Send the optimization built on :attr:`optimization`.
 
-    def _request_post(self, url, request_params, data=None, json=None, files=None, timeout=UNSET):
+        Sends a request to ``/api.v4/optimization_problem.php`` with the query
+        parameters of :attr:`optimization` and its ``data`` serialised to JSON
+        as the body. When redirects are disabled, ``redirect=0`` is added to
+        the query.
+
+        :param request_method: :meth:`_request_post` to create an optimization,
+            :meth:`_request_get` to fetch one.
+        :param params: the query to send; ``None`` (the default) uses a copy of
+            the query parameters of :attr:`optimization`.
+        :return: the :class:`requests.Response`.
+        :raise APIException: when the API answers outside the 200-399 range.
         """
-        POST request
-        :param url:
-        :param request_params:
-        :param data:
-        :param files:
-        :return:
+        params = dict(self.optimization.get_params() if params is None else params)
+        if not self.redirects:
+            params["redirect"] = 0
+        return self._make_request(API_HOST, params, request_method, data=dumps(self.optimization.data))
+
+    def _request_post(self, url, request_params, *, data=None, json=None, files=None, timeout=UNSET, headers=None):
+        """Send a POST request through :meth:`_send`.
+
+        :param url: absolute URL of the API endpoint.
+        :param request_params: query parameters.
+        :param data: form fields, or a pre-encoded body.
+        :param json: body to send as JSON.
+        :param files: files for a multipart upload.
+        :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
+        :return: the :class:`requests.Response`.
         """
         return self._send(
             "POST",
@@ -299,18 +499,20 @@ class Route4Me:
             allow_redirects=self.redirects,
             files=files,
             data=data,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             json=json,
             timeout=self._timeout(timeout),
         )
 
-    def _request_get(self, url, request_params, data=None, timeout=UNSET):
-        """
-        GET request
-        :param url:
-        :param request_params:
-        :param data:
-        :return:
+    def _request_get(self, url, request_params, *, data=None, timeout=UNSET, headers=None):
+        """Send a GET request through :meth:`_send`.
+
+        :param url: absolute URL of the API endpoint.
+        :param request_params: query parameters.
+        :param data: request body, if any.
+        :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
+        :return: the :class:`requests.Response`.
         """
         return self._send(
             "GET",
@@ -318,63 +520,109 @@ class Route4Me:
             params=request_params,
             allow_redirects=self.redirects,
             data=data,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 
-    def _request_put(self, url, request_params, json=None, data=None, timeout=UNSET):
-        """
-        PUT request
-        :param url:
-        :param request_params:
-        :param data:
-        :return:
+    def _request_put(self, url, request_params, *, json=None, data=None, timeout=UNSET, headers=None):
+        """Send a PUT request through :meth:`_send`.
+
+        :param url: absolute URL of the API endpoint.
+        :param request_params: query parameters.
+        :param json: body to send as JSON.
+        :param data: form fields, or a pre-encoded body.
+        :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
+        :return: the :class:`requests.Response`.
         """
         return self._send(
             "PUT",
             url,
             params=request_params,
+            allow_redirects=self.redirects,
             data=data,
             json=json,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 
-    def _request_delete(self, url, request_params, data=None, json=None, timeout=UNSET):
+    def _request_patch(self, url, request_params, *, json=None, data=None, timeout=UNSET, headers=None):
+        """Send a PATCH request through :meth:`_send`.
+
+        API V5 uses PATCH for partial updates. Like PUT, it is never retried.
+
+        :param url: absolute URL of the API endpoint.
+        :param request_params: query parameters.
+        :param json: body to send as JSON.
+        :param data: form fields, or a pre-encoded body.
+        :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
+        :return: the :class:`requests.Response`.
+
+        .. versionadded:: 1.0.0
         """
-        DELETE request
-        :param url:
-        :param request_params:
-        :param data:
-        :return:
+        return self._send(
+            "PATCH",
+            url,
+            params=request_params,
+            allow_redirects=self.redirects,
+            data=data,
+            json=json,
+            headers=self.headers if headers is None else headers,
+            timeout=self._timeout(timeout),
+        )
+
+    def _request_delete(self, url, request_params, *, data=None, json=None, timeout=UNSET, headers=None):
+        """Send a DELETE request through :meth:`_send`.
+
+        :param url: absolute URL of the API endpoint.
+        :param request_params: query parameters.
+        :param data: form fields, or a pre-encoded body.
+        :param json: body to send as JSON.
+        :param timeout: per-call timeout; ``UNSET`` uses the client's.
+        :param headers: request headers; ``None`` uses the client's :attr:`headers`.
+        :return: the :class:`requests.Response`.
         """
         return self._send(
             "DELETE",
             url,
             params=request_params,
+            allow_redirects=self.redirects,
             data=data,
             json=json,
-            headers=self.headers,
+            headers=self.headers if headers is None else headers,
             timeout=self._timeout(timeout),
         )
 
     def run_optimization(self):
-        """
-        Run optimization and return response as an object.
-        :return: response as an object
+        """Create an optimization from the parameters and addresses set so far.
+
+        Sends ``POST /api.v4/optimization_problem.php`` with the request built
+        on :attr:`optimization`: its route parameters, and the addresses added
+        with :meth:`Address.add_address <route4me.address.Address.add_address>`.
+
+        :return: the decoded JSON reply: the optimization problem, with its
+            routes and addresses.
+        :raise APIException: when the API answers outside the 200-399 range.
         """
         self.response = self.get(self._request_post)
         return self.response.json()
 
     def re_optimization(self, optimization_id, data=None):
-        """
-        Execute reoptimization
-        :param optimization_id:
-        :param data:
-        :return: response as a object
-        :raise APIException: on a non-2xx/3xx response
+        """Re-optimize an existing optimization.
 
-        .. versionchanged:: 0.3.1
+        Sends ``PUT /api.v4/optimization_problem.php`` with
+        ``optimization_problem_id`` and ``reoptimize=1`` in the query and
+        ``{"parameters": data}`` as the JSON body.
+
+        :param optimization_id: ID of the optimization problem.
+        :param data: route parameters to change before re-optimizing, e.g.
+            ``{"route_name": "Monday"}``. ``None`` sends no changes.
+        :return: the decoded JSON reply: the re-optimized problem.
+        :raise ParamValueException: when ``optimization_id`` is not a string.
+        :raise APIException: when the API answers outside the 200-399 range.
+
+        .. versionchanged:: 1.0.0
            Routed through ``_make_request``. It previously called
            ``_request_put`` directly and so never raised on an HTTP error --
            callers got ``response.json()`` of an error body, or a
@@ -382,33 +630,42 @@ class Route4Me:
         """
         if data is None:
             data = {}
-        self.optimization.optimization_problem_id(optimization_id)
-        self.optimization.reoptimize(1)
+        params = self.optimization.validated_params(optimization_problem_id=optimization_id, reoptimize=1)
         data = {"parameters": data}
-        self.response = self._make_request(API_HOST, self.optimization.get_params(), self._request_put, json=data)
+        self.response = self._make_request(API_HOST, params, self._request_put, json=data)
         return self.response.json()
 
     def get_optimization(self, optimization_problem_id):
-        """
-        Get optimization given optimization_problem_id
-        :param optimization_problem_id:
-        :return: the parsed optimization payload
+        """Get an optimization by ID.
 
-        .. versionchanged:: 0.3.1
+        Sends ``GET /api.v4/optimization_problem.php``. When the reply has
+        ``addresses``, they are also stored on :attr:`address`.
+
+        :param optimization_problem_id: ID of the optimization problem.
+        :return: the decoded JSON reply: the optimization problem.
+        :raise ParamValueException: when ``optimization_problem_id`` is not a
+            string.
+        :raise APIException: when the API answers outside the 200-399 range.
+
+        .. versionchanged:: 1.0.0
            Now returns the payload. It previously returned ``None`` always, and
            raised ``TypeError`` for any response containing ``addresses`` --
            which is every real optimization response -- via ``parse_response``.
         """
-        self.optimization.optimization_problem_id(optimization_problem_id)
-        self.response = self.get(self._request_get)
+        params = self.optimization.validated_params(optimization_problem_id=optimization_problem_id)
+        self.response = self.get(self._request_get, params)
         return self.parse_response()
 
     def parse_response(self):
-        """
-        Parse response and set it to Route4me instance
-        :return: the parsed response payload
+        """Decode the last response and keep its addresses.
 
-        .. versionchanged:: 0.3.1
+        When the decoded reply is a dict with ``addresses``, they are stored on
+        :attr:`address` (see :meth:`Address.get_addresses
+        <route4me.address.Address.get_addresses>`).
+
+        :return: the decoded JSON of :attr:`response`.
+
+        .. versionchanged:: 1.0.0
            Reads the decoded payload. It previously subscripted
            ``self.response`` -- a :class:`requests.Response`, which is not
            subscriptable -- raising ``TypeError``.
@@ -419,20 +676,22 @@ class Route4Me:
         return payload
 
     def export_result_to_json(self, file_name):
-        """
-        Export response to JSON File
-        :param file_name:
-        :return:
+        """Write the decoded JSON of the last response to a file.
 
-        .. versionchanged:: 0.3.1
+        Does nothing when no request has been sent yet.
+
+        :param file_name: path of the file to write; an existing file is
+            overwritten.
+
+        .. versionchanged:: 1.0.0
            Serialises the decoded payload. It previously passed
            ``Response.content`` (``bytes``) to ``json.dump``, which raises
            ``TypeError: Object of type bytes is not JSON serializable`` -- so
            this method had never worked.
         """
         if self.response:
-            with open(file_name, "w") as f:
-                json.dump(
+            with open(file_name, "w", encoding="utf-8") as f:
+                dump(
                     self.response.json(),
                     f,
                     ensure_ascii=False,
@@ -441,14 +700,14 @@ class Route4Me:
                 )
 
     def export_request_to_json(self, file_name):
-        """
-        Export resquest to JSON File
-        :param file_name:
-        :return:
+        """Write the optimization request body built so far to a file.
+
+        :param file_name: path of the file to write; an existing file is
+            overwritten.
         """
         if self.optimization.data:
-            with open(file_name, "w") as f:
-                json.dump(
+            with open(file_name, "w", encoding="utf-8") as f:
+                dump(
                     self.optimization.data,
                     f,
                     ensure_ascii=False,

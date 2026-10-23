@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "route4me"
-version = "0.3.1.0"
+version = "1.0.0"
 description = "Route4Me Python SDK"
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.9"
@@ -38,10 +38,17 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-# 2.25.0 is the floor for modern urllib3 interop and predates none of the
-# security fixes we rely on; 2.31.0 carries the CVE-2023-32681 fix for the
-# proxy-Authorization leak, which matters because this SDK accepts `proxies`.
-dependencies = ["requests>=2.31.0"]
+# Floors are set by security fixes, not by features:
+#   requests 2.33.0  CVE-2024-35195, CVE-2024-47081 (.netrc leak), CVE-2026-25645
+#   urllib3  2.8.0   CVE-2024-37891 .. CVE-2026-97689 (redirects, decompression, proxy TLS)
+# Those releases need Python 3.10+. On 3.9 the newest available versions are
+# the floor instead; the advisories still open there are listed in SECURITY.md.
+dependencies = [
+    "requests>=2.33.0; python_version >= '3.10'",
+    "urllib3>=2.8.0; python_version >= '3.10'",
+    "requests>=2.32.5; python_version < '3.10'",
+    "urllib3>=2.6.3; python_version < '3.10'",
+]
 
 [project.urls]
 Homepage = "https://github.com/route4me/route4me-python-sdk"
@@ -59,6 +66,7 @@ test = [
 ]
 lint = [
     "ruff>=0.6",
+    "pylint>=3.3",
     "mypy>=1.8",
     "types-requests",
 ]
@@ -142,7 +150,7 @@ ignore = [
 #   S311 (`random` for retry jitter, address.py)          -- fixed in Phase 6
 #   E402 (module-level imports after code, address.py)    -- fixed in Phase 6
 #   B904 (`raise e` without `from`, base.py)              -- fixed in Phase 6
-#   RUF034 (no-op ternary, _api_method.py)                -- fixed in Phase 6
+#   RUF034 (no-op ternary, the old _api_method.py)        -- fixed in Phase 6
 #
 # Resist adding one back. If a new finding is genuine, fix it; if it is a false
 # positive, suppress it inline at the line with a reason.
@@ -150,30 +158,93 @@ ignore = [
 [tool.ruff.lint.isort]
 known-first-party = ["route4me"]
 
+# ------------------------------------------------------------------ pylint --
+#
+# The package, the tests and the examples must pass with zero messages:
+#     pylint route4me --rcfile=pyproject.toml
+#     pylint tests --rcfile=tests/pylintrc
+#     pylint --rcfile=examples/pylintrc $(git ls-files 'examples/*.py')
+# tests/pylintrc relaxes only the checks that fight pytest; examples/pylintrc
+# only drops duplicate-code. The examples are passed as files because their
+# subfolders have no __init__.py.
+
+[tool.pylint.main]
+py-version = "3.9"
+load-plugins = ["pylint.extensions.docparams"]
+jobs = 0
+
+[tool.pylint.format]
+max-line-length = 120
+
+[tool.pylint.basic]
+# The public enum types in constants.py and bundling.py (TRAVEL_MODE,
+# BUNDLING_MODE, ...) are built by constants.enum() and read like constants.
+# Renaming them would break every caller, so UPPER_CASE class names are allowed.
+class-rgx = "^_?([A-Z][a-zA-Z0-9]*|[A-Z][A-Z0-9_]*)$"
+
+[tool.pylint.design]
+# Resource classes map one method to one API operation, so they are wide by nature.
+max-public-methods = 40
+max-attributes = 12
+# SDK methods mirror API parameters; positional ones stay capped at the default 5.
+max-args = 8
+min-public-methods = 0
+
+[tool.pylint.parameter_documentation]
+default-docstring-type = "sphinx"
+accept-no-param-doc = false
+accept-no-raise-doc = false
+accept-no-return-doc = false
+accept-no-yields-doc = false
+
+[tool.pylint.similarities]
+ignore-imports = true
+ignore-signatures = true
+
+[tool.pylint."messages control"]
+# Types belong in annotations (checked by mypy), not repeated in docstrings;
+# parameters, return values and raised exceptions must still be documented.
+# The rest of the list is pylint's own default.
+disable = [
+    "missing-type-doc",
+    "missing-return-type-doc",
+    "raw-checker-failed",
+    "bad-inline-option",
+    "locally-disabled",
+    "file-ignored",
+    "suppressed-message",
+    "useless-suppression",
+    "deprecated-pragma",
+    "use-symbolic-message-instead",
+    "use-implicit-booleaness-not-comparison-to-string",
+    "use-implicit-booleaness-not-comparison-to-zero",
+]
+
 # ------------------------------------------------------------------ pytest --
 
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]
-# `-m "not live"` keeps the network-hitting smoke tests out of the default run;
-# CI runs them nightly with a real key. No --cov-report=html here: forcing it
-# regenerated cover-html/ on every local run, which is how an 86 KB .coverage
-# and a 40-file cover-html/ ended up committed to the working tree. Opt in with
+# The suite never talks to the real API: tests that need a live key are kept
+# outside the repository. No --cov-report=html here: forcing it regenerated
+# cover-html/ on every local run, which is how an 86 KB .coverage and a
+# 40-file cover-html/ ended up committed to the working tree. Opt in with
 # `pytest --cov-report=html` when you actually want it.
 addopts = [
     "-v",
     "-rfesxX",
     "--strict-markers",
     "--strict-config",
-    "-m", "not live",
     # Offline by design. Any test that reaches a real socket fails loudly
     # instead of silently depending on the network, a live key, or Route4Me's
-    # uptime. Tests under tests/live/ opt back in with @pytest.mark.enable_socket.
+    # uptime.
     "--disable-socket",
     "--allow-unix-socket",
 ]
-markers = [
-    "live: hits the real Route4Me API; requires ROUTE4ME_API_KEY. Deselected by default.",
+# The methods the C# SDK marks obsolete are deprecated but still tested; their
+# warning itself is asserted in tests/test_obsolete_methods.py.
+filterwarnings = [
+    "ignore:.*the C# SDK marks it obsolete.*:DeprecationWarning",
 ]
 
 # ---------------------------------------------------------------- coverage --
@@ -186,6 +257,7 @@ omit = ["route4me/version.py"]
 [tool.coverage.report]
 precision = 2
 show_missing = true
+fail_under = 90
 exclude_lines = [
     "pragma: no cover",
     "if TYPE_CHECKING:",
@@ -203,7 +275,8 @@ output = "coverage.xml"
 # -------------------------------------------------------------------- mypy --
 
 [tool.mypy]
-python_version = "3.9"
+# No python_version: current mypy releases only target 3.10 and later, so it
+# checks against the interpreter it runs on. The 3.9 test job covers runtime.
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_unused_ignores = true
@@ -227,12 +300,8 @@ warn_return_any = true
 
 # --- Tiers B-D: flip these on as each tier lands. ---------------------------
 # [[tool.mypy.overrides]]
-# module = ["route4me._fields", "route4me._api_method", "route4me.base"]
+# module = ["route4me._fields", "route4me.base"]
 # disallow_untyped_defs = true
-
-[[tool.mypy.overrides]]
-module = ["tests.*", "examples.*"]
-ignore_errors = true
 
 # ------------------------------------------------------------------ bandit --
 

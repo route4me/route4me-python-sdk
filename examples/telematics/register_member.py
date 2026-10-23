@@ -1,9 +1,25 @@
+"""Register a member with the telematics service.
+
+Calls :meth:`Telematics.register_member <route4me.telematics.Telematics.register_member>`, which sends
+``GET /api.v4/telematics/register.php`` with ``member_id``, and prints the reply, which holds the
+member's telematics ``api_token``.
+
+Run it with::
+
+    python examples/telematics/register_member.py --api_key <your key> --member_id <member ID>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key, member_id):
+    """Register the member and print the reply.
+
+    :param api_key: Route4Me API key.
+    :param member_id: ID of the member.
+    """
     route4me = Route4Me(api_key)
 
     telematics = route4me.telematics

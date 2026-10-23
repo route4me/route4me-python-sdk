@@ -1,3 +1,19 @@
+r"""Connect a member to a telematics vendor.
+
+Calls :meth:`Telematics.register_member <route4me.telematics.Telematics.register_member>`
+(``GET /api.v4/telematics/register.php``) to get the member's telematics API token, reads the vendor
+credentials from a JSON file shaped like ``vendor_credentials.json``, and calls
+:meth:`Telematics.register_connection <route4me.telematics.Telematics.register_connection>`, which sends
+``POST /api.v4/telematics/connections.php`` with the credentials and
+``validate_remote_credentials="true"`` as the JSON body. Prints the new connection. The values in
+``vendor_credentials.json`` are samples.
+
+Run it with::
+
+    python examples/telematics/register_vendor_connection.py --api_key <your key> --member_id <member ID> \
+        --vendor_credentials examples/telematics/vendor_credentials.json
+"""
+
 import argparse
 import json
 
@@ -5,13 +21,22 @@ from route4me import Route4Me
 
 
 def _load_credentials(fn):
-    with open(fn) as inputfile:
-        data = json.load(inputfile)
-        inputfile.close()
-        return data
+    """Read the vendor credentials from a JSON file.
+
+    :param fn: path of the file.
+    :return: the credentials, as a dict.
+    """
+    with open(fn, encoding="utf-8") as inputfile:
+        return json.load(inputfile)
 
 
 def main(api_key, member_id, filename):
+    """Create the connection and print it.
+
+    :param api_key: Route4Me API key.
+    :param member_id: ID of the member.
+    :param filename: path of the JSON file with the vendor credentials.
+    """
     route4me = Route4Me(api_key)
 
     telematics = route4me.telematics

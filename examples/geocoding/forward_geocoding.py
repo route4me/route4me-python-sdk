@@ -1,9 +1,25 @@
+"""Geocode an address with the batch geocoder.
+
+Calls :meth:`Address.geocode <route4me.address.Address.geocode>` with
+``addresses="Boston-Cambridge-Quincy, MA-NH, USA"``, which sends ``POST /api/geocoder.php`` with
+``addresses`` as a form field, and prints the raw reply, CSV by default. Several addresses can go in one
+request, separated by ``||``; get_geocode.py geocodes one address and returns JSON.
+
+Run it with::
+
+    python examples/geocoding/forward_geocoding.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Geocode the sample address and print the reply.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     address = "Boston-Cambridge-Quincy, MA-NH, USA"

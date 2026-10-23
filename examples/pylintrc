@@ -1,0 +1,40 @@
+# pylint settings for the examples:
+#
+#     pylint --rcfile=examples/pylintrc $(git ls-files 'examples/*.py')
+#
+# Pass the files, not the directory: the example subfolders have no
+# __init__.py, so `pylint examples` checks only the top-level scripts.
+#
+# Same rules as the package (pyproject.toml), except duplicate-code: every
+# example is a self-contained script, so the setup lines repeat on purpose.
+
+[MAIN]
+py-version=3.9
+jobs=0
+load-plugins=pylint.extensions.docparams
+
+[FORMAT]
+max-line-length=120
+
+[DESIGN]
+min-public-methods=0
+max-args=8
+
+[BASIC]
+class-rgx=^_?([A-Z][a-zA-Z0-9]*|[A-Z][A-Z0-9_]*)$
+
+[MESSAGES CONTROL]
+disable=
+    duplicate-code,
+    missing-type-doc,
+    missing-return-type-doc,
+    raw-checker-failed,
+    bad-inline-option,
+    locally-disabled,
+    file-ignored,
+    suppressed-message,
+    useless-suppression,
+    deprecated-pragma,
+    use-symbolic-message-instead,
+    use-implicit-booleaness-not-comparison-to-string,
+    use-implicit-booleaness-not-comparison-to-zero,

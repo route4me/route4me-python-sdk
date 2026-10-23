@@ -1,3 +1,18 @@
+"""Add a note to a route destination.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` and
+:meth:`Route.get_route <route4me.route.Route.get_route>` (``GET /api.v4/route.php``) to read the latest
+route, then :meth:`Address.add_address_notes <route4me.address.Address.add_address_notes>` for its first
+destination, which sends ``POST /actions/addRouteNotes.php`` with ``route_id``, ``address_id``,
+``device_type`` and the destination's coordinates (``dev_lat``, ``dev_lng``) in the query, and the note
+(``strNoteContents``) and its type (``strUpdateType``, here ``wrongdelivery``) as form fields. Prints
+the new note, which stays on the route.
+
+Run it with::
+
+    python examples/notes/add_address_notes.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -5,6 +20,10 @@ from route4me.constants import DEVICE_TYPE
 
 
 def main(api_key):
+    """Add a note to the first destination of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     route = route4me.route
@@ -37,10 +56,10 @@ def main(api_key):
                 print(". ".join(response["errors"]))
             else:
                 note = response["note"]
-                print("Note ID: {}".format(response["note_id"]))
-                print("Note contents: {}".format(note["contents"]))
-                print("Route ID: {}".format(note["route_id"]))
-                print("Route Destination ID: {}".format(note["route_destination_id"]))
+                print(f"Note ID: {response['note_id']}")
+                print(f"Note contents: {note['contents']}")
+                print(f"Route ID: {note['route_id']}")
+                print(f"Route Destination ID: {note['route_destination_id']}")
 
 
 if __name__ == "__main__":

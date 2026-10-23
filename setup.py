@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Compatibility shim.
 
 All packaging metadata lives in ``pyproject.toml`` (PEP 621) and the canonical

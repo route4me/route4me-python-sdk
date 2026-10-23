@@ -114,3 +114,199 @@ Vehicles
 .. automodule:: route4me.vehicles
 	:members:
 	:show-inheritance:
+
+Address Book V5
+---------------
+
+.. automodule:: route4me.address_book_v5
+	:members:
+	:show-inheritance:
+
+Address Barcodes
+----------------
+
+.. automodule:: route4me.address_barcodes
+	:members:
+	:show-inheritance:
+
+Vehicles (API V5)
+-----------------
+
+.. automodule:: route4me.vehicles_v5
+	:members:
+	:show-inheritance:
+
+Vehicle Profiles
+----------------
+
+.. automodule:: route4me.vehicle_profiles
+	:members:
+	:show-inheritance:
+
+Vehicle Capacity Profiles
+-------------------------
+
+.. automodule:: route4me.vehicle_capacity_profiles
+	:members:
+	:show-inheritance:
+
+Optimization Profiles
+---------------------
+
+.. automodule:: route4me.optimization_profiles
+	:members:
+	:show-inheritance:
+
+Route Destinations V5
+---------------------
+
+.. automodule:: route4me.route_destinations_v5
+	:members:
+	:show-inheritance:
+
+Routes V5
+---------
+
+.. automodule:: route4me.routes_v5
+	:members:
+	:show-inheritance:
+
+Account Profile (API V5)
+------------------------
+
+.. automodule:: route4me.account_profile
+	:members:
+	:show-inheritance:
+
+Asset Tracking
+--------------
+
+.. automodule:: route4me.asset_tracking
+	:members:
+	:show-inheritance:
+
+Auth History (API V5)
+---------------------
+
+.. automodule:: route4me.auth_history
+	:members:
+	:show-inheritance:
+
+Autocomplete
+------------
+
+.. automodule:: route4me.autocomplete
+	:members:
+	:show-inheritance:
+
+Configuration Settings
+----------------------
+
+.. automodule:: route4me.configuration_settings
+	:members:
+	:show-inheritance:
+
+Configuration Settings (API V5)
+-------------------------------
+
+.. automodule:: route4me.configuration_settings_v5
+	:members:
+	:show-inheritance:
+
+Distance
+--------
+
+.. automodule:: route4me.distance
+	:members:
+	:show-inheritance:
+
+Drivers
+-------
+
+.. automodule:: route4me.drivers
+	:members:
+	:show-inheritance:
+
+Team (API V5)
+-------------
+
+.. automodule:: route4me.team_v5
+	:members:
+	:show-inheritance:
+
+Orders (API V5)
+---------------
+
+.. automodule:: route4me.orders_v5
+	:members:
+	:show-inheritance:
+
+Recurring Routes
+----------------
+
+.. automodule:: route4me.recurring_routes
+	:members:
+	:show-inheritance:
+
+Notes
+-----
+
+.. automodule:: route4me.notes
+	:members:
+	:show-inheritance:
+
+Driver Reviews
+--------------
+
+.. automodule:: route4me.driver_reviews
+	:members:
+	:show-inheritance:
+
+POD Workflows
+-------------
+
+.. automodule:: route4me.pod_workflows
+	:members:
+	:show-inheritance:
+
+Customers
+---------
+
+.. automodule:: route4me.customers
+	:members:
+	:show-inheritance:
+
+Facilities
+----------
+
+.. automodule:: route4me.facilities
+	:members:
+	:show-inheritance:
+
+Locations
+---------
+
+.. automodule:: route4me.locations
+	:members:
+	:show-inheritance:
+
+Route Breaks
+------------
+
+.. automodule:: route4me.route_breaks
+	:members:
+	:show-inheritance:
+
+Territories (API V5)
+--------------------
+
+.. automodule:: route4me.territories_v5
+	:members:
+	:show-inheritance:
+
+Tracking History
+----------------
+
+.. automodule:: route4me.tracking_history
+	:members:
+	:show-inheritance:

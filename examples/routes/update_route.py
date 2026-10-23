@@ -1,3 +1,16 @@
+"""Update the fields of a route.
+
+Creates a route by running a TSP optimization of seven New York addresses, one of them the depot with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then sets its ``driver_alias`` with
+:meth:`Route.update_route <route4me.route.Route.update_route>`, which sends ``PUT /api.v4/route.php``
+with ``route_id`` in the query and the fields as the JSON body.
+
+Run it with::
+
+    python examples/routes/update_route.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +24,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Create a route, set its driver alias and print it.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     optimization = r4m.optimization
@@ -69,13 +86,13 @@ def main(api_key):
         }
         route_id = response["addresses"][1]["route_id"]
         print(f"Route ID: {route_id}")
-        print("Driver Alias: {}".format(data["driver_alias"]))
+        print(f"Driver Alias: {data['driver_alias']}")
         response = r4m.route.update_route(data, route_id)
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
             print("Updating Route")
-            print("Driver Alias: {}".format(response["driver_alias"]))
+            print(f"Driver Alias: {response['driver_alias']}")
 
 
 if __name__ == "__main__":

@@ -23,6 +23,8 @@ Usage::
 #: Sentinel for "the caller did not supply this", so that an explicit ``None``
 #: can carry its own meaning (for ``timeout``, "wait forever").
 class _Unset:
+    """Type of :data:`UNSET`. Falsy, and shown as ``UNSET``."""
+
     __slots__ = ()
 
     def __repr__(self):
@@ -73,7 +75,7 @@ class Route4MeConfig:
     """Global defaults. Assign to the class attributes to change them."""
 
     #: Default request timeout. ``None`` disables timeouts entirely (the
-    #: pre-0.2.0 behaviour), which risks hanging the calling thread forever.
+    #: behaviour before 1.0.0), which risks hanging the calling thread forever.
     timeout = DEFAULT_TIMEOUT
 
     #: When True (the default), credentials are stripped from URLs before they
@@ -126,6 +128,13 @@ def resolve(per_call, per_client, config_attr):
     Order is per-call > per-client > :class:`Route4MeConfig`. ``UNSET`` means
     "not supplied at this layer", which is why an explicit ``None`` can still
     carry its own meaning.
+
+    :param per_call: value given for one call, or :data:`UNSET`.
+    :param per_client: value given to the client constructor, or :data:`UNSET`.
+    :param config_attr: name of the :class:`Route4MeConfig` attribute to fall
+        back to.
+    :return: the first value that is not :data:`UNSET`, else the
+        :class:`Route4MeConfig` attribute.
     """
     for candidate in (per_call, per_client):
         if candidate is not UNSET:
@@ -142,6 +151,10 @@ def normalize_timeout(value):
     * a number -- applied to both the connect and read phases
     * a 2-sequence -- ``(connect, read)``
 
+    Numbers must be positive; ``bool`` is rejected.
+
+    :param value: the timeout to check.
+    :return: ``None``, a ``float``, or a ``(connect, read)`` tuple of floats.
     :raise ValueError: on any other shape, rather than letting ``requests``
         fail later with a less obvious message.
     """
@@ -167,6 +180,11 @@ def resolve_timeout(*candidates):
 
     Falls back to :attr:`Route4MeConfig.timeout`, then to
     :data:`DEFAULT_TIMEOUT` if someone has set the global to ``UNSET``.
+
+    :param candidates: timeouts in order of precedence, each possibly
+        :data:`UNSET`.
+    :return: the normalised timeout, as returned by :func:`normalize_timeout`.
+    :raise ValueError: when the chosen timeout is not a valid shape.
     """
     for candidate in candidates:
         if candidate is not UNSET:

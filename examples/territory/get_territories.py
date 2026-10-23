@@ -1,9 +1,23 @@
+"""List the account's territories.
+
+Calls :meth:`Territory.get_territories <route4me.territory.Territory.get_territories>`, which sends
+``GET /api.v4/territory.php``, and prints the name, colour, owner, shape and data of each territory.
+
+Run it with::
+
+    python examples/territory/get_territories.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print every territory.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     territory = route4me.territory
@@ -12,11 +26,11 @@ def main(api_key):
         print(". ".join(response["errors"]))
     else:
         for i, territory in enumerate(response):
-            print("{}  - Territory ID: {}".format(i + 1, territory["territory_id"]))
-            print("\tTerritory Name: {}".format(territory["territory_name"]))
-            print("\tTerritory Color: {}".format(territory["territory_color"]))
-            print("\tMember ID: {}".format(territory["member_id"]))
-            print("\tTerritory Type: {}".format(territory["territory"]["type"]))
+            print(f"{i + 1}  - Territory ID: {territory['territory_id']}")
+            print(f"\tTerritory Name: {territory['territory_name']}")
+            print(f"\tTerritory Color: {territory['territory_color']}")
+            print(f"\tMember ID: {territory['member_id']}")
+            print(f"\tTerritory Type: {territory['territory']['type']}")
             if territory["territory"]["data"]:
                 print("\tData:")
                 for data in territory["territory"]["data"]:

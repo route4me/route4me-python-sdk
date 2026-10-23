@@ -1,9 +1,25 @@
+"""Get the activities recorded on the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`Route.get_activities <route4me.route.Route.get_activities>` with ``limit=10``
+and ``offset=5``, which sends ``GET /api/get_activities.php``. Prints the total and the ID, message,
+type and route of each activity.
+
+Run it with::
+
+    python examples/activities/get_activities.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the activities of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     route = route4me.route
@@ -18,15 +34,15 @@ def main(api_key):
         if "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Total: {}".format(response["total"]))
+            print(f"Total: {response['total']}")
             print("Activities:\n")
             for i, activity in enumerate(response["results"]):
                 print(f"Activity #{i + 1}")
-                print("\tActivity ID: {}".format(activity["activity_id"]))
-                print("\tActivity Message: {}".format(activity["activity_message"]))
-                print("\tActivity Type: {}".format(activity["activity_type"]))
-                print("\tRoute ID: {}".format(activity["route_id"]))
-                print("\tRoute Name: {}".format(activity["route_name"]))
+                print(f"\tActivity ID: {activity['activity_id']}")
+                print(f"\tActivity Message: {activity['activity_message']}")
+                print(f"\tActivity Type: {activity['activity_type']}")
+                print(f"\tRoute ID: {activity['route_id']}")
+                print(f"\tRoute Name: {activity['route_name']}")
 
 
 if __name__ == "__main__":

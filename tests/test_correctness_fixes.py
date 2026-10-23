@@ -9,10 +9,10 @@ with an obvious name.
 import io
 
 import pytest
+import requests as requests_lib
 import responses
 
 from route4me import Route4Me
-from route4me._api_method import make_request
 from route4me.api_endpoints import BATCH_GEOCODER, ROUTE_HOST, SINGLE_GEOCODER
 from route4me.exceptions import ParamValueException
 
@@ -120,8 +120,6 @@ class TestFixGeocodeBackoff:
         assert address["lat"] == 40.76
 
     def test_delays_grow_exponentially(self, client, mocked, monkeypatch):
-        import requests as requests_lib
-
         slept = []
         monkeypatch.setattr("route4me.address.time.sleep", slept.append)
         monkeypatch.setattr(
@@ -139,8 +137,6 @@ class TestFixGeocodeBackoff:
         assert slept[0] < slept[1] < slept[2]
 
     def test_it_reports_the_address_as_the_error_when_exhausted(self, client, monkeypatch):
-        import requests as requests_lib
-
         monkeypatch.setattr("route4me.address.time.sleep", lambda _: None)
         monkeypatch.setattr(
             client.address,
@@ -167,10 +163,11 @@ class TestValidateParamsDoesNotMaskBugs:
         assert excinfo.value.param == "definitely_not_a_field"
         assert excinfo.value.get_msg() == "Not supported"
 
-    def test_a_non_callable_attribute_is_rejected_clearly(self, client):
-        """``params`` is a dict on ``Base``, not a setter."""
+    @pytest.mark.parametrize(("name", "value"), [("params", {}), ("data", "value")])
+    def test_a_non_callable_attribute_is_rejected_clearly(self, client, name, value):
+        """#131: ``params`` and ``data`` are dicts on ``Base``, not setters; calling one raised ``TypeError``."""
         with pytest.raises(ParamValueException) as excinfo:
-            client.optimization.validate_params(params={})
+            client.optimization.validate_params(**{name: value})
 
         assert excinfo.value.get_msg() == "Not a settable parameter"
 
@@ -194,20 +191,21 @@ class TestValidateParamsDoesNotMaskBugs:
             client.optimization.validate_params(route_name="x")
 
 
-class TestMakeRequestRequiredValidation:
-    """``_api_method`` had ``params if body is None else params`` -- identical
-    branches, a leftover from a refactor."""
+class TestCallApiRequiredValidation:
+    """The shared request helper (now ``Base._call_api``) once had
+    ``params if body is None else params`` -- identical branches, a leftover
+    from a refactor."""
 
     def test_required_params_are_validated_against_params(self, client, mocked):
         mocked.add(responses.GET, ROUTE_HOST, json={}, status=200)
 
         with pytest.raises(ParamValueException):
-            make_request(client.route, ROUTE_HOST, "get", {"api_key": "k"}, required=["route_id"])
+            client.route._call_api(ROUTE_HOST, "get", {"api_key": "k"}, required=["route_id"])
 
     def test_it_passes_when_the_requirement_is_met(self, client, mocked):
         mocked.add(responses.GET, ROUTE_HOST, json={"ok": True}, status=200)
 
-        result = make_request(client.route, ROUTE_HOST, "get", {"route_id": ROUTE_ID}, required=["route_id"])
+        result = client.route._call_api(ROUTE_HOST, "get", {"route_id": ROUTE_ID}, required=["route_id"])
 
         assert result == {"ok": True}
 
@@ -217,7 +215,7 @@ class TestMakeRequestRequiredValidation:
         mocked.add(responses.POST, ROUTE_HOST, json={"ok": True}, status=200)
 
         with pytest.raises(ParamValueException):
-            make_request(client.route, ROUTE_HOST, "post", {}, required=["route_id"], body={"route_id": ROUTE_ID})
+            client.route._call_api(ROUTE_HOST, "post", {}, required=["route_id"], body={"route_id": ROUTE_ID})
 
 
 class TestTelematicsDisplayHelpers:
@@ -245,7 +243,8 @@ class TestTelematicsDisplayHelpers:
         buffer = io.StringIO()
         vendor = {"id": 7, "name": "Acme", "features": [{"name": "gps"}, {"name": "fuel"}]}
 
-        Route4Me("k" * 32).telematics.pp_vendor_comparison(vendor, file=buffer)
+        with pytest.warns(DeprecationWarning):
+            Route4Me("k" * 32).telematics.pp_vendor_comparison(vendor, file=buffer)
 
         assert buffer.getvalue().strip() == "7\tAcme\tgps, fuel"
 
@@ -253,8 +252,18 @@ class TestTelematicsDisplayHelpers:
         """Previously raised ``KeyError`` on a vendor with no ``features``."""
         buffer = io.StringIO()
 
-        Route4Me("k" * 32).telematics.pp_vendor_comparison({"id": 7, "name": "Acme"}, file=buffer)
+        with pytest.warns(DeprecationWarning):
+            Route4Me("k" * 32).telematics.pp_vendor_comparison({"id": 7, "name": "Acme"}, file=buffer)
 
         # rstrip("\n") only -- the trailing tab is the empty feature column and
         # is part of the expected output.
         assert buffer.getvalue().rstrip("\n") == "7\tAcme\t"
+
+
+class TestSetterMessages:
+    def test_truck_hazardous_goods_names_its_own_values(self, client):
+        """#133: the message was "Must be MI or KM", copied from the distance unit setter."""
+        with pytest.raises(ParamValueException) as excinfo:
+            client.optimization.truck_hazardous_goods("INVALID_GOODS")
+
+        assert excinfo.value.get_msg() == "Must be a TRUCK_HAZARDOUS_GOODS value"

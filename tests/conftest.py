@@ -3,9 +3,8 @@
 The suite is **offline by design**. ``pytest-socket`` is armed in
 ``pyproject.toml`` via ``--disable-socket``, so any test that reaches a real
 socket fails loudly instead of silently depending on the network, a live API
-key, or Route4Me's uptime. Tests that are *supposed* to dial out live under
-``tests/live/`` and carry ``@pytest.mark.live``, which the default run
-deselects.
+key, or Route4Me's uptime. Tests that need the real API are kept outside the
+repository, so no key ever has to be configured here.
 
 HTTP is faked with `responses <https://github.com/getsentry/responses>`_,
 which patches ``HTTPAdapter.send``. That sits above urllib3, so the whole
@@ -14,10 +13,14 @@ handling, ``APIException`` construction -- is exercised for real; only the
 wire is replaced.
 """
 
+import collections
 import json
 import pathlib
+import re
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
+import requests
 import responses as responses_lib
 
 from route4me import Route4Me
@@ -123,10 +126,102 @@ def query_of():
     ``parse_qs`` yields lists; this flattens single-valued keys, which is what
     assertions actually want to compare against.
     """
-    from urllib.parse import parse_qs, urlsplit
 
     def _query(request):
         raw = parse_qs(urlsplit(request.url).query, keep_blank_values=True)
         return {k: (v[0] if len(v) == 1 else v) for k, v in raw.items()}
 
     return _query
+
+
+# ----------------------------------------------------------- request guard --
+
+#: Endpoint registry shared with the Java SDK tests. Generated outside the repo
+#: from the Route4Me OpenAPI specs, the C# SDK constants and a liveness probe.
+REGISTRY = json.loads((FIXTURE_DIR / "endpoints.json").read_text(encoding="utf-8"))
+
+
+def _pattern(path):
+    """Compile a registry path, where ``{}`` stands for exactly one segment."""
+    return re.compile("^" + re.escape(path).replace(r"\{\}", "[^/]+") + "$")
+
+
+ALLOWED_HOSTS = frozenset(REGISTRY["allowed_hosts"])
+ENDPOINTS = [(e["method"], e["host"], _pattern(e["path"])) for e in REGISTRY["endpoints"]]
+DEPRECATED = [(d["host"], _pattern(d["path"]), d["reason"]) for d in REGISTRY["deprecated"]]
+
+#: Deprecated endpoints hit during the run, reported once in the summary.
+DEPRECATED_HITS = collections.Counter()
+
+
+def check_request(method, url, headers):
+    """Return a list of problems with one outgoing request (empty when it is fine).
+
+    Every request the SDK sends must go over https to a Route4Me host, to an
+    endpoint in the registry, and must carry the API key in one place only: an
+    ``Authorization: Bearer`` header for API V5, the ``api_key`` query
+    parameter for everything else. A deprecated endpoint is allowed but recorded.
+    """
+    parts = urlsplit(url)
+    path = parts.path.rstrip("/") or "/"
+    problems = []
+    if parts.scheme != "https":
+        problems.append(f"{method} {url}: scheme is {parts.scheme!r}, not https")
+    # Checked before the deprecated-endpoint shortcut: the key must never
+    # reach any other host, retired ones included.
+    if parts.hostname not in ("api.route4me.com", "wh.route4me.com") and (
+        API_KEY in url or any(API_KEY in str(v) for v in headers.values())
+    ):
+        problems.append(f"{method} {url}: the API key is sent to {parts.hostname!r}, which is not an API host")
+    for host, pattern, reason in DEPRECATED:
+        if parts.hostname == host and pattern.match(path):
+            DEPRECATED_HITS[f"{method} {host}{path} ({reason})"] += 1
+            return problems
+    if parts.hostname not in ALLOWED_HOSTS:
+        problems.append(f"{method} {url}: host {parts.hostname!r} is not an allowed Route4Me host")
+    elif not any(
+        host == parts.hostname and m in ("*", method) and pattern.match(path) for m, host, pattern in ENDPOINTS
+    ):
+        problems.append(f"{method} {parts.hostname}{path}: endpoint is not in tests/fixtures/endpoints.json")
+    query = parse_qs(parts.query)
+    v5 = url.startswith("https://wh.route4me.com/modules/api/v5.")
+    other_headers = {k: v for k, v in headers.items() if not (v5 and k.lower() == "authorization")}
+    if API_KEY in parts.path or any(API_KEY in str(v) for v in other_headers.values()):
+        problems.append(f"{method} {url}: the API key appears outside its expected place")
+    if any(API_KEY in v for k, values in query.items() if k != "api_key" for v in values):
+        problems.append(f"{method} {url}: the API key appears in a query parameter other than api_key")
+    if v5 and "api_key" in query:
+        problems.append(f"{method} {url}: an API V5 request carries the key in the URL instead of a bearer token")
+    if v5 and headers.get("Authorization") != f"Bearer {API_KEY}":
+        problems.append(f"{method} {url}: an API V5 request lacks the bearer token")
+    return problems
+
+
+@pytest.fixture(autouse=True)
+def _request_guard(monkeypatch):
+    """Check every request the SDK sends during a test.
+
+    ``requests.Session.send`` is the single funnel for both the pooled session
+    and ``requests.request``; ``responses`` patches the adapter below it, so the
+    guard sees exactly what would have gone on the wire.
+    """
+    seen = []
+    original = requests.Session.send
+
+    def send(session, request, **kwargs):
+        seen.append(request)
+        return original(session, request, **kwargs)
+
+    monkeypatch.setattr(requests.Session, "send", send)
+    yield seen
+    problems = [p for request in seen for p in check_request(request.method, request.url, request.headers)]
+    if problems:
+        pytest.fail("request guard:\n  " + "\n  ".join(problems), pytrace=False)
+
+
+def pytest_terminal_summary(terminalreporter):
+    """List the deprecated endpoints the suite exercised."""
+    if DEPRECATED_HITS:
+        terminalreporter.section("deprecated endpoints hit")
+        for line, count in sorted(DEPRECATED_HITS.items()):
+            terminalreporter.write_line(f"{count:4}  {line}")

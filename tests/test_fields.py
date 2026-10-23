@@ -6,7 +6,7 @@ through it.
 
 The descriptor is unusual: ``__get__`` returns a *closure*, so the API is call
 syntax (``obj.route_id("ABC")``) rather than assignment. ``self.name`` is the
-wire key, which is what lets ``cached_lat`` write to ``lat``.
+wire key, which may differ from the attribute name.
 """
 
 import pytest
@@ -22,13 +22,13 @@ class Target:
     str_param = ValidatedField("str_param", str, "param", "must be a string")
     int_data = ValidatedField("int_data", int, "data", "must be an int")
     numeric = ValidatedField("numeric", "numeric", "data", "must be numeric")
-    strict_float = ValidatedField("strict_float", "float_strict", "param", "must be a float")
+    number = ValidatedField("number", "number", "param", "must be a number")
     flag = ValidatedField("flag", "boolish", "data", "must be 0 or 1")
     unit = ValidatedField("unit", "enum", "data", "bad unit", enum_cls=DISTANCE_UNIT)
     algo = ValidatedField("algo", "oneof", "data", "bad algo", valid_values=[1, 2, 3])
     metric = ValidatedField("metric", "range", "data", "out of range", valid_range=(1, 7))
     #: Aliased field: the attribute is `cached`, the wire key is `lat`.
-    cached = ValidatedField("lat", "float_strict", "param", "must be a float")
+    cached = ValidatedField("lat", "number", "param", "must be a number")
 
     def __init__(self):
         self.params = {}
@@ -57,7 +57,7 @@ class TestDescriptorProtocol:
         assert Target.str_param.attr_name == "str_param"
 
     def test_the_wire_key_can_differ_from_the_attribute_name(self, target):
-        """`cached` writes `lat` -- how cached_lat/cached_lng alias in Base."""
+        """`cached` writes `lat`: the wire key is the descriptor's name."""
         target.cached(40.7)
         assert target.params == {"lat": 40.7}
         assert "cached" not in target.params
@@ -112,15 +112,16 @@ class TestValidation:
         with pytest.raises(ParamValueException):
             target.numeric(value)
 
-    def test_float_strict_accepts_floats(self, target):
-        target.strict_float(40.7636197)
-        assert target.params["strict_float"] == 40.7636197
+    @pytest.mark.parametrize("value", [40.7636197, 10, 0, -73])
+    def test_number_accepts_ints_and_floats(self, target, value):
+        """#126: a whole-number coordinate or altitude is valid."""
+        target.number(value)
+        assert target.params["number"] == value
 
-    @pytest.mark.parametrize("value", [1, "1.5", None])
-    def test_float_strict_rejects_ints_and_strings(self, target, value):
-        """An int latitude is rejected on purpose -- the API distinguishes."""
+    @pytest.mark.parametrize("value", [True, False, "1.5", None])
+    def test_number_rejects_booleans_and_strings(self, target, value):
         with pytest.raises(ParamValueException):
-            target.strict_float(value)
+            target.number(value)
 
     @pytest.mark.parametrize("value", [0, 1])
     def test_boolish_accepts_zero_and_one(self, target, value):

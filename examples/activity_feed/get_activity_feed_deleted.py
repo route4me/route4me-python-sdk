@@ -1,9 +1,26 @@
+"""Get the destinations deleted from the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`ActivityFeed.get_activity_feed_deleted
+<route4me.activity_feed.ActivityFeed.get_activity_feed_deleted>`, which sends
+``GET /api.v4/activity_feed.php`` with its ``route_id`` and ``activity_type=delete-destination``. Prints
+the total and the ID and type of each activity.
+
+Run it with::
+
+    python examples/activity_feed/get_activity_feed_deleted.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the ``delete-destination`` activities of the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     activity_feed = route4me.activity_feed
@@ -19,11 +36,11 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Total affected: {}".format(response["total"]))
+            print(f"Total affected: {response['total']}")
             for i, activity in enumerate(response["results"]):
                 print(f"Activity #{i + 1}")
-                print("\tActivity ID: {}".format(activity["activity_id"]))
-                print("\tActivity Type: {}".format(activity["activity_type"]))
+                print(f"\tActivity ID: {activity['activity_id']}")
+                print(f"\tActivity Type: {activity['activity_type']}")
 
 
 if __name__ == "__main__":

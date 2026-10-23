@@ -1,0 +1,46 @@
+# pylint settings for the test suite:  pylint tests --rcfile=tests/pylintrc
+#
+# Same rules as the package (pyproject.toml), minus the checks that conflict with
+# how pytest works:
+#   missing-*-docstring   test names state the behaviour under test
+#   redefined-outer-name  pytest injects fixtures by argument name
+#   protected-access      white-box tests inspect internals on purpose
+#   unused-argument       some fixtures are requested only for their side effect
+#   too-many-*arguments   parametrised tests take many fixtures and parameters
+#   duplicate-code        parametrised tables repeat by design
+#   use-implicit-booleaness-not-comparison
+#                         `assert x == []` checks the type as well as emptiness
+
+[MAIN]
+py-version=3.9
+jobs=0
+
+[FORMAT]
+max-line-length=120
+
+[DESIGN]
+min-public-methods=0
+max-public-methods=60
+
+[MESSAGES CONTROL]
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    redefined-outer-name,
+    protected-access,
+    unused-argument,
+    too-many-arguments,
+    too-many-positional-arguments,
+    duplicate-code,
+    use-implicit-booleaness-not-comparison,
+    raw-checker-failed,
+    bad-inline-option,
+    locally-disabled,
+    file-ignored,
+    suppressed-message,
+    useless-suppression,
+    deprecated-pragma,
+    use-symbolic-message-instead,
+    use-implicit-booleaness-not-comparison-to-string,
+    use-implicit-booleaness-not-comparison-to-zero,

@@ -1,0 +1,7 @@
+# Findings in old history that are known and handled. Each line is a gitleaks fingerprint.
+#
+# A Codecov upload token, committed in codecov.yml in 2017 (e49d100). The file was
+# removed in 1.0.0 together with the Codecov integration. The token has been public
+# since 2017, so it must be revoked in Codecov; ignoring it here only stops the
+# full-history scan from failing on it.
+e49d100cb930c8de16cc41bd6722703e1f0a64d4:codecov.yml:generic-api-key:2
