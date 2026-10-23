@@ -31,6 +31,26 @@ repos:
 
   - repo: local
     hooks:
+      # pylint needs the package's own imports, so it runs from the dev
+      # environment (`pip install -e ".[dev]"`) rather than an isolated one.
+      - id: pylint-package
+        name: pylint (package)
+        entry: pylint --rcfile=pyproject.toml
+        language: system
+        types: [python]
+        files: ^route4me/
+      - id: pylint-examples
+        name: pylint (examples)
+        entry: pylint --rcfile=examples/pylintrc
+        language: system
+        types: [python]
+        files: ^examples/
+      - id: pylint-tests
+        name: pylint (tests)
+        entry: pylint --rcfile=tests/pylintrc
+        language: system
+        types: [python]
+        files: ^tests/
       # pyproject.toml and route4me/version.py both carry the version string.
       # Catching drift at commit time is cheaper than at release time.
       - id: version-consistency

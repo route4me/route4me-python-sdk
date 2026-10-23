@@ -1,0 +1,7687 @@
+{
+ "allowed_hosts": [
+  "api.route4me.com",
+  "wh.route4me.com",
+  "rapid.route4me.com",
+  "validator.route4me.com"
+ ],
+ "endpoints": [
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/addRouteNotes.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/address/update_address_visited.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/authenticate.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/duplicate_route.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/merge_routes.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/register_action.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/route/move_route_destination.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/route/share_route.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/upload/csv-xls-geocode.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/upload/csv-xls-preview.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/upload/json-geocode.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/upload/upload.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/actions/webinar_register.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v3/route/reoptimize_2.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/activity_feed.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/address.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/address_book.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/address_book_group.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/avoidance.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/configuration-settings.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/hybrid_date_optimization.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order_custom_user_fields.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/orders/changes.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/predict-optimization-time.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/route.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/status.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/telematics/connections.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/telematics/register.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/telematics/vendors.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/territory.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/user.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api.v4/vehicle.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/address.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/address_book/get_search_group_addresses.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/address_book/save_geocoded.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/change_hybrid_optimization_depot.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/device/verify_device_license.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/geocoder.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/get_activities.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/member/capabilities.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/member/user_license.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/member/view_users.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/route/mark_address_departed.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/schedule_calendar_data.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/track/get_device_location.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/track/view_user_locations.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/api/vehicles/view_vehicles.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/datafeed/session/validate_session.php"
+  },
+  {
+   "method": "*",
+   "host": "api.route4me.com",
+   "path": "/track/set.php"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-barcodes"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/batch-create"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/batch-update"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/custom-fields"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/depots"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/export"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/export-by-area-ids"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/export-by-areas"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/all"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/clustering"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/pagination"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/show"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/update-by-areas"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/clustering"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/export"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/export/columns"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/heatmap"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/list"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/list/combined"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/territories"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/types"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/types/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/list"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/facilities/types"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/bulk-create"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/custom-types"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/destination/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/route/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/data-list"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/delete-entities"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/save-entities"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/batch-create"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/batch-delete"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/batch-update"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/batch-update/filter"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-platform/order-custom-user-fields"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/aggregation/assign-optimization-profile"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/aggregation/combined"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/archive"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/history"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/profile-api"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/master-routes"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules/replace"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/scheduled-routes/get-copies"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/schedules"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-breaks"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/columns"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/list"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/list/fields"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/order/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/sequence"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/sorting"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/planned"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/{}"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/{}/history"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/{}/rollback"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-stop-status"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/custom-data/bulk"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/custom-data/keys"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/datatable/config"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/delete"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/list"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/lookup-for-new-destination"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/custom-data"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/bulk-insert"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/assign"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/activate"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/deactivate"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/delete"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/restore"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/update"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/execute"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/license"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/location"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/paginate"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/search"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/sync/pending"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows"
+  },
+  {
+   "method": "*",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.1/routes"
+  },
+  {
+   "method": "DELETE",
+   "host": "api.route4me.com",
+   "path": "/api.v4/address.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "api.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "api.route4me.com",
+   "path": "/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order_custom_user_fields.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "api.route4me.com",
+   "path": "/api.v4/route.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "api.route4me.com",
+   "path": "/api.v4/territory.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/cart/add-ons/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/cart/packages/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/delete"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/delete-by-areas"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/aliases/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/delete"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/groups/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/identifier-types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/locations/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/avoidance/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/break-profiles/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-children/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-groups/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-criteria/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-object-types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-quantity-ranges/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rules/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-categories/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/sla-policies/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedule-rules/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedules/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/contracts/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/priorities/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/affiliation-types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/business-units/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/lines-of-business/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/equipment-types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/accounts/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/inventory-levels/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}/line-items/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items-in-groups/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/{}/aliases/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}/line-items/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/price-lists/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/pricing-modifiers/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/export-profiles/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/{}/delete"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geofences/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/gradual-release/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/factors/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/trusted-devices/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/devices"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/categories/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/configurations/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/items/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/support-links/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/facilities/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/inventories"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/inventories/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/organizations"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/custom-types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/{}/attachment"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/grab-and-go/destinations"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/grab-and-go/optimization"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-custom-user-fields"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-inventory"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-inventory/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-inventory/{}/items"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-import/connections/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/custom-fields/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-custom-quotas/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/system-quota-defaults/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules/{}/items"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/schedules/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/types/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/address.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/grab-and-go/addresses.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/grab-and-go/optimization.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/route.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api/route/remove_all.php"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/delete"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/members"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/relations"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routing-profiles/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/organization/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/skill-management/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/crews/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/terminate"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/connected-vehicles"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/connections"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/bulk"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/{}/items"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles/code/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/authorize"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules/{}"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules/{}/items"
+  },
+  {
+   "method": "DELETE",
+   "host": "wh.route4me.com",
+   "path": "/modules/schedules/{}"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api.v4/address.php"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order.php"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order_custom_user_fields.php"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api.v4/route.php"
+  },
+  {
+   "method": "GET",
+   "host": "api.route4me.com",
+   "path": "/api.v4/territory.php"
+  },
+  {
+   "method": "GET",
+   "host": "rapid.route4me.com",
+   "path": "/country"
+  },
+  {
+   "method": "GET",
+   "host": "rapid.route4me.com",
+   "path": "/timezone"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/add-ons/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/cart"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/cart/items/count"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/packages/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/search/suggestions"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/.well-known/openid-configuration"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/mobile/device/existing-versions"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/mobile/device/incompatibility/marketplace"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/mobile/subscription/devices"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/account/settings/data"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/account/settings/voice-notifications"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/route-types-config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/types-config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/{}/export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-barcodes"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/custom-fields"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/depots"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/all"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/clustering"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/pagination"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/show"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/clusterisation/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/clusterisation/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-preview/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-preview/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/amp-route-optimization/jobs/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/reports"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/reports/async-export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/reports/export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/users"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/ai/dashboard/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/capabilities"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/export/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/export/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/export/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/html-stream/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/reports/depots"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/reports/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/reports/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/api/v5.0/vehicle-capacity-profiles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/aliases/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/groups/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/identifier-types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/locations/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/uploads/mapping"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/auth-history"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/auth-history/apiconf"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/auth-history/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/automatic-territories/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/automatic-territories/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/automatic-territories/optimizations"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/automatic-territories/route-information"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/automatic-territories/smart-optimizations"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/automatic-territories/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/avoidance"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/avoidance/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/break-profiles/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/building-information-and-service-time/building-information"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/client-vars"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/client_vars/with_tiers"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/client_vars/with_tiers_and_features"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-children"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-children/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-groups"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-groups/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-object-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-object-types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-criterion-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-criterion-types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-criteria"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-criteria/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-object-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-object-types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-quantity-ranges"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-quantity-ranges/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rules"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rules/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-categories"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-categories/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/sla-policies"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/sla-policies/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/timezones"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedule-rules"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedule-rules/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedules"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedules/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/congregation"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-cloud-data-import/callback/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/export/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/export/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/export/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages/async-export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages/dtconf"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages/export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages/history"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/reports/export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/reports/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/reports/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/contracts"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/contracts/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/custom-data/keys"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/priorities"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/priorities/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews/settings/get"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews/settings/get-by-member"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews/settings/get-logo"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews/settings/get-logo-path"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/affiliation-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/affiliation-types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/business-units"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/business-units/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/lines-of-business"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/lines-of-business/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/{}/list/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/equipment-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/equipment-types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/accounts"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/accounts/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/asset-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/availability-classes"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/currencies"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/destination-inventories/invoices/id"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/destination-inventories/receipt/id"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/entry-statuses"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/entry-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/inventory-levels"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/inventory-levels/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoice-statuses"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}/line-items"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}/line-items/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/item-groups"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/item-identifier-type-variants"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/item-statuses"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/item-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items-in-groups"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items-in-groups/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/{}/aliases"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/{}/aliases/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}/line-items"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}/line-items/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/ledger-treatments"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/movement-directions"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/payment-terms"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/price-lists"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/price-lists/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/pricing-modifiers"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/pricing-modifiers/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/quantity-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/sourcing-buckets"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/uom-groups"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/uoms"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/experiment"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/export-profiles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/export-profiles/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/file-uploads"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/file-uploads/apiconf"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/file-uploads/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/file-uploads/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/file-uploads/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/apiconf"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/{}/download"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/fuel-cost"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geocoding"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geofences"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geofences/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/gps-tracking"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/gps-tracking/polyline"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/gradual-release"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/backup-codes"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/policy"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/trusted-devices"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/devices"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/categories"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/categories/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/combine-rules"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/configurations"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/configurations/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/generate"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/items"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/items/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/metadata"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/support-links"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/facilities"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/facilities/{}/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/inventories"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/inventories/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/allowed-roles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/requests"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/requests/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/organizations"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/messaging-service/dispatch-settings"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/messaging-service/settings"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/mobile-billing-api/license"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/custom-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/destination/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/route/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/data-list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/list/config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/grab-and-go/destinations"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/grab-and-go/optimization"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/params"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/state"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-custom-user-fields"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-inventory/orders"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-inventory/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-tracking"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-tracking/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-import/connections"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-import/connections/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-import/vendors"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/custom-fields"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/embedded-tracking"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/export/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/export/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/export/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/history"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/simple-history"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/preflight-api/all_routes"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/profile-api"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/profile-api/mobile-info"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/pruning/planned"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/pruning/retention"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/pruning/retention/config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/pruning/retention/costs"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-custom-quotas"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-custom-quotas/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-quotas"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-quotas/paginated"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-quotas/periodic-cached"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-quotas/static"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-quotas/system"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/periodic-used-quotas"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/quotas"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/quotas/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/system-quota-defaults"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/system-quota-defaults/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/master-routes/apiconf"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/master-routes/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules/pagination"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules/{}/preview"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/scheduled-routes/is-copy/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/schedules"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/schedules/pagination"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/schedules/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/system/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/system/{}/children"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/types/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/{}/children"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-custom-data/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/list/fields"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/order/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/sorting"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/async-export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/async-export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/columns/{}/by-export-type"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export/formats"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/async-export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/async-export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/export-attachments"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-share/share/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/{}/history"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/{}/rollback"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/address.php"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/grab-and-go/addresses.php"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/grab-and-go/optimization.php"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/route.php"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/state.php"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/custom-data/keys"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/destinations/bulk-actions/import/mapping"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/import/mapping"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/list/config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/lookup-for-new-destination/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/lookup-for-new-destination/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/manifest/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/member-route/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/optimizations/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original/reverse"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/reindex-callback/nested/config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/vehicle-route/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/voice-alerts"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/custom-data"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/directions"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/members"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/members/history"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/relations"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/settings"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routing-profiles/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/acs/redirect/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/logout/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/mapping"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/metadata/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/organization"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/organization/mapping"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/organization/sp-certificate"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/organization/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/sp-certificate"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/sp-config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/skill-management"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/skill-management/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/static-map/generate/point"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/static-map/generate/point/google"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/static-map/generate/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/static-map/generate/{}/google"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/destinations/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/export/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/export/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/export/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/{}/parameters"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/routes/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/routes/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/visits/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/{}/export/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/crews/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/crews/{}/versions"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/customer-support-root-members"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/history"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/me"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/paginate"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/template"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/territories"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/connected-vehicles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/connections"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/drivers"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/hos/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/locations"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/routes"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/routes/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/routes/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-incidents"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-incidents/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-incidents/event-types"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-incidents/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-media"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-media/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-media/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/trips"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/trips/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/trips/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vehicle-activity/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendor-users"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendor-users/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendor-users/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendors"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendors/all"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/apiconf"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/export/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/export/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/export/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/zones"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/member/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/route/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/vehicle/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-page-api/destination"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-page-api/order-info/options"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/upload-downloader/d/t/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/upload-downloader/destination/attachments/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/upload-downloader/destination/attachments/{}/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/upload-downloader/download/token/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/upload-downloader/download/uploads/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/upload-downloader/info/t/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/datatable"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/datatable/config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/list/config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/page/config"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/vehicles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles/code/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/execute"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/fields"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/license"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/location"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/paginate"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/route-confirmation"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/search"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/{}/track"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/viral-marketing/invitations/version"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/viral-marketing/invitations/{}/people"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/viral-marketing/invitations/{}/preview"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/weather/forecast"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows/action-evidences"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows/action-evidences/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/async-export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/async-export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/columns/{}/by-export-type"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/export/download/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/export/formats"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/export/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/export/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/reset-password/verify"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/external/v5.0/mobile-billing-api/job-tracker/result/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/external/v5.0/mobile-billing-api/job-tracker/status/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/master-routes/apiconf"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/master-routes/list"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/authorize"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/keys"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/userinfo"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules/pagination"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules/{}/preview"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/scheduled-routes/is-copy/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/schedules"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/schedules/pagination"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/schedules/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/async-export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/async-export/{}"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/columns"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/export"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/export-attachments"
+  },
+  {
+   "method": "GET",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/export/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/equipment-types/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/accounts/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/inventory-levels/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}/line-items/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items-in-groups/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/{}/aliases/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}/line-items/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/price-lists/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/pricing-modifiers/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/categories/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/items/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-inventory/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/pruning/retention/config"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/crews/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/connections"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles/code/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles/{}"
+  },
+  {
+   "method": "PATCH",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles"
+  },
+  {
+   "method": "POST",
+   "host": "api.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "POST",
+   "host": "api.route4me.com",
+   "path": "/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "POST",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order.php"
+  },
+  {
+   "method": "POST",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order_custom_user_fields.php"
+  },
+  {
+   "method": "POST",
+   "host": "api.route4me.com",
+   "path": "/api.v4/route.php"
+  },
+  {
+   "method": "POST",
+   "host": "api.route4me.com",
+   "path": "/api.v4/territory.php"
+  },
+  {
+   "method": "POST",
+   "host": "rapid.route4me.com",
+   "path": "/timezone"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/cart/add-ons"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/api/v1.0/marketplace/cart/packages"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/address-barcodes"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/address-barcodes/store/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/mobile/authenticate/device"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/account-support"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/account/settings/facilities/select"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/activity-feed/counts-by-type"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/batch-create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/export-by-area-ids"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/export-by-areas"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/import"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/all"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/index/pagination"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/show"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/api/v5.0/address-book/orders"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups/filter/all"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups/filter/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups/positions"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups/{}/filter/all"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups/{}/filter/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/clusterisation"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/clusterisation/webhook"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/export/columns"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/heatmap"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/list/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/service-time/heatmap"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/territories"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/reindex-callback"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/temporal-access"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/temporal-access/store-async"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/uploads/file"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/uploads/geocode"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/uploads/mapping"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/uploads/preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/amp-route-optimization/jobs"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/arrival-time-log"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/departure-time-log"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/geofence-entered-time-log"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/geofence-left-time-log"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/route-deleted-time-log"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/route-time-log"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/account/route-time-log-by-route"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/ai/dashboard"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/reports/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/analytics/reports/generate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/aliases"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/aliases/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/groups"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/groups/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/identifier-types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/identifier-types/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/import"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/locations"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/locations/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/types/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/uploads/file"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/uploads/geocode"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/uploads/preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/auth-history/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/auth-history/store"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/automatic-territories"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/automatic-territories/job-callback/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/avoidance"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/avoidance/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/break-profiles"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/break-profiles/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/break-profiles/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/building-information-and-service-time/time-configuration"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/client-vars"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/client_vars/with_tiers"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/client_vars/with_tiers_and_features"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-children"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-children/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-children/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-groups"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-groups/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-groups/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-criteria"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-criteria/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-criteria/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-object-types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-object-types/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-object-types/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-quantity-ranges"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-quantity-ranges/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-quantity-ranges/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rules"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rules/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rules/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-categories"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-categories/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-categories/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-types/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-types/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/sla-policies"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/sla-policies/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/sla-policies/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedule-rules"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedule-rules/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedule-rules/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedules"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedules/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedules/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/consumption/report"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-cloud-data-import/files"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-cloud-data-import/logout"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-cloud-data-import/upload"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages/async-export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/reports/export/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/reports/generate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/bulk-delete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/bulk-insert"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/bulk-update"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/contracts"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/contracts/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/contracts/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/custom-data/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/list/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/priorities"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destination/deliver"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destination/deliver-barcode"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original/delete/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original/depart"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original/move"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original/visit"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews/settings/upload"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/affiliation-types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/affiliation-types/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/business-units"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/business-units/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/lines-of-business"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/lines-of-business/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/equipment-types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/equipment-types/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/equipment-types/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/accounts"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/accounts/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/destination-inventories/bulk-store"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/destination-inventories/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/destination-inventories/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/inventory-levels"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}/line-items"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/invoices/{}/line-items/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items-in-groups"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/items/{}/aliases"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}/line-items"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/journal-entries/{}/line-items/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/price-lists"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/price-lists/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/price-lists/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/pricing-modifiers"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/pricing-modifiers/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/erp/pricing-modifiers/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/export-profiles"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/file-uploads/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/fuel-cost"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geocoding"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geocoding/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geocoding/forward"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geocoding/reverse"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geofences"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geofences/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geofences/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/gps-tracking"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/gps-tracking/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/gps-tracking/polyline"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/gradual-release"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/backup-codes"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/email/confirm"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/email/enroll"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/factors/{}/primary"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/login/challenge"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/login/verify"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/totp/confirm"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/totp/enroll"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/account-activation/send-code/email"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/account-activation/send-code/phone"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/account-activation/verify-code/email"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/account-activation/verify-code/phone"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/account-setup"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/authenticate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/authenticate/device"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/authenticate/oauth"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/devices"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/logout-other-devices"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/oauth/brokered-code/issue"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/oauth/tokens/revoke"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/registration"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/categories"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/categories/reorder"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/configurations/{}/clone"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/configurations/{}/preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/configurations/{}/publish"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/items"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/items/reorder"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/support-links"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/facilities"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/facilities/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/inventories"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/inventories/restore"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/inventories/{}/restore"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/csv-parse"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/requests"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/requests/bulk/accept"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/requests/bulk/decline"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/requests/cancel"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/requests/{}/accept"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/requests/{}/decline"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/send"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/sendgrid-callback"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/{}/accept"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/{}/cancel"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/{}/decline"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/{}/re-send"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/{}/twilio-callback"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/magic-login/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/magic-login/send"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/bulk-get"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/bulk-set"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/clear-cache"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/organizations"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/organizations/bulk-get"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/organizations/bulk-set"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/messaging-service/dispatch-settings"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/messaging-service/inbound-sms-callback"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/messaging-service/send"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/messaging-service/settings"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/metrics"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/metrics/route-progress"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/mobile-billing-api/android/validate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/mobile-billing-api/license"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/attachment"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/bulk-create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/custom-types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/filter"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/orders"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/delete-entities"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/get-entities"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/get-entities-template"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/save-entities"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/grab-and-go/destinations"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/grab-and-go/optimization"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/state"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-custom-user-fields"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-tracking"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-tracking/store-by-external-id"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-tracking/store-with-hash"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-import/connections"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-import/connections/{}/request-history"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/archive"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/custom-fields"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/list/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/preflight-api/api/v5.0/broadcasting/auth"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/preflight-api/api_access"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/preflight-api/broadcasting/auth"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/preflight-api/broadcasting/bulk-auth"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/preflight-api/notifications"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/pruning/retention/usage"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-custom-quotas"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-quotas/reset-cache"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/operations"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/quotas"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/system-quota-defaults"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/master-routes"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/master-routes/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/schedule-preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/scheduled-routes/get-copies"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/schedules"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/system/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/system/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/types"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/types/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/types/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/{}/reorder"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-breaks"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-breaks/async"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-custom-data/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/list/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/map/heatmap"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/sequence"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/service-time/heatmap"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/async-export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/async-export/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/columns"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/columns/{}/by-export-type"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export-attachments"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/export/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/async-export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/async-export/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/columns"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/export-attachments"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-export/{}/export/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-share/share/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/planned"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-status/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-stop-status"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route4trucks/analytics"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route4trucks/event"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/actions/address/update_address_visited.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/actions/duplicate_route.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/actions/merge_routes.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/actions/route/delete_route_destination.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/actions/route/move_route_destination.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/actions/route/rename_route.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v3/route/reverse.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v3/route/reverse_2.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/grab-and-go/addresses.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/grab-and-go/optimization.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/route.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/split_route.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api/route/mark_address_departed.php"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/assign"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/assign-asset"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/assign-facility"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/assign-preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/bulk/update"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/bulk/update-collection"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/create"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/create/master"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/custom-data/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/destinations/bulk-actions/commit"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/destinations/bulk-actions/import/file"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/destinations/bulk-actions/import/geocode"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/destinations/bulk-actions/import/preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/destinations/bulk-actions/match"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/dispatch"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/list/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/lock"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/lookup-for-new-destination"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/lookup-for-new-destination/async"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/master-route"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/optimizations/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original/create-raw"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original/duplicate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original/merge"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original/rename"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original/reverse"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original/split"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/reindex-callback"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/reindex-callback/nested"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/update-directions"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/voice-alerts"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/duplicate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/members"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/rating"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/relations"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routing-profiles"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routing-profiles/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routing-profiles/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/assertion-consume/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/login"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/mapping"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/organization"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/organization/mapping"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/skill-management"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/skill-management/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/create-optimization/planner"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/bulk-delete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/geocode"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/import"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/bulk-delete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/bulk-update"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/heatmap"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/destinations/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/destinations/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/generate/strategic-scenario"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/bulk-delete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/bulk-update"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/heatmap"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/bulk/delete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/export/nested"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/export/nested/totals"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/{}/add-scenarios"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/{}/draft"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/{}/duplicate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/pattern-analysis"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/pattern-analysis/file"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/pattern-analysis/preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/routes/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/routes/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/routes/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/export/nested"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/export/nested/totals"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/{}/accept"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/scenarios/{}/import/complete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/uploads/file"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/uploads/planner"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/uploads/preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/visits/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/visits/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/visits/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/bulk-update"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/crews"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/crews/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/crews/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/bulk-insert"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/reindex-callback"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/terminate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/connections"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/connections/disable"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/drivers/messages"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/hos/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/hos/debug/vehicle-activity"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/register"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/routes/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/routes/import"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/routes/stops/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/routes/{}/directions"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-incidents/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-incidents/debug"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-incidents/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-media/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-media/debug"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-media/incident/{}/refresh"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/trips/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/trips/import"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/trips/stops/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/trips/{}/directions"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendor-users/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendor-users/import"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendors"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/assign-optimization-profile"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/data"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/async-export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/members-last-location"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-history/vehicles-last-location"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/tracking-page-api"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/traverse-routes"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/upload-downloader/upload"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/upload-downloader/upload/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-capacity-profiles"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/search"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/settings"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-profiles/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/assign"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk-activate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk-deactivate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk-delete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk-restore"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk-update"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/activate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/deactivate"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/delete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/restore"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/bulk/update"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/clustering"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/execute"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/list"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/reindex-callback"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/route-confirmation"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/search"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/sync/pending"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/viral-marketing/invitations/{}/people/send"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows/action-evidences"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows/action-evidences/bulk"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/async-export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/async-export/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/columns"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/columns/{}/by-export-type"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/export-attachments"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/export/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/contact"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/crm-sync/leads"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/crm-sync/members"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/reset-password"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/reset-password/complete"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/external-api/v5.0/tracking-page-api"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/external/v5.0/mobile-billing-api/{}/callback"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/master-routes"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/master-routes/combined"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/authorize"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/revoke"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/token"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/token/refresh"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/oauth/userinfo"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/schedule-preview"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/scheduled-routes/get-copies"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/schedules"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/async-export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/async-export/{}"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/columns"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/export"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/export-attachments"
+  },
+  {
+   "method": "POST",
+   "host": "wh.route4me.com",
+   "path": "/modules/{}/export/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "api.route4me.com",
+   "path": "/api.v4/address.php"
+  },
+  {
+   "method": "PUT",
+   "host": "api.route4me.com",
+   "path": "/api.v4/note_custom_types.php"
+  },
+  {
+   "method": "PUT",
+   "host": "api.route4me.com",
+   "path": "/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "PUT",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order.php"
+  },
+  {
+   "method": "PUT",
+   "host": "api.route4me.com",
+   "path": "/api.v4/order_custom_user_fields.php"
+  },
+  {
+   "method": "PUT",
+   "host": "api.route4me.com",
+   "path": "/api.v4/route.php"
+  },
+  {
+   "method": "PUT",
+   "host": "api.route4me.com",
+   "path": "/api.v4/territory.php"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/account/settings/data"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/account/settings/voice-notifications"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/batch-update"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/batch-update-async"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/update-by-areas"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/addresses/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/groups/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/address-book/locations/types/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/aliases/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/bulk-update"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/groups/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/identifier-types/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/locations/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/types/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/assets/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/avoidance/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/break-profiles/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-group-children/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/rule-groups/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-criteria/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-object-types/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rule-quantity-ranges/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/dynamic-service-times/service-duration-rules/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-categories/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/service-types/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/sla-policies/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedule-rules/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/common-dictionaries/work-schedules/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customer-notification-history/messages/update-status/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/contracts/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/priorities/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/customers/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original/depart"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/destinations/original/visit"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/driver-reviews/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/affiliation-types/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/business-units/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/lines-of-business/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/entity-types/{}/list/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/export-profiles/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/file-uploads"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/files/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/geofences/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/iam/2fa/policy"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/categories/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/combine-rules"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/configurations/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/items/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/internal-menu/support-links/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/facilities/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/inventory-manager/inventories/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/invitations/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/member-configuration-settings/organizations"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/notes/custom-types/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimization-profiles/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/optimizations/original/grab-and-go/optimization"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-custom-user-fields"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/order-inventory/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders-import/connections/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/custom-fields/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/orders/update"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/pruning/retention/config"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/member-custom-quotas/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/periodic-used-quotas/update-current"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/quotas/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/quota-manager/system-quota-defaults/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules/replace/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/route-schedules/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/recurring-routes/schedules/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/types/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/regions/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-custom-data/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/route-destinations/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/address.php"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/grab-and-go/optimization.php"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/optimization_problem.php"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes-platform/legacy/api.v4/route.php"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/optimizations/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/original/reverse"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/custom-data"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/members"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routes/{}/settings"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/routing-profiles/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/organization/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/saml/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/skill-management/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/datasets/{}/locations/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/locations/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/strategic-optimizations/optimizations/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/team/users/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/connections"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/hos/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/routes/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-incidents/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/safety-media/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/trips/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vehicle-activity/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendor-users/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/telematics/vendors"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/territories/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicle-inventory/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/vehicles/columns"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/viral-marketing/invitations/{}/people/showed"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/api/v5.0/workflows/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules/replace/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/route-schedules/{}"
+  },
+  {
+   "method": "PUT",
+   "host": "wh.route4me.com",
+   "path": "/modules/schedules/{}"
+  }
+ ],
+ "deprecated": [
+  {
+   "host": "telematics.route4me.com",
+   "path": "/api/vendors.php",
+   "reason": "host retired (301 to marketing site)"
+  },
+  {
+   "host": "rapid.route4me.com",
+   "path": "/street_data",
+   "reason": "404 since at least 2026-10-21"
+  },
+  {
+   "host": "rapid.route4me.com",
+   "path": "/street_data/{}",
+   "reason": "404"
+  },
+  {
+   "host": "rapid.route4me.com",
+   "path": "/street_data/{}/{}",
+   "reason": "404"
+  },
+  {
+   "host": "rapid.route4me.com",
+   "path": "/street_data/zipcode/{}",
+   "reason": "404"
+  },
+  {
+   "host": "rapid.route4me.com",
+   "path": "/street_data/zipcode/{}/{}/{}",
+   "reason": "404"
+  },
+  {
+   "host": "rapid.route4me.com",
+   "path": "/street_data/service/{}/{}",
+   "reason": "404"
+  },
+  {
+   "host": "rapid.route4me.com",
+   "path": "/street_data/service/{}/{}/{}/{}",
+   "reason": "404"
+  },
+  {
+   "host": "api.route4me.com",
+   "path": "/actions/route/export_current_route.php",
+   "reason": "404 (File not found.)"
+  },
+  {
+   "host": "api.route4me.com",
+   "path": "/route4me.php",
+   "reason": "404 (File not found.)"
+  }
+ ]
+}

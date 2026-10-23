@@ -83,7 +83,7 @@ class TestBundling:
 
 class TestServiceTimeRules:
     def test_it_still_subclasses_dict(self):
-        """Load-bearing: documented in CLAUDE.md as not to be changed."""
+        """Load-bearing: payload code relies on ServiceTimeRules being a dict."""
         assert isinstance(ServiceTimeRules(), dict)
 
     def test_defaults_are_class_attributes(self):

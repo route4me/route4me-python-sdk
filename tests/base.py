@@ -9,5 +9,5 @@ class Route4MeAPITestSuite(unittest.TestCase):
     """
 
     def setUp(self):
-        KEY = "11111111111111111111111111111111"
-        self.route4me = Route4Me(KEY)
+        key = "11111111111111111111111111111111"
+        self.route4me = Route4Me(key)

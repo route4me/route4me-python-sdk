@@ -79,6 +79,10 @@ def parse_retry_after(value):
 
     The C# SDK ignores this header entirely; honouring it is strictly better
     behaviour toward a rate-limited server.
+
+    :param value: the header value, or ``None`` when the header is absent.
+    :return: the delay in seconds, at most :data:`MAX_RETRY_AFTER`, or
+        ``None`` when the value is missing, negative or not a number.
     """
     if not value:
         return None
@@ -100,6 +104,12 @@ class CircuitBreaker:
 
     Thread-safe: all state transitions are taken under a lock, and the clock is
     ``time.monotonic`` so a wall-clock adjustment cannot wedge it open.
+
+    :param failure_threshold: consecutive failures that open the breaker.
+    :param reset_timeout: seconds the breaker stays open before a probe is
+        allowed.
+    :param on_open: ``callback(exc, reset_timeout)``, called once each time the
+        breaker opens. Exceptions from it are logged, never propagated.
     """
 
     def __init__(self, failure_threshold=5, reset_timeout=30.0, on_open=None):
@@ -112,11 +122,13 @@ class CircuitBreaker:
 
     @property
     def is_open(self):
+        """Whether the breaker is open, i.e. requests are short-circuited."""
         with self._lock:
             return self._opened_at is not None
 
     @property
     def failure_count(self):
+        """The number of consecutive failures recorded so far."""
         with self._lock:
             return self._failures
 
@@ -141,11 +153,20 @@ class CircuitBreaker:
             logger.debug("Route4Me circuit breaker half-open; allowing a probe request")
 
     def record_success(self):
+        """Record a successful request: reset the failure count and close the breaker."""
         with self._lock:
             self._failures = 0
             self._opened_at = None
 
     def record_failure(self, exc=None):
+        """Record a failed request, opening the breaker at the threshold.
+
+        When this failure opens the breaker, a warning is logged and
+        ``on_open`` is called outside the lock.
+
+        :param exc: the exception that caused the failure, or ``None`` for an
+            HTTP 5xx response. Passed on to ``on_open``.
+        """
         with self._lock:
             self._failures += 1
             if self._failures >= self.failure_threshold and self._opened_at is None:
@@ -153,7 +174,7 @@ class CircuitBreaker:
                 callback = self.on_open
                 threshold, timeout = self._failures, self.reset_timeout
             else:
-                callback = None
+                callback, threshold, timeout = None, None, None
         if callback is not None:
             logger.warning(
                 "Route4Me circuit breaker opened after %d consecutive failures; requests will fail fast for %.1fs",
@@ -164,7 +185,7 @@ class CircuitBreaker:
             # deadlock the breaker by touching it re-entrantly.
             try:
                 callback(exc, timeout)
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught  # a user callback must never break a request
                 logger.exception("Route4Me on_circuit_breaker_open callback raised")
 
     def reset(self):
@@ -185,7 +206,10 @@ def backoff_delay(attempt, initial_delay, jitter_ratio=0.2, rng=None):
     and re-flooding a server that is only just recovering.
 
     :param attempt: 1-based retry number.
+    :param initial_delay: delay before the first retry, in seconds.
+    :param jitter_ratio: maximum relative deviation of the jitter factor.
     :param rng: injectable ``random.Random`` for deterministic tests.
+    :return: the delay in seconds, never negative.
     """
     base = initial_delay * (2 ** (attempt - 1))
     generator = rng or random
@@ -194,14 +218,26 @@ def backoff_delay(attempt, initial_delay, jitter_ratio=0.2, rng=None):
 
 
 def should_retry_response(response, method):
-    """Whether ``response`` on ``method`` is worth retrying."""
+    """Whether ``response`` on ``method`` is worth retrying.
+
+    :param response: the :class:`requests.Response` received.
+    :param method: HTTP verb of the request.
+    :return: ``True`` when the verb is in :data:`RETRYABLE_METHODS` and the
+        status is in :data:`RETRYABLE_STATUSES`.
+    """
     if method.upper() not in RETRYABLE_METHODS:
         return False
     return response.status_code in RETRYABLE_STATUSES
 
 
 def should_retry_exception(exc, method):
-    """Whether ``exc`` on ``method`` is worth retrying."""
+    """Whether ``exc`` on ``method`` is worth retrying.
+
+    :param exc: the exception raised by the attempt.
+    :param method: HTTP verb of the request.
+    :return: ``True`` when the verb is in :data:`RETRYABLE_METHODS` and the
+        exception is one of :data:`RETRYABLE_EXCEPTIONS`.
+    """
     if method.upper() not in RETRYABLE_METHODS:
         return False
     return isinstance(exc, RETRYABLE_EXCEPTIONS)
@@ -210,6 +246,7 @@ def should_retry_exception(exc, method):
 def execute_with_retry(
     send,
     method,
+    *,
     retry_count=0,
     initial_delay=0.2,
     circuit_breaker=None,
@@ -229,8 +266,13 @@ def execute_with_retry(
         before each sleep. Exceptions from it are logged, never propagated.
     :param sleep: injectable for tests, so they need not actually wait.
     :param rng: injectable randomness for deterministic jitter in tests.
-    :returns: the final :class:`requests.Response`.
+    :return: the final :class:`requests.Response`, whatever its status.
     :raise CircuitBreakerOpen: if the breaker is open.
+    :raise requests.ConnectionError: when an attempt cannot connect and is not
+        retried: no retry is left, or the verb is not retryable.
+    :raise requests.Timeout: when an attempt times out and is not retried.
+    :raise requests.RequestException: for any other transport error, which is
+        never retried.
 
     The last attempt's outcome is returned or raised as-is, so a caller that
     exhausts its retries sees the real response or the real exception -- never
@@ -251,7 +293,7 @@ def execute_with_retry(
                 circuit_breaker.record_failure(exc)
             if attempt >= attempts or not should_retry_exception(exc, method):
                 raise
-            _wait(attempt, initial_delay, None, exc, on_retry, sleep, rng)
+            _wait(attempt, initial_delay, retry_after=None, outcome=exc, on_retry=on_retry, sleep=sleep, rng=rng)
             continue
         except requests.RequestException as exc:
             # Not transient (e.g. TooManyRedirects, InvalidURL): the breaker
@@ -270,21 +312,32 @@ def execute_with_retry(
             return response
 
         retry_after = parse_retry_after(response.headers.get("Retry-After"))
-        _wait(attempt, initial_delay, retry_after, response, on_retry, sleep, rng)
+        _wait(
+            attempt, initial_delay, retry_after=retry_after, outcome=response, on_retry=on_retry, sleep=sleep, rng=rng
+        )
 
     # Unreachable: the loop either returns or raises. Kept as a guard so a
     # future edit to the control flow fails loudly instead of returning None.
     raise last_exc or RuntimeError("retry loop exited without a result")
 
 
-def _wait(attempt, initial_delay, retry_after, outcome, on_retry, sleep, rng):
-    """Sleep before the next attempt, honouring ``Retry-After`` when present."""
+def _wait(attempt, initial_delay, *, retry_after, outcome, on_retry, sleep, rng):
+    """Sleep before the next attempt, honouring ``Retry-After`` when present.
+
+    :param attempt: 1-based number of the attempt that just failed.
+    :param initial_delay: exponential-backoff base, in seconds.
+    :param retry_after: server-supplied delay, or ``None``.
+    :param outcome: the exception or response that failed, for ``on_retry``.
+    :param on_retry: callback, or ``None``.
+    :param sleep: the sleep function.
+    :param rng: randomness for the jitter, or ``None``.
+    """
     delay = retry_after if retry_after is not None else backoff_delay(attempt, initial_delay, rng=rng)
     logger.debug("Route4Me retrying after %.3fs (attempt %d)", delay, attempt)
     if on_retry is not None:
         try:
             on_retry(outcome, delay, attempt)
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught  # a user callback must never break a request
             logger.exception("Route4Me on_retry callback raised")
     if delay > 0:
         sleep(delay)

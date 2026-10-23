@@ -10,6 +10,8 @@
 # pyproject.toml. ``tests/test_version.py`` fails the build if they drift.
 # ==============================================================================
 
+"""Version and package metadata of the Route4Me Python SDK."""
+
 __version__ = "0.3.1.0"
 
 #: Numeric release components, derived from :data:`__version__`.

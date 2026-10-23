@@ -36,6 +36,12 @@ jobs:
       - name: ruff format --check
         run: ruff format --check route4me/ tests/ examples/
 
+      - name: pylint
+        run: |
+          pylint route4me --rcfile=pyproject.toml
+          pylint examples --rcfile=examples/pylintrc
+          pylint tests --rcfile=tests/pylintrc
+
   typecheck:
     name: Type check
     runs-on: ubuntu-latest
@@ -84,8 +90,7 @@ jobs:
       - name: Install
         run: python -m pip install -e ".[test]"
 
-      # The suite is offline by design: `-m "not live"` (set in pyproject.toml)
-      # deselects the nightly smoke tests, and from Phase 3 onward pytest-socket
+      # The suite is offline by design: pytest-socket (armed in pyproject.toml)
       # turns any stray real connection into a hard failure.
       - name: pytest
         run: >-

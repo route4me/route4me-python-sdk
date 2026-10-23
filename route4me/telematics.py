@@ -1,3 +1,5 @@
+"""The :class:`Telematics` resource: telematics vendors and the connections to them."""
+
 from .api_endpoints import (
     TELEMATICS_CONNECTIONS_V4,
     TELEMATICS_REGISTER_V4,
@@ -9,15 +11,20 @@ from .exceptions import APIException, ParamValueException
 
 
 class Telematics(Base):
-    """
-    Telematics Management
+    """Telematics: the vendors Route4Me integrates with, and connections to them.
+
+    Use it as ``route4me.telematics``. The connection methods take the
+    member's telematics ``api_token``, which :meth:`register_member` returns.
+
+    Unless stated otherwise, a method returns the decoded JSON reply, or on an
+    API error the ``{"errors": ...}`` dict from :meth:`APIException.to_dict
+    <route4me.exceptions.APIException.to_dict>` instead of raising.
     """
 
     def __init__(self, api):
-        """
-        Telematics Instance
-        :param api:
-        :return:
+        """Create the resource.
+
+        :param api: the :class:`~route4me.api.Route4Me` client.
         """
         Base.__init__(self, api)
 
@@ -31,6 +38,10 @@ class Telematics(Base):
         silently produce no output for all of them, since examples do not
         configure a handler.
 
+        Prints one ``key : value`` line per item, then a blank line. Anything
+        other than a dict prints nothing.
+
+        :param response: the decoded reply to print.
         :param file: destination stream; defaults to stdout. Pass an
             ``io.StringIO`` to capture the output instead.
         """
@@ -45,13 +56,25 @@ class Telematics(Base):
 
         See :meth:`pp_response` on why this prints rather than logs.
 
+        Prints the vendor's ``id``, ``name`` and feature names. Anything other
+        than a dict prints nothing.
+
+        :param vendor: one vendor, as decoded from a reply.
         :param file: destination stream; defaults to stdout.
         """
         if isinstance(vendor, dict):
             features = [x["name"] for x in vendor.get("features", [])]
-            print("{}\t{}\t{}".format(vendor.get("id"), vendor.get("name"), ", ".join(features)), file=file)
+            print(f"{vendor.get('id')}\t{vendor.get('name')}\t{', '.join(features)}", file=file)
 
     def get_vendors(self):
+        """List the telematics vendors.
+
+        Sends ``GET /api/vendors.php`` to ``telematics.route4me.com``.
+
+        :return: the decoded JSON reply: the vendors, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when the resource has no API key.
+        """
         if self.check_required_params(
             self.params,
             [
@@ -59,7 +82,7 @@ class Telematics(Base):
             ],
         ):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_V4, self.params, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -67,12 +90,22 @@ class Telematics(Base):
             raise ParamValueException("params", "Missing API KEY")
 
     def get_vendor(self, vendor_id):
+        """Get one telematics vendor.
+
+        Sends ``GET /api/vendors.php`` to ``telematics.route4me.com`` with
+        ``vendor_id``.
+
+        :param vendor_id: ID of the vendor.
+        :return: the decoded JSON reply: the vendor, or the ``{"errors": ...}``
+            dict on an API error.
+        :raise ParamValueException: when the resource has no API key.
+        """
 
         self.params.update({"vendor_id": vendor_id})
 
         if self.check_required_params(self.params, ["api_key"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_V4, self.params, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -80,6 +113,15 @@ class Telematics(Base):
             raise ParamValueException("params", "Missing API KEY")
 
     def search_vendor(self, **kwargs):
+        """Search the telematics vendors.
+
+        Sends ``GET /api/vendors.php`` to ``telematics.route4me.com``.
+
+        :param kwargs: search filters, sent as query parameters as is.
+        :return: the decoded JSON reply: the matching vendors, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when the resource has no API key.
+        """
 
         kwargs.update(
             {
@@ -89,7 +131,7 @@ class Telematics(Base):
 
         if self.check_required_params(kwargs, ["api_key"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_V4, kwargs, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_V4, kwargs, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -97,12 +139,22 @@ class Telematics(Base):
             raise ParamValueException("params", "Missing API KEY")
 
     def compare_vendors(self, vendors_id):
+        """Compare several telematics vendors.
+
+        Sends ``GET /api/vendors.php`` to ``telematics.route4me.com`` with
+        ``vendors``.
+
+        :param vendors_id: the vendor IDs, comma-separated, e.g. ``"55,56"``.
+        :return: the decoded JSON reply: the vendors, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when the resource has no API key.
+        """
 
         self.params.update({"vendors": vendors_id})
 
         if self.check_required_params(self.params, ["api_key"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_V4, self.params, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_V4, self.params, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -110,11 +162,20 @@ class Telematics(Base):
             raise ParamValueException("params", "Missing API KEY")
 
     def register_member(self, member_id):
+        """Register a member with the telematics service.
+
+        Sends ``GET /api.v4/telematics/register.php`` with ``member_id``.
+
+        :param member_id: ID of the member.
+        :return: the decoded JSON reply, with the member's ``api_token``, or
+            the ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when the resource has no API key.
+        """
         self.params.update({"member_id": member_id})
 
         if self.check_required_params(self.params, ["api_key"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_REGISTER_V4, self.params, self.api._request_get)
+                self.response = self._request(TELEMATICS_REGISTER_V4, self.params, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -122,11 +183,22 @@ class Telematics(Base):
             raise ParamValueException("params", "Missing API KEY")
 
     def get_connections(self, api_token, **kwargs):
+        """List a member's telematics connections.
+
+        Sends ``GET /api.v4/telematics/connections.php``.
+
+        :param api_token: the member's telematics API token.
+        :param kwargs: further query parameters, sent as is.
+        :return: the decoded JSON reply: the connections, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: if the query has no ``api_token``. The
+            argument is always added, so this is not raised in practice.
+        """
         kwargs.update({"api_token": api_token})
 
         if self.check_required_params(kwargs, ["api_token"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4, kwargs, self.api._request_get)
+                self.response = self._request(TELEMATICS_CONNECTIONS_V4, kwargs, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -134,11 +206,22 @@ class Telematics(Base):
             raise ParamValueException("params", "Missing API Token")
 
     def get_vendors_info(self, api_token, **kwargs):
+        """Get information on the vendors a member is connected to.
+
+        Sends ``GET /api.v4/telematics/vendors.php``.
+
+        :param api_token: the member's telematics API token.
+        :param kwargs: further query parameters, sent as is.
+        :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
+            API error.
+        :raise ParamValueException: if the query has no ``api_token``. The
+            argument is always added, so this is not raised in practice.
+        """
         kwargs.update({"api_token": api_token})
 
         if self.check_required_params(kwargs, ["api_token"]):
             try:
-                self.response = self.api._make_request(TELEMATICS_VENDORS_INFO_V4, kwargs, self.api._request_get)
+                self.response = self._request(TELEMATICS_VENDORS_INFO_V4, kwargs, "get")
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -146,13 +229,23 @@ class Telematics(Base):
             raise ParamValueException("params", "Missing API Token")
 
     def register_connection(self, api_token, **kwargs):
+        """Create a connection to a telematics vendor.
+
+        Sends ``POST /api.v4/telematics/connections.php`` with the keywords
+        and ``validate_remote_credentials="true"`` as the JSON body.
+
+        :param api_token: the member's telematics API token.
+        :param kwargs: the connection fields, e.g. the vendor credentials.
+            Required: ``vendor_id``.
+        :return: the decoded JSON reply: the new connection, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``vendor_id`` is missing.
+        """
         params = {"api_token": api_token}
         kwargs.update({"validate_remote_credentials": "true"})
         if self.check_required_params(kwargs, ["vendor_id"]):
             try:
-                self.response = self.api._make_request(
-                    TELEMATICS_CONNECTIONS_V4, params, self.api._request_post, json=kwargs
-                )
+                self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "post", json=kwargs)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()
@@ -160,29 +253,57 @@ class Telematics(Base):
             raise ParamValueException("params", "Missing Vendor ID")
 
     def get_connection(self, api_token, connection_token):
+        """Get one telematics connection.
+
+        Sends ``GET /api.v4/telematics/connections.php``.
+
+        :param api_token: the member's telematics API token.
+        :param connection_token: token of the connection.
+        :return: the decoded JSON reply: the connection, or the
+            ``{"errors": ...}`` dict on an API error.
+        """
         params = {"api_token": api_token, "connection_token": connection_token}
         try:
-            self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4, params, self.api._request_get)
+            self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "get")
             return self.response.json()
         except APIException as e:
             return e.to_dict()
 
     def delete_connection(self, api_token, connection_token):
+        """Delete a telematics connection.
+
+        Sends ``DELETE /api.v4/telematics/connections.php``.
+
+        :param api_token: the member's telematics API token.
+        :param connection_token: token of the connection.
+        :return: the decoded JSON reply, or the ``{"errors": ...}`` dict on an
+            API error.
+        """
         params = {"api_token": api_token, "connection_token": connection_token}
         try:
-            self.response = self.api._make_request(TELEMATICS_CONNECTIONS_V4, params, self.api._request_delete)
+            self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "delete")
             return self.response.json()
         except APIException as e:
             return e.to_dict()
 
     def update_connection(self, api_token, connection_token, **kwargs):
+        """Update a telematics connection.
+
+        Sends ``PUT /api.v4/telematics/connections.php`` with the keywords and
+        ``validate_remote_credentials="true"`` as the JSON body.
+
+        :param api_token: the member's telematics API token.
+        :param connection_token: token of the connection.
+        :param kwargs: the fields to change. Required: ``vendor_id``.
+        :return: the decoded JSON reply: the updated connection, or the
+            ``{"errors": ...}`` dict on an API error.
+        :raise ParamValueException: when ``vendor_id`` is missing.
+        """
         params = {"api_token": api_token, "connection_token": connection_token}
         kwargs.update({"validate_remote_credentials": "true"})
         if self.check_required_params(kwargs, ["vendor_id"]):
             try:
-                self.response = self.api._make_request(
-                    TELEMATICS_CONNECTIONS_V4, params, self.api._request_put, json=kwargs
-                )
+                self.response = self._request(TELEMATICS_CONNECTIONS_V4, params, "put", json=kwargs)
                 return self.response.json()
             except APIException as e:
                 return e.to_dict()

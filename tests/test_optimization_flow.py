@@ -11,8 +11,10 @@ import json
 import pytest
 import responses
 
+from route4me import Route4Me
 from route4me.api_endpoints import API_HOST
 from route4me.constants import ALGORITHM_TYPE
+from route4me.exceptions import APIException
 
 OPTIMIZATION_ID = "07372F2CF3814EC6E2E4C4B0DCF20B9C"
 
@@ -75,8 +77,6 @@ class TestRunOptimization:
 
     def test_redirects_disabled_adds_the_redirect_flag(self, mocked, query_of, last_request):
         """``redirects=False`` is surfaced to the API as ``redirect=0``."""
-        from route4me import Route4Me
-
         client = Route4Me("1" * 32, redirects=False)
         mocked.add(responses.POST, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)
 
@@ -87,8 +87,6 @@ class TestRunOptimization:
     def test_an_http_error_propagates(self, prepared, mocked):
         """``run_optimization`` does not catch -- unlike resource methods, it
         raises. Pinning this because it is an inconsistency callers rely on."""
-        from route4me.exceptions import APIException
-
         mocked.add(responses.POST, API_HOST, json={"errors": ["bad"]}, status=400)
 
         with pytest.raises(APIException):
@@ -164,8 +162,6 @@ class TestReOptimization:
         assert json.loads(last_request().body) == {"parameters": {"route_name": "Renamed"}}
 
     def test_an_http_error_propagates(self, client, mocked):
-        from route4me.exceptions import APIException
-
         mocked.add(responses.PUT, API_HOST, json={"errors": ["bad"]}, status=400)
 
         with pytest.raises(APIException):
