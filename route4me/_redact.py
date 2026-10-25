@@ -47,6 +47,23 @@ SENSITIVE_PARAMS = frozenset(
     }
 )
 
+#: Name endings that mark a credential, e.g. ``organization_api_key`` or
+#: ``device_token``. A name that is not in :data:`SENSITIVE_PARAMS` is still
+#: redacted when it ends with one of these.
+SENSITIVE_SUFFIXES = ("api_key", "apikey", "_token", "_secret", "password")
+
+
+def is_sensitive_param(name):
+    """Tell whether a query or form parameter holds a credential.
+
+    :param name: the parameter name; matched case-insensitively.
+    :return: ``True`` when the name is in :data:`SENSITIVE_PARAMS` or ends
+        with one of :data:`SENSITIVE_SUFFIXES`.
+    """
+    lowered = str(name).lower()
+    return lowered in SENSITIVE_PARAMS or lowered.endswith(SENSITIVE_SUFFIXES)
+
+
 #: Request/response headers whose values must never be logged.
 SENSITIVE_HEADERS = frozenset(
     {
@@ -66,10 +83,14 @@ def _drop_query(url):
     Used when a URL cannot be parsed. Throwing the whole query string away is
     the safe choice -- we would rather lose debugging detail than emit a
     credential we failed to recognise.
+
+    :param url: the URL to cut.
+    :return: the URL up to its query, followed by ``?REDACTED``, or
+        ``REDACTED`` alone when even that fails.
     """
     try:
         return url.split("?", 1)[0] + "?" + REDACTED
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return REDACTED
 
 
@@ -83,6 +104,10 @@ def redact_url(url):
     'https://api.route4me.com/x.php?api_key=REDACTED&limit=1'
 
     Falls back to :func:`_drop_query` if the URL cannot be parsed. Never raises.
+
+    :param url: the URL to redact.
+    :return: the redacted URL. ``url`` itself when it has no query string, is
+        empty, or is not a string.
     """
     if not url or not isinstance(url, str):
         return url
@@ -91,9 +116,9 @@ def redact_url(url):
         if not parts.query:
             return url
         pairs = parse_qsl(parts.query, keep_blank_values=True)
-        cleaned = [(k, REDACTED if k.lower() in SENSITIVE_PARAMS else v) for k, v in pairs]
+        cleaned = [(k, REDACTED if is_sensitive_param(k) else v) for k, v in pairs]
         return urlunsplit(parts._replace(query=urlencode(cleaned)))
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return _drop_query(url)
 
 
@@ -104,8 +129,14 @@ def redact_text(text, *secrets):
     parameters back inside error payloads, which means the API key can appear
     in the body as well as the URL.
 
-    Short secrets are ignored -- replacing a 1- or 2-character string would
-    corrupt the body without protecting anything meaningful.
+    Secrets shorter than 8 characters are ignored -- replacing a very short
+    string would corrupt the body without protecting anything meaningful.
+    Matching ignores letter case.
+
+    :param text: the text to redact, typically a response body.
+    :param secrets: the values to remove, e.g. the API key.
+    :return: the redacted text; ``text`` itself when it is empty or not a
+        string, or ``REDACTED`` alone if redaction fails.
     """
     if not text or not isinstance(text, str):
         return text
@@ -113,10 +144,10 @@ def redact_text(text, *secrets):
         for secret in secrets:
             if isinstance(secret, str) and len(secret) >= 8:
                 text = text.replace(secret, REDACTED)
-                # Also catch a percent- or URL-encoded appearance.
+                # Also catch the secret in a different letter case.
                 text = re.sub(re.escape(secret), REDACTED, text, flags=re.IGNORECASE)
         return text
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return REDACTED
 
 
@@ -125,20 +156,31 @@ def redact_headers(headers):
 
     Accepts anything dict-like (including ``requests``' case-insensitive
     ``CaseInsensitiveDict``). Returns a plain ``dict``.
+
+    :param headers: the headers to redact.
+    :return: a new dict with the values of :data:`SENSITIVE_HEADERS` replaced;
+        ``{}`` for empty input, or ``{"REDACTED": "REDACTED"}`` if redaction
+        fails.
     """
     if not headers:
         return {}
     try:
         return {k: (REDACTED if str(k).lower() in SENSITIVE_HEADERS else v) for k, v in dict(headers).items()}
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return {REDACTED: REDACTED}
 
 
 def redact_params(params):
-    """Return a copy of a query-parameter mapping with sensitive values replaced."""
+    """Return a copy of a query-parameter mapping with sensitive values replaced.
+
+    :param params: the query parameters to redact.
+    :return: a new dict with the values of credential parameters (see
+        :func:`is_sensitive_param`) replaced; ``{}`` for empty input, or
+        ``{"REDACTED": "REDACTED"}`` if redaction fails.
+    """
     if not params:
         return {}
     try:
-        return {k: (REDACTED if str(k).lower() in SENSITIVE_PARAMS else v) for k, v in dict(params).items()}
-    except Exception:
+        return {k: (REDACTED if is_sensitive_param(k) else v) for k, v in dict(params).items()}
+    except Exception:  # pylint: disable=broad-exception-caught  # redaction must never raise
         return {REDACTED: REDACTED}

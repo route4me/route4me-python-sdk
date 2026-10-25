@@ -1,3 +1,16 @@
+"""Remove a destination from a route.
+
+Creates a route by running a TSP optimization of seven New York addresses, one of them the depot with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then removes its second address with
+:meth:`Address.delete_address_from_route <route4me.address.Address.delete_address_from_route>`, which
+sends ``DELETE /api.v4/address.php`` with ``route_id`` and ``route_destination_id``.
+
+Run it with::
+
+    python examples/addresses/remove_route_destination.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +24,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Create a route and remove one of its destinations.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
     optimization = r4m.optimization
     address = r4m.address
@@ -65,7 +82,7 @@ def main(api_key):
     print("Current Addresses")
     for i, address in enumerate(response["addresses"]):
         print(f"Number {i}:")
-        print("\taddress: {}".format(address["address"]))
+        print(f"\taddress: {address['address']}")
         print("\t")
 
     route_id = response["addresses"][1]["route_id"]
@@ -73,7 +90,7 @@ def main(api_key):
 
     print(f"Deleting address {route_destination_id} from Route: {route_id}")
     response = r4m.address.delete_address_from_route(route_id, route_destination_id)
-    print("Address id: {} deleted: {}".format(response["route_destination_id"], response["deleted"]))
+    print(f"Address id: {response['route_destination_id']} deleted: {response['deleted']}")
 
 
 if __name__ == "__main__":

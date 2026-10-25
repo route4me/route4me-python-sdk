@@ -232,3 +232,29 @@ class TestParamsAreNotMutated:
         client._make_request(ROUTE_HOST, None, client._request_get)
 
         assert len(mocked.calls) == 1
+
+
+class TestTheKeyGoesOnlyToTheApiHosts:
+    def test_a_request_to_another_host_carries_no_key(self, client, monkeypatch):
+        """Even if a caller puts api_key in the query, another host never gets it."""
+        sent = []
+        monkeypatch.setattr(client, "_request_get", lambda url, params, **kwargs: sent.append(params) or _ok())
+
+        client._make_request("https://rapid.route4me.com/timezone", {"api_key": "x", "lat": 1}, client._request_get)
+
+        assert sent == [{"lat": 1}]
+
+    def test_a_v4_request_to_the_api_host_carries_the_key(self, client, monkeypatch, api_key):
+        sent = []
+        monkeypatch.setattr(client, "_request_get", lambda url, params, **kwargs: sent.append(params) or _ok())
+
+        client._make_request("https://api.route4me.com/api.v4/route.php", {}, client._request_get)
+
+        assert sent == [{"api_key": api_key}]
+
+
+def _ok():
+    """Return a minimal successful response."""
+    response = requests.Response()
+    response.status_code = 200
+    return response

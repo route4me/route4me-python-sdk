@@ -15,6 +15,7 @@ import pytest
 import responses
 
 from route4me.api_endpoints import ACTIVITY_FEED, ADDRESSBOOK, AVOIDANCE, ORDERS_HOST
+from route4me.avoidance_zones import AvoidanceZones, AvoindanceZones
 from route4me.exceptions import ParamValueException
 
 TERRITORY_ID = "0F3B8C2D5E7A419B6C8D0E2F4A6B8C1D"
@@ -89,8 +90,6 @@ class TestAvoidanceZones:
 
     def test_the_misspelled_alias_is_the_same_class(self):
         """`AvoindanceZones` shipped in a release and must never be removed."""
-        from route4me.avoidance_zones import AvoidanceZones, AvoindanceZones
-
         assert AvoindanceZones is AvoidanceZones
 
     def test_an_api_error_is_returned_not_raised(self, client, mocked):
@@ -263,10 +262,22 @@ class TestActivityFeed:
     def test_log_specific_message(self, client, mocked, last_request):
         mocked.add(responses.POST, ACTIVITY_FEED, json={"status": True}, status=200)
 
-        result = client.activity_feed.log_specific_message(route_id="R1", activity_message="hello", api_key="k")
+        result = client.activity_feed.log_specific_message(route_id="R1", activity_message="hello")
 
         assert result == {"status": True}
         assert last_request().method == "POST"
+        assert json.loads(last_request().body) == {
+            "route_id": "R1",
+            "activity_message": "hello",
+            "activity_type": "user_message",
+        }
+
+    def test_log_specific_message_keeps_the_key_out_of_the_body(self, client, mocked, last_request, api_key):
+        mocked.add(responses.POST, ACTIVITY_FEED, json={"status": True}, status=200)
+
+        client.activity_feed.log_specific_message(route_id="R1", activity_message="hello")
+
+        assert api_key not in last_request().body.decode()
 
     def test_log_specific_message_enforces_its_required_fields(self, client):
         with pytest.raises(ParamValueException):

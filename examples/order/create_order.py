@@ -1,9 +1,25 @@
+"""Create an order.
+
+Calls :meth:`Order.create_order <route4me.orders.Order.create_order>`, which sends
+``POST /api.v4/order.php`` with the order as the JSON body (``address_1`` is required; ``EXT_FIELD_*``
+are extra fields), and prints the new order. The order stays in the account; delete_order.py shows how
+to remove one.
+
+Run it with::
+
+    python examples/order/create_order.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Create an order and print it.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     order = route4me.order
@@ -21,16 +37,16 @@ def main(api_key):
     if isinstance(response, dict) and "errors" in response.keys():
         print(". ".join(response["errors"]))
     else:
-        print("Member ID:\t{}".format(response.get("member_id")))
-        print("Order ID:\t{}".format(response.get("order_id")))
-        print("Order Status ID:\t{}".format(response.get("order_status_id")))
-        print("In Route Count:\t{}".format(response.get("in_route_count")))
-        print("Day Added:\t{}".format(response.get("day_added_YYMMDD")))
-        print("Is Pending:\t{}".format(response.get("is_pending")))
-        print("Is Accepted:\t{}".format(response.get("is_accepted")))
-        print("Is Started:\t{}".format(response.get("is_started")))
-        print("Is Validated:\t{}".format(response.get("is_validated")))
-        print("Is Completed:\t{}".format(response.get("is_completed")))
+        print(f"Member ID:\t{response.get('member_id')}")
+        print(f"Order ID:\t{response.get('order_id')}")
+        print(f"Order Status ID:\t{response.get('order_status_id')}")
+        print(f"In Route Count:\t{response.get('in_route_count')}")
+        print(f"Day Added:\t{response.get('day_added_YYMMDD')}")
+        print(f"Is Pending:\t{response.get('is_pending')}")
+        print(f"Is Accepted:\t{response.get('is_accepted')}")
+        print(f"Is Started:\t{response.get('is_started')}")
+        print(f"Is Validated:\t{response.get('is_validated')}")
+        print(f"Is Completed:\t{response.get('is_completed')}")
 
 
 if __name__ == "__main__":

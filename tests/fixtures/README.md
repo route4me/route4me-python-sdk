@@ -15,6 +15,6 @@ def test_something(mocked, load_fixture):
     mocked.add(responses.GET, URL, json=load_fixture("routes_list"))
 ```
 
-To refresh one against the live API, run the matching test in `tests/live/`
-with `ROUTE4ME_API_KEY` set, capture the response, and re-scrub it. Never
-commit a payload straight from a real account.
+To refresh one, capture the response from the live API outside the
+repository, then re-scrub it. Never commit a payload straight from a real
+account.

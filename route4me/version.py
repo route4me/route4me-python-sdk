@@ -10,10 +10,12 @@
 # pyproject.toml. ``tests/test_version.py`` fails the build if they drift.
 # ==============================================================================
 
-__version__ = "0.3.1.0"
+"""Version and package metadata of the Route4Me Python SDK."""
+
+__version__ = "1.0.0"
 
 #: Numeric release components, derived from :data:`__version__`.
-#: ``"0.2.0.0.dev0"`` -> ``(0, 2, 0, 0)``.
+#: ``"1.1.0.dev0"`` -> ``(1, 1, 0)``.
 VERSION = tuple(int(part) for part in __version__.split(".") if part.isdigit())
 
 #: Any PEP 440 suffix trailing the numeric components -- ``".dev0"``, ``"rc1"``,

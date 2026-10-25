@@ -1,3 +1,17 @@
+"""Create an optimization that notifies a URL when it is done.
+
+Runs a TSP optimization of nine New York addresses, one of them the depot, after setting a callback URL
+with ``optimization.optimized_callback_url(callback_url)``.
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php`` with the URL in the query, and Route4Me then sends a POST
+request with the ``optimization_problem_id`` to that URL. ``https://private.webhook`` is a placeholder:
+use an endpoint you control.
+
+Run it with::
+
+    python examples/optimizations/optimized_callback.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -11,6 +25,10 @@ from route4me.constants import (
 
 
 def main(api_key):
+    """Run the optimization with a callback URL and print the route.
+
+    :param api_key: Route4Me API key.
+    """
     callback_url = "https://private.webhook"
     route4me = Route4Me(api_key)
 
@@ -70,19 +88,17 @@ def main(api_key):
     )
 
     response = route4me.run_optimization()
-    print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
-    print("Optimization Link: {}".format(response["links"]["view"]))
+    print(f"Optimization Problem ID: {response['optimization_problem_id']}")
+    print(f"Optimization Link: {response['links']['view']}")
 
     for i, route in enumerate(response["routes"]):
-        print("\t{}\tRoute Link: {}".format(i + 1, route["links"]["route"]))
+        print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
-            print("\t\t\tAddress: {}".format(address["address"]))
+            print(f"\t\t\tAddress: {address['address']}")
 
     print(f"\nPlease open this url {callback_url}?inspect.")
     print(
-        "Verify that there is a POST request with this {} optimization_problem_id".format(
-            response["optimization_problem_id"]
-        )
+        f"Verify that there is a POST request with this {response['optimization_problem_id']} optimization_problem_id"
     )
 
 

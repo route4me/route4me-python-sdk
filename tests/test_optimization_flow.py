@@ -11,8 +11,10 @@ import json
 import pytest
 import responses
 
+from route4me import Route4Me
 from route4me.api_endpoints import API_HOST
 from route4me.constants import ALGORITHM_TYPE
+from route4me.exceptions import APIException
 
 OPTIMIZATION_ID = "07372F2CF3814EC6E2E4C4B0DCF20B9C"
 
@@ -75,8 +77,6 @@ class TestRunOptimization:
 
     def test_redirects_disabled_adds_the_redirect_flag(self, mocked, query_of, last_request):
         """``redirects=False`` is surfaced to the API as ``redirect=0``."""
-        from route4me import Route4Me
-
         client = Route4Me("1" * 32, redirects=False)
         mocked.add(responses.POST, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)
 
@@ -87,8 +87,6 @@ class TestRunOptimization:
     def test_an_http_error_propagates(self, prepared, mocked):
         """``run_optimization`` does not catch -- unlike resource methods, it
         raises. Pinning this because it is an inconsistency callers rely on."""
-        from route4me.exceptions import APIException
-
         mocked.add(responses.POST, API_HOST, json={"errors": ["bad"]}, status=400)
 
         with pytest.raises(APIException):
@@ -164,8 +162,6 @@ class TestReOptimization:
         assert json.loads(last_request().body) == {"parameters": {"route_name": "Renamed"}}
 
     def test_an_http_error_propagates(self, client, mocked):
-        from route4me.exceptions import APIException
-
         mocked.add(responses.PUT, API_HOST, json={"errors": ["bad"]}, status=400)
 
         with pytest.raises(APIException):
@@ -188,6 +184,41 @@ class TestExporters:
         client.export_result_to_json(str(target))
 
         assert not target.exists()
+
+    def test_a_failed_export_closes_its_file(self, client, tmp_path, monkeypatch):
+        """#132: a value JSON cannot encode left the file open."""
+        handles = []
+
+        def recording_dump(obj, handle, **kwargs):
+            handles.append(handle)
+            return json.dump(obj, handle, **kwargs)
+
+        monkeypatch.setattr("route4me.api.dump", recording_dump)
+        client.optimization.data = {"invalid": {1, 2}}
+
+        with pytest.raises(TypeError):
+            client.export_request_to_json(str(tmp_path / "out.json"))
+
+        assert len(handles) == 1
+        assert handles[0].closed
+
+    @pytest.mark.parametrize("exporter", ["export_result_to_json", "export_request_to_json"])
+    def test_exports_are_written_as_utf8(self, prepared, mocked, tmp_path, monkeypatch, exporter):
+        """#37: without an explicit encoding, non-ASCII addresses fail on Windows."""
+        mocked.add(responses.POST, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)
+        prepared.run_optimization()
+        encodings = []
+        real_open = open
+
+        def spy(file, *args, **kwargs):
+            encodings.append(kwargs.get("encoding"))
+            return real_open(file, *args, **kwargs)
+
+        monkeypatch.setattr("route4me.api.open", spy, raising=False)
+
+        getattr(prepared, exporter)(str(tmp_path / "out.json"))
+
+        assert encodings == ["utf-8"]
 
     def test_export_result_writes_after_a_call(self, prepared, mocked, tmp_path):
         mocked.add(responses.POST, API_HOST, json=OPTIMIZATION_RESPONSE, status=200)

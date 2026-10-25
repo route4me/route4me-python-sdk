@@ -1,9 +1,24 @@
+"""List the latest ten optimizations.
+
+Calls :meth:`Optimization.get_optimizations <route4me.optimization.Optimization.get_optimizations>` with
+``limit=10`` and ``offset=0``, which sends ``GET /api.v4/optimization_problem.php``, and prints the ID
+and route name of each optimization.
+
+Run it with::
+
+    python examples/optimizations/get_optimizations.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the latest ten optimizations.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization
@@ -15,9 +30,7 @@ def main(api_key):
         for i, optimization in enumerate(response["optimizations"]):
             optimization_problem_id = optimization["optimization_problem_id"]
             print(
-                "{}.-\tOptimization ID: {} - \t{}".format(
-                    i + 1, optimization_problem_id, optimization["parameters"]["route_name"]
-                )
+                f"{i + 1}.-\tOptimization ID: {optimization_problem_id} - \t{optimization['parameters']['route_name']}"
             )
 
 

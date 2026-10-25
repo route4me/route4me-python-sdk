@@ -2,8 +2,8 @@
 
 Previously this file made a real HTTPS call to ``api.route4me.com`` with the
 dummy key and was documented as "fails by design". It now runs against
-recorded payloads; the honest smoke coverage it was standing in for moved to
-``tests/live/test_smoke.py``.
+recorded payloads. Smoke tests against the real API need a live key and are
+kept outside the repository.
 
 The old version also had a broken guard -- ``if hasattr(response, "errors")``
 against a ``dict``, which is always ``False``, so the error branch it was

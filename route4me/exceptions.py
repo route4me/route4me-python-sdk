@@ -1,3 +1,9 @@
+"""Exceptions raised by the SDK.
+
+:class:`APIException` is raised when the API answers with an HTTP error;
+:class:`ParamValueException` when a parameter is missing or invalid.
+"""
+
 import json
 
 from ._redact import redact_url
@@ -7,11 +13,40 @@ from .version import VERSION_STRING
 DRIVER_VERSION = f"route4me-python-sdk-{VERSION_STRING}"
 
 
-class APIException(Exception):
-    """
-    Handle API Exceptions
+def _message_list(value):
+    """Flatten an error value from a reply into a list of strings.
 
-    .. versionchanged:: 0.2.0
+    :param value: a string, a list of strings, a dict of field name to
+        messages (the V5 ``messages`` shape), or ``None``.
+    :return: the messages, each one a string; empty for ``None`` or an empty
+        value.
+    """
+    if value is None or value == "" or isinstance(value, bool):
+        return []
+    if isinstance(value, dict):
+        value = list(value.values())
+    if not isinstance(value, (list, tuple)):
+        return [str(value)]
+    flattened = []
+    for item in value:
+        flattened.extend(_message_list(item))
+    return flattened
+
+
+class APIException(Exception):
+    """The API answered with an HTTP status outside the 200-399 range.
+
+    Most resource methods catch it and return :meth:`to_dict` instead of
+    raising it.
+
+    :param status_code: the HTTP status code.
+    :param response: the response body text. The client removes the API key
+        from it before raising.
+    :param url: the request URL.
+    :param redact: whether to strip credentials from ``url``. ``None`` (the
+        default) follows ``Route4MeConfig.redact_urls``.
+
+    .. versionchanged:: 1.0.0
        ``url`` is now redacted. ``requests`` resolves ``Response.url`` to the
        fully expanded request URL, which for the V4 API carries
        ``?api_key=<plaintext>``; that string used to appear in ``str(exc)``,
@@ -42,32 +77,33 @@ class APIException(Exception):
         Exception.__init__(self, exception)
 
     def get_status_code(self):
-        """
-        Status code
-        :return:
+        """Return the HTTP status code.
+
+        :return: the status code, e.g. ``404``.
         """
         return self.status_code
 
     def get_response(self):
-        """
-        Return response
-        :return:
+        """Return the response body.
+
+        :return: the response body text.
         """
         return self.response
 
     def get_url(self):
-        """
-        Redacted request URL
-        :return:
+        """Return the request URL.
+
+        :return: the URL, with credentials stripped unless redaction was
+            turned off.
         """
         return self.url
 
     def to_dict(self):
-        """
-        Return a dictionary representation of the exception
+        """Return the error as a dict.
 
-        Always shaped ``{"errors": ...}`` -- this is what almost every resource
-        method returns on an API error, so the shape is load-bearing.
+        Always shaped ``{"errors": [message, ...]}``: this is what almost every
+        resource method returns on an API error, so the shape is load-bearing.
+        ``". ".join(result["errors"])`` always works.
 
         Defensive on three inputs that used to raise *out of the error path*,
         turning a plain HTTP failure into a confusing traceback:
@@ -77,46 +113,45 @@ class APIException(Exception):
         * a body that is valid JSON but not an object, e.g. ``[1, 2]`` --
           ``json.loads`` returns a list, whose ``.get`` raises ``AttributeError``
         * a V5 error envelope, which has no ``errors`` key at all
+
+        :return: ``{"errors": messages}``, a non-empty list of strings: the V4
+            ``errors``, the V5 ``messages`` flattened, or the ``message`` or
+            ``error`` value; ``["Unexpected server response"]`` when none of
+            them is present or the body is not a JSON object.
+
+        .. versionchanged:: 1.0.0
+           ``errors`` is always a list of strings. It used to be a string for a
+           non-JSON body, and ``None`` when the reply had no ``errors`` key.
         """
         try:
             payload = json.loads(self.response)
         except (TypeError, ValueError):
             # ValueError covers json.JSONDecodeError, which subclasses it.
-            return {"errors": "Unexpected server response"}
+            payload = None
 
-        if not isinstance(payload, dict):
-            return {"errors": "Unexpected server response"}
-
-        if payload.get("errors") is not None:
-            # V4 shape: {"errors": [...]}
-            return {"errors": payload["errors"]}
-
-        # V5 shape (DataTypes/V5/ResultResponse.cs):
-        #   {"status": false, "code": 422, "messages": {"field": ["..."]}}
-        # There is no "errors" key, so without this branch every V5 failure
-        # returned {"errors": None} and threw the actual message away.
-        messages = payload.get("messages")
-        if isinstance(messages, dict):
-            flattened = []
-            for value in messages.values():
-                if isinstance(value, (list, tuple)):
-                    flattened.extend(value)
-                else:
-                    flattened.append(value)
-            return {"errors": flattened}
-        if messages:
-            return {"errors": messages}
-
-        if "errors" in payload:
-            # Present but explicitly null -- preserve the historical shape.
-            return {"errors": payload["errors"]}
-
-        return {"errors": payload.get("message") or "Unexpected server response"}
+        messages = []
+        if isinstance(payload, dict):
+            # V4 replies carry {"errors": [...]}. V5 replies have no "errors"
+            # key (DataTypes/V5/ResultResponse.cs):
+            #   {"status": false, "code": 422, "messages": {"field": ["..."]}}
+            # and a module the account lacks answers 403 with
+            #   {"status": false, "exit_code": 1, "error": "...feature is not enabled..."}
+            # Without the fallbacks every V5 failure lost its message.
+            for key in ("errors", "messages", "message", "error"):
+                messages = _message_list(payload.get(key))
+                if messages:
+                    break
+        return {"errors": messages or ["Unexpected server response"]}
 
 
 class ParamValueException(Exception):
-    """
-    Handle Params exceptions
+    """A parameter is missing or has an invalid value.
+
+    Raised before any request is sent.
+
+    :param param: name of the offending parameter, or a group name such as
+        ``"params"`` when required parameters are missing.
+    :param msg: what is wrong with it.
     """
 
     def __init__(self, param, msg):
@@ -129,8 +164,8 @@ class ParamValueException(Exception):
         Exception.__init__(self, exception)
 
     def get_msg(self):
-        """
-        Message from exception
-        :return:
+        """Return the error message.
+
+        :return: the message passed as ``msg``.
         """
         return self.msg

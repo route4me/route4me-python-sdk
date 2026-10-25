@@ -1,3 +1,16 @@
+"""Optimize 48 stops with time windows, from two depots.
+
+Builds a CVRP_TW_MD (multiple depot) optimization in Louisville, Kentucky: two depots and 48 stops, each
+with a ten-minute time window and five minutes of service, split into up to ten round-trip routes
+(``parts``, ``rt``) that start at 07:00, on the matrix distance metric, optimized for time.
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>` sends
+``POST /api.v4/optimization_problem.php``. Prints the optimization link and the addresses of each route.
+
+Run it with::
+
+    python examples/multiple_depot_multiple_driver_time_window.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -5,17 +18,16 @@ from route4me.constants import (
     ALGORITHM_TYPE,
     DEVICE_TYPE,
     DISTANCE_UNIT,
-    METRIC,
     OPTIMIZE,
     TRAVEL_MODE,
 )
 
 
-def main(api_key):
-    route4me = Route4Me(api_key)
+def _set_parameters(optimization):
+    """Set the route parameters of the optimization.
 
-    optimization = route4me.optimization
-    address = route4me.address
+    :param optimization: the client's :class:`~route4me.optimization.Optimization` resource.
+    """
     optimization.route_name("Multiple Depot, Multiple Driver, Time window")
     optimization.algorithm_type(ALGORITHM_TYPE.CVRP_TW_MD)
     optimization.share_route(0)
@@ -23,7 +35,9 @@ def main(api_key):
     optimization.device_type(DEVICE_TYPE.WEB)
     optimization.distance_unit(DISTANCE_UNIT.MI)
     optimization.travel_mode(TRAVEL_MODE.DRIVING)
-    optimization.metric(METRIC.ROUTE4ME_METRIC_MATRIX)
+    # 4 is METRIC.ROUTE4ME_METRIC_MATRIX. METRIC is built at run time by auto_enum(),
+    # so static checkers cannot see its members; the value is spelled out instead.
+    optimization.metric(4)
     optimization.vehicle_capacity(9999)
     optimization.vehicle_max_distance_mi(99999)
     optimization.parts(10)
@@ -32,12 +46,25 @@ def main(api_key):
     optimization.route_max_duration(86400)
     optimization.optimize(OPTIMIZE.TIME)
 
+
+def _add_depots(address):
+    """Add the two depots the routes start from.
+
+    :param address: the client's :class:`~route4me.address.Address` resource.
+    """
     address.add_address(
         address="455 S 4th St, Louisville, KY 40202", lat=38.251698, lng=-85.757308, is_depot=1, time=300
     )
     address.add_address(
         address="1604 PARKRIDGE PKWY, Louisville, KY, 40214", lat=38.141598, lng=-85.793846, is_depot=1, time=300
     )
+
+
+def _add_stops(address):
+    """Add the 48 stops to visit.
+
+    :param address: the client's :class:`~route4me.address.Address` resource.
+    """
     address.add_address(
         address="1407 MCCOY, Louisville, KY, 40215",
         lat=38.202496,
@@ -471,12 +498,30 @@ def main(api_key):
         time_window_end=58800,
     )
 
-    response = route4me.run_optimization()
-    print("Optimization Link: {}".format(response["links"]["view"]))
+
+def _print_routes(response):
+    """Print the optimization link and the addresses of each route.
+
+    :param response: the reply of :meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`.
+    """
+    print(f"Optimization Link: {response['links']['view']}")
     for i, route in enumerate(response["routes"]):
-        print("\t{}\tRoute Link: {}".format(i + 1, route["links"]["route"]))
+        print(f"\t{i + 1}\tRoute Link: {route['links']['route']}")
         for address in route["addresses"]:
-            print("\t\t\tAddress: {}".format(address["address"]))
+            print(f"\t\t\tAddress: {address['address']}")
+
+
+def main(api_key):
+    """Run the optimization and print the routes.
+
+    :param api_key: Route4Me API key.
+    """
+    route4me = Route4Me(api_key)
+    _set_parameters(route4me.optimization)
+    _add_depots(route4me.address)
+    _add_stops(route4me.address)
+    response = route4me.run_optimization()
+    _print_routes(response)
 
 
 if __name__ == "__main__":

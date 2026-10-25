@@ -1,9 +1,26 @@
+"""List a member's telematics connections.
+
+Calls :meth:`Telematics.register_member <route4me.telematics.Telematics.register_member>`
+(``GET /api.v4/telematics/register.php``) to get the member's telematics API token, then
+:meth:`Telematics.get_connections <route4me.telematics.Telematics.get_connections>` with it, which sends
+``GET /api.v4/telematics/connections.php``, and prints each connection.
+
+Run it with::
+
+    python examples/telematics/get_connections.py --api_key <your key> --member_id <member ID>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key, member_id):
+    """Print the telematics connections of the member.
+
+    :param api_key: Route4Me API key.
+    :param member_id: ID of the member.
+    """
     route4me = Route4Me(api_key)
 
     telematics = route4me.telematics

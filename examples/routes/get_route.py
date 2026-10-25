@@ -1,9 +1,25 @@
+"""Get the latest route.
+
+Calls :meth:`Route.get_routes <route4me.route.Route.get_routes>` (``GET /api.v4/route.php``) to find the
+latest route, then :meth:`Route.get_route <route4me.route.Route.get_route>` with its ``route_id``, which
+sends the same request with ``route_id`` in the query. Prints the optimization ID and the ID and address
+of each destination.
+
+Run it with::
+
+    python examples/routes/get_route.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
 
 
 def main(api_key):
+    """Print the latest route.
+
+    :param api_key: Route4Me API key.
+    """
     r4m = Route4Me(api_key)
 
     route = r4m.route
@@ -17,9 +33,9 @@ def main(api_key):
         if isinstance(response, dict) and "errors" in response.keys():
             print(". ".join(response["errors"]))
         else:
-            print("Optimization Problem ID: {}".format(response["optimization_problem_id"]))
+            print(f"Optimization Problem ID: {response['optimization_problem_id']}")
             for address in response["addresses"]:
-                print("\t\t\tID: {} - Address: {}".format(address["route_destination_id"], address["address"]))
+                print(f"\t\t\tID: {address['route_destination_id']} - Address: {address['address']}")
 
 
 if __name__ == "__main__":

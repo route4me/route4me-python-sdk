@@ -1,3 +1,17 @@
+"""Remove an address from an optimization.
+
+Runs a TSP optimization of nine New York addresses, one of them the depot with
+:meth:`Route4Me.run_optimization <route4me.api.Route4Me.run_optimization>`
+(``POST /api.v4/optimization_problem.php``), then :meth:`Optimization.delete_address_from_optimization
+<route4me.optimization.Optimization.delete_address_from_optimization>` with its
+``optimization_problem_id`` and the second address's ``route_destination_id``, which sends
+``DELETE /api.v4/address.php``.
+
+Run it with::
+
+    python examples/optimizations/delete_address_from_optimization.py --api_key <your key>
+"""
+
 import argparse
 
 from route4me import Route4Me
@@ -5,6 +19,10 @@ from route4me.constants import ALGORITHM_TYPE, DEVICE_TYPE, DISTANCE_UNIT, OPTIM
 
 
 def main(api_key):
+    """Create an optimization and remove one of its addresses.
+
+    :param api_key: Route4Me API key.
+    """
     route4me = Route4Me(api_key)
 
     optimization = route4me.optimization
@@ -69,8 +87,8 @@ def main(api_key):
         optimization_problem_id=optimization_id, route_destination_id=route_destination_id
     )
 
-    print("Route Destination ID: {}".format(response["route_destination_id"]))
-    print("Deleted: {}".format(response["deleted"]))
+    print(f"Route Destination ID: {response['route_destination_id']}")
+    print(f"Deleted: {response['deleted']}")
 
 
 if __name__ == "__main__":

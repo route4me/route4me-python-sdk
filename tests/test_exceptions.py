@@ -38,19 +38,51 @@ class TestAPIException:
         assert exc.to_dict() == {"errors": ["a", "b"]}
 
     def test_to_dict_on_valid_json_without_an_errors_key(self):
-        """Changed in 0.2.0: this used to return ``{"errors": None}``, which
-        satisfied an ``"errors" in result`` check while carrying no
-        information."""
+        """This used to return ``{"errors": None}``, which satisfied an
+        ``"errors" in result`` check while carrying no information."""
         exc = APIException(400, json.dumps({"status": False}), "u")
 
-        assert exc.to_dict() == {"errors": "Unexpected server response"}
+        assert exc.to_dict() == {"errors": ["Unexpected server response"]}
 
-    def test_to_dict_preserves_an_explicitly_null_errors_key(self):
-        """``{"errors": null}`` keeps its historical shape -- some callers
-        distinguish "the key was present" from "the key was absent"."""
-        exc = APIException(400, json.dumps({"errors": None}), "u")
+    def test_to_dict_treats_a_null_errors_key_as_absent(self):
+        """``{"errors": null}`` used to come back unchanged, and
+        ``". ".join(None)`` raised in every caller."""
+        exc = APIException(400, json.dumps({"errors": None, "message": "Bad route"}), "u")
 
-        assert exc.to_dict() == {"errors": None}
+        assert exc.to_dict() == {"errors": ["Bad route"]}
+
+    def test_to_dict_wraps_a_scalar_v4_error(self):
+        exc = APIException(400, json.dumps({"errors": "Route not found"}), "u")
+
+        assert exc.to_dict() == {"errors": ["Route not found"]}
+
+    def test_to_dict_falls_back_when_the_errors_list_is_empty(self):
+        exc = APIException(400, json.dumps({"errors": []}), "u")
+
+        assert exc.to_dict() == {"errors": ["Unexpected server response"]}
+
+    def test_to_dict_reads_a_v5_error_key(self):
+        """A V5 module the account lacks answers 403 with a singular ``error``,
+        seen live; it used to come back as "Unexpected server response"."""
+        body = json.dumps({"status": False, "exit_code": 1, "error": "The required feature is not enabled."})
+
+        assert APIException(403, body, "u").to_dict() == {"errors": ["The required feature is not enabled."]}
+
+    def test_to_dict_ignores_a_boolean_error_flag(self):
+        body = json.dumps({"status": False, "error": False})
+
+        assert APIException(500, body, "u").to_dict() == {"errors": ["Unexpected server response"]}
+
+    def test_to_dict_errors_always_join(self):
+        """Every example prints ``". ".join(result["errors"])``. A string value
+        printed letter by letter; a non-string list item raised ``TypeError``."""
+        bodies = [None, "", "<html>", "[1, 2]", '{"errors": [404, "x"]}', '{"messages": {"a": ["b", 7]}}']
+
+        for body in bodies:
+            errors = APIException(400, body, "u").to_dict()["errors"]
+
+            assert errors and all(isinstance(message, str) for message in errors)
+            assert ". ".join(errors)
 
     def test_to_dict_flattens_the_v5_messages_envelope(self):
         """A V5 error has no ``errors`` key at all (see
@@ -80,30 +112,30 @@ class TestAPIException:
     def test_to_dict_handles_a_scalar_v5_message(self):
         exc = APIException(422, json.dumps({"status": False, "messages": "Nope"}), "u")
 
-        assert exc.to_dict() == {"errors": "Nope"}
+        assert exc.to_dict() == {"errors": ["Nope"]}
 
     def test_to_dict_falls_back_to_a_message_key(self):
         exc = APIException(500, json.dumps({"message": "Server exploded"}), "u")
 
-        assert exc.to_dict() == {"errors": "Server exploded"}
+        assert exc.to_dict() == {"errors": ["Server exploded"]}
 
     def test_to_dict_on_non_json_returns_a_placeholder(self):
         exc = APIException(500, "<html>Gateway Error</html>", "u")
 
-        assert exc.to_dict() == {"errors": "Unexpected server response"}
+        assert exc.to_dict() == {"errors": ["Unexpected server response"]}
 
     def test_to_dict_on_an_empty_body(self):
         exc = APIException(502, "", "u")
 
-        assert exc.to_dict() == {"errors": "Unexpected server response"}
+        assert exc.to_dict() == {"errors": ["Unexpected server response"]}
 
     def test_to_dict_survives_a_none_body(self):
         """A response with no body should not turn into a second exception."""
-        assert APIException(504, None, "u").to_dict() == {"errors": "Unexpected server response"}
+        assert APIException(504, None, "u").to_dict() == {"errors": ["Unexpected server response"]}
 
     def test_to_dict_survives_a_json_array_body(self):
         """Some endpoints return a bare array even on an error status."""
-        assert APIException(400, "[1, 2]", "u").to_dict() == {"errors": "Unexpected server response"}
+        assert APIException(400, "[1, 2]", "u").to_dict() == {"errors": ["Unexpected server response"]}
 
 
 class TestParamValueException:

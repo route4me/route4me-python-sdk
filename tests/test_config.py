@@ -30,7 +30,7 @@ class TestUnsetSentinel:
     def test_it_is_distinct_from_none_and_false(self):
         assert UNSET is not None
         assert UNSET is not False
-        assert UNSET != None  # noqa: E711 - identity vs equality is the point
+        assert UNSET != None  # noqa: E711  # pylint: disable=singleton-comparison  # equality vs identity is the point
 
 
 class TestDefaults:

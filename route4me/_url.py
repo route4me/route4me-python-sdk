@@ -10,7 +10,7 @@ V5 is REST-style, so every one of its ~200 endpoints has this same surface.
 Use these helpers for anything that lands in a path; they are not optional.
 """
 
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit
 
 from .exceptions import ParamValueException
 
@@ -29,6 +29,9 @@ def path_segment(value, name="value"):
     >>> path_segment("a b?c#d", "alias")
     'a%20b%3Fc%23d'
 
+    :param value: the value to encode; converted with ``str()``.
+    :param name: parameter name reported in the error.
+    :return: the percent-encoded segment.
     :raise ParamValueException: if the value is ``None`` or empty. An empty
         segment would silently collapse the path and hit the wrong endpoint.
     """
@@ -50,6 +53,10 @@ def path_int(value, name="value", minimum=0):
     >>> path_int(10, "offset")
     '10'
 
+    :param value: an ``int``, or a string holding one. ``bool`` is rejected.
+    :param name: parameter name reported in the error.
+    :param minimum: smallest accepted value.
+    :return: the integer as a string.
     :raise ParamValueException: if the value is not an integer, or is below
         ``minimum``.
     """
@@ -73,8 +80,52 @@ def join_path(base, *segments):
 
     >>> join_path("https://rapid.route4me.com/street_data/", "00602", "17")
     'https://rapid.route4me.com/street_data/00602/17/'
+
+    :param base: the base URL.
+    :param segments: path segments, already encoded.
+    :return: the joined URL, always ending with ``/``.
     """
     url = base.rstrip("/")
     for segment in segments:
         url = f"{url}/{str(segment).strip('/')}"
     return url + "/"
+
+
+#: URL prefix of every API V5 endpoint.
+API_V5_PREFIX = "https://wh.route4me.com/modules/api/v5."
+
+#: The only hosts the API key is ever sent to, over https.
+API_KEY_HOSTS = ("api.route4me.com", "wh.route4me.com")
+
+
+def is_v5_url(url):
+    """Tell whether ``url`` is an API V5 endpoint, which takes a bearer token.
+
+    >>> is_v5_url("https://wh.route4me.com/modules/api/v5.0/route-status/X")
+    True
+    >>> is_v5_url("https://api.route4me.com/api.v4/route.php")
+    False
+
+    :param url: absolute URL of the endpoint.
+    :return: ``True`` for ``https://wh.route4me.com/modules/api/v5.*`` URLs.
+    """
+    return str(url).startswith(API_V5_PREFIX)
+
+
+def takes_api_key(url):
+    """Tell whether a request to ``url`` may carry the API key.
+
+    Only https requests to the Route4Me API hosts (:data:`API_KEY_HOSTS`) do.
+    A retired host or any other host gets no key, so a dead or wrong endpoint
+    can never collect it (the PHP SDK once sent its key to a retired host).
+
+    >>> takes_api_key("https://api.route4me.com/api.v4/route.php")
+    True
+    >>> takes_api_key("https://telematics.route4me.com/api/vendors.php")
+    False
+
+    :param url: absolute URL of the endpoint.
+    :return: ``True`` when the key may be sent.
+    """
+    parts = urlsplit(str(url))
+    return parts.scheme == "https" and parts.hostname in API_KEY_HOSTS

@@ -14,15 +14,17 @@ as XPASS and forces the marker to be removed -- the fix cannot land silently.
 import json
 
 import pytest
+import requests
 import responses
 
 from route4me import Route4Me
 from route4me.api import HEADERS
-from route4me.api_endpoints import ROUTE_HOST, TERRITORY_HOST
+from route4me.api_endpoints import ROUTE_HOST, TERRITORY_HOST, VEHICLES_V5
 from route4me.config import DEFAULT_TIMEOUT, Route4MeConfig
 from route4me.exceptions import APIException
 
 ANY_URL = ROUTE_HOST
+PATCH_URL = f"{VEHICLES_V5}/C0FFEE00C0FFEE00C0FFEE00C0FFEE00"
 
 
 class _StopSend(Exception):
@@ -50,7 +52,11 @@ class TestApiKeyInjection:
 class TestStatusHandling:
     @pytest.mark.parametrize("status", [200, 201, 204, 301, 302, 399])
     def test_2xx_and_3xx_are_returned(self, client, mocked, status):
-        mocked.add(responses.GET, ANY_URL, json={}, status=status)
+        # A 204 must not carry a body; current urllib3 rejects one.
+        if status == 204:
+            mocked.add(responses.GET, ANY_URL, body=b"", status=status)
+        else:
+            mocked.add(responses.GET, ANY_URL, json={}, status=status)
 
         response = client._make_request(ANY_URL, {}, client._request_get)
 
@@ -73,7 +79,79 @@ class TestStatusHandling:
         with pytest.raises(APIException) as excinfo:
             client._make_request(ANY_URL, {}, client._request_get)
 
-        assert excinfo.value.to_dict() == {"errors": "Unexpected server response"}
+        assert excinfo.value.to_dict() == {"errors": ["Unexpected server response"]}
+
+
+class TestQueryValues:
+    @pytest.mark.parametrize(("value", "sent"), [(True, "1"), (False, "0"), (1, "1"), ("yes", "yes")])
+    def test_booleans_are_sent_as_1_or_0(self, client, mocked, query_of, last_request, value, sent):
+        """requests sends ``True`` as ``"True"``. PHP reads ``"False"`` as true,
+        and the V5 boolean rule rejects both strings."""
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+
+        client._make_request(ANY_URL, {"flag": value}, client._request_get)
+
+        assert query_of(last_request())["flag"] == sent
+
+    def test_v5_lists_and_dicts_use_bracketed_keys(self, client, mocked, query_of, last_request):
+        """requests cannot send a dict or a nested list, and PHP keeps only the
+        last of a repeated plain key."""
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client._make_request(
+            url,
+            {"ids": ["A", "B"], "filters": {"active": True}, "order_by": [["title", "asc"]]},
+            client._request_get,
+        )
+
+        assert query_of(last_request()) == {
+            "ids[]": ["A", "B"],
+            "filters[active]": "1",
+            "order_by[0][]": ["title", "asc"],
+        }
+
+    def test_v5_requests_ask_for_json_first(self, client, mocked, last_request):
+        """With Accept: */* API V5 renders its errors as HTML (seen live), so
+        their messages were lost."""
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client._make_request(url, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "application/json, */*;q=0.8"
+
+    def test_v4_requests_keep_the_default_accept(self, client, mocked, last_request):
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+
+        client._make_request(ANY_URL, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "*/*"
+
+    def test_a_custom_accept_is_kept_for_v5(self, mocked, last_request, api_key):
+        client = Route4Me(api_key, headers={"Accept": "text/csv"})
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/ABC"
+        mocked.add(responses.GET, url, body="a,b", status=200)
+
+        client._make_request(url, {}, client._request_get)
+
+        assert last_request().headers["Accept"] == "text/csv"
+
+    def test_v4_lists_are_left_as_they_are(self, client, mocked, query_of, last_request):
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+
+        client._make_request(ANY_URL, {"route_id": ["A", "B"], "flags": [True, False]}, client._request_get)
+
+        assert query_of(last_request())["route_id"] == ["A", "B"]
+        assert query_of(last_request())["flags"] == ["1", "0"]
+
+    def test_the_callers_params_are_not_changed(self, client, mocked):
+        mocked.add(responses.GET, ANY_URL, json={}, status=200)
+        params = {"flag": True}
+
+        client._make_request(ANY_URL, params, client._request_get)
+
+        assert params == {"flag": True}
 
 
 class TestVerbs:
@@ -85,13 +163,16 @@ class TestVerbs:
             ("_request_get", "GET", responses.GET),
             ("_request_post", "POST", responses.POST),
             ("_request_put", "PUT", responses.PUT),
+            ("_request_patch", "PATCH", responses.PATCH),
             ("_request_delete", "DELETE", responses.DELETE),
         ],
     )
     def test_verb(self, client, mocked, last_request, helper, expected, registered):
-        mocked.add(registered, ANY_URL, json={}, status=200)
+        # PATCH exists only on API V5 endpoints, such as a vehicle update.
+        url = PATCH_URL if expected == "PATCH" else ANY_URL
+        mocked.add(registered, url, json={}, status=200)
 
-        getattr(client, helper)(ANY_URL, {"api_key": "k"})
+        client._make_request(url, {}, getattr(client, helper))
 
         assert last_request().method == expected
 
@@ -108,6 +189,13 @@ class TestVerbs:
         client._request_put(TERRITORY_HOST, {}, json={"territory_name": "X"})
 
         assert json.loads(last_request().body) == {"territory_name": "X"}
+
+    def test_patch_sends_a_json_body(self, client, mocked, last_request):
+        mocked.add(responses.PATCH, PATCH_URL, json={}, status=200)
+
+        client._make_request(PATCH_URL, {}, client._request_patch, json={"alias": "X"})
+
+        assert json.loads(last_request().body) == {"alias": "X"}
 
 
 class TestClientConfiguration:
@@ -213,7 +301,7 @@ class TestApiKeyLeakage:
 class TestTimeouts:
     """Every request must carry a timeout.
 
-    ``requests`` defaults to *no* timeout, so before 0.2.0 a stalled socket
+    ``requests`` defaults to *no* timeout, so before 1.0.0 a stalled socket
     blocked the calling thread forever -- the highest-impact defect for anyone
     embedding the SDK in a server.
 
@@ -226,7 +314,7 @@ class TestTimeouts:
     def _capture_timeout(monkeypatch):
         """Record the ``timeout`` kwarg that reaches the transport.
 
-        Patches ``requests.Session.request`` -- since 0.3.0 every call is
+        Patches ``requests.Session.request`` -- since 1.0.0 every call is
         issued through a pooled session, not the module-level helpers.
         """
         captured = {}
@@ -245,6 +333,7 @@ class TestTimeouts:
             ("_request_get", "GET"),
             ("_request_post", "POST"),
             ("_request_put", "PUT"),
+            ("_request_patch", "PATCH"),
             ("_request_delete", "DELETE"),
         ],
     )
@@ -279,7 +368,7 @@ class TestTimeouts:
 
         assert captured["timeout"] == (1.0, 2.0)
 
-    def test_none_restores_the_pre_0_2_0_unbounded_behaviour(self, monkeypatch):
+    def test_none_restores_the_unbounded_behaviour(self, monkeypatch):
         """An explicit, greppable opt-out."""
         client = Route4Me("k" * 32, timeout=None)
         captured = self._capture_timeout(monkeypatch)
@@ -313,3 +402,74 @@ class TestParamsMutation:
         client._make_request(ANY_URL, params, client._request_get)
 
         assert params == {"limit": 1}, "api_key was written into the caller's dict"
+
+
+class TestRedirectsSetting:
+    """``redirects=False`` applies to every verb, not just GET and POST (#128)."""
+
+    @pytest.mark.parametrize("verb", ["get", "post", "put", "delete"])
+    def test_redirects_false_is_passed_to_every_verb(self, monkeypatch, verb):
+        client = Route4Me("1" * 32, redirects=False)
+        seen = {}
+
+        def capture(method, url, **kwargs):
+            seen.update(kwargs)
+            raise RuntimeError("stop before sending")
+
+        monkeypatch.setattr(client, "_send", capture)
+
+        with pytest.raises(RuntimeError):
+            getattr(client, f"_request_{verb}")(ANY_URL, {})
+
+        assert seen["allow_redirects"] is False
+
+
+class TestProxiesSetting:
+    """#128: the client's proxies reach every verb; DELETE used to drop them."""
+
+    @pytest.mark.parametrize("verb", ["get", "post", "put", "delete"])
+    def test_proxies_are_passed_to_every_verb(self, monkeypatch, verb):
+        proxies = {"https": "http://proxy.example.com:3128"}
+        client = Route4Me("1" * 32, proxies=proxies)
+        seen = {}
+
+        def capture(session, method, url, **kwargs):
+            seen.update(kwargs)
+            raise RuntimeError("stop before sending")
+
+        monkeypatch.setattr(requests.Session, "request", capture)
+
+        with pytest.raises(RuntimeError):
+            getattr(client, f"_request_{verb}")(ANY_URL, {})
+
+        assert seen["proxies"] == proxies
+
+
+class TestKeyPlacement:
+    """V5 takes a bearer token; everything else keeps ``api_key`` in the query."""
+
+    def test_a_v5_request_sends_a_bearer_token_and_no_query_key(self, client, mocked, query_of, last_request, api_key):
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/C0FFEE00C0FFEE00C0FFEE00C0FFEE00"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client.route_status.get_route_status("C0FFEE00C0FFEE00C0FFEE00C0FFEE00")
+
+        assert last_request().headers["Authorization"] == f"Bearer {api_key}"
+        assert "api_key" not in query_of(last_request())
+
+    def test_a_v4_request_keeps_the_query_key_and_sends_no_token(self, client, mocked, query_of, last_request, api_key):
+        mocked.add(responses.GET, ROUTE_HOST, json=[], status=200)
+
+        client.route.get_routes(limit=1, offset=0)
+
+        assert query_of(last_request())["api_key"] == api_key
+        assert "Authorization" not in last_request().headers
+
+    def test_custom_headers_are_kept_on_v5_requests(self, mocked, last_request):
+        client = Route4Me("1" * 32, headers={"User-Agent": "my-app/2.0"})
+        url = "https://wh.route4me.com/modules/api/v5.0/route-status/C0FFEE00C0FFEE00C0FFEE00C0FFEE00"
+        mocked.add(responses.GET, url, json={}, status=200)
+
+        client.route_status.get_route_status("C0FFEE00C0FFEE00C0FFEE00C0FFEE00")
+
+        assert last_request().headers["User-Agent"] == "my-app/2.0"

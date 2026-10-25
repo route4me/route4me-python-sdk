@@ -1,3 +1,17 @@
+"""Route4Me Python SDK.
+
+A client for the Route4Me route optimization API. Create a :class:`Route4Me`
+client with an API key and use its resource attributes::
+
+    from route4me import Route4Me
+
+    route4me = Route4Me("11111111111111111111111111111111")
+    routes = route4me.route.get_routes(limit=10, offset=0)
+
+The package also exports the exceptions, :class:`AdvancedConstraint`,
+:class:`Bundling` and the bundling mode constants.
+"""
+
 from .advanced_constraint import AdvancedConstraint
 from .api import Route4Me
 from .bundling import (
