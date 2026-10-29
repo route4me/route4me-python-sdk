@@ -5,9 +5,9 @@ This is the history of changes of the `route4me` package.
 > This file should be filled by maintainers, using pull requests
 > Please, follow this [guide](https://keepachangelog.com/en/1.0.0/)
 
-## [1.0.0] - Unreleased
+## [1.0.0] - 2026-10-29
 
-This is the first release since 0.1.7.0, and PyPI still serves 0.0.7.1 from 2020.
+This is the first release since 0.1.7.0, and the first on PyPI since 0.0.7.1 in 2020.
 
 It fixes every open bug report (#19, #26, #30–#43, #124–#135), adds 216 API methods for the operations the coverage issues list (#44–#107), and hardens how the SDK handles the API key. It also adds an offline test suite of 1,422 tests behind a request guard. Several fixes change behaviour that code may rely on, so read **Breaking changes** before upgrading.
 
