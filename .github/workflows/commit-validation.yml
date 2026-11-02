@@ -14,9 +14,9 @@ jobs:
     name: Conventional commits
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
       - name: Commitsar
-        uses: aevea/commitsar@916c7b483225a30d3a17f407fa25f5b25888ea69 # v0.20.2
+        uses: aevea/commitsar@909c3ab676c9af63cb84f2e38f395c7e89829b04 # v1.0.3
