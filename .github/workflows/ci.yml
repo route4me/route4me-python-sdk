@@ -76,8 +76,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         include:
+          # ubuntu-latest is Ubuntu 26.04 since November 2026, and
+          # actions/python-versions has no 3.9 build for it. Keep 3.9 on
+          # 24.04 for as long as pyproject.toml says requires-python >=3.9.
+          - os: ubuntu-24.04
+            python-version: "3.9"
           # Spot-check the other platforms on one interpreter rather than
           # multiplying the whole matrix by three.
           - os: macos-latest
