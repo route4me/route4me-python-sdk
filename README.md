@@ -108,6 +108,15 @@ The SDK sends the key the way each API expects it:
 
 The key is never put in a request body, and it is removed from the URLs and bodies stored on exceptions.
 
+### Another Route4Me environment
+
+To point the SDK at another Route4Me environment (a staging API, say), set these before `import route4me`:
+
+- `ROUTE4ME_API_HOST`: the API V4 host, instead of `api.route4me.com`.
+- `ROUTE4ME_API_V5_HOST`: the API V5 host, instead of `wh.route4me.com`.
+
+Each takes a host name (`api.staging.example`) or an `https://` URL without a path. The key is sent only to these two hosts, over https. A value that is not an https host stops the import with a `ValueError`, so a typo cannot send the key elsewhere. The hosts are read once, at import, so they apply to every client in the process.
+
 ### Errors
 
 - **Resource methods** such as `r4m.route.get_route()` do not raise on an API error. They return `{"errors": [...]}`, a non-empty list of messages:
