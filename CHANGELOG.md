@@ -5,6 +5,14 @@ This is the history of changes of the `route4me` package.
 > This file should be filled by maintainers, using pull requests
 > Please, follow this [guide](https://keepachangelog.com/en/1.0.0/)
 
+## [Unreleased]
+
+### Added
+- **`ROUTE4ME_API_HOST` and `ROUTE4ME_API_V5_HOST`** point the SDK at another Route4Me environment, such as a staging API. Each takes a host name or an `https://` URL without a path, read once at import.
+  - The API key follows them: it goes only to the two configured hosts (`route4me._url.API_KEY_HOSTS`), and V5 requests are recognised by the configured V5 host.
+  - Before this, the only way was to replace `route4me/api_endpoints.py`. Since 1.0.0 that breaks twice: the replaced file misses constants newer modules import, and the key was still sent only to the production hosts.
+  - Unset or blank means production, as before. A value that is not an https host stops the import with a `ValueError`.
+
 ## [1.0.0] - 2026-10-29
 
 This is the first release since 0.1.7.0, and the first on PyPI since 0.0.7.1 in 2020.

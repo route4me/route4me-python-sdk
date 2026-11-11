@@ -3,10 +3,49 @@
 ``MAIN_HOST`` serves API V4 and the older action endpoints; ``API_V5`` is the
 base of API V5. :data:`EXPORTER_V5` is a template: fill ``{route_id}`` with
 ``str.format``.
+
+Both hosts can point at another Route4Me environment (staging, say) through
+the environment variables :data:`API_HOST_ENV` (``ROUTE4ME_API_HOST``) and
+:data:`API_V5_HOST_ENV` (``ROUTE4ME_API_V5_HOST``). Each takes a host name or
+an ``https://`` URL without a path. They are read once, when this module is
+first imported, so set them before ``import route4me``. The API key follows
+them: it is sent only to these two hosts (:data:`route4me._url.API_KEY_HOSTS`).
 """
 
-MAIN_HOST = "https://api.route4me.com"
-API_V5 = "https://wh.route4me.com/modules/api/v5.0"
+import os
+from urllib.parse import urlsplit
+
+#: Environment variable naming the host of API V4 and the action endpoints.
+API_HOST_ENV = "ROUTE4ME_API_HOST"
+#: Environment variable naming the host of API V5.
+API_V5_HOST_ENV = "ROUTE4ME_API_V5_HOST"
+
+
+def _host_url(variable, default):
+    """Return ``https://<host>`` from ``variable``, or ``default`` when it is unset.
+
+    :param variable: name of the environment variable.
+    :param default: the production URL, ``https://<host>``.
+    :return: ``https://<host>[:port]``, lower-cased, with no trailing slash.
+    :raise ValueError: when the value is not a host name or an ``https://``
+        URL without a path, query or credentials. The API key goes to this
+        host, so a typo must stop the import rather than send it elsewhere.
+    """
+    value = os.environ.get(variable, "").strip()
+    if not value:
+        return default
+    parts = urlsplit(value if "://" in value else f"https://{value}")
+    beyond_host = (parts.path.strip("/"), parts.query, parts.fragment, parts.username, parts.password)
+    if parts.scheme != "https" or not parts.hostname or any(beyond_host):
+        raise ValueError(f"{variable} must be a host name or an https:// URL without a path, got {value!r}")
+    return f"https://{parts.netloc.lower()}"
+
+
+#: ``https://<host>`` of API V4 and the older action endpoints.
+MAIN_HOST = _host_url(API_HOST_ENV, "https://api.route4me.com")
+#: ``https://<host>`` of API V5.
+API_V5_HOST = _host_url(API_V5_HOST_ENV, "https://wh.route4me.com")
+API_V5 = f"{API_V5_HOST}/modules/api/v5.0"
 
 ACTIVITY_FEED = f"{MAIN_HOST}/api.v4/activity_feed.php"
 ADDRESSBOOK = f"{MAIN_HOST}/api.v4/address_book.php"
@@ -52,7 +91,7 @@ VEHICLES_HOST = f"{MAIN_HOST}/api/vehicles/view_vehicles.php"
 WEBINAR_REGISTER = f"{MAIN_HOST}/actions/webinar_register.php"
 ZIPCODE_TERRITORIES = "https://rapid.route4me.com/street_data/territories"
 
-EXPORTER_V5 = "https://wh.route4me.com/modules/api/v5.0/route-export/{route_id}/export"
+EXPORTER_V5 = f"{API_V5}/route-export/{{route_id}}/export"
 ROUTE_STATUS_V5 = f"{API_V5}/route-status"
 ORDERS_GROUP_V5 = f"{API_V5}/orders/aggregation/combined"
 OPTIMIZATION_PROFILES_V5 = f"{API_V5}/optimization-profiles/data-list"

@@ -12,6 +12,7 @@ Use these helpers for anything that lands in a path; they are not optional.
 
 from urllib.parse import quote, urlsplit
 
+from .api_endpoints import API_V5_HOST, MAIN_HOST
 from .exceptions import ParamValueException
 
 
@@ -92,10 +93,12 @@ def join_path(base, *segments):
 
 
 #: URL prefix of every API V5 endpoint.
-API_V5_PREFIX = "https://wh.route4me.com/modules/api/v5."
+API_V5_PREFIX = f"{API_V5_HOST}/modules/api/v5."
 
-#: The only hosts the API key is ever sent to, over https.
-API_KEY_HOSTS = ("api.route4me.com", "wh.route4me.com")
+#: The only hosts the API key is ever sent to, over https: the two API hosts,
+#: ``api.route4me.com`` and ``wh.route4me.com`` unless ``ROUTE4ME_API_HOST``
+#: or ``ROUTE4ME_API_V5_HOST`` name others (:mod:`route4me.api_endpoints`).
+API_KEY_HOSTS = tuple(dict.fromkeys(urlsplit(url).hostname for url in (MAIN_HOST, API_V5_HOST)))
 
 
 def is_v5_url(url):
